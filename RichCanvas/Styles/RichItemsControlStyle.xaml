@@ -1,0 +1,43 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:RichCanvas">
+    <Style TargetType="{x:Type local:RichItemsControl}">
+        <Style.Resources>
+            <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+        </Style.Resources>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:RichItemsControl}">
+                    <Grid Background="{TemplateBinding Background}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <ScrollViewer CanContentScroll="True"
+                                      HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Auto">
+                            <local:PanningGrid Background="AliceBlue"
+                                               x:Name="CanvasContainer">
+
+                                <Canvas RenderTransform="{Binding AppliedTransform, RelativeSource={RelativeSource TemplatedParent}}"
+                                        x:Name="containerDrawing">
+                                    <local:RichCanvas x:Name="PART_Panel"
+                                                      IsItemsHost="True" />
+                                    <Rectangle x:Name="PART_SelectionRectangle"
+                                               Stroke="Black"
+                                               StrokeThickness="1"
+                                               Visibility="{Binding IsSelecting, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisConverter}}"
+                                               Canvas.Top="{Binding SelectionRectangle.Y, RelativeSource={RelativeSource TemplatedParent}}"
+                                               Canvas.Left="{Binding SelectionRectangle.X, RelativeSource={RelativeSource TemplatedParent}}"
+                                               Width="{Binding SelectionRectangle.Width, RelativeSource={RelativeSource TemplatedParent}}"
+                                               Height="{Binding SelectionRectangle.Height, RelativeSource={RelativeSource TemplatedParent}}" />
+                                </Canvas>
+                                
+                            </local:PanningGrid>
+                        </ScrollViewer>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
