@@ -57,6 +57,21 @@ namespace RichCanvas.Gestures
                 (scaleTransformItem.ScaleX < 0 && scaleTransformItem.ScaleY > 0) ? 2 :
                 (scaleTransformItem.ScaleX < 0 && scaleTransformItem.ScaleY < 0) ? 3 :
                 (scaleTransformItem.ScaleX > 0 && scaleTransformItem.ScaleY < 0) ? 4 : 0;
+
+            if (scaleTransformItem.ScaleX < 0 && scaleTransformItem.ScaleY > 0)
+            {
+                _currentItem.Left -= _currentItem.Width;
+            }
+            if (scaleTransformItem.ScaleX < 0 && scaleTransformItem.ScaleY < 0)
+            {
+                _currentItem.Left -= _currentItem.Width;
+                _currentItem.Top -= _currentItem.Height;
+            }
+            if (scaleTransformItem.ScaleX > 0 && scaleTransformItem.ScaleY < 0)
+            {
+                _currentItem.Top -= _currentItem.Height;
+            }
+
             _inView.Add(_currentItem);
             if (_inView.Count > 0)
             {
