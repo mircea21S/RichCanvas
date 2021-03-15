@@ -51,7 +51,8 @@ namespace RichCanvas
             {
                 if (_lowestElement != _parent.BottomLimit)
                 {
-                    UpdateExtentHeight(-(BottomLimit - _parent.BottomLimit));
+                    //UpdateExtentHeight(-(BottomLimit - _parent.BottomLimit));
+
                     _lowestElement = _parent.BottomLimit;
                 }
                 return _parent.BottomLimit == 0 ? 0 : _parent.BottomLimit;
@@ -310,43 +311,31 @@ namespace RichCanvas
                     _viewportTopLeftInitial = new Point(0, 0);
                     _viewportBottomRightInitial = new Point(ActualWidth, ActualHeight);
                     var previousViewport = _viewport;
+                    _viewport = constraint;
                     if (previousViewport.Height != constraint.Height)
                     {
-                        if (_offset.Y != 0)
+                        if (_offset.Y > 0)
                         {
-                            //if (_offset.Y > 0)
-                            //{
-                            //    if (constraint.Height > previousViewport.Height)
-                            //    {
-                            //        _offset.Y += (constraint.Height - previousViewport.Height);
-                            //    }
-                            //    else
-                            //    {
-                            //        _offset.Y += (previousViewport.Height - constraint.Height);
-                            //    }
-                            //}
-                            //else
-                            //{
-                            //    if (constraint.Height > previousViewport.Height)
-                            //    {
-                            //        _offset.Y -= (constraint.Height - previousViewport.Height);
-                            //    }
-                            //    else
-                            //    {
-                            //        _offset.Y -= (previousViewport.Height - constraint.Height);
-                            //    }
-                            //}
-                            var oldOffset = _offset.Y;
                             _offset.Y = TopLimit - HighestElement;
-                            if (oldOffset != _offset.Y)
-                            {
-                                _offsetDifference = _offset.Y - oldOffset;
-                            }
-                            //UpdateExtentHeight(_offsetDifference);
                             _extent.Height = constraint.Height + _offset.Y;
                         }
+                        else if (_offset.Y < 0)
+                        {
+                            //update offset
+                            _offset.Y = BottomLimit - LowestElement;
+                        }
+                        if (BottomLimit < LowestElement)
+                        {
+                            _extent.Height = _viewport.Height + Math.Abs(LowestElement - BottomLimit);
+                            _offset.Y = BottomLimit - LowestElement;
+                        }
+                        if (TopLimit > HighestElement)
+                        {
+                            _extent.Height = _viewport.Height + Math.Abs(TopLimit - HighestElement);
+                            _offset.Y = TopLimit - HighestElement;
+                        }
+
                     }
-                    _viewport = constraint;
                     if (_offset.Y == 0)
                     {
                         _extent.Height = _viewport.Height;
@@ -361,6 +350,8 @@ namespace RichCanvas
                         _extent = _viewport;
                     }
                 }
+                Console.WriteLine(_extent.Height);
+                Console.WriteLine(_offset.Y);
                 ScrollOwner.InvalidateScrollInfo();
             }
             return base.MeasureOverride(constraint);
@@ -434,21 +425,26 @@ namespace RichCanvas
 
         private void UpdateExtentHeight(double offset)
         {
-            if (_offset.Y == 0)
+            if (offset == 0)
             {
                 _extent.Height = _viewport.Height;
+                return;
+            }
+            //if (_offset.Y == 0)
+            //{
+            //    _extent.Height = _viewport.Height;
+            //}
+            //else
+            //{
+            if (_offset.Y < 0)
+            {
+                _extent.Height += -offset;
             }
             else
             {
-                if (_offset.Y < 0)
-                {
-                    _extent.Height += -offset;
-                }
-                else
-                {
-                    _extent.Height += offset;
-                }
+                _extent.Height += offset;
             }
+            //}
         }
         private void CheckLimits(double offset)
         {
