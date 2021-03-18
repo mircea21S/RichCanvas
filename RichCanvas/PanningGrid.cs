@@ -137,7 +137,7 @@ namespace RichCanvas
                     var y = Math.Abs(TopLimit - HighestElement) * _scaleTransform.ScaleY;
                     var offset = y - _lastTopOffset;
                     _lastTopOffset = y;
-                    SetVerticalOffset(offset);
+                    _offset.Y = y;
                     UpdateExtentHeight(offset);
 
                     var x = Math.Abs(LowestElement - BottomLimit) * _scaleTransform.ScaleY;
@@ -147,13 +147,12 @@ namespace RichCanvas
                 }
                 else
                 {
-                    //TODO: move this in a method update scroll (used on measureoverride and everytime we update the scroll)
                     if (TopLimit > HighestElement)
                     {
                         var y = Math.Abs(TopLimit - HighestElement) * _scaleTransform.ScaleY;
                         var offset = y - _lastTopOffset;
                         _lastTopOffset = y;
-                        SetVerticalOffset(offset);
+                        _offset.Y = y;
                         UpdateExtentHeight(offset);
                     }
                     if (BottomLimit < LowestElement)
@@ -161,13 +160,13 @@ namespace RichCanvas
                         var y = Math.Abs(LowestElement - BottomLimit) * _scaleTransform.ScaleY;
                         var offset = y - _lastBottomOffset;
                         _lastBottomOffset = y;
-                        SetVerticalOffset(-offset);
+                        _offset.Y = -y;
                         UpdateExtentHeight(-offset);
                     }
-                    //end of method from todo
                     if (TopLimit < HighestElement && BottomLimit > LowestElement)
                     {
                         SetVerticalOffset(0);
+                        UpdateExtentHeight(0);
                     }
                 }
                 _lastOffset = _offset.Y;
@@ -308,31 +307,51 @@ namespace RichCanvas
             {
                 if (_viewport != constraint)
                 {
+                    var x = LowestElement - BottomLimit;
                     _viewportTopLeftInitial = new Point(0, 0);
                     _viewportBottomRightInitial = new Point(ActualWidth, ActualHeight);
                     var previousViewport = _viewport;
                     _viewport = constraint;
                     if (previousViewport.Height != constraint.Height)
                     {
-                        if (_offset.Y > 0)
+                        bool extends = previousViewport.Height < constraint.Height;
+                        if (BottomLimit < LowestElement && TopLimit > HighestElement)
                         {
-                            _offset.Y = TopLimit - HighestElement;
-                            _extent.Height = constraint.Height + _offset.Y;
+                            //do nothing
+                            if (extends)
+                            {
+                                //extent grows
+                                Console.WriteLine(BottomLimit);
+                                //_extent.Height -= x;
+                                //_extent.Height += LowestElement - BottomLimit;
+                                //_extent.Height -= (constraint.Height - previousViewport.Height);
+                            }
+                            else
+                            {
+
+                            }
                         }
-                        else if (_offset.Y < 0)
+                        else
                         {
-                            //update offset
-                            _offset.Y = BottomLimit - LowestElement;
-                        }
-                        if (BottomLimit < LowestElement)
-                        {
-                            _extent.Height = _viewport.Height + Math.Abs(LowestElement - BottomLimit);
-                            _offset.Y = BottomLimit - LowestElement;
-                        }
-                        if (TopLimit > HighestElement)
-                        {
-                            _extent.Height = _viewport.Height + Math.Abs(TopLimit - HighestElement);
-                            _offset.Y = TopLimit - HighestElement;
+                            //if (_offset.Y > 0)
+                            //{
+                            //    _offset.Y = TopLimit - HighestElement;
+                            //    _extent.Height = constraint.Height + _offset.Y;
+                            //}
+                            //else if (_offset.Y < 0)
+                            //{
+                            //    _offset.Y = BottomLimit - LowestElement;
+                            //}
+                            if (BottomLimit < LowestElement)
+                            {
+                                _extent.Height = _viewport.Height + (Math.Abs(LowestElement - BottomLimit) * _scaleTransform.ScaleY);
+                                _offset.Y = (BottomLimit - LowestElement) * _scaleTransform.ScaleY;
+                            }
+                            if (TopLimit > HighestElement)
+                            {
+                                _extent.Height = _viewport.Height + (Math.Abs(TopLimit - HighestElement) * _scaleTransform.ScaleY);
+                                _offset.Y = (TopLimit - HighestElement) * _scaleTransform.ScaleY;
+                            }
                         }
 
                     }
