@@ -421,7 +421,7 @@ namespace RichCanvas
                 {
                     if (BottomLimit < LowestElement)
                     {
-                        _offset.Y = (BottomLimit - LowestElement) * _scaleTransform.ScaleY;
+                        _offset.Y = (TopLimit - HighestElement) * _scaleTransform.ScaleY;
                         _extent.Height = _viewport.Height + (Math.Abs(LowestElement - BottomLimit) * _scaleTransform.ScaleY);
                     }
                     if (TopLimit > HighestElement)
@@ -442,7 +442,6 @@ namespace RichCanvas
                 }
                 else
                 {
-                    //re-adjust extent and offset
                     _offset.Y = Math.Abs(TopLimit - HighestElement) * _scaleTransform.ScaleY;
                     var x = Math.Abs(LowestElement - BottomLimit) * _scaleTransform.ScaleY;
                     _extent.Height = _initialExtent.Height + (_offset.Y + x);
