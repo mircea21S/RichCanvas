@@ -42,11 +42,6 @@ namespace RichCanvas.Gestures
             _translateTransform.X = position.X - originX * _scaleTransform.ScaleX;
             _translateTransform.Y = position.Y - originY * _scaleTransform.ScaleY;
         }
-        private int Round(double value, int factor)
-        {
-            return (int)Math.Round(
-             (value / factor),
-             MidpointRounding.AwayFromZero) * factor;
-        }
+
     }
 }

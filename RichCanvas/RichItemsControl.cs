@@ -149,6 +149,13 @@ namespace RichCanvas
                     for (int i = 0; i < this.Items.Count; i++)
                     {
                         RichItemContainer container = (RichItemContainer)this.ItemContainerGenerator.ContainerFromIndex(i);
+
+                        // already drawn
+                        if (container.Height != 0 && container.Width != 0)
+                        {
+                            container.IsDrawn = true;
+                        }
+
                         if (!container.IsDrawn)
                         {
                             _drawingGesture.OnMouseDown(container, e);
@@ -214,8 +221,15 @@ namespace RichCanvas
         }
         protected override void OnItemsChanged(NotifyCollectionChangedEventArgs e)
         {
-
-
+            if (Items.Count > 0)
+            {
+                var items = Items.Cast<object>().Select(i => (RichItemContainer)ItemContainerGenerator.ContainerFromItem(i));
+                BottomLimit = items.Select(c => c.Height + c.Top).Max();
+                RightLimit = items.Select(c => c.Width + c.Left).Max();
+                TopLimit = items.Select(c => c.Top).Min();
+                LeftLimit = items.Select(c => c.Left).Min();
+                _canvasContainer.AdjustScrollVertically();
+            }
         }
 
         private HitTestResultBehavior OnHitTestResultCallback(HitTestResult result)
