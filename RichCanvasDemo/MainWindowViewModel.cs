@@ -22,9 +22,21 @@ namespace RichCanvasDemo
         }
         private void OnDrawCommand()
         {
-            Items.Add(new Line { Top = -10, Left = 100, Width = 40, Height = 40 });
-            Items.Add(new Line { Top = 395, Left = 100, Width = 40, Height = 40 });
-            //Items.Add(new Rectangle());
+            Items.Add(new Line());
+            //Items.Add(new Line
+            //{
+            //    Top = -10,
+            //    Left = 100,
+            //    Height = 40,
+            //    Width = 40
+            //});
+            //Items.Add(new Line
+            //{
+            //    Top = 405,
+            //    Left = 100,
+            //    Height = 40,
+            //    Width = 40
+            //});
         }
         public void DrawConnectedLine(Point p)
         {

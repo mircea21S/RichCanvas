@@ -26,15 +26,13 @@ namespace RichCanvas
 
         private RichCanvas _mainPanel;
         private PanningGrid _canvasContainer;
-
-        public Canvas ContainerDrawing { get; private set; }
-
-        private ICollection<RichItemContainer> _selections = new List<RichItemContainer>();
+        private List<RichItemContainer> _selections = new List<RichItemContainer>();
         private bool _isDrawing;
         private Gestures.Drawing _drawingGesture;
         private Selecting _selectingGesture;
         internal bool HasSelections => _selections.Count > 0;
         internal RichCanvas ItemsHost => _mainPanel;
+        internal PanningGrid ScrollContainer => _canvasContainer;
 
         public static DependencyProperty MousePositionProperty = DependencyProperty.Register("MousePosition", typeof(Point), typeof(RichItemsControl));
 
@@ -70,6 +68,7 @@ namespace RichCanvas
             set => SetValue(AppliedTransformProperty, value);
         }
 
+
         public bool IsPanning { get; private set; }
         public bool IsZooming { get; private set; }
 
@@ -94,17 +93,29 @@ namespace RichCanvas
             };
             _drawingGesture = new Gestures.Drawing(this);
         }
-        private void OnDragDeltaChanged(Point point)
+        internal void UpdateSelections()
         {
-            foreach (var item in _selections)
+            for (int i = 0; i < _selections.Count; i++)
             {
-                var transformGroup = (TransformGroup)item.RenderTransform;
+                var transformGroup = (TransformGroup)_selections[i].RenderTransform;
                 var translateTransform = (TranslateTransform)transformGroup.Children[1];
+                _selections[i].Top += translateTransform.Y;
+                _selections[i].Left += translateTransform.X;
 
-                translateTransform.X += point.X;
-                translateTransform.Y += point.Y;
+                translateTransform.X = 0;
+                translateTransform.Y = 0;
             }
         }
+
+        internal void UpdateLimits()
+        {
+            var items = Items.Cast<object>().Select(i => (RichItemContainer)ItemContainerGenerator.ContainerFromItem(i));
+            BottomLimit = items.Select(c => c.Height + c.Top).Max();
+            RightLimit = items.Select(c => c.Width + c.Left).Max();
+            TopLimit = items.Select(c => c.Top).Min();
+            LeftLimit = items.Select(c => c.Left).Min();
+        }
+
         protected override void OnKeyDown(KeyEventArgs e)
         {
             if (e.Key == Key.LeftCtrl)
@@ -132,7 +143,6 @@ namespace RichCanvas
         {
             _mainPanel = GetTemplateChild(ElementPanel) as RichCanvas;
             _canvasContainer = GetTemplateChild(CanvasContainerName) as PanningGrid;
-            ContainerDrawing = GetTemplateChild("containerDrawing") as Canvas;
             _canvasContainer.Initalize(this);
         }
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -223,12 +233,24 @@ namespace RichCanvas
         {
             if (Items.Count > 0)
             {
-                var items = Items.Cast<object>().Select(i => (RichItemContainer)ItemContainerGenerator.ContainerFromItem(i));
-                BottomLimit = items.Select(c => c.Height + c.Top).Max();
-                RightLimit = items.Select(c => c.Width + c.Left).Max();
-                TopLimit = items.Select(c => c.Top).Min();
-                LeftLimit = items.Select(c => c.Left).Min();
-                _canvasContainer.AdjustScrollVertically();
+                var previousTopLimit = TopLimit;
+                var previousBottomLimit = BottomLimit;
+                UpdateLimits();
+                if ((TopLimit != 0 && previousTopLimit != TopLimit) || (previousBottomLimit != BottomLimit && BottomLimit != _canvasContainer.ViewportHeight))
+                {
+                    _canvasContainer.AdjustScrollVertically();
+                }
+            }
+        }
+        private void OnDragDeltaChanged(Point point)
+        {
+            foreach (var item in _selections)
+            {
+                var transformGroup = (TransformGroup)item.RenderTransform;
+                var translateTransform = (TranslateTransform)transformGroup.Children[1];
+
+                translateTransform.X += point.X;
+                translateTransform.Y += point.Y;
             }
         }
 

@@ -47,30 +47,20 @@ namespace RichCanvas.Gestures
             }
             _currentItem.Width = Math.Abs(width);
             _currentItem.Height = Math.Abs(height);
+
+            var mousePositionViewport = args.GetPosition(_context.ScrollContainer);
+            if (mousePositionViewport.Y > _context.ScrollContainer.ViewportHeight)
+            {
+                _context.ScrollContainer.Pan2(_currentItem.Top + _currentItem.Height);
+                Console.WriteLine(_currentItem.Top + _currentItem.Height);
+            }
         }
         internal RichItemContainer OnMouseUp()
         {
             _currentItem.IsDrawn = true;
 
-            var scaleTransformItem = (ScaleTransform)((TransformGroup)_currentItem.RenderTransform).Children[0];
-            _currentItem.Quadrant = scaleTransformItem.ScaleX > 0 && scaleTransformItem.ScaleY > 0 ? 1 :
-                (scaleTransformItem.ScaleX < 0 && scaleTransformItem.ScaleY > 0) ? 2 :
-                (scaleTransformItem.ScaleX < 0 && scaleTransformItem.ScaleY < 0) ? 3 :
-                (scaleTransformItem.ScaleX > 0 && scaleTransformItem.ScaleY < 0) ? 4 : 0;
-
-            if (scaleTransformItem.ScaleX < 0 && scaleTransformItem.ScaleY > 0)
-            {
-                _currentItem.Left -= _currentItem.Width;
-            }
-            if (scaleTransformItem.ScaleX < 0 && scaleTransformItem.ScaleY < 0)
-            {
-                _currentItem.Left -= _currentItem.Width;
-                _currentItem.Top -= _currentItem.Height;
-            }
-            if (scaleTransformItem.ScaleX > 0 && scaleTransformItem.ScaleY < 0)
-            {
-                _currentItem.Top -= _currentItem.Height;
-            }
+            SetItemPosition();
+            _context.ItemsHost.InvalidateArrange();
 
             _inView.Add(_currentItem);
             if (_inView.Count > 0)
@@ -81,6 +71,28 @@ namespace RichCanvas.Gestures
                 _context.LeftLimit = _inView.Select(c => c.Left).Min();
             }
             return _currentItem;
+        }
+        private void SetItemPosition()
+        {
+            var scaleTransformItem = (ScaleTransform)((TransformGroup)_currentItem.RenderTransform).Children[0];
+            var translateTransformItem = (TranslateTransform)((TransformGroup)_currentItem.RenderTransform).Children[1];
+            if (scaleTransformItem.ScaleX < 0 && scaleTransformItem.ScaleY > 0)
+            {
+                _currentItem.Left -= _currentItem.Width;
+                translateTransformItem.X += _currentItem.Width;
+            }
+            if (scaleTransformItem.ScaleX < 0 && scaleTransformItem.ScaleY < 0)
+            {
+                _currentItem.Left -= _currentItem.Width;
+                _currentItem.Top -= _currentItem.Height;
+                scaleTransformItem.ScaleX = 1;
+                scaleTransformItem.ScaleY = 1;
+            }
+            if (scaleTransformItem.ScaleX > 0 && scaleTransformItem.ScaleY < 0)
+            {
+                _currentItem.Top -= _currentItem.Height;
+                translateTransformItem.Y += _currentItem.Height;
+            }
         }
     }
 }
