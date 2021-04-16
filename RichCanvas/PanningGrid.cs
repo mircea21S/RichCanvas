@@ -34,13 +34,13 @@ namespace RichCanvas
             {
                 if (_highestElement != _parent.TopLimit)
                 {
-                    if (_offset.Y != 0)
+                    if (_offset.Y < 0)
                     {
                         _offset.Y = (TopLimit - _parent.TopLimit) * _scaleTransform.ScaleY;
                     }
                     _highestElement = _parent.TopLimit;
                 }
-                return _parent.TopLimit == 0 ? _viewport.Height : _parent.TopLimit;
+                return _parent.TopLimit == 0 ? TopLimit : _parent.TopLimit;
             }
         }
         private double LowestElement
@@ -51,7 +51,7 @@ namespace RichCanvas
                 {
                     _lowestElement = _parent.BottomLimit;
                 }
-                return _parent.BottomLimit == 0 ? 0 : _parent.BottomLimit;
+                return _parent.BottomLimit == 0 ? BottomLimit : _parent.BottomLimit;
             }
         }
         internal double TopLimit => TranslatePoint(_viewportTopLeftInitial, _parent.ItemsHost).Y;
@@ -262,12 +262,14 @@ namespace RichCanvas
                 _lastBottomOffset = 0;
             }
             _offset.Y += offset;
+            if (_offset.Y > 0 && TopLimit < HighestElement)
+            {
+                _offset.Y = 0;
+            }
         }
 
         public void AdjustScrollVertically()
         {
-            Console.WriteLine(TopLimit + " " + HighestElement);
-            Console.WriteLine(BottomLimit + " " + LowestElement);
             if (!(BottomLimit < LowestElement && TopLimit > HighestElement))
             {
                 if (BottomLimit < LowestElement)
@@ -296,18 +298,81 @@ namespace RichCanvas
             }
             ScrollOwner.InvalidateScrollInfo();
         }
-        internal void Pan2(double v)
+        internal void Pan2(double currentDrawingPosition)
         {
-            if (BottomLimit < v)
+            if (TopLimit > HighestElement && BottomLimit < LowestElement)
             {
-                _lastBottomOffset = _offset.Y;
-                var y = Math.Abs(v - BottomLimit) * _scaleTransform.ScaleY;
-                var offset = y - Math.Abs(_lastBottomOffset);
-
-                if (v > LowestElement && offset != 0)
+                if (currentDrawingPosition < HighestElement && Math.Abs(currentDrawingPosition) != _offset.Y)
                 {
-                    SetVerticalOffset(-offset);
-                    _extent.Height = _initialExtent.Height + (-_offset.Y);
+                    var lastTopOffset = _offset.Y;
+                    _offset.Y = Math.Abs(TopLimit - currentDrawingPosition) * _scaleTransform.ScaleY;
+                    var offsetTop = _offset.Y - lastTopOffset;
+
+                    _offset.Y = Math.Abs(TopLimit - currentDrawingPosition) * _scaleTransform.ScaleY;
+                    var x = Math.Abs(LowestElement - BottomLimit) * _scaleTransform.ScaleY;
+                    _extent.Height = _initialExtent.Height + (_offset.Y + x);
+
+                    ScrollVertically(-offsetTop);
+                }
+
+                var offset = (currentDrawingPosition - LowestElement) - _lastBottomOffset;
+                _lastBottomOffset = currentDrawingPosition - LowestElement;
+
+                if (currentDrawingPosition > LowestElement && offset != 0)
+                {
+                    _offset.Y = Math.Abs(TopLimit - HighestElement) * _scaleTransform.ScaleY;
+                    var x = Math.Abs(currentDrawingPosition - BottomLimit) * _scaleTransform.ScaleY;
+                    _extent.Height = _initialExtent.Height + (_offset.Y + x);
+                    Console.WriteLine(offset);
+                    ScrollVertically(offset);
+                }
+            }
+            else
+            {
+                if (currentDrawingPosition < HighestElement && Math.Abs(currentDrawingPosition) != _offset.Y)
+                {
+                    var lastOffset = _offset.Y < 0 ? 0 : _offset.Y;
+                    _offset.Y = Math.Abs(TopLimit - currentDrawingPosition) * _scaleTransform.ScaleY;
+                    var offset = _offset.Y - lastOffset;
+                    if (BottomLimit < LowestElement)
+                    {
+                        var x = Math.Abs(LowestElement - BottomLimit) * _scaleTransform.ScaleY;
+                        _extent.Height = _initialExtent.Height + (_offset.Y + x);
+                    }
+                    else
+                    {
+                        _extent.Height = _initialExtent.Height + _offset.Y;
+                    }
+                    ScrollVertically(-offset);
+                }
+                else if (currentDrawingPosition > LowestElement)
+                {
+                    _lastBottomOffset = _offset.Y;
+                    var y = Math.Abs(currentDrawingPosition - BottomLimit) * _scaleTransform.ScaleY;
+                    var offset = y - Math.Abs(_lastBottomOffset);
+
+                    if (TopLimit > HighestElement)
+                    {
+                        if (offset != 0)
+                        {
+                            var lastOffset = _offset.Y < 0 ? 0 : _offset.Y;
+                            _offset.Y = Math.Abs(TopLimit - HighestElement) * _scaleTransform.ScaleY;
+                            var x = Math.Abs(currentDrawingPosition - BottomLimit) * _scaleTransform.ScaleY;
+                            _extent.Height = _initialExtent.Height + (_offset.Y + x);
+
+                            var offsetTop = Math.Abs(_offset.Y - lastOffset);
+                            ScrollVertically(offsetTop);
+                        }
+                    }
+                    else
+                    {
+                        if (offset != 0)
+                        {
+                            SetVerticalOffset(-offset);
+                            _extent.Height = _initialExtent.Height + (-_offset.Y);
+                            ScrollVertically(offset);
+                        }
+                    }
                 }
             }
             ScrollOwner.InvalidateScrollInfo();
@@ -333,6 +398,12 @@ namespace RichCanvas
             _offset.Y = offset * _scaleTransform.ScaleY;
             _extent.Height += scrollOffset;
             ScrollOwner.InvalidateScrollInfo();
+        }
+        internal void ResetScroll()
+        {
+            SetVerticalOffset(0);
+            UpdateExtentHeight(0);
+            ScrollOwner?.InvalidateScrollInfo();
         }
         protected override Size MeasureOverride(Size constraint)
         {
@@ -419,6 +490,12 @@ namespace RichCanvas
         {
             if ((TopLimit > HighestElement && BottomLimit < LowestElement) && !_parent.IsZooming)
             {
+                if (_offset.Y > 0)
+                {
+                    _offset.Y = Math.Abs(TopLimit - HighestElement) * _scaleTransform.ScaleY;
+                    var x = Math.Abs(LowestElement - BottomLimit) * _scaleTransform.ScaleY;
+                    _extent.Height = _initialExtent.Height + (_offset.Y + x);
+                }
                 if (Math.Round(_extent.Height - _lastExtent.Height) == 10)
                 {
                     UpdateExtentHeight(-Math.Abs(offset));
@@ -431,11 +508,11 @@ namespace RichCanvas
             }
             else
             {
-                if (_offset.Y > 0)
+                if (_offset.Y > 0 && TopLimit > HighestElement)
                 {
                     if (_extent.Height - (_offset.Y - offset) > _viewport.Height)
                     {
-                        UpdateExtentHeight(-Math.Abs((_extent.Height - (_offset.Y - offset)) - _viewport.Height));
+                        _extent.Height = _viewport.Height + _offset.Y;
                         return;
                     }
                 }

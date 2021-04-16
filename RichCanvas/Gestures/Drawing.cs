@@ -51,8 +51,19 @@ namespace RichCanvas.Gestures
             var mousePositionViewport = args.GetPosition(_context.ScrollContainer);
             if (mousePositionViewport.Y > _context.ScrollContainer.ViewportHeight)
             {
+                if (_context.TopLimit == 0)
+                {
+                    _context.TopLimit = _currentItem.Top;
+                }
                 _context.ScrollContainer.Pan2(_currentItem.Top + _currentItem.Height);
-                Console.WriteLine(_currentItem.Top + _currentItem.Height);
+            }
+            else if (mousePositionViewport.Y < 0)
+            {
+                if (_context.BottomLimit == 0)
+                {
+                    _context.BottomLimit = (_currentItem.Top - _currentItem.Height) + _currentItem.Height;
+                }
+                _context.ScrollContainer.Pan2(_currentItem.Top - _currentItem.Height);
             }
         }
         internal RichItemContainer OnMouseUp()

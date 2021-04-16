@@ -54,9 +54,14 @@ namespace RichCanvas
             get => (bool)GetValue(IsSelectingProperty);
             set => SetValue(IsSelectingProperty, value);
         }
+
         public static DependencyProperty AppliedTransformProperty = DependencyProperty.Register("AppliedTransform", typeof(Transform), typeof(RichItemsControl));
 
-        public double TopLimit { get; set; }
+        public double TopLimit
+        {
+            get;
+            set;
+        }
         public double RightLimit { get; set; }
         public double BottomLimit { get; set; }
         public double LeftLimit { get; set; }
@@ -112,7 +117,11 @@ namespace RichCanvas
             var items = Items.Cast<object>().Select(i => (RichItemContainer)ItemContainerGenerator.ContainerFromItem(i));
             BottomLimit = items.Select(c => c.Height + c.Top).Max();
             RightLimit = items.Select(c => c.Width + c.Left).Max();
-            TopLimit = items.Select(c => c.Top).Min();
+            var validElements = items.Where(c => c.Top != 0);
+            if (validElements.Count() != 0)
+            {
+                TopLimit = validElements.Select(c => c.Top).Min();
+            }
             LeftLimit = items.Select(c => c.Left).Min();
         }
 
