@@ -82,6 +82,7 @@ namespace RichCanvas
                 CaptureMouse();
             }
         }
+
         protected override void OnPreviewMouseMove(MouseEventArgs e)
         {
             if (Keyboard.IsKeyDown(Key.Space) && Mouse.LeftButton == MouseButtonState.Pressed && _parent.IsPanning)
@@ -262,10 +263,21 @@ namespace RichCanvas
                 _lastBottomOffset = 0;
             }
             _offset.Y += offset;
+
             if (_offset.Y > 0 && TopLimit < HighestElement)
             {
                 _offset.Y = 0;
             }
+            if (_offset.Y > Math.Abs((TopLimit - HighestElement) * _scaleTransform.ScaleX))
+            {
+                _offset.Y = Math.Abs((TopLimit - HighestElement) * _scaleTransform.ScaleX);
+            }
+            if (_offset.Y < 0 && Math.Abs(_offset.Y) > Math.Abs((BottomLimit - LowestElement) * _scaleTransform.ScaleX))
+            {
+                _offset.Y = (BottomLimit - LowestElement) * _scaleTransform.ScaleX;
+                _extent.Height = _initialExtent.Height + Math.Abs(_offset.Y);
+            }
+            //Console.WriteLine(_offset.Y + " " + Math.Abs(BottomLimit - LowestElement));
         }
 
         public void AdjustScrollVertically()
@@ -302,7 +314,7 @@ namespace RichCanvas
         {
             if (TopLimit > HighestElement && BottomLimit < LowestElement)
             {
-                if (currentDrawingPosition < HighestElement && Math.Abs(currentDrawingPosition) != _offset.Y)
+                if (Math.Abs(currentDrawingPosition) != _offset.Y)
                 {
                     var lastTopOffset = _offset.Y;
                     _offset.Y = Math.Abs(TopLimit - currentDrawingPosition) * _scaleTransform.ScaleY;
@@ -318,7 +330,7 @@ namespace RichCanvas
                 var offset = (currentDrawingPosition - LowestElement) - _lastBottomOffset;
                 _lastBottomOffset = currentDrawingPosition - LowestElement;
 
-                if (currentDrawingPosition > LowestElement && offset != 0)
+                if (offset != 0)
                 {
                     _offset.Y = Math.Abs(TopLimit - HighestElement) * _scaleTransform.ScaleY;
                     var x = Math.Abs(currentDrawingPosition - BottomLimit) * _scaleTransform.ScaleY;
@@ -355,12 +367,14 @@ namespace RichCanvas
                     {
                         if (offset != 0)
                         {
-                            var lastOffset = _offset.Y < 0 ? 0 : _offset.Y;
+                            var lastOffset = _extent.Height;
                             _offset.Y = Math.Abs(TopLimit - HighestElement) * _scaleTransform.ScaleY;
                             var x = Math.Abs(currentDrawingPosition - BottomLimit) * _scaleTransform.ScaleY;
                             _extent.Height = _initialExtent.Height + (_offset.Y + x);
 
-                            var offsetTop = Math.Abs(_offset.Y - lastOffset);
+                            var offsetTop = Math.Abs(_extent.Height - lastOffset);
+
+                            Console.WriteLine(offsetTop);
                             ScrollVertically(offsetTop);
                         }
                     }
@@ -377,9 +391,16 @@ namespace RichCanvas
             }
             ScrollOwner.InvalidateScrollInfo();
         }
-        internal void Pan(double offset)
+        internal void Pan(double offset, bool reverseScroll = false)
         {
-            ScrollVertically(offset);
+            if (reverseScroll)
+            {
+                ScrollVertically(-offset);
+            }
+            else
+            {
+                ScrollVertically(offset);
+            }
             if (TopLimit > HighestElement || BottomLimit < LowestElement)
             {
                 SetVerticalOffset(offset);
@@ -391,6 +412,7 @@ namespace RichCanvas
                 UpdateExtentHeight(0);
             }
             ScrollOwner.InvalidateScrollInfo();
+            Console.WriteLine(_offset.Y + " " + _extent.Height);
         }
         internal void UpdateScrollExplictly(double scrollOffset, double offset)
         {
@@ -490,12 +512,10 @@ namespace RichCanvas
         {
             if ((TopLimit > HighestElement && BottomLimit < LowestElement) && !_parent.IsZooming)
             {
-                if (_offset.Y > 0)
-                {
-                    _offset.Y = Math.Abs(TopLimit - HighestElement) * _scaleTransform.ScaleY;
-                    var x = Math.Abs(LowestElement - BottomLimit) * _scaleTransform.ScaleY;
-                    _extent.Height = _initialExtent.Height + (_offset.Y + x);
-                }
+                _offset.Y = Math.Abs(TopLimit - HighestElement) * _scaleTransform.ScaleY;
+                var x = Math.Abs(LowestElement - BottomLimit) * _scaleTransform.ScaleY;
+                _extent.Height = _initialExtent.Height + (_offset.Y + x);
+
                 if (Math.Round(_extent.Height - _lastExtent.Height) == 10)
                 {
                     UpdateExtentHeight(-Math.Abs(offset));
@@ -508,14 +528,21 @@ namespace RichCanvas
             }
             else
             {
-                if (_offset.Y > 0 && TopLimit > HighestElement)
+                //if (_offset.Y > 0 && TopLimit > HighestElement)
+                //{
+                //    if (_extent.Height - (_offset.Y - offset) > _viewport.Height)
+                //    {
+                //        _extent.Height = _viewport.Height + _offset.Y;
+                //        return;
+                //    }
+                //}
+
+                if (_offset.Y > 0 && _offset.Y < Math.Abs(TopLimit - HighestElement) * _scaleTransform.ScaleX)
                 {
-                    if (_extent.Height - (_offset.Y - offset) > _viewport.Height)
-                    {
-                        _extent.Height = _viewport.Height + _offset.Y;
-                        return;
-                    }
+                    _offset.Y = Math.Abs(TopLimit - HighestElement) * _scaleTransform.ScaleX;
+                    _extent.Height = _viewport.Height + _offset.Y;
                 }
+
                 UpdateExtentHeight(offset);
             }
         }

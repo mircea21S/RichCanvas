@@ -10,6 +10,7 @@ using System.Windows.Shapes;
 using System.Collections;
 using System.Linq;
 using System.Collections.Specialized;
+using System.Windows.Threading;
 
 namespace RichCanvas
 {
@@ -30,12 +31,12 @@ namespace RichCanvas
         private bool _isDrawing;
         private Gestures.Drawing _drawingGesture;
         private Selecting _selectingGesture;
+        private DispatcherTimer _autoPanTimer;
         internal bool HasSelections => _selections.Count > 0;
         internal RichCanvas ItemsHost => _mainPanel;
         internal PanningGrid ScrollContainer => _canvasContainer;
 
         public static DependencyProperty MousePositionProperty = DependencyProperty.Register("MousePosition", typeof(Point), typeof(RichItemsControl));
-
         public Point MousePosition
         {
             get => (Point)GetValue(MousePositionProperty);
@@ -48,6 +49,7 @@ namespace RichCanvas
             get => (Rect)GetValue(SelectionRectangleProperty);
             set => SetValue(SelectionRectangleProperty, value);
         }
+
         public static DependencyProperty IsSelectingProperty = DependencyProperty.Register("IsSelecting", typeof(bool), typeof(RichItemsControl));
         public bool IsSelecting
         {
@@ -56,24 +58,26 @@ namespace RichCanvas
         }
 
         public static DependencyProperty AppliedTransformProperty = DependencyProperty.Register("AppliedTransform", typeof(Transform), typeof(RichItemsControl));
-
-        public double TopLimit
-        {
-            get;
-            set;
-        }
-        public double RightLimit { get; set; }
-        public double BottomLimit { get; set; }
-        public double LeftLimit { get; set; }
-
-
         public Transform AppliedTransform
         {
             get => (Transform)GetValue(AppliedTransformProperty);
             set => SetValue(AppliedTransformProperty, value);
         }
 
+        public static DependencyProperty DisableAutoPanningProperty = DependencyProperty.Register("DisableAutoPanning", typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true, OnDisableAutoPanningChanged));
+        private Point _previousMousePosition;
 
+        public bool DisableAutoPanning
+        {
+            get => (bool)GetValue(DisableAutoPanningProperty);
+            set => SetValue(DisableAutoPanningProperty, value);
+        }
+
+
+        public double TopLimit { get; set; }
+        public double RightLimit { get; set; }
+        public double BottomLimit { get; set; }
+        public double LeftLimit { get; set; }
         public bool IsPanning { get; private set; }
         public bool IsZooming { get; private set; }
 
@@ -251,6 +255,66 @@ namespace RichCanvas
                 }
             }
         }
+
+        private static void OnDisableAutoPanningChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+            => ((RichItemsControl)d).OnDisableAutoPanningChanged((bool)e.NewValue);
+
+        private void OnDisableAutoPanningChanged(bool shouldDisable)
+        {
+            if (!shouldDisable)
+            {
+                if (_autoPanTimer == null)
+                {
+                    _autoPanTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(1), DispatcherPriority.Background, new EventHandler(HandleAutoPanning), Dispatcher);
+                    _autoPanTimer.Start();
+                }
+                else
+                {
+                    _autoPanTimer.Interval = TimeSpan.FromMilliseconds(1);
+                    _autoPanTimer.Start();
+                }
+            }
+        }
+
+        private void HandleAutoPanning(object sender, EventArgs e)
+        {
+            // if is drawing or moving an object
+            if (IsMouseOver && Mouse.LeftButton == MouseButtonState.Pressed && Mouse.Captured != null && _isDrawing)
+            {
+                var mousePosition = Mouse.GetPosition(ScrollContainer);
+                if (mousePosition.Y < 0)
+                {
+                    if (mousePosition == _previousMousePosition)
+                    {
+                        _drawingGesture.CurrentItem.Height += 1;
+                    }
+                    if (TopLimit > _drawingGesture.CurrentItem.Top - _drawingGesture.CurrentItem.Height)
+                    {
+                        TopLimit = _drawingGesture.CurrentItem.Top - _drawingGesture.CurrentItem.Height;
+                    }
+                    if (BottomLimit == 0)
+                    {
+                        BottomLimit = (_drawingGesture.CurrentItem.Top - _drawingGesture.CurrentItem.Height) + _drawingGesture.CurrentItem.Height;
+                    }
+                    ScrollContainer.Pan(1, true);
+                }
+                else if (mousePosition.Y > ScrollContainer.ViewportHeight)
+                {
+                    _drawingGesture.CurrentItem.Height += 1;
+                    if (BottomLimit < _drawingGesture.CurrentItem.Top + _drawingGesture.CurrentItem.Height)
+                    {
+                        BottomLimit = _drawingGesture.CurrentItem.Top + _drawingGesture.CurrentItem.Height;
+                    }
+                    if (TopLimit == 0)
+                    {
+                        TopLimit = _drawingGesture.CurrentItem.Top;
+                    }
+                    ScrollContainer.Pan(-1, true);
+                }
+                _previousMousePosition = mousePosition;
+            }
+        }
+
         private void OnDragDeltaChanged(Point point)
         {
             foreach (var item in _selections)

@@ -12,6 +12,9 @@ namespace RichCanvas.Gestures
         private readonly ScaleTransform _scaleTransform;
         private readonly List<RichItemContainer> _inView;
         private RichItemContainer _currentItem;
+
+        internal RichItemContainer CurrentItem => _currentItem;
+
         public Drawing(RichItemsControl context)
         {
             _context = context;
@@ -47,24 +50,31 @@ namespace RichCanvas.Gestures
             }
             _currentItem.Width = Math.Abs(width);
             _currentItem.Height = Math.Abs(height);
-
-            var mousePositionViewport = args.GetPosition(_context.ScrollContainer);
-            if (mousePositionViewport.Y > _context.ScrollContainer.ViewportHeight)
-            {
-                if (_context.TopLimit == 0)
-                {
-                    _context.TopLimit = _currentItem.Top;
-                }
-                _context.ScrollContainer.Pan2(_currentItem.Top + _currentItem.Height);
-            }
-            else if (mousePositionViewport.Y < 0)
-            {
-                if (_context.BottomLimit == 0)
-                {
-                    _context.BottomLimit = (_currentItem.Top - _currentItem.Height) + _currentItem.Height;
-                }
-                _context.ScrollContainer.Pan2(_currentItem.Top - _currentItem.Height);
-            }
+            //var mousePositionViewport = args.GetPosition(_context.ScrollContainer);
+            //if (mousePositionViewport.Y > _context.ScrollContainer.ViewportHeight)
+            //{
+            //    if (_context.TopLimit == 0)
+            //    {
+            //        _context.TopLimit = _currentItem.Top;
+            //    }
+            //    if (_context.BottomLimit < _currentItem.Top + _currentItem.Height)
+            //    {
+            //        _context.ScrollContainer.Pan2(_currentItem.Top + _currentItem.Height);
+            //    }
+            //}
+            //else if (mousePositionViewport.Y < 0)
+            //{
+            //    if (_context.BottomLimit == 0)
+            //    {
+            //        _context.BottomLimit = (_currentItem.Top - _currentItem.Height) + _currentItem.Height;
+            //    }
+            //    // always smaller than 0
+            //    if (_context.TopLimit > (_currentItem.Top - _currentItem.Height))
+            //    {
+            //        _context.TopLimit = _currentItem.Top - _currentItem.Height;
+            //        _context.ScrollContainer.Pan(-1);
+            //    }
+            //}
         }
         internal RichItemContainer OnMouseUp()
         {
