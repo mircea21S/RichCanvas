@@ -34,10 +34,6 @@ namespace RichCanvas
             {
                 if (_highestElement != _parent.TopLimit)
                 {
-                    if (_offset.Y < 0)
-                    {
-                        _offset.Y = (TopLimit - _parent.TopLimit) * _scaleTransform.ScaleY;
-                    }
                     _highestElement = _parent.TopLimit;
                 }
                 return _parent.TopLimit == 0 ? TopLimit : _parent.TopLimit;
@@ -113,7 +109,6 @@ namespace RichCanvas
         }
         protected override void OnPreviewMouseWheel(MouseWheelEventArgs e)
         {
-
             if (Keyboard.IsKeyDown(Key.LeftCtrl))
             {
                 var position = e.GetPosition(this);
@@ -275,9 +270,7 @@ namespace RichCanvas
             if (_offset.Y < 0 && Math.Abs(_offset.Y) > Math.Abs((BottomLimit - LowestElement) * _scaleTransform.ScaleX))
             {
                 _offset.Y = (BottomLimit - LowestElement) * _scaleTransform.ScaleX;
-                _extent.Height = _initialExtent.Height + Math.Abs(_offset.Y);
             }
-            //Console.WriteLine(_offset.Y + " " + Math.Abs(BottomLimit - LowestElement));
         }
 
         public void AdjustScrollVertically()
@@ -288,16 +281,16 @@ namespace RichCanvas
                 {
                     if (_extent.Height - _offset.Y >= _viewport.Height)
                     {
-                        _extent.Height = _viewport.Height + (Math.Abs(LowestElement - BottomLimit) * _scaleTransform.ScaleY);
+                        _extent.Height = _initialExtent.Height + (Math.Abs(LowestElement - BottomLimit) * _scaleTransform.ScaleY);
                     }
-                    _offset.Y = (TopLimit - HighestElement) * _scaleTransform.ScaleY;
+                    _offset.Y = (BottomLimit - LowestElement) * _scaleTransform.ScaleY;
                 }
                 if (TopLimit > HighestElement)
                 {
                     var offset = Math.Abs(TopLimit - HighestElement) * _scaleTransform.ScaleY;
                     if (_extent.Height - _offset.Y >= _viewport.Height)
                     {
-                        _extent.Height += offset;
+                        _extent.Height = _initialExtent.Height + offset;
                     }
                     _offset.Y = offset;
                 }
@@ -310,6 +303,7 @@ namespace RichCanvas
             }
             ScrollOwner.InvalidateScrollInfo();
         }
+
         internal void Pan2(double currentDrawingPosition)
         {
             if (TopLimit > HighestElement && BottomLimit < LowestElement)
@@ -412,15 +406,9 @@ namespace RichCanvas
                 UpdateExtentHeight(0);
             }
             ScrollOwner.InvalidateScrollInfo();
-            Console.WriteLine(_offset.Y + " " + _extent.Height);
+            Console.WriteLine("trans: " + _translateTransform.Y + " offset: " + _offset.Y + " heii: " + _extent.Height);
         }
-        internal void UpdateScrollExplictly(double scrollOffset, double offset)
-        {
-            ScrollVertically(-scrollOffset);
-            _offset.Y = offset * _scaleTransform.ScaleY;
-            _extent.Height += scrollOffset;
-            ScrollOwner.InvalidateScrollInfo();
-        }
+
         internal void ResetScroll()
         {
             SetVerticalOffset(0);
@@ -528,22 +516,20 @@ namespace RichCanvas
             }
             else
             {
-                //if (_offset.Y > 0 && TopLimit > HighestElement)
-                //{
-                //    if (_extent.Height - (_offset.Y - offset) > _viewport.Height)
-                //    {
-                //        _extent.Height = _viewport.Height + _offset.Y;
-                //        return;
-                //    }
-                //}
-
-                if (_offset.Y > 0 && _offset.Y < Math.Abs(TopLimit - HighestElement) * _scaleTransform.ScaleX)
+                if (_offset.Y > 0 && TopLimit > HighestElement)
                 {
-                    _offset.Y = Math.Abs(TopLimit - HighestElement) * _scaleTransform.ScaleX;
-                    _extent.Height = _viewport.Height + _offset.Y;
+                    if (_extent.Height - (_offset.Y - offset) > _viewport.Height)
+                    {
+                        _extent.Height = _viewport.Height + _offset.Y;
+                        return;
+                    }
+                    _extent.Height = _initialExtent.Height + _offset.Y;
+                }
+                else
+                {
+                    UpdateExtentHeight(offset);
                 }
 
-                UpdateExtentHeight(offset);
             }
         }
         private void AdjustExtentHeight(Size previousViewport)

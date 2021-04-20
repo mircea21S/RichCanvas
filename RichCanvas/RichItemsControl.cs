@@ -115,6 +115,17 @@ namespace RichCanvas
                 translateTransform.Y = 0;
             }
         }
+        internal void UpdateSelectionsLimit()
+        {
+            var selectionTopLimit = _selections.Select(c =>
+            {
+                var transformGroup = (TransformGroup)c.RenderTransform;
+                var translateTransform = (TranslateTransform)transformGroup.Children[1];
+                return c.Top + translateTransform.Y;
+            }).Min();
+            TopLimit = selectionTopLimit;
+            ScrollContainer.AdjustScrollVertically();
+        }
 
         internal void UpdateLimits()
         {
@@ -127,6 +138,7 @@ namespace RichCanvas
                 TopLimit = validElements.Select(c => c.Top).Min();
             }
             LeftLimit = items.Select(c => c.Left).Min();
+            ScrollContainer.AdjustScrollVertically();
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
@@ -246,13 +258,7 @@ namespace RichCanvas
         {
             if (Items.Count > 0)
             {
-                var previousTopLimit = TopLimit;
-                var previousBottomLimit = BottomLimit;
                 UpdateLimits();
-                if ((TopLimit != 0 && previousTopLimit != TopLimit) || (previousBottomLimit != BottomLimit && BottomLimit != _canvasContainer.ViewportHeight))
-                {
-                    _canvasContainer.AdjustScrollVertically();
-                }
             }
         }
 
@@ -279,35 +285,38 @@ namespace RichCanvas
         private void HandleAutoPanning(object sender, EventArgs e)
         {
             // if is drawing or moving an object
-            if (IsMouseOver && Mouse.LeftButton == MouseButtonState.Pressed && Mouse.Captured != null && _isDrawing)
+            if (IsMouseOver && Mouse.LeftButton == MouseButtonState.Pressed && Mouse.Captured != null)
             {
                 var mousePosition = Mouse.GetPosition(ScrollContainer);
                 if (mousePosition.Y < 0)
                 {
-                    if (mousePosition == _previousMousePosition)
+                    if (_isDrawing)
                     {
                         _drawingGesture.CurrentItem.Height += 1;
-                    }
-                    if (TopLimit > _drawingGesture.CurrentItem.Top - _drawingGesture.CurrentItem.Height)
-                    {
-                        TopLimit = _drawingGesture.CurrentItem.Top - _drawingGesture.CurrentItem.Height;
-                    }
-                    if (BottomLimit == 0)
-                    {
-                        BottomLimit = (_drawingGesture.CurrentItem.Top - _drawingGesture.CurrentItem.Height) + _drawingGesture.CurrentItem.Height;
+                        if (TopLimit > _drawingGesture.CurrentItem.Top - _drawingGesture.CurrentItem.Height)
+                        {
+                            TopLimit = _drawingGesture.CurrentItem.Top - _drawingGesture.CurrentItem.Height;
+                        }
+                        if (BottomLimit == 0)
+                        {
+                            BottomLimit = (_drawingGesture.CurrentItem.Top - _drawingGesture.CurrentItem.Height) + _drawingGesture.CurrentItem.Height;
+                        }
                     }
                     ScrollContainer.Pan(1, true);
                 }
                 else if (mousePosition.Y > ScrollContainer.ViewportHeight)
                 {
-                    _drawingGesture.CurrentItem.Height += 1;
-                    if (BottomLimit < _drawingGesture.CurrentItem.Top + _drawingGesture.CurrentItem.Height)
+                    if (_isDrawing)
                     {
-                        BottomLimit = _drawingGesture.CurrentItem.Top + _drawingGesture.CurrentItem.Height;
-                    }
-                    if (TopLimit == 0)
-                    {
-                        TopLimit = _drawingGesture.CurrentItem.Top;
+                        _drawingGesture.CurrentItem.Height += 1;
+                        if (BottomLimit < _drawingGesture.CurrentItem.Top + _drawingGesture.CurrentItem.Height)
+                        {
+                            BottomLimit = _drawingGesture.CurrentItem.Top + _drawingGesture.CurrentItem.Height;
+                        }
+                        if (TopLimit == 0)
+                        {
+                            TopLimit = _drawingGesture.CurrentItem.Top;
+                        }
                     }
                     ScrollContainer.Pan(-1, true);
                 }

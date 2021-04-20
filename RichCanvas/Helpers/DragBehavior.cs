@@ -80,6 +80,7 @@ namespace RichCanvas.Helpers
 
                 var transformGroup = (TransformGroup)container.RenderTransform;
                 var translateTransform = (TranslateTransform)transformGroup.Children[1];
+
                 if (!ItemsControl.HasSelections)
                 {
                     translateTransform.X += currentPosition.X - _initialPosition.X;
@@ -87,6 +88,11 @@ namespace RichCanvas.Helpers
                 }
 
                 DragDelta?.Invoke(new Point(currentPosition.X - _initialPosition.X, currentPosition.Y - _initialPosition.Y));
+
+                if (ItemsControl.HasSelections)
+                {
+                    ItemsControl.UpdateSelectionsLimit();
+                }
                 _initialPosition = currentPosition;
             }
         }

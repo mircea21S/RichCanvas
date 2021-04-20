@@ -50,47 +50,15 @@ namespace RichCanvas.Gestures
             }
             _currentItem.Width = Math.Abs(width);
             _currentItem.Height = Math.Abs(height);
-            //var mousePositionViewport = args.GetPosition(_context.ScrollContainer);
-            //if (mousePositionViewport.Y > _context.ScrollContainer.ViewportHeight)
-            //{
-            //    if (_context.TopLimit == 0)
-            //    {
-            //        _context.TopLimit = _currentItem.Top;
-            //    }
-            //    if (_context.BottomLimit < _currentItem.Top + _currentItem.Height)
-            //    {
-            //        _context.ScrollContainer.Pan2(_currentItem.Top + _currentItem.Height);
-            //    }
-            //}
-            //else if (mousePositionViewport.Y < 0)
-            //{
-            //    if (_context.BottomLimit == 0)
-            //    {
-            //        _context.BottomLimit = (_currentItem.Top - _currentItem.Height) + _currentItem.Height;
-            //    }
-            //    // always smaller than 0
-            //    if (_context.TopLimit > (_currentItem.Top - _currentItem.Height))
-            //    {
-            //        _context.TopLimit = _currentItem.Top - _currentItem.Height;
-            //        _context.ScrollContainer.Pan(-1);
-            //    }
-            //}
         }
         internal RichItemContainer OnMouseUp()
         {
             _currentItem.IsDrawn = true;
 
             SetItemPosition();
+            _context.UpdateLimits();
             _context.ItemsHost.InvalidateArrange();
-
-            _inView.Add(_currentItem);
-            if (_inView.Count > 0)
-            {
-                _context.BottomLimit = _inView.Select(c => c.Height + c.Top).Max();
-                _context.RightLimit = _inView.Select(c => c.Width + c.Left).Max();
-                _context.TopLimit = _inView.Select(c => c.Top).Min();
-                _context.LeftLimit = _inView.Select(c => c.Left).Min();
-            }
+          
             return _currentItem;
         }
         private void SetItemPosition()

@@ -1,8 +1,6 @@
 ﻿using RichCanvasDemo.Common;
 using RichCanvasDemo.ViewModels;
 using RichCanvasDemo.ViewModels.Base;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
