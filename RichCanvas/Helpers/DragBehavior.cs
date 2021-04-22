@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -65,9 +64,11 @@ namespace RichCanvas.Helpers
 
             translateTransform.X = 0;
             translateTransform.Y = 0;
+
             ItemsControl.UpdateSelections();
             ItemsControl.UpdateLimits();
             ItemsControl.ItemsHost.InvalidateArrange();
+
             ItemsControl.Cursor = Cursors.Arrow;
         }
 

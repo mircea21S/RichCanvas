@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -58,7 +57,7 @@ namespace RichCanvas.Gestures
             SetItemPosition();
             _context.UpdateLimits();
             _context.ItemsHost.InvalidateArrange();
-          
+
             return _currentItem;
         }
         private void SetItemPosition()

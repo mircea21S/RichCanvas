@@ -66,6 +66,7 @@ namespace RichCanvas
 
         public static DependencyProperty DisableAutoPanningProperty = DependencyProperty.Register("DisableAutoPanning", typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true, OnDisableAutoPanningChanged));
         private Point _previousMousePosition;
+        private double _selectionTopLimit;
 
         public bool DisableAutoPanning
         {
@@ -75,8 +76,14 @@ namespace RichCanvas
 
 
         public double TopLimit { get; set; }
+
+        private bool _setTopSelection;
+
         public double RightLimit { get; set; }
         public double BottomLimit { get; set; }
+
+        private bool _setBottomSelection;
+
         public double LeftLimit { get; set; }
         public bool IsPanning { get; private set; }
         public bool IsZooming { get; private set; }
@@ -114,6 +121,8 @@ namespace RichCanvas
                 translateTransform.X = 0;
                 translateTransform.Y = 0;
             }
+            _setTopSelection = false;
+            _setBottomSelection = false;
         }
         internal void UpdateSelectionsLimit()
         {
@@ -123,7 +132,31 @@ namespace RichCanvas
                 var translateTransform = (TranslateTransform)transformGroup.Children[1];
                 return c.Top + translateTransform.Y;
             }).Min();
-            TopLimit = selectionTopLimit;
+            var selectionBottomLimit = _selections.Select(c =>
+            {
+                var transformGroup = (TransformGroup)c.RenderTransform;
+                var translateTransform = (TranslateTransform)transformGroup.Children[1];
+                return c.Top + c.Height + translateTransform.Y;
+            }).Max();
+
+            if (selectionTopLimit < TopLimit)
+            {
+                TopLimit = selectionTopLimit;
+                _setTopSelection = true;
+            }
+            if (selectionBottomLimit > BottomLimit)
+            {
+                BottomLimit = selectionBottomLimit;
+                _setBottomSelection = true;
+            }
+            if (_setTopSelection)
+            {
+                TopLimit = selectionTopLimit;
+            }
+            if (_setBottomSelection)
+            {
+                BottomLimit = selectionBottomLimit;
+            }
             ScrollContainer.AdjustScrollVertically();
         }
 
@@ -290,19 +323,46 @@ namespace RichCanvas
                 var mousePosition = Mouse.GetPosition(ScrollContainer);
                 if (mousePosition.Y < 0)
                 {
-                    if (_isDrawing)
+                    if (_previousMousePosition.Y < 0)
                     {
-                        _drawingGesture.CurrentItem.Height += 1;
-                        if (TopLimit > _drawingGesture.CurrentItem.Top - _drawingGesture.CurrentItem.Height)
+                        if (_isDrawing)
                         {
-                            TopLimit = _drawingGesture.CurrentItem.Top - _drawingGesture.CurrentItem.Height;
+                            if (mousePosition.Y <= _previousMousePosition.Y)
+                            {
+                                _drawingGesture.CurrentItem.Height += 1;
+                            }
+                            else
+                            {
+                                _drawingGesture.CurrentItem.Height -= 1;
+                            }
+                            if (TopLimit > _drawingGesture.CurrentItem.Top - _drawingGesture.CurrentItem.Height)
+                            {
+                                TopLimit = _drawingGesture.CurrentItem.Top - _drawingGesture.CurrentItem.Height;
+                            }
+                            if (BottomLimit == 0)
+                            {
+                                BottomLimit = (_drawingGesture.CurrentItem.Top - _drawingGesture.CurrentItem.Height) + _drawingGesture.CurrentItem.Height;
+                            }
                         }
-                        if (BottomLimit == 0)
-                        {
-                            BottomLimit = (_drawingGesture.CurrentItem.Top - _drawingGesture.CurrentItem.Height) + _drawingGesture.CurrentItem.Height;
-                        }
+                        ScrollContainer.Pan(1, true);
                     }
-                    ScrollContainer.Pan(1, true);
+                    else
+                    {
+                        if (_isDrawing)
+                        {
+
+                            _drawingGesture.CurrentItem.Height += 1;
+                            if (TopLimit > _drawingGesture.CurrentItem.Top - _drawingGesture.CurrentItem.Height)
+                            {
+                                TopLimit = _drawingGesture.CurrentItem.Top - _drawingGesture.CurrentItem.Height;
+                            }
+                            if (BottomLimit == 0)
+                            {
+                                BottomLimit = (_drawingGesture.CurrentItem.Top - _drawingGesture.CurrentItem.Height) + _drawingGesture.CurrentItem.Height;
+                            }
+                        }
+                        ScrollContainer.Pan(1, true);
+                    }
                 }
                 else if (mousePosition.Y > ScrollContainer.ViewportHeight)
                 {
