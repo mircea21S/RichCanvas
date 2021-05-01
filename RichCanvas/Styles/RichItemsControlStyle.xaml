@@ -32,7 +32,7 @@
                                                Width="{Binding SelectionRectangle.Width, RelativeSource={RelativeSource TemplatedParent}}"
                                                Height="{Binding SelectionRectangle.Height, RelativeSource={RelativeSource TemplatedParent}}" />
                                 </Canvas>
-                                
+
                             </local:PanningGrid>
                         </ScrollViewer>
                     </Grid>

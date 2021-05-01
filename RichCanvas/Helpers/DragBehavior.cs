@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -11,7 +12,9 @@ namespace RichCanvas.Helpers
         private static Point _initialPosition;
 
         internal static RichItemsControl ItemsControl { get; set; }
+
         public static bool IsDragging { get; private set; }
+
 
         internal static DependencyProperty IsDraggingProperty = DependencyProperty.RegisterAttached("IsDragging", typeof(bool), typeof(RichItemContainer),
             new PropertyMetadata(OnIsDraggingChanged));
@@ -23,6 +26,7 @@ namespace RichCanvas.Helpers
         {
             return (bool)element.GetValue(IsDraggingProperty);
         }
+
         private static void OnIsDraggingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is RichItemContainer container)
@@ -64,10 +68,16 @@ namespace RichCanvas.Helpers
 
             translateTransform.X = 0;
             translateTransform.Y = 0;
-
-            ItemsControl.UpdateSelections();
-            ItemsControl.UpdateLimits();
             ItemsControl.ItemsHost.InvalidateArrange();
+
+            if (ItemsControl.HasSelections)
+            {
+                ItemsControl.UpdateSelections();
+            }
+            else
+            {
+                ItemsControl.AdjustScroll();
+            }
 
             ItemsControl.Cursor = Cursors.Arrow;
         }
@@ -90,10 +100,26 @@ namespace RichCanvas.Helpers
 
                 DragDelta?.Invoke(new Point(currentPosition.X - _initialPosition.X, currentPosition.Y - _initialPosition.Y));
 
+                if (container.Top + translateTransform.Y < ItemsControl.ItemsHost.BoundingBox.Top || container.Top == ItemsControl.ItemsHost.BoundingBox.Top
+                     || container.Top + translateTransform.Y + container.Height > ItemsControl.ItemsHost.BoundingBox.Height || container.Top + container.Height == ItemsControl.ItemsHost.BoundingBox.Height
+                     || container.Left + translateTransform.X < ItemsControl.ItemsHost.BoundingBox.Left || container.Left == ItemsControl.ItemsHost.BoundingBox.Left ||
+                     container.Left + translateTransform.X + container.Width > ItemsControl.ItemsHost.BoundingBox.Width || container.Left + container.Width == ItemsControl.ItemsHost.BoundingBox.Width)
+                {
+                    container.Top += translateTransform.Y;
+                    container.Left += translateTransform.X;
+                    translateTransform.X = 0;
+                    translateTransform.Y = 0;
+                    ItemsControl.ItemsHost.InvalidateMeasure();
+                }
+
+
                 if (ItemsControl.HasSelections)
                 {
-                    ItemsControl.UpdateSelectionsLimit();
+                    ItemsControl.UpdateSelections();
                 }
+
+                ItemsControl.AdjustScroll();
+
                 _initialPosition = currentPosition;
             }
         }

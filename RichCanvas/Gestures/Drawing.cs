@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -8,17 +7,11 @@ namespace RichCanvas.Gestures
     internal class Drawing
     {
         private readonly RichItemsControl _context;
-        private readonly ScaleTransform _scaleTransform;
-        private readonly List<RichItemContainer> _inView;
         private RichItemContainer _currentItem;
-
-        internal RichItemContainer CurrentItem => _currentItem;
 
         public Drawing(RichItemsControl context)
         {
             _context = context;
-            _scaleTransform = (ScaleTransform)((TransformGroup)_context.AppliedTransform).Children[0];
-            _inView = new List<RichItemContainer>();
         }
         internal void OnMouseDown(RichItemContainer container, MouseEventArgs args)
         {
@@ -50,12 +43,13 @@ namespace RichCanvas.Gestures
             _currentItem.Width = Math.Abs(width);
             _currentItem.Height = Math.Abs(height);
         }
+
+
         internal RichItemContainer OnMouseUp()
         {
             _currentItem.IsDrawn = true;
 
             SetItemPosition();
-            _context.UpdateLimits();
             _context.ItemsHost.InvalidateArrange();
 
             return _currentItem;
@@ -69,18 +63,41 @@ namespace RichCanvas.Gestures
                 _currentItem.Left -= _currentItem.Width;
                 translateTransformItem.X += _currentItem.Width;
             }
-            if (scaleTransformItem.ScaleX < 0 && scaleTransformItem.ScaleY < 0)
+            else if (scaleTransformItem.ScaleX < 0 && scaleTransformItem.ScaleY < 0)
             {
                 _currentItem.Left -= _currentItem.Width;
                 _currentItem.Top -= _currentItem.Height;
                 scaleTransformItem.ScaleX = 1;
                 scaleTransformItem.ScaleY = 1;
             }
-            if (scaleTransformItem.ScaleX > 0 && scaleTransformItem.ScaleY < 0)
+            else if (scaleTransformItem.ScaleX > 0 && scaleTransformItem.ScaleY < 0)
             {
                 _currentItem.Top -= _currentItem.Height;
                 translateTransformItem.Y += _currentItem.Height;
             }
+        }
+
+        internal void UpdateCurrentItem(int height = 0, int width = 0)
+        {
+            _currentItem.Height += height;
+            _currentItem.Width += width;
+        }
+
+        internal double GetCurrentItemTop()
+        {
+            return _currentItem.Top;
+        }
+        internal double GetCurrentItemLeft()
+        {
+            return _currentItem.Left;
+        }
+        internal double GetCurrentItemHeight()
+        {
+            return _currentItem.Height;
+        }
+        internal double GetCurrentItemWidth()
+        {
+            return _currentItem.Width;
         }
     }
 }

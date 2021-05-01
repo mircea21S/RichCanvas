@@ -36,7 +36,7 @@ namespace RichCanvas
             get => (int)GetValue(QuadrantProperty);
             set => SetValue(QuadrantProperty, value);
         }
-       
+
         internal bool IsDrawn { get; set; }
         protected override void OnMouseEnter(MouseEventArgs e)
         {

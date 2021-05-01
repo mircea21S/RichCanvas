@@ -1,17 +1,28 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace RichCanvas
 {
     public class RichCanvas : Panel
     {
+        internal Rect BoundingBox { get; private set; }
         protected override Size MeasureOverride(Size constraint)
         {
+            double minX = double.MaxValue;
+            double minY = double.MaxValue;
+            double maxX = double.MinValue;
+            double maxY = double.MinValue;
             foreach (UIElement child in Children)
             {
-                ((RichItemContainer)child).Measure(constraint);
+                var container = (RichItemContainer)child;
+                container.Measure(constraint);
+                minX = Math.Min(minX, container.Left);
+                minY = Math.Min(minY, container.Top);
+                maxX = Math.Max(maxX, container.Left + container.Width);
+                maxY = Math.Max(maxY, container.Top + container.Height);
             }
+            BoundingBox = new Rect(minX, minY, Math.Abs(maxX), Math.Abs(maxY));
             return default;
         }
         protected override Size ArrangeOverride(Size arrangeSize)
