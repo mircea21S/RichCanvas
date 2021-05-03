@@ -8,6 +8,7 @@ namespace RichCanvas.Gestures
     {
         private readonly RichItemsControl _context;
         private RichItemContainer _currentItem;
+        internal RichItemContainer CurrentItem => _currentItem;
 
         public Drawing(RichItemsControl context)
         {
@@ -50,10 +51,104 @@ namespace RichCanvas.Gestures
             _currentItem.IsDrawn = true;
 
             SetItemPosition();
+            _context.ItemsHost.InvalidateMeasure();
             _context.ItemsHost.InvalidateArrange();
 
             return _currentItem;
         }
+        internal void UpdateCurrentItem(int height = 0, int width = 0)
+        {
+            _currentItem.Height += height;
+            _currentItem.Width += width;
+        }
+
+        internal bool CheckInViewport()
+        {
+            var scaleTransformItem = (ScaleTransform)((TransformGroup)_currentItem.RenderTransform).Children[0];
+            if (scaleTransformItem.ScaleX < 0 && scaleTransformItem.ScaleY > 0)
+            {
+                var left = _currentItem.Left - _currentItem.Width;
+                if (left < _context.ItemsHost.BoundingBox.Left || left == _context.ItemsHost.BoundingBox.Left)
+                {
+                    return true;
+                }
+            }
+            else if (scaleTransformItem.ScaleX < 0 && scaleTransformItem.ScaleY < 0)
+            {
+                var left = _currentItem.Left - _currentItem.Width;
+                var top = _currentItem.Top - _currentItem.Height;
+                if (left < _context.ItemsHost.BoundingBox.Left || left == _context.ItemsHost.BoundingBox.Left || top < _context.ItemsHost.BoundingBox.Top || top == _context.ItemsHost.BoundingBox.Top)
+                {
+                    return true;
+                }
+            }
+            else if (scaleTransformItem.ScaleX > 0 && scaleTransformItem.ScaleY < 0)
+            {
+                var top = _currentItem.Top - _currentItem.Height;
+                if (top < _context.ItemsHost.BoundingBox.Top || top == _context.ItemsHost.BoundingBox.Top)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        internal double GetCurrentTop()
+        {
+            var scaleTransformItem = (ScaleTransform)((TransformGroup)_currentItem.RenderTransform).Children[0];
+
+            if (scaleTransformItem.ScaleY > 0)
+            {
+                return _currentItem.Top;
+            }
+            else
+            {
+                return _currentItem.Top - _currentItem.Height;
+            }
+        }
+
+        internal double GetCurrentLeft()
+        {
+            var scaleTransformItem = (ScaleTransform)((TransformGroup)_currentItem.RenderTransform).Children[0];
+
+            if (scaleTransformItem.ScaleX > 0)
+            {
+                return _currentItem.Left;
+            }
+            else
+            {
+                return _currentItem.Left - _currentItem.Width;
+            }
+        }
+
+        internal double GetCurrentRight()
+        {
+            var scaleTransformItem = (ScaleTransform)((TransformGroup)_currentItem.RenderTransform).Children[0];
+
+            if (scaleTransformItem.ScaleX > 0)
+            {
+                return _currentItem.Width;
+            }
+            else
+            {
+                return (_currentItem.Left - _currentItem.Width) + _currentItem.Width;
+            }
+        }
+
+        internal double GetCurrentBottom()
+        {
+            var scaleTransformItem = (ScaleTransform)((TransformGroup)_currentItem.RenderTransform).Children[0];
+
+            if (scaleTransformItem.ScaleY > 0)
+            {
+                return _currentItem.Height;
+            }
+            else
+            {
+                return (_currentItem.Top - _currentItem.Height) + _currentItem.Height;
+            }
+        }
+
         private void SetItemPosition()
         {
             var scaleTransformItem = (ScaleTransform)((TransformGroup)_currentItem.RenderTransform).Children[0];
@@ -77,27 +172,5 @@ namespace RichCanvas.Gestures
             }
         }
 
-        internal void UpdateCurrentItem(int height = 0, int width = 0)
-        {
-            _currentItem.Height += height;
-            _currentItem.Width += width;
-        }
-
-        internal double GetCurrentItemTop()
-        {
-            return _currentItem.Top;
-        }
-        internal double GetCurrentItemLeft()
-        {
-            return _currentItem.Left;
-        }
-        internal double GetCurrentItemHeight()
-        {
-            return _currentItem.Height;
-        }
-        internal double GetCurrentItemWidth()
-        {
-            return _currentItem.Width;
-        }
     }
 }

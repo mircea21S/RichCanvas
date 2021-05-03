@@ -1,5 +1,4 @@
 ﻿using RichCanvas.Gestures;
-using RichCanvas.Helpers;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,87 +24,13 @@ namespace RichCanvas
         private Point _viewportBottomRightInitial;
         private Point _viewportTopLeftInitial;
 
-        private double HighestElement
-        {
-            get
-            {
-                //if (DragBehavior.IsDragging)
-                //{
-                //    if (_parent.HasSelections)
-                //    {
-                //        return _parent.SelectionTopLimit < _parent.TopLimit ? _parent.SelectionTopLimit : _parent.TopLimit;
-                //    }
-                //    else
-                //    {
-                //        return DragBehavior.CurrentDraggingTopLimit < _parent.TopLimit ? DragBehavior.CurrentDraggingTopLimit : _parent.TopLimit;
-                //    }
-                //}
-                //return _parent.TopLimit;
-                //Console.WriteLine(_parent.ItemsHost.BoundingBox.Top);
-                return _parent.ItemsHost.BoundingBox.Top;
-            }
-        }
+        private double HighestElement => _parent.IsDrawing ? _parent.TopLimit : _parent.ItemsHost.BoundingBox.Top;
 
-        private double LowestElement
-        {
-            get
-            {
-                //if (DragBehavior.IsDragging)
-                //{
-                //    if (_parent.HasSelections)
-                //    {
-                //        return _parent.SelectionBottomLimit > _parent.BottomLimit ? _parent.SelectionBottomLimit : _parent.BottomLimit;
-                //    }
-                //    else
-                //    {
-                //        //Console.WriteLine(DragBehavior.CurrentDraggingBottomLimit + " " + _parent.BottomLimit);
-                //        return DragBehavior.CurrentDraggingBottomLimit > _parent.BottomLimit ? DragBehavior.CurrentDraggingBottomLimit : _parent.BottomLimit;
-                //    }
-                //}
-                //return _parent.BottomLimit;
-                return _parent.ItemsHost.BoundingBox.Height;
-            }
-        }
+        private double LowestElement => _parent.IsDrawing ? _parent.BottomLimit : _parent.ItemsHost.BoundingBox.Height;
 
-        private double MostLeftElement
-        {
-            get
-            {
-                //if (DragBehavior.IsDragging)
-                //{
-                //    if (_parent.HasSelections)
-                //    {
-                //        return _parent.SelectionLeftLimit < _parent.LeftLimit ? _parent.SelectionLeftLimit : _parent.LeftLimit;
-                //    }
-                //    else
-                //    {
-                //        return DragBehavior.CurrentDraggingLeftLimit < _parent.LeftLimit ? DragBehavior.CurrentDraggingLeftLimit : _parent.LeftLimit;
-                //    }
-                //}
-                //return _parent.LeftLimit;
-                return _parent.ItemsHost.BoundingBox.Left;
-            }
-        }
+        private double MostLeftElement => _parent.IsDrawing ? _parent.LeftLimit : _parent.ItemsHost.BoundingBox.Left;
 
-        private double MostRightElement
-        {
-            get
-            {
-                //if (DragBehavior.IsDragging)
-                //{
-                //    if (_parent.HasSelections)
-                //    {
-                //        return _parent.SelectionRightLimit > _parent.RightLimit ? _parent.SelectionRightLimit : _parent.RightLimit;
-                //    }
-                //    else
-                //    {
-                //        return DragBehavior.CurrentDraggingRightLimit > _parent.RightLimit ? DragBehavior.CurrentDraggingRightLimit : _parent.RightLimit;
-                //    }
-                //}
-                //return _parent.RightLimit;
-                return _parent.ItemsHost.BoundingBox.Width;
-            }
-        }
+        private double MostRightElement => _parent.IsDrawing ? _parent.RightLimit : _parent.ItemsHost.BoundingBox.Width;
 
         internal double TopOffset => Math.Abs(TopLimit - HighestElement) * _scaleTransform.ScaleY;
 
@@ -122,8 +47,6 @@ namespace RichCanvas
         internal double LeftLimit => TranslatePoint(_viewportTopLeftInitial, _parent.ItemsHost).X;
 
         internal double RightLimit => TranslatePoint(_viewportBottomRightInitial, _parent.ItemsHost).X;
-
-
 
         public bool CanHorizontallyScroll { get; set; }
 

@@ -76,8 +76,9 @@ namespace RichCanvas
         public double BottomLimit { get; set; }
         public double LeftLimit { get; set; }
         public bool IsPanning { get; private set; }
-
         public bool IsZooming { get; private set; }
+        internal bool IsDrawing => _isDrawing;
+        internal bool NeedMeasure { get; private set; }
 
         static RichItemsControl()
         {
@@ -113,6 +114,7 @@ namespace RichCanvas
         public override void OnApplyTemplate()
         {
             _mainPanel = GetTemplateChild(DrawingPanelName) as RichCanvas;
+            _mainPanel.Context = this;
 
             _canvasContainer = GetTemplateChild(CanvasContainerName) as PanningGrid;
             _canvasContainer.Initalize(this);
@@ -257,21 +259,20 @@ namespace RichCanvas
                 {
                     if (_isDrawing)
                     {
+                        NeedMeasure = false;
                         if (mousePosition.Y <= _previousMousePosition.Y)
                         {
-                            _drawingGesture.UpdateCurrentItem(1);
+                            _drawingGesture.CurrentItem.Height += 1;
+                            TopLimit = Math.Min(ItemsHost.BoundingBox.Top, _drawingGesture.GetCurrentTop());
+                            // top is not set yet so after drawing the bottom limit will become the intial top
+                            NeedMeasure = true;
+                            ItemsHost.InvalidateMeasure();
+                            BottomLimit = Math.Max(ItemsHost.BoundingBox.Height, _drawingGesture.CurrentItem.Top);
+                            Console.WriteLine(ItemsHost.BoundingBox.Height + " , " + _drawingGesture.CurrentItem.Top);
                         }
                         else
                         {
-                            _drawingGesture.UpdateCurrentItem(-1);
-                        }
-                        if (TopLimit > _drawingGesture.GetCurrentItemTop() - _drawingGesture.GetCurrentItemHeight())
-                        {
-                            TopLimit = _drawingGesture.GetCurrentItemTop() - _drawingGesture.GetCurrentItemHeight();
-                        }
-                        if (BottomLimit == 0)
-                        {
-                            BottomLimit = (_drawingGesture.GetCurrentItemTop() - _drawingGesture.GetCurrentItemHeight()) + _drawingGesture.GetCurrentItemHeight();
+                            _drawingGesture.CurrentItem.Height -= 1;
                         }
                     }
                     ScrollContainer.PanVertically(1, true);
@@ -280,24 +281,65 @@ namespace RichCanvas
                 {
                     if (_isDrawing)
                     {
+                        NeedMeasure = true;
                         if (mousePosition.Y >= _previousMousePosition.Y)
                         {
-                            _drawingGesture.UpdateCurrentItem(1);
+                            _drawingGesture.CurrentItem.Height += 1;
+                            BottomLimit = Math.Max(ItemsHost.BoundingBox.Height, _drawingGesture.GetCurrentBottom());
+                            TopLimit = Math.Min(ItemsHost.BoundingBox.Top, _drawingGesture.GetCurrentTop());
                         }
                         else
                         {
-                            _drawingGesture.UpdateCurrentItem(-1);
-                        }
-                        if (BottomLimit < _drawingGesture.GetCurrentItemTop() + _drawingGesture.GetCurrentItemHeight())
-                        {
-                            BottomLimit = _drawingGesture.GetCurrentItemTop() + _drawingGesture.GetCurrentItemHeight();
-                        }
-                        if (TopLimit == 0)
-                        {
-                            TopLimit = _drawingGesture.GetCurrentItemTop();
+                            _drawingGesture.CurrentItem.Height -= 1;
                         }
                     }
                     ScrollContainer.PanVertically(-1, true);
+                }
+                if (mousePosition.X < 0)
+                {
+                    if (_isDrawing)
+                    {
+                        NeedMeasure = false;
+                        if (mousePosition.Y <= _previousMousePosition.Y)
+                        {
+                            _drawingGesture.CurrentItem.Width += 1;
+                            LeftLimit = Math.Min(ItemsHost.BoundingBox.Left, _drawingGesture.GetCurrentLeft());
+                            // top is not set yet so after drawing the bottom limit will become the intial top
+                            RightLimit = Math.Max(ItemsHost.BoundingBox.Width, _drawingGesture.CurrentItem.Left);
+                        }
+                        else
+                        {
+                            _drawingGesture.CurrentItem.Width -= 1;
+                        }
+                    }
+                    ScrollContainer.PanHorizontally(1, true);
+                }
+                else if (mousePosition.X > ScrollContainer.ViewportWidth)
+                {
+                    if (_isDrawing)
+                    {
+                        NeedMeasure = true;
+                        if (mousePosition.Y >= _previousMousePosition.Y)
+                        {
+                            _drawingGesture.CurrentItem.Width += 1;
+                            RightLimit = Math.Max(ItemsHost.BoundingBox.Width, _drawingGesture.GetCurrentRight());
+                            LeftLimit = Math.Min(ItemsHost.BoundingBox.Left, _drawingGesture.GetCurrentLeft());
+                        }
+                        else
+                        {
+                            _drawingGesture.CurrentItem.Height -= 1;
+                        }
+                    }
+                    ScrollContainer.PanHorizontally(-1, true);
+                }
+
+                if (_isDrawing)
+                {
+                    TopLimit = Math.Min(ItemsHost.BoundingBox.Top, _drawingGesture.GetCurrentTop());
+                    BottomLimit = Math.Max(ItemsHost.BoundingBox.Height, _drawingGesture.GetCurrentBottom());
+                    RightLimit = Math.Max(ItemsHost.BoundingBox.Width, _drawingGesture.GetCurrentRight());
+                    LeftLimit = Math.Min(ItemsHost.BoundingBox.Left, _drawingGesture.GetCurrentLeft());
+                    AdjustScroll();
                 }
                 _previousMousePosition = mousePosition;
             }

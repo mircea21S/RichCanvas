@@ -7,8 +7,13 @@ namespace RichCanvas
     public class RichCanvas : Panel
     {
         internal Rect BoundingBox { get; private set; }
+        internal RichItemsControl Context { get; set; }
         protected override Size MeasureOverride(Size constraint)
         {
+            if (Context.IsDrawing && !Context.NeedMeasure)
+            {
+                return default;
+            }
             double minX = double.MaxValue;
             double minY = double.MaxValue;
             double maxX = double.MinValue;
@@ -23,6 +28,7 @@ namespace RichCanvas
                 maxY = Math.Max(maxY, container.Top + container.Height);
             }
             BoundingBox = new Rect(minX, minY, Math.Abs(maxX), Math.Abs(maxY));
+            //Console.WriteLine(BoundingBox.Height + " acum");
             return default;
         }
         protected override Size ArrangeOverride(Size arrangeSize)
