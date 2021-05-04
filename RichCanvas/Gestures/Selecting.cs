@@ -46,9 +46,6 @@ namespace RichCanvas.Gestures
 
             double width = position.X - _selectionRectangleInitialPosition.X;
             double height = position.Y - _selectionRectangleInitialPosition.Y;
-            Console.WriteLine(height + " " + scaleTransform.ScaleY);
-            //var left = _selectionRectangleInitialPosition.X;
-            //var top = _selectionRectangleInitialPosition.Y;
 
             if (width < 0 && scaleTransform.ScaleX == 1)
             {
@@ -68,16 +65,6 @@ namespace RichCanvas.Gestures
             {
                 scaleTransform.ScaleX = 1;
             }
-
-            //if (width < 0)
-            //{
-            //    left = position.X;
-            //}
-
-            //if (height < 0)
-            //{
-            //    top = position.Y;
-            //}
             Context.SelectionRectangle = new Rect(_selectionRectangleInitialPosition.X, _selectionRectangleInitialPosition.Y, Math.Abs(width), Math.Abs(height));
         }
         internal void AddSelection(RichItemContainer container)
