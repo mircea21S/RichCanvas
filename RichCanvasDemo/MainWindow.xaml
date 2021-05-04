@@ -34,7 +34,9 @@
                                      Grid.Row="1"
                                      Name="source"
                                      OnDrawEnded="RichItemsControl_OnDrawEnded"
-                                     DisableAutoPanning="False">
+                                     DisableAutoPanning="False"
+                                     AutoPanTickRate="0.9"
+                                     AutoPanSpeed="0.1">
             <richCanvas:RichItemsControl.Resources>
                 <DataTemplate DataType="{x:Type vm:Rectangle}">
                     <Rectangle Fill="Red"

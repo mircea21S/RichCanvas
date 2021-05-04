@@ -26,23 +26,31 @@ namespace RichCanvas.Gestures
             var position = args.GetPosition(_context.ItemsHost);
             var transformGroup = (TransformGroup)_currentItem.RenderTransform;
             var scaleTransform = (ScaleTransform)transformGroup.Children[0];
-            scaleTransform.ScaleX = 1;
-            scaleTransform.ScaleY = 1;
 
             double width = position.X - _currentItem.Left;
             double height = position.Y - _currentItem.Top;
 
-            if (width < 0)
+            _currentItem.Width = Math.Abs(width);
+            _currentItem.Height = Math.Abs(height);
+
+            if (width < 0 && scaleTransform.ScaleX == 1)
             {
                 scaleTransform.ScaleX = -1;
             }
 
-            if (height < 0)
+            if (height < 0 && scaleTransform.ScaleY == 1)
             {
                 scaleTransform.ScaleY = -1;
             }
-            _currentItem.Width = Math.Abs(width);
-            _currentItem.Height = Math.Abs(height);
+
+            if (height > 0 && scaleTransform.ScaleY == -1)
+            {
+                scaleTransform.ScaleY = 1;
+            }
+            if (width > 0 && scaleTransform.ScaleX == -1)
+            {
+                scaleTransform.ScaleX = 1;
+            }
         }
 
 
@@ -141,12 +149,22 @@ namespace RichCanvas.Gestures
 
             if (scaleTransformItem.ScaleY > 0)
             {
-                return _currentItem.Height;
+                return _currentItem.Height + _currentItem.Top;
             }
             else
             {
                 return (_currentItem.Top - _currentItem.Height) + _currentItem.Height;
             }
+        }
+
+        internal bool IsMeasureNeeded()
+        {
+            var scaleTransformItem = (ScaleTransform)((TransformGroup)_currentItem.RenderTransform).Children[0];
+            if (scaleTransformItem.ScaleX < 0 || scaleTransformItem.ScaleY < 0)
+            {
+                return false;
+            }
+            return true;
         }
 
         private void SetItemPosition()
