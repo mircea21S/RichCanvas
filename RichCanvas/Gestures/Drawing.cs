@@ -53,7 +53,6 @@ namespace RichCanvas.Gestures
             }
         }
 
-
         internal RichItemContainer OnMouseUp()
         {
             _currentItem.IsDrawn = true;
@@ -63,42 +62,6 @@ namespace RichCanvas.Gestures
             _context.ItemsHost.InvalidateArrange();
 
             return _currentItem;
-        }
-        internal void UpdateCurrentItem(int height = 0, int width = 0)
-        {
-            _currentItem.Height += height;
-            _currentItem.Width += width;
-        }
-
-        internal bool CheckInViewport()
-        {
-            var scaleTransformItem = (ScaleTransform)((TransformGroup)_currentItem.RenderTransform).Children[0];
-            if (scaleTransformItem.ScaleX < 0 && scaleTransformItem.ScaleY > 0)
-            {
-                var left = _currentItem.Left - _currentItem.Width;
-                if (left < _context.ItemsHost.BoundingBox.Left || left == _context.ItemsHost.BoundingBox.Left)
-                {
-                    return true;
-                }
-            }
-            else if (scaleTransformItem.ScaleX < 0 && scaleTransformItem.ScaleY < 0)
-            {
-                var left = _currentItem.Left - _currentItem.Width;
-                var top = _currentItem.Top - _currentItem.Height;
-                if (left < _context.ItemsHost.BoundingBox.Left || left == _context.ItemsHost.BoundingBox.Left || top < _context.ItemsHost.BoundingBox.Top || top == _context.ItemsHost.BoundingBox.Top)
-                {
-                    return true;
-                }
-            }
-            else if (scaleTransformItem.ScaleX > 0 && scaleTransformItem.ScaleY < 0)
-            {
-                var top = _currentItem.Top - _currentItem.Height;
-                if (top < _context.ItemsHost.BoundingBox.Top || top == _context.ItemsHost.BoundingBox.Top)
-                {
-                    return true;
-                }
-            }
-            return false;
         }
 
         internal double GetCurrentTop()

@@ -23,6 +23,8 @@ namespace RichCanvas
         private const string SelectionRectangleName = "PART_SelectionRectangle";
         private const string CanvasContainerName = "CanvasContainer";
 
+        public TransformGroup SelectionRectanlgeTransform { get; private set; }
+
         private RichCanvas _mainPanel;
         private PanningGrid _canvasContainer;
         private bool _isDrawing;
@@ -136,10 +138,20 @@ namespace RichCanvas
         }
         public override void OnApplyTemplate()
         {
-            _mainPanel = GetTemplateChild(DrawingPanelName) as RichCanvas;
+            var selectionRectangle = (Rectangle)GetTemplateChild(SelectionRectangleName);
+            selectionRectangle.RenderTransform = new TransformGroup
+            {
+                Children = new TransformCollection
+                {
+                    new ScaleTransform()
+                }
+            };
+            SelectionRectanlgeTransform = (TransformGroup)selectionRectangle.RenderTransform;
+
+            _mainPanel = (RichCanvas)GetTemplateChild(DrawingPanelName);
             _mainPanel.Context = this;
 
-            _canvasContainer = GetTemplateChild(CanvasContainerName) as PanningGrid;
+            _canvasContainer = (PanningGrid)GetTemplateChild(CanvasContainerName);
             _canvasContainer.Initalize(this);
         }
 
@@ -252,8 +264,7 @@ namespace RichCanvas
             else if (IsSelecting)
             {
                 _selectingGesture.OnMouseMove(e);
-
-                var geom = new RectangleGeometry(new Rect(SelectionRectangle.Left, SelectionRectangle.Top, SelectionRectangle.Width, SelectionRectangle.Height));
+                var geom = GetSelectionRectangleCurrentPosition();
                 _selectingGesture.UnselectAll();
 
                 VisualTreeHelper.HitTest(_mainPanel, null,
@@ -286,8 +297,8 @@ namespace RichCanvas
         {
             if (IsMouseOver && Mouse.LeftButton == MouseButtonState.Pressed && Mouse.Captured != null && !IsMouseCapturedByScrollBar() && !IsPanning)
             {
-                Console.WriteLine(AutoPanSpeed + " " + AutoPanTickRate);
                 var mousePosition = Mouse.GetPosition(ScrollContainer);
+
                 if (mousePosition.Y < 0)
                 {
                     if (_isDrawing)
@@ -303,6 +314,17 @@ namespace RichCanvas
                         else
                         {
                             _drawingGesture.CurrentItem.Height -= AutoPanSpeed;
+                        }
+                    }
+                    else if (IsSelecting)
+                    {
+                        if (mousePosition.Y <= _previousMousePosition.Y)
+                        {
+                            SelectionRectangle = new Rect(SelectionRectangle.Left, SelectionRectangle.Top, SelectionRectangle.Width, SelectionRectangle.Height + AutoPanSpeed);
+                        }
+                        else
+                        {
+                            SelectionRectangle = new Rect(SelectionRectangle.Left, SelectionRectangle.Top, SelectionRectangle.Width, SelectionRectangle.Height - AutoPanSpeed);
                         }
                     }
                     ScrollContainer.PanVertically(AutoPanSpeed, true);
@@ -323,8 +345,20 @@ namespace RichCanvas
                             _drawingGesture.CurrentItem.Height -= AutoPanSpeed;
                         }
                     }
+                    else if (IsSelecting)
+                    {
+                        if (mousePosition.Y >= _previousMousePosition.Y)
+                        {
+                            SelectionRectangle = new Rect(SelectionRectangle.Left, SelectionRectangle.Top, SelectionRectangle.Width, SelectionRectangle.Height + AutoPanSpeed);
+                        }
+                        else
+                        {
+                            SelectionRectangle = new Rect(SelectionRectangle.Left, SelectionRectangle.Top, SelectionRectangle.Width, SelectionRectangle.Height - AutoPanSpeed);
+                        }
+                    }
                     ScrollContainer.PanVertically(-AutoPanSpeed, true);
                 }
+
                 if (mousePosition.X < 0)
                 {
                     if (_isDrawing)
@@ -340,6 +374,17 @@ namespace RichCanvas
                         else
                         {
                             _drawingGesture.CurrentItem.Width -= AutoPanSpeed;
+                        }
+                    }
+                    else if (IsSelecting)
+                    {
+                        if (mousePosition.Y <= _previousMousePosition.Y)
+                        {
+                            SelectionRectangle = new Rect(SelectionRectangle.Left, SelectionRectangle.Top, SelectionRectangle.Width + AutoPanSpeed, SelectionRectangle.Height);
+                        }
+                        else
+                        {
+                            SelectionRectangle = new Rect(SelectionRectangle.Left, SelectionRectangle.Top, SelectionRectangle.Width - AutoPanSpeed, SelectionRectangle.Height);
                         }
                     }
                     ScrollContainer.PanHorizontally(AutoPanSpeed, true);
@@ -359,6 +404,18 @@ namespace RichCanvas
                         {
                             _drawingGesture.CurrentItem.Height -= AutoPanSpeed;
                         }
+                    }
+                    else if (IsSelecting)
+                    {
+                        if (mousePosition.Y >= _previousMousePosition.Y)
+                        {
+                            SelectionRectangle = new Rect(SelectionRectangle.Left, SelectionRectangle.Top, SelectionRectangle.Width + AutoPanSpeed, SelectionRectangle.Height);
+                        }
+                        else
+                        {
+                            SelectionRectangle = new Rect(SelectionRectangle.Left, SelectionRectangle.Top, SelectionRectangle.Width - AutoPanSpeed, SelectionRectangle.Height);
+                        }
+
                     }
                     ScrollContainer.PanHorizontally(-AutoPanSpeed, true);
                 }
@@ -388,6 +445,14 @@ namespace RichCanvas
         private bool IsMouseCapturedByScrollBar()
         {
             return Mouse.Captured.GetType() == typeof(Thumb) || Mouse.Captured.GetType() == typeof(RepeatButton);
+        }
+
+        private RectangleGeometry GetSelectionRectangleCurrentPosition()
+        {
+            var scaleTransform = (ScaleTransform)SelectionRectanlgeTransform.Children[0];
+            var currentSelectionTop = scaleTransform.ScaleY < 0 ? SelectionRectangle.Top - SelectionRectangle.Height : SelectionRectangle.Top;
+            var currentSelectionLeft = scaleTransform.ScaleX < 0 ? SelectionRectangle.Left - SelectionRectangle.Width : SelectionRectangle.Left;
+            return new RectangleGeometry(new Rect(currentSelectionLeft, currentSelectionTop, SelectionRectangle.Width, SelectionRectangle.Height));
         }
     }
 }

@@ -14,7 +14,7 @@ namespace RichCanvas.Gestures
         private List<RichItemContainer> _selections = new List<RichItemContainer>();
 
         internal RichItemsControl Context { get; set; }
-      
+
         internal bool HasSelections => _selections.Count > 0;
         public Selecting()
         {
@@ -41,21 +41,44 @@ namespace RichCanvas.Gestures
         internal void OnMouseMove(MouseEventArgs e)
         {
             var position = e.GetPosition(Context.ItemsHost);
+            var transformGroup = Context.SelectionRectanlgeTransform;
+            var scaleTransform = (ScaleTransform)transformGroup.Children[0];
+
             double width = position.X - _selectionRectangleInitialPosition.X;
             double height = position.Y - _selectionRectangleInitialPosition.Y;
-            var left = _selectionRectangleInitialPosition.X;
-            var top = _selectionRectangleInitialPosition.Y;
+            Console.WriteLine(height + " " + scaleTransform.ScaleY);
+            //var left = _selectionRectangleInitialPosition.X;
+            //var top = _selectionRectangleInitialPosition.Y;
 
-            if (width < 0)
+            if (width < 0 && scaleTransform.ScaleX == 1)
             {
-                left = position.X;
+                scaleTransform.ScaleX = -1;
             }
 
-            if (height < 0)
+            if (height < 0 && scaleTransform.ScaleY == 1)
             {
-                top = position.Y;
+                scaleTransform.ScaleY = -1;
             }
-            Context.SelectionRectangle = new Rect(left, top, Math.Abs(width), Math.Abs(height));
+
+            if (height > 0 && scaleTransform.ScaleY == -1)
+            {
+                scaleTransform.ScaleY = 1;
+            }
+            if (width > 0 && scaleTransform.ScaleX == -1)
+            {
+                scaleTransform.ScaleX = 1;
+            }
+
+            //if (width < 0)
+            //{
+            //    left = position.X;
+            //}
+
+            //if (height < 0)
+            //{
+            //    top = position.Y;
+            //}
+            Context.SelectionRectangle = new Rect(_selectionRectangleInitialPosition.X, _selectionRectangleInitialPosition.Y, Math.Abs(width), Math.Abs(height));
         }
         internal void AddSelection(RichItemContainer container)
         {
