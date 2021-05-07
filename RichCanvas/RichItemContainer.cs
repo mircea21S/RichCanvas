@@ -1,4 +1,5 @@
 ﻿using RichCanvas.Helpers;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -50,6 +51,11 @@ namespace RichCanvas
         {
             var intersection = hitTestParameters.HitGeometry.FillContainsWithDetail(new RectangleGeometry(new Rect(this.Left, this.Top, this.Width, this.Height)));
             return new GeometryHitTestResult(this, intersection);
+        }
+
+        internal bool IsValid()
+        {
+            return Height != 0 && Width != 0 && !double.IsNaN(Height) && !double.IsNaN(Width);
         }
     }
 }

@@ -149,7 +149,7 @@ namespace RichCanvas
             SelectionRectanlgeTransform = (TransformGroup)selectionRectangle.RenderTransform;
 
             _mainPanel = (RichCanvas)GetTemplateChild(DrawingPanelName);
-            _mainPanel.Context = this;
+            _mainPanel.ItemsOwner = this;
 
             _canvasContainer = (PanningGrid)GetTemplateChild(CanvasContainerName);
             _canvasContainer.Initalize(this);
@@ -196,18 +196,22 @@ namespace RichCanvas
                     for (int i = 0; i < this.Items.Count; i++)
                     {
                         RichItemContainer container = (RichItemContainer)this.ItemContainerGenerator.ContainerFromIndex(i);
-                        // already drawn
-                        if (container.Height != 0 && container.Width != 0)
+                        if (container != null)
                         {
-                            container.IsDrawn = true;
-                        }
+                            Console.WriteLine("aici");
+                            // already drawn
+                            if (container.IsValid())
+                            {
+                                container.IsDrawn = true;
+                            }
 
-                        if (!container.IsDrawn)
-                        {
-                            _drawingGesture.OnMouseDown(container, e);
-                            _isDrawing = true;
-                            CaptureMouse();
-                            break;
+                            if (!container.IsDrawn)
+                            {
+                                _drawingGesture.OnMouseDown(container, e);
+                                _isDrawing = true;
+                                CaptureMouse();
+                                break;
+                            }
                         }
                     }
                     if (!_isDrawing && !DragBehavior.IsDragging && !IsPanning)
@@ -227,6 +231,7 @@ namespace RichCanvas
                 _isDrawing = false;
                 var drawnItem = _drawingGesture.OnMouseUp();
                 OnDrawEnded?.Invoke(drawnItem.DataContext);
+                ItemsHost.InvalidateMeasure();
             }
             else if (!DragBehavior.IsDragging && IsSelecting)
             {

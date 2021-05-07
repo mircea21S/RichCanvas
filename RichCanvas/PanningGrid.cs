@@ -117,6 +117,7 @@ namespace RichCanvas
                 UpdateExtentWidth();
 
                 ScrollOwner.InvalidateScrollInfo();
+                _parent.ItemsHost.InvalidateMeasure();
             }
         }
         protected override Size MeasureOverride(Size constraint)
@@ -371,6 +372,7 @@ namespace RichCanvas
 
         internal void PanVertically(double offset, bool reverseScroll = false)
         {
+            _parent.ItemsHost.InvalidateMeasure();
             if (reverseScroll)
             {
                 ScrollVertically(-offset);
@@ -392,6 +394,7 @@ namespace RichCanvas
         }
         internal void PanHorizontally(double offset, bool reverseScroll = false)
         {
+            _parent.ItemsHost.InvalidateMeasure();
             if (reverseScroll)
             {
                 ScrollHorizontally(-offset);
