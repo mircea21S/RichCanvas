@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RichCanvas.Helpers;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -56,11 +57,10 @@ namespace RichCanvas
         {
             IItemContainerGenerator generator = ItemsOwner.ItemContainerGenerator;
             var pos = generator.GeneratorPositionFromIndex(0);
-            int childIndex = pos.Offset == 0 ? pos.Index : pos.Index + 1;
 
             using (generator.StartAt(pos, GeneratorDirection.Forward, true))
             {
-                for (int i = 0; i < ItemsOwner.Items.Count; i++, childIndex++)
+                for (int i = 0; i < ItemsOwner.Items.Count; i++)
                 {
                     var container = (RichItemContainer)generator.GenerateNext(out bool isNewlyRealized);
                     if (container.IsValid())
@@ -69,24 +69,14 @@ namespace RichCanvas
                         {
                             if (isNewlyRealized)
                             {
-                                //if (childIndex >= InternalChildren.Count)
-                                //{
-                                //    AddInternalChild(container);
-                                //}
-                                //else
-                                //{
                                 if (i >= InternalChildren.Count)
                                 {
-                                    Console.WriteLine("Added " + i);
                                     AddInternalChild(container);
                                 }
                                 else
                                 {
-                                    Console.WriteLine("insert " + i);
                                     InsertInternalChild(i, container);
                                 }
-
-                                //}
                             }
                         }
                     }
@@ -94,24 +84,14 @@ namespace RichCanvas
                     {
                         if (isNewlyRealized)
                         {
-                            //if (childIndex >= InternalChildren.Count)
-                            //{
-                            //    AddInternalChild(container);
-                            //}
-                            //else
-                            //{
                             if (i >= InternalChildren.Count)
                             {
-                                Console.WriteLine("Added invalid " + i);
                                 AddInternalChild(container);
                             }
                             else
                             {
-                                Console.WriteLine("insert invalid " + i);
                                 InsertInternalChild(i, container);
                             }
-
-                            //}
                         }
                     }
                     generator.PrepareItemContainer(container);
@@ -127,7 +107,8 @@ namespace RichCanvas
                 GeneratorPosition position = new GeneratorPosition(i, 0);
                 int itemIndex = generator.IndexFromGeneratorPosition(position);
                 var container = (RichItemContainer)ItemsOwner.ItemContainerGenerator.ContainerFromIndex(itemIndex);
-                if (!ContainerInViewport(container))
+                // can lose selection
+                if (!ContainerInViewport(container) && container.IsValid() && container != ItemsOwner.CurrentDrawingItem && !DragBehavior.IsDragging)
                 {
                     generator.Remove(position, 1);
                     RemoveInternalChildRange(i, 1);
@@ -137,8 +118,8 @@ namespace RichCanvas
 
         private bool ContainerInViewport(RichItemContainer container)
         {
-            return container.Top >= ItemsOwner.ScrollContainer.TopLimit && container.Left + container.Width >= ItemsOwner.ScrollContainer.LeftLimit
-                && container.Top + container.Height <= ItemsOwner.ScrollContainer.BottomLimit && container.Left + container.Width <= ItemsOwner.ScrollContainer.RightLimit;
+            return container.Top + container.Height >= ItemsOwner.ScrollContainer.TopLimit && container.Left + container.Width >= ItemsOwner.ScrollContainer.LeftLimit
+                && container.Top <= ItemsOwner.ScrollContainer.BottomLimit && container.Left <= ItemsOwner.ScrollContainer.RightLimit;
         }
     }
 }

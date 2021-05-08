@@ -104,6 +104,7 @@ namespace RichCanvas
         public bool IsZooming { get; private set; }
         internal bool IsDrawing => _isDrawing;
         internal bool NeedMeasure { get; private set; }
+        internal RichItemContainer CurrentDrawingItem => _drawingGesture.CurrentItem;
 
         static RichItemsControl()
         {
@@ -198,7 +199,6 @@ namespace RichCanvas
                         RichItemContainer container = (RichItemContainer)this.ItemContainerGenerator.ContainerFromIndex(i);
                         if (container != null)
                         {
-                            Console.WriteLine("aici");
                             // already drawn
                             if (container.IsValid())
                             {
@@ -311,14 +311,14 @@ namespace RichCanvas
                         NeedMeasure = false;
                         if (mousePosition.Y <= _previousMousePosition.Y)
                         {
-                            _drawingGesture.CurrentItem.Height += AutoPanSpeed;
+                            CurrentDrawingItem.Height += AutoPanSpeed;
                             TopLimit = Math.Min(ItemsHost.BoundingBox.Top, _drawingGesture.GetCurrentTop());
                             // top is not set yet so after drawing the bottom limit will become the intial top
-                            BottomLimit = Math.Max(ItemsHost.BoundingBox.Height, _drawingGesture.CurrentItem.Top);
+                            BottomLimit = Math.Max(ItemsHost.BoundingBox.Height, CurrentDrawingItem.Top);
                         }
                         else
                         {
-                            _drawingGesture.CurrentItem.Height -= AutoPanSpeed;
+                            CurrentDrawingItem.Height -= AutoPanSpeed;
                         }
                     }
                     else if (IsSelecting)
@@ -341,13 +341,13 @@ namespace RichCanvas
                         NeedMeasure = true;
                         if (mousePosition.Y >= _previousMousePosition.Y)
                         {
-                            _drawingGesture.CurrentItem.Height += AutoPanSpeed;
+                            CurrentDrawingItem.Height += AutoPanSpeed;
                             BottomLimit = Math.Max(ItemsHost.BoundingBox.Height, _drawingGesture.GetCurrentBottom());
                             TopLimit = Math.Min(ItemsHost.BoundingBox.Top, _drawingGesture.GetCurrentTop());
                         }
                         else
                         {
-                            _drawingGesture.CurrentItem.Height -= AutoPanSpeed;
+                            CurrentDrawingItem.Height -= AutoPanSpeed;
                         }
                     }
                     else if (IsSelecting)
@@ -371,14 +371,14 @@ namespace RichCanvas
                         NeedMeasure = false;
                         if (mousePosition.Y <= _previousMousePosition.Y)
                         {
-                            _drawingGesture.CurrentItem.Width += AutoPanSpeed;
+                            CurrentDrawingItem.Width += AutoPanSpeed;
                             LeftLimit = Math.Min(ItemsHost.BoundingBox.Left, _drawingGesture.GetCurrentLeft());
                             // top is not set yet so after drawing the bottom limit will become the intial top
-                            RightLimit = Math.Max(ItemsHost.BoundingBox.Width, _drawingGesture.CurrentItem.Left);
+                            RightLimit = Math.Max(ItemsHost.BoundingBox.Width, CurrentDrawingItem.Left);
                         }
                         else
                         {
-                            _drawingGesture.CurrentItem.Width -= AutoPanSpeed;
+                            CurrentDrawingItem.Width -= AutoPanSpeed;
                         }
                     }
                     else if (IsSelecting)
@@ -401,13 +401,13 @@ namespace RichCanvas
                         NeedMeasure = true;
                         if (mousePosition.Y >= _previousMousePosition.Y)
                         {
-                            _drawingGesture.CurrentItem.Width += AutoPanSpeed;
+                            CurrentDrawingItem.Width += AutoPanSpeed;
                             RightLimit = Math.Max(ItemsHost.BoundingBox.Width, _drawingGesture.GetCurrentRight());
                             LeftLimit = Math.Min(ItemsHost.BoundingBox.Left, _drawingGesture.GetCurrentLeft());
                         }
                         else
                         {
-                            _drawingGesture.CurrentItem.Height -= AutoPanSpeed;
+                            CurrentDrawingItem.Width -= AutoPanSpeed;
                         }
                     }
                     else if (IsSelecting)
