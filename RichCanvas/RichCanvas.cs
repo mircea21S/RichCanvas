@@ -1,5 +1,4 @@
-﻿using RichCanvas.Helpers;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -18,7 +17,6 @@ namespace RichCanvas
             {
                 return default;
             }
-
             VirtualizeItems();
 
             double minX = double.MaxValue;
@@ -36,7 +34,10 @@ namespace RichCanvas
             }
             BoundingBox = new Rect(minX, minY, Math.Abs(maxX), Math.Abs(maxY));
 
-            CleanupItems();
+            if (ItemsOwner.EnableVirtualization)
+            {
+                CleanupItems();
+            }
 
             return default;
         }
@@ -65,7 +66,7 @@ namespace RichCanvas
                     var container = (RichItemContainer)generator.GenerateNext(out bool isNewlyRealized);
                     if (container.IsValid())
                     {
-                        if (ContainerInViewport(container))
+                        if (ContainerInViewport(container) && ItemsOwner.EnableVirtualization)
                         {
                             if (isNewlyRealized)
                             {
@@ -77,6 +78,13 @@ namespace RichCanvas
                                 {
                                     InsertInternalChild(i, container);
                                 }
+                            }
+                        }
+                        else if (!ItemsOwner.EnableVirtualization)
+                        {
+                            if (isNewlyRealized)
+                            {
+                                AddInternalChild(container);
                             }
                         }
                     }

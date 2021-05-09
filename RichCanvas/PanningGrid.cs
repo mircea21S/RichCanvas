@@ -372,7 +372,10 @@ namespace RichCanvas
 
         internal void PanVertically(double offset, bool reverseScroll = false)
         {
-            _parent.ItemsHost.InvalidateMeasure();
+            if (_parent.EnableVirtualization)
+            {
+                _parent.ItemsHost.InvalidateMeasure();
+            }
 
             if (reverseScroll)
             {
@@ -395,7 +398,10 @@ namespace RichCanvas
         }
         internal void PanHorizontally(double offset, bool reverseScroll = false)
         {
-            _parent.ItemsHost.InvalidateMeasure();
+            if (_parent.EnableVirtualization)
+            {
+                _parent.ItemsHost.InvalidateMeasure();
+            }
 
             if (reverseScroll)
             {

@@ -75,13 +75,6 @@ namespace RichCanvas
 
         public static DependencyProperty AutoPanTickRateProperty = DependencyProperty.Register("AutoPanTickRate", typeof(float), typeof(RichItemsControl), new FrameworkPropertyMetadata(1f, OnAutoPanTickRateChanged));
 
-        private static void OnAutoPanTickRateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).UpdateTimerInterval();
-
-        private void UpdateTimerInterval()
-        {
-            _autoPanTimer.Interval = TimeSpan.FromMilliseconds(AutoPanTickRate);
-        }
-
         public float AutoPanTickRate
         {
             get => (float)GetValue(AutoPanTickRateProperty);
@@ -94,6 +87,14 @@ namespace RichCanvas
         {
             get => (float)GetValue(AutoPanSpeedProperty);
             set => SetValue(AutoPanSpeedProperty, value);
+        }
+
+        public static DependencyProperty EnableVirtualizationProperty = DependencyProperty.Register("EnableVirtualization", typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true));
+
+        public bool EnableVirtualization
+        {
+            get => (bool)GetValue(EnableVirtualizationProperty);
+            set => SetValue(EnableVirtualizationProperty, value);
         }
 
         public double TopLimit { get; set; }
@@ -459,6 +460,12 @@ namespace RichCanvas
             var currentSelectionTop = scaleTransform.ScaleY < 0 ? SelectionRectangle.Top - SelectionRectangle.Height : SelectionRectangle.Top;
             var currentSelectionLeft = scaleTransform.ScaleX < 0 ? SelectionRectangle.Left - SelectionRectangle.Width : SelectionRectangle.Left;
             return new RectangleGeometry(new Rect(currentSelectionLeft, currentSelectionTop, SelectionRectangle.Width, SelectionRectangle.Height));
+        }
+        private static void OnAutoPanTickRateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).UpdateTimerInterval();
+
+        private void UpdateTimerInterval()
+        {
+            _autoPanTimer.Interval = TimeSpan.FromMilliseconds(AutoPanTickRate);
         }
     }
 }
