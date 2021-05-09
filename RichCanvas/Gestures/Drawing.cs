@@ -130,6 +130,11 @@ namespace RichCanvas.Gestures
             return true;
         }
 
+        internal void Dispose()
+        {
+            _currentItem = null;
+        }
+
         private void SetItemPosition()
         {
             var scaleTransformItem = (ScaleTransform)((TransformGroup)_currentItem.RenderTransform).Children[0];

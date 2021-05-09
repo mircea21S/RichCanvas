@@ -108,7 +108,7 @@ namespace RichCanvas
                 int itemIndex = generator.IndexFromGeneratorPosition(position);
                 var container = (RichItemContainer)ItemsOwner.ItemContainerGenerator.ContainerFromIndex(itemIndex);
                 // can lose selection
-                if (!ContainerInViewport(container) && container.IsValid() && container != ItemsOwner.CurrentDrawingItem && !DragBehavior.IsDragging)
+                if (!ContainerInViewport(container) && container.IsValid() && container != ItemsOwner.CurrentDrawingItem)
                 {
                     generator.Remove(position, 1);
                     RemoveInternalChildRange(i, 1);

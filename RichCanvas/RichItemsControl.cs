@@ -231,6 +231,7 @@ namespace RichCanvas
                 _isDrawing = false;
                 var drawnItem = _drawingGesture.OnMouseUp();
                 OnDrawEnded?.Invoke(drawnItem.DataContext);
+                _drawingGesture.Dispose();
                 ItemsHost.InvalidateMeasure();
             }
             else if (!DragBehavior.IsDragging && IsSelecting)

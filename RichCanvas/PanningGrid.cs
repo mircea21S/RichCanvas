@@ -373,6 +373,7 @@ namespace RichCanvas
         internal void PanVertically(double offset, bool reverseScroll = false)
         {
             _parent.ItemsHost.InvalidateMeasure();
+
             if (reverseScroll)
             {
                 ScrollVertically(-offset);
@@ -395,6 +396,7 @@ namespace RichCanvas
         internal void PanHorizontally(double offset, bool reverseScroll = false)
         {
             _parent.ItemsHost.InvalidateMeasure();
+
             if (reverseScroll)
             {
                 ScrollHorizontally(-offset);
