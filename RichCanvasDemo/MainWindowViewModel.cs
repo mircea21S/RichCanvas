@@ -7,11 +7,18 @@ using System.Windows.Input;
 
 namespace RichCanvasDemo
 {
-    public class MainWindowViewModel
+    public class MainWindowViewModel : ObservableObject
     {
+        private bool _enableGrid;
+
         public ObservableCollection<Drawable> Items { get; }
         public ICommand DrawRectCommand { get; }
         public ICommand DrawLines { get; }
+        public bool EnableGrid
+        {
+            get => _enableGrid;
+            set => SetProperty(ref _enableGrid, value);
+        }
 
         public MainWindowViewModel()
         {
@@ -40,5 +47,6 @@ namespace RichCanvasDemo
         {
             Items.Add(new Line { Top = p.Y, Left = p.X });
         }
+
     }
 }

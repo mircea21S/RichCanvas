@@ -6,7 +6,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using System.Linq;
 using System.Windows.Threading;
 using System.Windows.Controls.Primitives;
 
@@ -32,6 +31,8 @@ namespace RichCanvas
         private Selecting _selectingGesture;
         private DispatcherTimer _autoPanTimer;
         private Point _previousMousePosition;
+        private Canvas _drawingContainerCanvas;
+        private Line[] _currentVerticalGridLines;
 
         internal bool HasSelections => _selectingGesture.HasSelections;
         internal RichCanvas ItemsHost => _mainPanel;
@@ -89,13 +90,40 @@ namespace RichCanvas
             set => SetValue(AutoPanSpeedProperty, value);
         }
 
-        public static DependencyProperty EnableVirtualizationProperty = DependencyProperty.Register("EnableVirtualization", typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true));
+        public static DependencyProperty EnableVirtualizationProperty = DependencyProperty.Register("EnableVirtualization", typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true, OnEnableVirtualizationChanged));
+
+        private static void OnEnableVirtualizationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).ItemsHost.InvalidateMeasure();
 
         public bool EnableVirtualization
         {
             get => (bool)GetValue(EnableVirtualizationProperty);
             set => SetValue(EnableVirtualizationProperty, value);
         }
+
+        public static DependencyProperty EnableGridProperty = DependencyProperty.Register("EnableGrid", typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
+
+        public bool EnableGrid
+        {
+            get => (bool)GetValue(EnableGridProperty);
+            set => SetValue(EnableGridProperty, value);
+        }
+
+        public static DependencyProperty GridSpacingProperty = DependencyProperty.Register("GridSpacing", typeof(float), typeof(RichItemsControl), new FrameworkPropertyMetadata(10f));
+
+        public float GridSpacing
+        {
+            get => (float)GetValue(GridSpacingProperty);
+            set => SetValue(GridSpacingProperty, value);
+        }
+
+        internal static readonly DependencyPropertyKey ViewportRectPropertyKey = DependencyProperty.RegisterReadOnly("ViewportRect", typeof(Rect), typeof(RichItemsControl), new FrameworkPropertyMetadata(Rect.Empty));
+        public static readonly DependencyProperty ViewportRectProperty = ViewportRectPropertyKey.DependencyProperty;
+
+        public Rect ViewportRect
+        {
+            get => (Rect)GetValue(ViewportRectProperty);
+        }
+        //scale scroll properties
 
         public double TopLimit { get; set; }
         public double RightLimit { get; set; }
@@ -155,6 +183,8 @@ namespace RichCanvas
 
             _canvasContainer = (PanningGrid)GetTemplateChild(CanvasContainerName);
             _canvasContainer.Initalize(this);
+
+            _drawingContainerCanvas = (Canvas)GetTemplateChild("containerDrawing");
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
@@ -271,7 +301,7 @@ namespace RichCanvas
             else if (IsSelecting)
             {
                 _selectingGesture.OnMouseMove(e);
-                var geom = GetSelectionRectangleCurrentPosition();
+                var geom = GetSelectionRectangleCurrentGeometry();
                 _selectingGesture.UnselectAll();
 
                 VisualTreeHelper.HitTest(_mainPanel, null,
@@ -375,7 +405,7 @@ namespace RichCanvas
                         {
                             CurrentDrawingItem.Width += AutoPanSpeed;
                             LeftLimit = Math.Min(ItemsHost.BoundingBox.Left, _drawingGesture.GetCurrentLeft());
-                            // top is not set yet so after drawing the bottom limit will become the intial top
+                            // left is not set yet so after drawing the right limit will become the intial left
                             RightLimit = Math.Max(ItemsHost.BoundingBox.Width, CurrentDrawingItem.Left);
                         }
                         else
@@ -454,7 +484,7 @@ namespace RichCanvas
             return Mouse.Captured.GetType() == typeof(Thumb) || Mouse.Captured.GetType() == typeof(RepeatButton);
         }
 
-        private RectangleGeometry GetSelectionRectangleCurrentPosition()
+        private RectangleGeometry GetSelectionRectangleCurrentGeometry()
         {
             var scaleTransform = (ScaleTransform)SelectionRectanlgeTransform.Children[0];
             var currentSelectionTop = scaleTransform.ScaleY < 0 ? SelectionRectangle.Top - SelectionRectangle.Height : SelectionRectangle.Top;

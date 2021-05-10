@@ -1,9 +1,12 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:RichCanvas">
+                    xmlns:local="clr-namespace:RichCanvas"
+                    xmlns:converters="clr-namespace:RichCanvas.Converters">
     <Style TargetType="{x:Type local:RichItemsControl}">
         <Style.Resources>
             <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+            <converters:BoolToGeometryConverter x:Key="BoolToGeometry" />
+            <converters:UIntToRectConverter x:Key="UIntToRect" />
         </Style.Resources>
         <Setter Property="Template">
             <Setter.Value>
@@ -12,12 +15,24 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
+                        <Grid.Resources>
+                            <GeometryDrawing x:Key="SmallGridGeometry"
+                                             Geometry="M0,0 L0,1 0.03,1 0.03,0.03 1,0.03 1,0 Z"
+                                             Brush="Red" />
+
+                            <DrawingBrush x:Key="SmallGridLinesDrawingBrush"
+                                          TileMode="Tile"
+                                          ViewportUnits="Absolute"
+                                          Viewport="{Binding GridSpacing, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource UIntToRect}}"
+                                          Transform="{Binding AppliedTransform, RelativeSource={RelativeSource TemplatedParent}}"
+                                          Drawing="{Binding EnableGrid, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToGeometry}, ConverterParameter={StaticResource SmallGridGeometry}}" />
+                        </Grid.Resources>
 
                         <ScrollViewer CanContentScroll="True"
                                       HorizontalScrollBarVisibility="Auto"
                                       VerticalScrollBarVisibility="Auto">
-                            <local:PanningGrid Background="AliceBlue"
-                                               x:Name="CanvasContainer">
+                            <local:PanningGrid x:Name="CanvasContainer"
+                                               Background="{StaticResource SmallGridLinesDrawingBrush}">
 
                                 <Canvas RenderTransform="{Binding AppliedTransform, RelativeSource={RelativeSource TemplatedParent}}"
                                         x:Name="containerDrawing">

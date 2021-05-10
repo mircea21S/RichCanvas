@@ -25,10 +25,19 @@
         <Button Content="Draw Rect"
                 Command="{Binding DrawRectCommand}"
                 Width="100"
+                Height="30"
                 HorizontalAlignment="Right" />
 
-        <Label Content="{Binding MousePosition, ElementName=source, Converter={StaticResource PointToStringConverter}}"
-               HorizontalAlignment="Left"></Label>
+        <StackPanel>
+            <Label Content="{Binding MousePosition, ElementName=source, Converter={StaticResource PointToStringConverter}}"
+                   HorizontalAlignment="Left"></Label>
+            <CheckBox Content="Enable Grid"
+                      IsChecked="{Binding EnableGrid, Mode=TwoWay}" />
+            <TextBox Text="{Binding GridSpacing}" 
+                     Width="100"
+                     HorizontalAlignment="Left"/>
+        </StackPanel>
+
 
         <richCanvas:RichItemsControl ItemsSource="{Binding Items}"
                                      Grid.Row="1"
@@ -36,7 +45,9 @@
                                      OnDrawEnded="RichItemsControl_OnDrawEnded"
                                      DisableAutoPanning="False"
                                      AutoPanTickRate="0.9"
-                                     AutoPanSpeed="0.1">
+                                     AutoPanSpeed="0.1"
+                                     EnableGrid="{Binding EnableGrid}"
+                                     GridSpacing="30">
             <richCanvas:RichItemsControl.Resources>
                 <DataTemplate DataType="{x:Type vm:Rectangle}">
                     <Rectangle Fill="Red"

@@ -69,7 +69,10 @@ namespace RichCanvas.Gestures
         }
         internal void AddSelection(RichItemContainer container)
         {
-            _selections.Add(container);
+            if (!container.IsSelectable)
+            {
+                _selections.Add(container);
+            }
         }
 
         internal void UnselectAll()

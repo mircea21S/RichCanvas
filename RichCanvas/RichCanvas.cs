@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RichCanvas.Helpers;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -32,7 +33,11 @@ namespace RichCanvas
                 maxX = Math.Max(maxX, container.Left + container.Width);
                 maxY = Math.Max(maxY, container.Top + container.Height);
             }
-            BoundingBox = new Rect(minX, minY, Math.Abs(maxX), Math.Abs(maxY));
+            if (InternalChildren.Count > 0)
+            {
+                BoundingBox = new Rect(minX, minY, Math.Abs(maxX), Math.Abs(maxY));
+                ItemsOwner.SetValue(RichItemsControl.ViewportRectPropertyKey, BoundingBox);
+            }
 
             if (ItemsOwner.EnableVirtualization)
             {
@@ -115,8 +120,8 @@ namespace RichCanvas
                 GeneratorPosition position = new GeneratorPosition(i, 0);
                 int itemIndex = generator.IndexFromGeneratorPosition(position);
                 var container = (RichItemContainer)ItemsOwner.ItemContainerGenerator.ContainerFromIndex(itemIndex);
-                // can lose selection
-                if (!ContainerInViewport(container) && container.IsValid() && container != ItemsOwner.CurrentDrawingItem)
+
+                if (!ContainerInViewport(container) && container.IsValid() && container != ItemsOwner.CurrentDrawingItem && !DragBehavior.IsDragging)
                 {
                     generator.Remove(position, 1);
                     RemoveInternalChildRange(i, 1);

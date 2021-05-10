@@ -110,6 +110,7 @@ namespace RichCanvas.Helpers
                     translateTransform.X = 0;
                     translateTransform.Y = 0;
                     ItemsControl.ItemsHost.InvalidateMeasure();
+                    //ItemsControl.HitTestGrid(container);
                 }
 
 

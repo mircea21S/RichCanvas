@@ -1,5 +1,4 @@
 ﻿using RichCanvas.Helpers;
-using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -31,11 +30,11 @@ namespace RichCanvas
             get => (double)GetValue(LeftProperty);
             set => SetValue(LeftProperty, value);
         }
-        public static DependencyProperty QuadrantProperty = DependencyProperty.Register("Quadrant", typeof(int), typeof(RichItemContainer));
-        public int Quadrant
+        public static DependencyProperty IsSelectableProperty = DependencyProperty.Register("IsSelectable", typeof(bool), typeof(RichItemContainer), new FrameworkPropertyMetadata(false));
+        public bool IsSelectable
         {
-            get => (int)GetValue(QuadrantProperty);
-            set => SetValue(QuadrantProperty, value);
+            get => (bool)GetValue(IsSelectableProperty);
+            set => SetValue(IsSelectableProperty, value);
         }
 
         internal bool IsDrawn { get; set; }
