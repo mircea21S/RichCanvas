@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:RichCanvasDemo"
         xmlns:richCanvas="clr-namespace:RichCanvas;assembly=RichCanvas"
         xmlns:vm="clr-namespace:RichCanvasDemo.ViewModels"
+        xmlns:converters="clr-namespace:RichCanvasDemo.Converters"
         mc:Ignorable="d"
         Title="MainWindow"
         Height="450"
@@ -16,38 +17,57 @@
     <Window.Resources>
         <local:DebugConverter x:Key="DebugConverter" />
         <local:PointToStringConverter x:Key="PointToStringConverter" />
+        <converters:StringToFloatConverter x:Key="StringToFloatConverter" />
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
         <Button Content="Draw Rect"
                 Command="{Binding DrawRectCommand}"
                 Width="100"
                 Height="30"
-                HorizontalAlignment="Right" />
+                HorizontalAlignment="Right"
+                Grid.Column="3" />
 
-        <StackPanel>
+        <StackPanel Width="200">
             <Label Content="{Binding MousePosition, ElementName=source, Converter={StaticResource PointToStringConverter}}"
                    HorizontalAlignment="Left"></Label>
             <CheckBox Content="Enable Grid"
                       IsChecked="{Binding EnableGrid, Mode=TwoWay}" />
-            <TextBox Text="{Binding GridSpacing}" 
+            <TextBlock Text="Grid spacing value" />
+            <TextBox Text="{Binding GridSpacing, Mode=TwoWay}"
                      Width="100"
-                     HorizontalAlignment="Left"/>
+                     HorizontalAlignment="Left" />
+        </StackPanel>
+        <StackPanel Grid.Column="1">
+            <TextBlock Text="Number of elements" />
+            <TextBox Text="{Binding ElementsCount, Mode=TwoWay}">
+
+            </TextBox>
+            <Button Content="Generate"
+                    Width="100"
+                    Height="30"
+                    Command="{Binding GenerateElements}" />
         </StackPanel>
 
 
         <richCanvas:RichItemsControl ItemsSource="{Binding Items}"
                                      Grid.Row="1"
+                                     Grid.ColumnSpan="10"
                                      Name="source"
                                      OnDrawEnded="RichItemsControl_OnDrawEnded"
                                      DisableAutoPanning="False"
                                      AutoPanTickRate="0.9"
                                      AutoPanSpeed="0.1"
                                      EnableGrid="{Binding EnableGrid}"
-                                     GridSpacing="30">
+                                     GridSpacing="{Binding GridSpacing, Converter={StaticResource StringToFloatConverter}}">
             <richCanvas:RichItemsControl.Resources>
                 <DataTemplate DataType="{x:Type vm:Rectangle}">
                     <Rectangle Fill="Red"

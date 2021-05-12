@@ -1,6 +1,7 @@
 ﻿using RichCanvasDemo.Common;
 using RichCanvasDemo.ViewModels;
 using RichCanvasDemo.ViewModels.Base;
+using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
@@ -10,38 +11,59 @@ namespace RichCanvasDemo
     public class MainWindowViewModel : ObservableObject
     {
         private bool _enableGrid;
+        private string _gridSpacing;
+        private string _elementsCount;
 
         public ObservableCollection<Drawable> Items { get; }
         public ICommand DrawRectCommand { get; }
+        public ICommand GenerateElements { get; }
         public ICommand DrawLines { get; }
         public bool EnableGrid
         {
             get => _enableGrid;
             set => SetProperty(ref _enableGrid, value);
         }
+        public string GridSpacing
+        {
+            get => _gridSpacing;
+            set => SetProperty(ref _gridSpacing, value);
+        }
+
+        public string ElementsCount
+        {
+            get => _elementsCount;
+            set => SetProperty(ref _elementsCount, value);
+        }
 
         public MainWindowViewModel()
         {
             Items = new ObservableCollection<Drawable>();
             DrawRectCommand = new RelayCommand(OnDrawCommand);
+            GenerateElements = new RelayCommand(OnGenerateElements);
         }
+
+        private void OnGenerateElements()
+        {
+            int elementsCount = int.Parse(ElementsCount);
+            for (int i = 0; i < elementsCount; i++)
+            {
+                Random rnd = new Random();
+                double left = rnd.Next(-1000, 1000);
+                double top = rnd.Next(-1000, 1000);
+                var item = new Line
+                {
+                    Left = left,
+                    Top = top,
+                    Width = Math.Abs(left + 30),
+                    Height = Math.Abs(top + 30)
+                };
+                Items.Add(item);
+            }
+        }
+
         private void OnDrawCommand()
         {
             Items.Add(new Line());
-            //Items.Add(new Line
-            //{
-            //    Top = -10,
-            //    Left = 100,
-            //    Height = 40,
-            //    Width = 40
-            //});
-            //Items.Add(new Line
-            //{
-            //    Top = 405,
-            //    Left = 100,
-            //    Height = 40,
-            //    Width = 40
-            //});
         }
         public void DrawConnectedLine(Point p)
         {

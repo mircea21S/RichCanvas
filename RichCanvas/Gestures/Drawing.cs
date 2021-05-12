@@ -29,6 +29,7 @@ namespace RichCanvas.Gestures
 
             double width = position.X - _currentItem.Left;
             double height = position.Y - _currentItem.Top;
+            _context.NeedMeasure = false;
 
             _currentItem.Width = Math.Abs(width);
             _currentItem.Height = Math.Abs(height);
@@ -58,6 +59,7 @@ namespace RichCanvas.Gestures
             _currentItem.IsDrawn = true;
 
             SetItemPosition();
+
             _context.ItemsHost.InvalidateMeasure();
             _context.ItemsHost.InvalidateArrange();
 
@@ -98,7 +100,7 @@ namespace RichCanvas.Gestures
 
             if (scaleTransformItem.ScaleX > 0)
             {
-                return _currentItem.Width;
+                return _currentItem.Width + _currentItem.Left;
             }
             else
             {
@@ -155,6 +157,12 @@ namespace RichCanvas.Gestures
             {
                 _currentItem.Top -= _currentItem.Height;
                 translateTransformItem.Y += _currentItem.Height;
+            }
+
+            if (_context.EnableGrid)
+            {
+                _currentItem.Left = Math.Round(_currentItem.Left / _context.GridSpacing) * _context.GridSpacing;
+                _currentItem.Top = Math.Round(_currentItem.Top / _context.GridSpacing) * _context.GridSpacing;
             }
         }
 

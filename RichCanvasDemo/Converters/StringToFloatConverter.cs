@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using System.Windows.Media;
 
-namespace RichCanvas.Converters
+namespace RichCanvasDemo.Converters
 {
-    public class BoolToGeometryConverter : IValueConverter
+    public class StringToFloatConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var enableGrid = (bool)value;
-            if (enableGrid)
+            if (value != null)
             {
-                return parameter;
+                return float.Parse((string)value);
             }
-            return new GeometryDrawing(Brushes.AliceBlue, new Pen() { Brush = Brushes.AliceBlue }, new RectangleGeometry(new System.Windows.Rect(0, 0, 1, 1)));
+            return 10f;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

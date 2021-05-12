@@ -90,6 +90,7 @@ namespace RichCanvas.Gestures
             {
                 var transformGroup = (TransformGroup)_selections[i].RenderTransform;
                 var translateTransform = (TranslateTransform)transformGroup.Children[1];
+
                 _selections[i].Top += translateTransform.Y;
                 _selections[i].Left += translateTransform.X;
 

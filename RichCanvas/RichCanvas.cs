@@ -1,5 +1,6 @@
 ﻿using RichCanvas.Helpers;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -14,10 +15,11 @@ namespace RichCanvas
 
         protected override Size MeasureOverride(Size constraint)
         {
-            if (ItemsOwner.IsDrawing && !ItemsOwner.NeedMeasure)
+            if ((ItemsOwner.IsDrawing || ItemsOwner.IsSelecting || DragBehavior.IsDragging) && !ItemsOwner.NeedMeasure)
             {
                 return default;
             }
+
             VirtualizeItems();
 
             double minX = double.MaxValue;
@@ -37,6 +39,7 @@ namespace RichCanvas
             {
                 BoundingBox = new Rect(minX, minY, Math.Abs(maxX), Math.Abs(maxY));
                 ItemsOwner.SetValue(RichItemsControl.ViewportRectPropertyKey, BoundingBox);
+                ItemsOwner.AdjustScroll();
             }
 
             if (ItemsOwner.EnableVirtualization)
@@ -59,7 +62,7 @@ namespace RichCanvas
             return arrangeSize;
         }
 
-        private void VirtualizeItems()
+        internal void VirtualizeItems()
         {
             IItemContainerGenerator generator = ItemsOwner.ItemContainerGenerator;
             var pos = generator.GeneratorPositionFromIndex(0);

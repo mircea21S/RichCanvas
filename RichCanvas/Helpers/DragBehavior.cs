@@ -66,6 +66,12 @@ namespace RichCanvas.Helpers
             container.Top += translateTransform.Y;
             container.Left += translateTransform.X;
 
+            if (ItemsControl.EnableGrid)
+            {
+                container.Left = Math.Round(container.Left / ItemsControl.GridSpacing) * ItemsControl.GridSpacing;
+                container.Top = Math.Round(container.Top / ItemsControl.GridSpacing) * ItemsControl.GridSpacing;
+            }
+
             translateTransform.X = 0;
             translateTransform.Y = 0;
             ItemsControl.ItemsHost.InvalidateArrange();
@@ -110,7 +116,6 @@ namespace RichCanvas.Helpers
                     translateTransform.X = 0;
                     translateTransform.Y = 0;
                     ItemsControl.ItemsHost.InvalidateMeasure();
-                    //ItemsControl.HitTestGrid(container);
                 }
 
 
