@@ -27,6 +27,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Button Content="Draw Rect"
@@ -45,29 +46,37 @@
             <TextBox Text="{Binding GridSpacing, Mode=TwoWay}"
                      Width="100"
                      HorizontalAlignment="Left" />
+            <CheckBox Content="Enable Virtualization"
+                      IsChecked="{Binding EnableVirtualization, Mode=TwoWay}" />
         </StackPanel>
         <StackPanel Grid.Column="1">
             <TextBlock Text="Number of elements" />
-            <TextBox Text="{Binding ElementsCount, Mode=TwoWay}">
-
-            </TextBox>
+            <TextBox Text="{Binding ElementsCount, Mode=TwoWay}" />
             <Button Content="Generate"
                     Width="100"
                     Height="30"
                     Command="{Binding GenerateElements}" />
+            <TextBlock Text="{Binding Items.Count, StringFormat= '\{0\} (elements)'}" />
+            <TextBlock Text="{Binding ElementName=source, Path=VisibleElementsCount, StringFormat= '\{0\} (visible elements)'}" />
         </StackPanel>
-
+        <StackPanel Grid.Column="2"
+                    Margin="10 0 0 0">
+            <TextBlock Text="{Binding ElementName=source, Path=ViewportRect.Location, StringFormat= '\{0\} (left, top of bounding box)'}" />
+            <TextBlock Text="{Binding SelectedItems.Count, StringFormat= '\{0\} (selected items)'}" />
+        </StackPanel>
 
         <richCanvas:RichItemsControl ItemsSource="{Binding Items}"
                                      Grid.Row="1"
                                      Grid.ColumnSpan="10"
                                      Name="source"
-                                     OnDrawEnded="RichItemsControl_OnDrawEnded"
+                                     DrawingEnded="RichItemsControl_OnDrawEnded"
                                      DisableAutoPanning="False"
                                      AutoPanTickRate="0.9"
                                      AutoPanSpeed="0.1"
+                                     SelectedItems="{Binding SelectedItems}"
                                      EnableGrid="{Binding EnableGrid}"
-                                     GridSpacing="{Binding GridSpacing, Converter={StaticResource StringToFloatConverter}}">
+                                     GridSpacing="{Binding GridSpacing, Converter={StaticResource StringToFloatConverter}}"
+                                     EnableVirtualization="{Binding EnableVirtualization}">
             <richCanvas:RichItemsControl.Resources>
                 <DataTemplate DataType="{x:Type vm:Rectangle}">
                     <Rectangle Fill="Red"

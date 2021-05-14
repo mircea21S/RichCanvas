@@ -1,4 +1,5 @@
 ﻿using RichCanvas.Helpers;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -8,10 +9,6 @@ namespace RichCanvas
 {
     public class RichItemContainer : ContentControl
     {
-        static RichItemContainer()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(RichItemContainer), new FrameworkPropertyMetadata(typeof(RichItemContainer)));
-        }
         public static DependencyProperty IsSelectedProperty = DependencyProperty.Register("IsSelected", typeof(bool), typeof(RichItemContainer));
         public bool IsSelected
         {
@@ -37,7 +34,13 @@ namespace RichCanvas
             set => SetValue(IsSelectableProperty, value);
         }
 
+        static RichItemContainer()
+        {
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(RichItemContainer), new FrameworkPropertyMetadata(typeof(RichItemContainer)));
+        }
+
         internal bool IsDrawn { get; set; }
+       
         protected override void OnMouseEnter(MouseEventArgs e)
         {
             DragBehavior.SetIsDragging((RichItemContainer)e.OriginalSource, true);

@@ -1,15 +1,20 @@
 ﻿using RichCanvas.Helpers;
 using System;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 
 namespace RichCanvas
 {
     public class RichCanvas : VirtualizingPanel
     {
-        internal Rect BoundingBox { get; private set; }
+        private bool _boundingBoxInitialized;
+
+        internal double TopLimit { get; private set; } = double.PositiveInfinity;
+        internal double BottomLimit { get; private set; } = double.NegativeInfinity;
+        internal double LeftLimit { get; private set; } = double.PositiveInfinity;
+        internal double RightLimit { get; private set; } = double.NegativeInfinity;
 
         internal RichItemsControl ItemsOwner { get; set; }
 
@@ -30,15 +35,22 @@ namespace RichCanvas
             {
                 var container = (RichItemContainer)child;
                 container.Measure(constraint);
-                minX = Math.Min(minX, container.Left);
-                minY = Math.Min(minY, container.Top);
-                maxX = Math.Max(maxX, container.Left + container.Width);
-                maxY = Math.Max(maxY, container.Top + container.Height);
+                if (container.IsValid())
+                {
+                    _boundingBoxInitialized = true;
+                    minX = Math.Min(minX, container.Left);
+                    minY = Math.Min(minY, container.Top);
+                    maxX = Math.Max(maxX, container.Left + container.Width);
+                    maxY = Math.Max(maxY, container.Top + container.Height);
+                }
             }
-            if (InternalChildren.Count > 0)
+            if (_boundingBoxInitialized)
             {
-                BoundingBox = new Rect(minX, minY, Math.Abs(maxX), Math.Abs(maxY));
-                ItemsOwner.SetValue(RichItemsControl.ViewportRectPropertyKey, BoundingBox);
+                TopLimit = minY;
+                LeftLimit = minX;
+                BottomLimit = maxY;
+                RightLimit = maxX;
+                ItemsOwner.SetValue(RichItemsControl.ViewportRectPropertyKey, new Rect(LeftLimit, TopLimit, 0, 0));
                 ItemsOwner.AdjustScroll();
             }
 
@@ -46,6 +58,7 @@ namespace RichCanvas
             {
                 CleanupItems();
             }
+            ItemsOwner.VisibleElementsCount = InternalChildren.Count;
 
             return default;
         }
@@ -124,7 +137,7 @@ namespace RichCanvas
                 int itemIndex = generator.IndexFromGeneratorPosition(position);
                 var container = (RichItemContainer)ItemsOwner.ItemContainerGenerator.ContainerFromIndex(itemIndex);
 
-                if (!ContainerInViewport(container) && container.IsValid() && container != ItemsOwner.CurrentDrawingItem && !DragBehavior.IsDragging)
+                if (!ContainerInViewport(container) && container.IsValid() && container != ItemsOwner.CurrentDrawingItem && ((DragBehavior.IsDragging && Mouse.LeftButton == MouseButtonState.Released) || !DragBehavior.IsDragging))
                 {
                     generator.Remove(position, 1);
                     RemoveInternalChildRange(i, 1);

@@ -2,6 +2,7 @@
 using RichCanvasDemo.ViewModels;
 using RichCanvasDemo.ViewModels.Base;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
@@ -13,8 +14,10 @@ namespace RichCanvasDemo
         private bool _enableGrid;
         private string _gridSpacing;
         private string _elementsCount;
+        private bool _enableVirtualization;
 
         public ObservableCollection<Drawable> Items { get; }
+        public ObservableCollection<Drawable> SelectedItems { get; }
         public ICommand DrawRectCommand { get; }
         public ICommand GenerateElements { get; }
         public ICommand DrawLines { get; }
@@ -34,11 +37,17 @@ namespace RichCanvasDemo
             get => _elementsCount;
             set => SetProperty(ref _elementsCount, value);
         }
+        public bool EnableVirtualization
+        {
+            get => _enableVirtualization;
+            set => SetProperty(ref _enableVirtualization, value);
+        }
 
         public MainWindowViewModel()
         {
             Items = new ObservableCollection<Drawable>();
             DrawRectCommand = new RelayCommand(OnDrawCommand);
+            SelectedItems = new ObservableCollection<Drawable>();
             GenerateElements = new RelayCommand(OnGenerateElements);
         }
 

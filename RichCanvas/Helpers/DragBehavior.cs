@@ -51,6 +51,7 @@ namespace RichCanvas.Helpers
         private static void OnSelectedContainerClicked(object sender, MouseButtonEventArgs e)
         {
             RichItemContainer container = (RichItemContainer)sender;
+            ItemsControl.AddSelection(container);
             _initialPosition = new Point(e.GetPosition(ItemsControl.ItemsHost).X, e.GetPosition(ItemsControl.ItemsHost).Y);
             container.CaptureMouse();
             ItemsControl.Cursor = Cursors.Hand;
@@ -74,7 +75,9 @@ namespace RichCanvas.Helpers
 
             translateTransform.X = 0;
             translateTransform.Y = 0;
-            ItemsControl.ItemsHost.InvalidateArrange();
+
+            ItemsControl.NeedMeasure = true;
+            ItemsControl.ItemsHost.InvalidateMeasure();
 
             if (ItemsControl.HasSelections)
             {
@@ -84,7 +87,6 @@ namespace RichCanvas.Helpers
             {
                 ItemsControl.AdjustScroll();
             }
-
             ItemsControl.Cursor = Cursors.Arrow;
         }
 
@@ -106,15 +108,16 @@ namespace RichCanvas.Helpers
 
                 DragDelta?.Invoke(new Point(currentPosition.X - _initialPosition.X, currentPosition.Y - _initialPosition.Y));
 
-                if (container.Top + translateTransform.Y < ItemsControl.ItemsHost.BoundingBox.Top || container.Top == ItemsControl.ItemsHost.BoundingBox.Top
-                     || container.Top + translateTransform.Y + container.Height > ItemsControl.ItemsHost.BoundingBox.Height || container.Top + container.Height == ItemsControl.ItemsHost.BoundingBox.Height
-                     || container.Left + translateTransform.X < ItemsControl.ItemsHost.BoundingBox.Left || container.Left == ItemsControl.ItemsHost.BoundingBox.Left ||
-                     container.Left + translateTransform.X + container.Width > ItemsControl.ItemsHost.BoundingBox.Width || container.Left + container.Width == ItemsControl.ItemsHost.BoundingBox.Width)
+                if (container.Top + translateTransform.Y < ItemsControl.ItemsHost.TopLimit || container.Top == ItemsControl.ItemsHost.TopLimit
+                     || container.Top + translateTransform.Y + container.Height > ItemsControl.ItemsHost.BottomLimit || container.Top + container.Height == ItemsControl.ItemsHost.BottomLimit
+                     || container.Left + translateTransform.X < ItemsControl.ItemsHost.LeftLimit || container.Left == ItemsControl.ItemsHost.LeftLimit ||
+                     container.Left + translateTransform.X + container.Width > ItemsControl.ItemsHost.RightLimit || container.Left + container.Width == ItemsControl.ItemsHost.RightLimit)
                 {
                     container.Top += translateTransform.Y;
                     container.Left += translateTransform.X;
                     translateTransform.X = 0;
                     translateTransform.Y = 0;
+                    ItemsControl.NeedMeasure = true;
                     ItemsControl.ItemsHost.InvalidateMeasure();
                 }
 

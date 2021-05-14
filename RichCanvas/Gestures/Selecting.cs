@@ -33,6 +33,13 @@ namespace RichCanvas.Gestures
             }
         }
 
+        internal void Update(Point endLocation)
+        {
+            var width = Math.Abs(endLocation.X - _selectionRectangleInitialPosition.X);
+            var height = Math.Abs(endLocation.Y - _selectionRectangleInitialPosition.Y);
+            Context.SelectionRectangle = new Rect(_selectionRectangleInitialPosition.X, _selectionRectangleInitialPosition.Y, width, height);
+        }
+
         internal void OnMouseDown(MouseEventArgs e)
         {
             var position = e.GetPosition(Context.ItemsHost);
@@ -71,7 +78,15 @@ namespace RichCanvas.Gestures
         {
             if (!container.IsSelectable)
             {
-                _selections.Add(container);
+                container.IsSelected = true;
+                if (!_selections.Contains(container))
+                {
+                    _selections.Add(container);
+                    if (Context.SelectedItems != null)
+                    {
+                        Context.SelectedItems.Add(container.DataContext);
+                    }
+                }
             }
         }
 
@@ -82,6 +97,10 @@ namespace RichCanvas.Gestures
                 selection.IsSelected = false;
             }
             _selections.Clear();
+            if (Context.SelectedItems != null)
+            {
+                Context.SelectedItems.Clear();
+            }
         }
 
         internal void UpdateSelectionsPosition()

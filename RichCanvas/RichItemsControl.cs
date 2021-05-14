@@ -10,6 +10,7 @@ using System.Windows.Threading;
 using System.Windows.Controls.Primitives;
 using System.Collections.Specialized;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace RichCanvas
 {
@@ -17,9 +18,6 @@ namespace RichCanvas
     [TemplatePart(Name = SelectionRectangleName, Type = typeof(Rectangle))]
     public class RichItemsControl : ItemsControl
     {
-        public delegate void DrawEndedEventHandler(object context);
-        public event DrawEndedEventHandler OnDrawEnded;
-
         private const string DrawingPanelName = "PART_Panel";
         private const string SelectionRectangleName = "PART_SelectionRectangle";
         private const string CanvasContainerName = "CanvasContainer";
@@ -34,7 +32,7 @@ namespace RichCanvas
         private DispatcherTimer _autoPanTimer;
         private Point _previousMousePosition;
         private Canvas _drawingContainerCanvas;
-        private Line[] _currentVerticalGridLines;
+        private List<int> _currentDrawingIndexes = new List<int>();
 
         internal bool HasSelections => _selectingGesture.HasSelections;
         internal RichCanvas ItemsHost => _mainPanel;
@@ -94,7 +92,7 @@ namespace RichCanvas
 
         public static DependencyProperty EnableVirtualizationProperty = DependencyProperty.Register("EnableVirtualization", typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true, OnEnableVirtualizationChanged));
 
-        private static void OnEnableVirtualizationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).ItemsHost.InvalidateMeasure();
+        private static void OnEnableVirtualizationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).ItemsHost?.InvalidateMeasure();
 
         public bool EnableVirtualization
         {
@@ -125,7 +123,108 @@ namespace RichCanvas
         {
             get => (Rect)GetValue(ViewportRectProperty);
         }
+
+        public static DependencyProperty VisibleElementsProperty = DependencyProperty.Register("VisibleElementsCount", typeof(int), typeof(RichItemsControl));
+
+        public int VisibleElementsCount
+        {
+            get => (int)GetValue(VisibleElementsProperty);
+            set => SetValue(VisibleElementsProperty, value);
+        }
+
         //scale scroll properties
+        public static DependencyProperty MaxScaleProperty = DependencyProperty.Register("MaxScale", typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(0.1d, OnMaxScaleChanged, CoerceMaxScale));
+
+        public double MaxScale
+        {
+            get => (double)GetValue(MaxScaleProperty);
+            set => SetValue(MaxScaleProperty, value);
+        }
+
+        private static void OnMaxScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var zoom = (RichItemsControl)d;
+            zoom.CoerceValue(ScaleProperty);
+        }
+        private static object CoerceMaxScale(DependencyObject d, object value)
+        {
+            var zoom = (RichItemsControl)d;
+            var min = zoom.MinScale;
+
+            return (double)value < min ? min : value;
+        }
+
+        public static DependencyProperty MinScaleProperty = DependencyProperty.Register("MinScale", typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(0.1d, OnMinimumScaleChanged, CoerceMinimumScale));
+        public double MinScale
+        {
+            get => (double)GetValue(MinScaleProperty);
+            set => SetValue(MinScaleProperty, value);
+        }
+        private static object CoerceMinimumScale(DependencyObject d, object value)
+            => (double)value > 0 ? value : 0.1;
+
+        private static void OnMinimumScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var zoom = (RichItemsControl)d;
+            zoom.CoerceValue(MaxScaleProperty);
+            zoom.CoerceValue(ScaleProperty);
+        }
+
+        public static DependencyProperty ScaleProperty = DependencyProperty.Register("Scale", typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(1d, OnScaleChanged, ConstarainScaleToRange));
+        public double Scale
+        {
+            get => (double)GetValue(ScaleProperty);
+            set => SetValue(ScaleProperty, value);
+        }
+
+        private static object ConstarainScaleToRange(DependencyObject d, object value)
+        {
+            var itemsControl = (RichItemsControl)d;
+
+            //if (itemsControl.DisableZooming)
+            //{
+            //    return itemsControl.Scale;
+            //}
+
+            double num = (double)value;
+            double minimum = itemsControl.MinScale;
+            if (num < minimum)
+            {
+                return minimum;
+            }
+
+            double maximum = itemsControl.MaxScale;
+            if (num > maximum)
+            {
+                return maximum;
+            }
+
+            return value;
+        }
+        private static void OnScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).OverrideScale((double)e.NewValue);
+        private void OverrideScale(double newValue)
+        {
+            CoerceValue(ScaleProperty);
+            ScaleTransform.ScaleX = newValue;
+            ScaleTransform.ScaleY = newValue;
+        }
+
+        public static DependencyProperty SelectedItemsProperty = DependencyProperty.Register("SelectedItems", typeof(IList), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(IList)));
+
+        public IList SelectedItems
+        {
+            get => (IList)GetValue(SelectedItemsProperty);
+            set => SetValue(SelectedItemsProperty, value);
+        }
+
+        public static readonly RoutedEvent DrawingEndedEvent = EventManager.RegisterRoutedEvent(
+            "DrawingEnded", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(RichItemsControl));
+
+        public event RoutedEventHandler DrawingEnded
+        {
+            add { AddHandler(DrawingEndedEvent, value); }
+            remove { RemoveHandler(DrawingEndedEvent, value); }
+        }
 
         public double TopLimit { get; set; }
         public double RightLimit { get; set; }
@@ -137,6 +236,9 @@ namespace RichCanvas
         internal bool NeedMeasure { get; set; }
         internal RichItemContainer CurrentDrawingItem => _drawingGesture.CurrentItem;
 
+        protected readonly ScaleTransform ScaleTransform = new ScaleTransform();
+        protected readonly TranslateTransform TranslateTransform = new TranslateTransform();
+
         static RichItemsControl()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RichItemsControl), new FrameworkPropertyMetadata(typeof(RichItemsControl)));
@@ -147,7 +249,7 @@ namespace RichCanvas
             {
                 Children = new TransformCollection
                 {
-                    new ScaleTransform(), new TranslateTransform()
+                    ScaleTransform, TranslateTransform
                 }
             };
             DragBehavior.ItemsControl = this;
@@ -157,6 +259,8 @@ namespace RichCanvas
             };
             _drawingGesture = new Gestures.Drawing(this);
         }
+
+        internal void AddSelection(RichItemContainer container) => _selectingGesture.AddSelection(container);
         internal void UpdateSelections()
         {
             // TODO: snap all selections on release
@@ -216,7 +320,7 @@ namespace RichCanvas
             },
             IsHitTestVisible = true
         };
-        
+
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             if (Keyboard.IsKeyDown(Key.Space))
@@ -228,22 +332,22 @@ namespace RichCanvas
             {
                 if (!VisualHelper.IsScrollBarParent((DependencyObject)e.OriginalSource))
                 {
-                    for (int i = 0; i < this.Items.Count; i++)
+                    for (int i = 0; i < _currentDrawingIndexes.Count; i++)
                     {
-                        RichItemContainer container = (RichItemContainer)this.ItemContainerGenerator.ContainerFromIndex(i);
+                        RichItemContainer container = (RichItemContainer)ItemContainerGenerator.ContainerFromIndex(_currentDrawingIndexes[i]);
                         if (container != null)
                         {
-                            // already drawn
                             if (container.IsValid())
                             {
                                 container.IsDrawn = true;
+                                _currentDrawingIndexes.Remove(_currentDrawingIndexes[i]);
                             }
-
-                            if (!container.IsDrawn)
+                            else
                             {
+                                _currentDrawingIndexes.Remove(_currentDrawingIndexes[i]);
+                                CaptureMouse();
                                 _drawingGesture.OnMouseDown(container, e);
                                 _isDrawing = true;
-                                CaptureMouse();
                                 break;
                             }
                         }
@@ -263,8 +367,9 @@ namespace RichCanvas
             if (_isDrawing)
             {
                 _isDrawing = false;
+                NeedMeasure = true;
                 var drawnItem = _drawingGesture.OnMouseUp();
-                OnDrawEnded?.Invoke(drawnItem.DataContext);
+                RaiseDrawEndedEvent(drawnItem.DataContext);
                 _drawingGesture.Dispose();
 
                 ItemsHost.InvalidateMeasure();
@@ -295,10 +400,10 @@ namespace RichCanvas
                 _drawingGesture.OnMouseMove(e);
                 if (DisableAutoPanning)
                 {
-                    TopLimit = Math.Min(ItemsHost.BoundingBox.Top, _drawingGesture.GetCurrentTop());
-                    BottomLimit = Math.Max(ItemsHost.BoundingBox.Height, _drawingGesture.GetCurrentBottom());
-                    RightLimit = Math.Max(ItemsHost.BoundingBox.Width, _drawingGesture.GetCurrentRight());
-                    LeftLimit = Math.Min(ItemsHost.BoundingBox.Left, _drawingGesture.GetCurrentLeft());
+                    TopLimit = Math.Min(ItemsHost.TopLimit, _drawingGesture.GetCurrentTop());
+                    BottomLimit = Math.Max(ItemsHost.BottomLimit, _drawingGesture.GetCurrentBottom());
+                    RightLimit = Math.Max(ItemsHost.RightLimit, _drawingGesture.GetCurrentRight());
+                    LeftLimit = Math.Min(ItemsHost.LeftLimit, _drawingGesture.GetCurrentLeft());
                     AdjustScroll();
                 }
             }
@@ -311,6 +416,14 @@ namespace RichCanvas
                 VisualTreeHelper.HitTest(_mainPanel, null,
                     new HitTestResultCallback(OnHitTestResultCallback),
                     new GeometryHitTestParameters(geom));
+            }
+        }
+
+        protected override void OnItemsChanged(NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewStartingIndex != -1)
+            {
+                _currentDrawingIndexes.Add(e.NewStartingIndex);
             }
         }
 
@@ -338,34 +451,17 @@ namespace RichCanvas
         {
             if (IsMouseOver && Mouse.LeftButton == MouseButtonState.Pressed && Mouse.Captured != null && !IsMouseCapturedByScrollBar() && !IsPanning)
             {
-                var mousePosition = Mouse.GetPosition(ScrollContainer);
                 NeedMeasure = false;
+                var mousePosition = Mouse.GetPosition(ItemsHost);
                 if (mousePosition.Y < 0)
                 {
                     if (_isDrawing)
                     {
-                        if (mousePosition.Y <= _previousMousePosition.Y)
-                        {
-                            CurrentDrawingItem.Height += AutoPanSpeed;
-                            TopLimit = Math.Min(ItemsHost.BoundingBox.Top, _drawingGesture.GetCurrentTop());
-                            // top is not set yet so after drawing the bottom limit will become the intial top
-                            BottomLimit = Math.Max(ItemsHost.BoundingBox.Height, CurrentDrawingItem.Top);
-                        }
-                        else
-                        {
-                            CurrentDrawingItem.Height -= AutoPanSpeed;
-                        }
-                    }
-                    else if (IsSelecting)
-                    {
-                        if (mousePosition.Y <= _previousMousePosition.Y)
-                        {
-                            SelectionRectangle = new Rect(SelectionRectangle.Left, SelectionRectangle.Top, SelectionRectangle.Width, SelectionRectangle.Height + AutoPanSpeed);
-                        }
-                        else
-                        {
-                            SelectionRectangle = new Rect(SelectionRectangle.Left, SelectionRectangle.Top, SelectionRectangle.Width, SelectionRectangle.Height - AutoPanSpeed);
-                        }
+                        TopLimit = Math.Min(ItemsHost.TopLimit, _drawingGesture.GetCurrentTop());
+                        // top is not set yet so after drawing the bottom limit will become the intial top
+                        BottomLimit = Math.Max(ItemsHost.BottomLimit, CurrentDrawingItem.Top);
+
+                        CurrentDrawingItem.Height = Math.Abs(mousePosition.Y - CurrentDrawingItem.Top);
                     }
                     ScrollContainer.PanVertically(AutoPanSpeed, true);
                 }
@@ -373,35 +469,18 @@ namespace RichCanvas
                 {
                     if (_isDrawing)
                     {
-                        if (mousePosition.Y >= _previousMousePosition.Y)
+                        if (Items.Count == 1)
                         {
-                            CurrentDrawingItem.Height += AutoPanSpeed;
-                            BottomLimit = Math.Max(ItemsHost.BoundingBox.Height, _drawingGesture.GetCurrentBottom());
+                            TopLimit = _drawingGesture.GetCurrentTop();
+                            BottomLimit = _drawingGesture.GetCurrentBottom();
+                        }
+                        else
+                        {
+                            BottomLimit = Math.Max(ItemsHost.BottomLimit, _drawingGesture.GetCurrentBottom());
+                            TopLimit = Math.Min(ItemsHost.TopLimit, _drawingGesture.GetCurrentTop());
+                        }
 
-                            if (Items.Count == 1)
-                            {
-                                TopLimit = _drawingGesture.GetCurrentTop();
-                            }
-                            else
-                            {
-                                TopLimit = Math.Min(ItemsHost.BoundingBox.Top, _drawingGesture.GetCurrentTop());
-                            }
-                        }
-                        else
-                        {
-                            CurrentDrawingItem.Height -= AutoPanSpeed;
-                        }
-                    }
-                    else if (IsSelecting)
-                    {
-                        if (mousePosition.Y >= _previousMousePosition.Y)
-                        {
-                            SelectionRectangle = new Rect(SelectionRectangle.Left, SelectionRectangle.Top, SelectionRectangle.Width, SelectionRectangle.Height + AutoPanSpeed);
-                        }
-                        else
-                        {
-                            SelectionRectangle = new Rect(SelectionRectangle.Left, SelectionRectangle.Top, SelectionRectangle.Width, SelectionRectangle.Height - AutoPanSpeed);
-                        }
+                        CurrentDrawingItem.Height = Math.Abs(mousePosition.Y - CurrentDrawingItem.Top);
                     }
                     ScrollContainer.PanVertically(-AutoPanSpeed, true);
                 }
@@ -410,28 +489,10 @@ namespace RichCanvas
                 {
                     if (_isDrawing)
                     {
-                        if (mousePosition.Y <= _previousMousePosition.Y)
-                        {
-                            CurrentDrawingItem.Width += AutoPanSpeed;
-                            LeftLimit = Math.Min(ItemsHost.BoundingBox.Left, _drawingGesture.GetCurrentLeft());
-                            // left is not set yet so after drawing the right limit will become the intial left
-                            RightLimit = Math.Max(ItemsHost.BoundingBox.Width, CurrentDrawingItem.Left);
-                        }
-                        else
-                        {
-                            CurrentDrawingItem.Width -= AutoPanSpeed;
-                        }
-                    }
-                    else if (IsSelecting)
-                    {
-                        if (mousePosition.Y <= _previousMousePosition.Y)
-                        {
-                            SelectionRectangle = new Rect(SelectionRectangle.Left, SelectionRectangle.Top, SelectionRectangle.Width + AutoPanSpeed, SelectionRectangle.Height);
-                        }
-                        else
-                        {
-                            SelectionRectangle = new Rect(SelectionRectangle.Left, SelectionRectangle.Top, SelectionRectangle.Width - AutoPanSpeed, SelectionRectangle.Height);
-                        }
+                        LeftLimit = Math.Min(ItemsHost.LeftLimit, _drawingGesture.GetCurrentLeft());
+                        // left is not set yet so after drawing the right limit will become the intial left
+                        RightLimit = Math.Max(ItemsHost.RightLimit, CurrentDrawingItem.Left);
+                        CurrentDrawingItem.Width = Math.Abs(mousePosition.X - CurrentDrawingItem.Left);
                     }
                     ScrollContainer.PanHorizontally(AutoPanSpeed, true);
                 }
@@ -439,35 +500,17 @@ namespace RichCanvas
                 {
                     if (_isDrawing)
                     {
-                        if (mousePosition.Y >= _previousMousePosition.Y)
+                        if (Items.Count == 1)
                         {
-                            CurrentDrawingItem.Width += AutoPanSpeed;
-                            RightLimit = Math.Max(ItemsHost.BoundingBox.Width, _drawingGesture.GetCurrentRight());
-                            if (Items.Count == 1)
-                            {
-                                LeftLimit = _drawingGesture.GetCurrentLeft();
-                            }
-                            else
-                            {
-                                LeftLimit = Math.Min(ItemsHost.BoundingBox.Left, _drawingGesture.GetCurrentLeft());
-                            }
+                            LeftLimit = _drawingGesture.GetCurrentLeft();
+                            RightLimit = _drawingGesture.GetCurrentRight();
                         }
                         else
                         {
-                            CurrentDrawingItem.Width -= AutoPanSpeed;
+                            LeftLimit = Math.Min(ItemsHost.LeftLimit, _drawingGesture.GetCurrentLeft());
+                            RightLimit = Math.Max(ItemsHost.RightLimit, _drawingGesture.GetCurrentRight());
                         }
-                    }
-                    else if (IsSelecting)
-                    {
-                        if (mousePosition.Y >= _previousMousePosition.Y)
-                        {
-                            SelectionRectangle = new Rect(SelectionRectangle.Left, SelectionRectangle.Top, SelectionRectangle.Width + AutoPanSpeed, SelectionRectangle.Height);
-                        }
-                        else
-                        {
-                            SelectionRectangle = new Rect(SelectionRectangle.Left, SelectionRectangle.Top, SelectionRectangle.Width - AutoPanSpeed, SelectionRectangle.Height);
-                        }
-
+                        CurrentDrawingItem.Width = Math.Abs(mousePosition.X - CurrentDrawingItem.Left);
                     }
                     ScrollContainer.PanHorizontally(-AutoPanSpeed, true);
                 }
@@ -476,14 +519,20 @@ namespace RichCanvas
                 {
                     if (Items.Count > 1)
                     {
-                        TopLimit = Math.Min(ItemsHost.BoundingBox.Top, _drawingGesture.GetCurrentTop());
-                        BottomLimit = Math.Max(ItemsHost.BoundingBox.Height, _drawingGesture.GetCurrentBottom());
-                        RightLimit = Math.Max(ItemsHost.BoundingBox.Width, _drawingGesture.GetCurrentRight());
-                        LeftLimit = Math.Min(ItemsHost.BoundingBox.Left, _drawingGesture.GetCurrentLeft());
+                        TopLimit = Math.Min(ItemsHost.TopLimit, _drawingGesture.GetCurrentTop());
+                        BottomLimit = Math.Max(ItemsHost.BottomLimit, _drawingGesture.GetCurrentBottom());
+                        RightLimit = Math.Max(ItemsHost.RightLimit, _drawingGesture.GetCurrentRight());
+                        LeftLimit = Math.Min(ItemsHost.LeftLimit, _drawingGesture.GetCurrentLeft());
                         AdjustScroll();
                     }
                 }
                 _previousMousePosition = mousePosition;
+                if (IsSelecting)
+                {
+                    _selectingGesture.Update(mousePosition);
+                }
+                // overwrites the true from panning (virtualization disabled on autopanning = selecting + drawing)
+                NeedMeasure = false;
             }
         }
 
@@ -491,7 +540,6 @@ namespace RichCanvas
         {
             if (result.VisualHit is RichItemContainer container)
             {
-                container.IsSelected = true;
                 _selectingGesture.AddSelection(container);
             }
             return HitTestResultBehavior.Continue;
@@ -515,5 +563,11 @@ namespace RichCanvas
         {
             _autoPanTimer.Interval = TimeSpan.FromMilliseconds(AutoPanTickRate);
         }
+        private void RaiseDrawEndedEvent(object context)
+        {
+            RoutedEventArgs newEventArgs = new RoutedEventArgs(DrawingEndedEvent, context);
+            RaiseEvent(newEventArgs);
+        }
+        private Point TransformPoint(Point point) => new Point((TranslateTransform.X + point.X) / ScaleTransform.ScaleX, (TranslateTransform.Y + point.Y) / ScaleTransform.ScaleY);
     }
 }

@@ -24,13 +24,13 @@ namespace RichCanvas
         private Point _viewportBottomRightInitial;
         private Point _viewportTopLeftInitial;
 
-        private double HighestElement => _parent.IsDrawing ? _parent.TopLimit : _parent.ItemsHost.BoundingBox.Top;
+        private double HighestElement => _parent.IsDrawing ? _parent.TopLimit : _parent.ItemsHost.TopLimit;
 
-        private double LowestElement => _parent.IsDrawing ? _parent.BottomLimit : _parent.ItemsHost.BoundingBox.Height;
+        private double LowestElement => _parent.IsDrawing ? _parent.BottomLimit : _parent.ItemsHost.BottomLimit;
 
-        private double MostLeftElement => _parent.IsDrawing ? _parent.LeftLimit : _parent.ItemsHost.BoundingBox.Left;
+        private double MostLeftElement => _parent.IsDrawing ? _parent.LeftLimit : _parent.ItemsHost.LeftLimit;
 
-        private double MostRightElement => _parent.IsDrawing ? _parent.RightLimit : _parent.ItemsHost.BoundingBox.Width;
+        private double MostRightElement => _parent.IsDrawing ? _parent.RightLimit : _parent.ItemsHost.RightLimit;
 
         internal double TopOffset => Math.Abs(TopLimit - HighestElement) * _scaleTransform.ScaleY;
 
@@ -117,7 +117,11 @@ namespace RichCanvas
                 UpdateExtentWidth();
 
                 ScrollOwner.InvalidateScrollInfo();
-                _parent.ItemsHost.InvalidateMeasure();
+                if (_parent.EnableVirtualization)
+                {
+                    _parent.NeedMeasure = true;
+                    _parent.ItemsHost.InvalidateMeasure();
+                }
             }
         }
         protected override Size MeasureOverride(Size constraint)
@@ -374,6 +378,7 @@ namespace RichCanvas
         {
             if (_parent.EnableVirtualization)
             {
+                _parent.NeedMeasure = true;
                 _parent.ItemsHost.InvalidateMeasure();
             }
 
@@ -400,6 +405,7 @@ namespace RichCanvas
         {
             if (_parent.EnableVirtualization)
             {
+                _parent.NeedMeasure = true;
                 _parent.ItemsHost.InvalidateMeasure();
             }
 
@@ -426,8 +432,8 @@ namespace RichCanvas
         internal void Initalize(RichItemsControl richItemsControl)
         {
             _parent = richItemsControl;
-            _translateTransform = (TranslateTransform)((TransformGroup)richItemsControl.AppliedTransform).Children[1];
-            _scaleTransform = (ScaleTransform)((TransformGroup)richItemsControl.AppliedTransform).Children[0];
+            _translateTransform = (TranslateTransform)(richItemsControl.AppliedTransform).Children[1];
+            _scaleTransform = (ScaleTransform)(richItemsControl.AppliedTransform).Children[0];
             _zoomGesture = new Zoom(_scaleTransform, _translateTransform);
         }
 
