@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -14,16 +15,14 @@ namespace RichCanvas.Gestures
         {
             _context = context;
         }
-        internal void OnMouseDown(RichItemContainer container, MouseEventArgs args)
+        internal void OnMouseDown(RichItemContainer container, Point position)
         {
-            var position = args.GetPosition(_context.ItemsHost);
             container.Top = position.Y;
             container.Left = position.X;
             _currentItem = container;
         }
-        internal void OnMouseMove(MouseEventArgs args)
+        internal void OnMouseMove(Point position)
         {
-            var position = args.GetPosition(_context.ItemsHost);
             var transformGroup = (TransformGroup)_currentItem.RenderTransform;
             var scaleTransform = (ScaleTransform)transformGroup.Children[0];
 

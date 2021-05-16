@@ -35,6 +35,7 @@ namespace RichCanvas.Helpers
                 IsDragging = isDragging;
                 if (isDragging)
                 {
+                    //can raise routed events on container(drag started e.g)
                     container.MouseDown += OnSelectedContainerClicked;
                     container.MouseMove += OnSelectedContainerMove;
                     container.MouseUp += OnSelectedContainerReleased;
@@ -128,7 +129,6 @@ namespace RichCanvas.Helpers
                 }
 
                 ItemsControl.AdjustScroll();
-
                 _initialPosition = currentPosition;
             }
         }

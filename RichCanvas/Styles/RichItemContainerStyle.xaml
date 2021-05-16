@@ -9,7 +9,9 @@
                             BorderThickness="1"
                             Background="Transparent"
                             IsHitTestVisible="True">
-                        <ContentPresenter></ContentPresenter>
+                        <AdornerDecorator>
+                            <ContentPresenter></ContentPresenter>
+                        </AdornerDecorator>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

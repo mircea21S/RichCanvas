@@ -11,6 +11,14 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:RichItemsControl}">
+                    <ControlTemplate.Resources>
+                        <DataTemplate x:Key="HighlightAdornerStyle">
+                            <Border BorderBrush="#29A6F9"
+                                    BorderThickness="2"
+                                    SnapsToDevicePixels="True">
+                            </Border>
+                        </DataTemplate>
+                    </ControlTemplate.Resources>
                     <Grid Background="{TemplateBinding Background}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />

@@ -1,9 +1,7 @@
 ﻿using RichCanvas.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Media;
 
 namespace RichCanvas.Gestures
@@ -12,12 +10,13 @@ namespace RichCanvas.Gestures
     {
         private Point _selectionRectangleInitialPosition;
         private List<RichItemContainer> _selections = new List<RichItemContainer>();
-
-        internal RichItemsControl Context { get; set; }
+        private RichItemsControl _context;
 
         internal bool HasSelections => _selections.Count > 0;
-        public Selecting()
+
+        public Selecting(RichItemsControl context)
         {
+            _context = context;
             DragBehavior.DragDelta += OnDragDeltaChanged;
         }
 
@@ -37,18 +36,17 @@ namespace RichCanvas.Gestures
         {
             var width = Math.Abs(endLocation.X - _selectionRectangleInitialPosition.X);
             var height = Math.Abs(endLocation.Y - _selectionRectangleInitialPosition.Y);
-            Context.SelectionRectangle = new Rect(_selectionRectangleInitialPosition.X, _selectionRectangleInitialPosition.Y, width, height);
+            _context.SelectionRectangle = new Rect(_selectionRectangleInitialPosition.X, _selectionRectangleInitialPosition.Y, width, height);
         }
 
-        internal void OnMouseDown(MouseEventArgs e)
+        internal void OnMouseDown(Point position)
         {
-            var position = e.GetPosition(Context.ItemsHost);
             _selectionRectangleInitialPosition = position;
         }
-        internal void OnMouseMove(MouseEventArgs e)
+
+        internal void OnMouseMove(Point position)
         {
-            var position = e.GetPosition(Context.ItemsHost);
-            var transformGroup = Context.SelectionRectanlgeTransform;
+            var transformGroup = _context.SelectionRectanlgeTransform;
             var scaleTransform = (ScaleTransform)transformGroup.Children[0];
 
             double width = position.X - _selectionRectangleInitialPosition.X;
@@ -72,19 +70,20 @@ namespace RichCanvas.Gestures
             {
                 scaleTransform.ScaleX = 1;
             }
-            Context.SelectionRectangle = new Rect(_selectionRectangleInitialPosition.X, _selectionRectangleInitialPosition.Y, Math.Abs(width), Math.Abs(height));
+            _context.SelectionRectangle = new Rect(_selectionRectangleInitialPosition.X, _selectionRectangleInitialPosition.Y, Math.Abs(width), Math.Abs(height));
         }
+
         internal void AddSelection(RichItemContainer container)
         {
-            if (!container.IsSelectable)
+            if (container.IsSelectable)
             {
                 container.IsSelected = true;
                 if (!_selections.Contains(container))
                 {
                     _selections.Add(container);
-                    if (Context.SelectedItems != null)
+                    if (_context.SelectedItems != null)
                     {
-                        Context.SelectedItems.Add(container.DataContext);
+                        _context.SelectedItems.Add(container.DataContext);
                     }
                 }
             }
@@ -97,9 +96,9 @@ namespace RichCanvas.Gestures
                 selection.IsSelected = false;
             }
             _selections.Clear();
-            if (Context.SelectedItems != null)
+            if (_context.SelectedItems != null)
             {
-                Context.SelectedItems.Clear();
+                _context.SelectedItems.Clear();
             }
         }
 
@@ -116,7 +115,7 @@ namespace RichCanvas.Gestures
                 translateTransform.X = 0;
                 translateTransform.Y = 0;
             }
-            Context.ItemsHost.InvalidateMeasure();
+            _context.ItemsHost.InvalidateMeasure();
         }
     }
 }
