@@ -59,9 +59,6 @@ namespace RichCanvas.Gestures
 
             SetItemPosition();
 
-            _context.ItemsHost.InvalidateMeasure();
-            _context.ItemsHost.InvalidateArrange();
-
             return _currentItem;
         }
 

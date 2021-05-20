@@ -1,17 +1,19 @@
-﻿using RichCanvas.Adorners;
-using RichCanvas.Helpers;
+﻿using RichCanvas.Helpers;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace RichCanvas
 {
+    [TemplatePart(Name = ContentPresenterName, Type = typeof(ContentPresenter))]
     public class RichItemContainer : ContentControl
     {
-        public static DependencyProperty IsSelectedProperty = DependencyProperty.Register("IsSelected", typeof(bool), typeof(RichItemContainer));
+        private const string ContentPresenterName = "PART_ContentPresenter";
+
+        public static DependencyProperty IsSelectedProperty = DependencyProperty.Register("IsSelected", typeof(bool), typeof(RichItemContainer), new FrameworkPropertyMetadata(OnIsSelectedChanged));
+
         public bool IsSelected
         {
             get => (bool)GetValue(IsSelectedProperty);
@@ -36,7 +38,6 @@ namespace RichCanvas
             set => SetValue(IsSelectableProperty, value);
         }
         public static DependencyProperty IsDraggableProperty = DependencyProperty.Register("IsDraggable", typeof(bool), typeof(RichItemContainer), new FrameworkPropertyMetadata(true));
-        private HighlightAdorner _currentAdorner;
 
         public bool IsDraggable
         {
@@ -53,14 +54,6 @@ namespace RichCanvas
 
         protected override void OnMouseEnter(MouseEventArgs e)
         {
-            AdornerLayer layer = AdornerLayer.GetAdornerLayer(this);
-            // Attach new adorner to current ListBoxItem
-            var adorner = new HighlightAdorner(this);
-            _currentAdorner = adorner;
-            adorner.Container.Content = this;
-            adorner.Container.ContentTemplate = Host.HighlightTemplate;
-            layer.Add(adorner);
-
             if (IsDraggable)
             {
                 DragBehavior.SetIsDragging((RichItemContainer)e.OriginalSource, true);
@@ -69,26 +62,29 @@ namespace RichCanvas
 
         protected override void OnMouseLeave(MouseEventArgs e)
         {
-            AdornerLayer layer = AdornerLayer.GetAdornerLayer(this);
-            if (_currentAdorner != null)
-            {
-                layer.Remove(_currentAdorner);
-            }
             if (IsDraggable)
             {
                 DragBehavior.SetIsDragging((RichItemContainer)e.OriginalSource, false);
             }
         }
 
-        protected override GeometryHitTestResult HitTestCore(GeometryHitTestParameters hitTestParameters)
-        {
-            var intersection = hitTestParameters.HitGeometry.FillContainsWithDetail(new RectangleGeometry(new Rect(this.Left, this.Top, this.Width, this.Height)));
-            return new GeometryHitTestResult(this, intersection);
-        }
+        //protected override GeometryHitTestResult HitTestCore(GeometryHitTestParameters hitTestParameters)
+        //{
+        //    var intersection = hitTestParameters.HitGeometry.FillContainsWithDetail(new RectangleGeometry(new Rect(Left, Top, Width, Height)));
+        //    return new GeometryHitTestResult(this, intersection);
+        //}
 
         internal bool IsValid()
         {
             return Height != 0 && Width != 0 && !double.IsNaN(Height) && !double.IsNaN(Width);
+        }
+
+        private static void OnIsSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if ((bool)e.NewValue)
+            {
+                ((RichItemContainer)d).Host.AddSelection((RichItemContainer)d);
+            }
         }
     }
 }

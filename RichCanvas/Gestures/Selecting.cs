@@ -12,7 +12,7 @@ namespace RichCanvas.Gestures
         private List<RichItemContainer> _selections = new List<RichItemContainer>();
         private RichItemsControl _context;
 
-        internal bool HasSelections => _selections.Count > 0;
+        internal bool HasSelections => _selections.Count > 1;
 
         public Selecting(RichItemsControl context)
         {

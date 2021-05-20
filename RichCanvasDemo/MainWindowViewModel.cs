@@ -15,12 +15,17 @@ namespace RichCanvasDemo
         private string _gridSpacing;
         private string _elementsCount;
         private bool _enableVirtualization;
+        private ICommand drawLineCommand;
+        private ICommand resizeCommand;
 
         public ObservableCollection<Drawable> Items { get; }
         public ObservableCollection<Drawable> SelectedItems { get; }
         public ICommand DrawRectCommand { get; }
         public ICommand GenerateElements { get; }
         public ICommand DrawLines { get; }
+        public ICommand DrawLineCommand => drawLineCommand ??= new RelayCommand(DrawLine);
+        public ICommand ResizeCommand => resizeCommand ??= new RelayCommand(Resize);
+
         public bool EnableGrid
         {
             get => _enableGrid;
@@ -72,11 +77,22 @@ namespace RichCanvasDemo
 
         private void OnDrawCommand()
         {
-            Items.Add(new Line());
+            Items.Add(new Rectangle());
         }
         public void DrawConnectedLine(Point p)
         {
             Items.Add(new Line { Top = p.Y, Left = p.X });
+        }
+
+        private void DrawLine()
+        {
+            Items.Add(new Line());
+        }
+
+        private void Resize()
+        {
+            var x = SelectedItems[0];
+            x.Height += 20;
         }
 
     }

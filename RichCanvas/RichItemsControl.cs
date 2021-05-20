@@ -22,8 +22,8 @@ namespace RichCanvas
         private const string SelectionRectangleName = "PART_SelectionRectangle";
         private const string CanvasContainerName = "CanvasContainer";
 
-        protected readonly ScaleTransform ScaleTransform = new ScaleTransform();
-        protected readonly TranslateTransform TranslateTransform = new TranslateTransform();
+        internal readonly ScaleTransform ScaleTransform = new ScaleTransform();
+        internal readonly TranslateTransform TranslateTransform = new TranslateTransform();
 
         public TransformGroup SelectionRectanlgeTransform { get; private set; }
 
@@ -39,35 +39,36 @@ namespace RichCanvas
         internal RichCanvas ItemsHost => _mainPanel;
         internal PanningGrid ScrollContainer => _canvasContainer;
 
-        public static DependencyProperty MousePositionProperty = DependencyProperty.Register("MousePosition", typeof(Point), typeof(RichItemsControl));
+        public static DependencyProperty MousePositionProperty = DependencyProperty.Register(nameof(MousePosition), typeof(Point), typeof(RichItemsControl));
         public Point MousePosition
         {
             get => (Point)GetValue(MousePositionProperty);
             set => SetValue(MousePositionProperty, value);
         }
 
-        public static DependencyProperty SelectionRectangleProperty = DependencyProperty.Register("SelectionRectangle", typeof(Rect), typeof(RichItemsControl));
+        public static DependencyProperty SelectionRectangleProperty = DependencyProperty.Register(nameof(SelectionRectangle), typeof(Rect), typeof(RichItemsControl));
         public Rect SelectionRectangle
         {
             get => (Rect)GetValue(SelectionRectangleProperty);
             set => SetValue(SelectionRectangleProperty, value);
         }
 
-        public static DependencyProperty IsSelectingProperty = DependencyProperty.Register("IsSelecting", typeof(bool), typeof(RichItemsControl));
+
+        public static DependencyProperty IsSelectingProperty = DependencyProperty.Register(nameof(IsSelecting), typeof(bool), typeof(RichItemsControl));
         public bool IsSelecting
         {
             get => (bool)GetValue(IsSelectingProperty);
             set => SetValue(IsSelectingProperty, value);
         }
 
-        public static DependencyProperty AppliedTransformProperty = DependencyProperty.Register("AppliedTransform", typeof(TransformGroup), typeof(RichItemsControl));
+        public static DependencyProperty AppliedTransformProperty = DependencyProperty.Register(nameof(AppliedTransform), typeof(TransformGroup), typeof(RichItemsControl));
         public TransformGroup AppliedTransform
         {
             get => (TransformGroup)GetValue(AppliedTransformProperty);
             set => SetValue(AppliedTransformProperty, value);
         }
 
-        public static DependencyProperty DisableAutoPanningProperty = DependencyProperty.Register("DisableAutoPanning", typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true, OnDisableAutoPanningChanged));
+        public static DependencyProperty DisableAutoPanningProperty = DependencyProperty.Register(nameof(DisableAutoPanning), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true, OnDisableAutoPanningChanged));
 
         public bool DisableAutoPanning
         {
@@ -75,7 +76,7 @@ namespace RichCanvas
             set => SetValue(DisableAutoPanningProperty, value);
         }
 
-        public static DependencyProperty AutoPanTickRateProperty = DependencyProperty.Register("AutoPanTickRate", typeof(float), typeof(RichItemsControl), new FrameworkPropertyMetadata(1f, OnAutoPanTickRateChanged));
+        public static DependencyProperty AutoPanTickRateProperty = DependencyProperty.Register(nameof(AutoPanTickRate), typeof(float), typeof(RichItemsControl), new FrameworkPropertyMetadata(1f, OnAutoPanTickRateChanged));
 
         public float AutoPanTickRate
         {
@@ -83,7 +84,7 @@ namespace RichCanvas
             set => SetValue(AutoPanTickRateProperty, value);
         }
 
-        public static DependencyProperty AutoPanSpeedProperty = DependencyProperty.Register("AutoPanSpeed", typeof(float), typeof(RichItemsControl), new FrameworkPropertyMetadata(1f));
+        public static DependencyProperty AutoPanSpeedProperty = DependencyProperty.Register(nameof(AutoPanSpeed), typeof(float), typeof(RichItemsControl), new FrameworkPropertyMetadata(1f));
 
         public float AutoPanSpeed
         {
@@ -91,7 +92,7 @@ namespace RichCanvas
             set => SetValue(AutoPanSpeedProperty, value);
         }
 
-        public static DependencyProperty EnableVirtualizationProperty = DependencyProperty.Register("EnableVirtualization", typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true, OnEnableVirtualizationChanged));
+        public static DependencyProperty EnableVirtualizationProperty = DependencyProperty.Register(nameof(EnableVirtualization), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true, OnEnableVirtualizationChanged));
 
         private static void OnEnableVirtualizationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).ItemsHost?.InvalidateMeasure();
 
@@ -101,7 +102,7 @@ namespace RichCanvas
             set => SetValue(EnableVirtualizationProperty, value);
         }
 
-        public static DependencyProperty EnableGridProperty = DependencyProperty.Register("EnableGrid", typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
+        public static DependencyProperty EnableGridProperty = DependencyProperty.Register(nameof(EnableGrid), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
 
         public bool EnableGrid
         {
@@ -109,7 +110,7 @@ namespace RichCanvas
             set => SetValue(EnableGridProperty, value);
         }
 
-        public static DependencyProperty GridSpacingProperty = DependencyProperty.Register("GridSpacing", typeof(float), typeof(RichItemsControl), new FrameworkPropertyMetadata(10f));
+        public static DependencyProperty GridSpacingProperty = DependencyProperty.Register(nameof(GridSpacing), typeof(float), typeof(RichItemsControl), new FrameworkPropertyMetadata(10f));
 
         public float GridSpacing
         {
@@ -117,7 +118,7 @@ namespace RichCanvas
             set => SetValue(GridSpacingProperty, value);
         }
 
-        internal static readonly DependencyPropertyKey ViewportRectPropertyKey = DependencyProperty.RegisterReadOnly("ViewportRect", typeof(Rect), typeof(RichItemsControl), new FrameworkPropertyMetadata(Rect.Empty));
+        internal static readonly DependencyPropertyKey ViewportRectPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewportRect), typeof(Rect), typeof(RichItemsControl), new FrameworkPropertyMetadata(Rect.Empty));
         public static readonly DependencyProperty ViewportRectProperty = ViewportRectPropertyKey.DependencyProperty;
 
         public Rect ViewportRect
@@ -125,7 +126,8 @@ namespace RichCanvas
             get => (Rect)GetValue(ViewportRectProperty);
         }
 
-        public static DependencyProperty VisibleElementsProperty = DependencyProperty.Register("VisibleElementsCount", typeof(int), typeof(RichItemsControl));
+        //readonly todo
+        public static DependencyProperty VisibleElementsProperty = DependencyProperty.Register(nameof(VisibleElementsCount), typeof(int), typeof(RichItemsControl));
 
         public int VisibleElementsCount
         {
@@ -133,7 +135,7 @@ namespace RichCanvas
             set => SetValue(VisibleElementsProperty, value);
         }
 
-        public static readonly DependencyProperty HighlightTemplateProperty = DependencyProperty.Register("HighlightTemplate", typeof(DataTemplate), typeof(RichItemsControl));
+        public static readonly DependencyProperty HighlightTemplateProperty = DependencyProperty.Register(nameof(HighlightTemplate), typeof(DataTemplate), typeof(RichItemsControl));
         public DataTemplate HighlightTemplate
         {
             get => (DataTemplate)GetValue(HighlightTemplateProperty);
@@ -142,7 +144,7 @@ namespace RichCanvas
 
         //disable scroll, disable zoom, scrollSpeed, SelectionRectangleStyle, GridStyle TBD, EnableSnapping
 
-        public static DependencyProperty MaxScaleProperty = DependencyProperty.Register("MaxScale", typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(0.1d, OnMaxScaleChanged, CoerceMaxScale));
+        public static DependencyProperty MaxScaleProperty = DependencyProperty.Register(nameof(MaxScale), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(0.1d, OnMaxScaleChanged, CoerceMaxScale));
 
         public double MaxScale
         {
@@ -163,7 +165,7 @@ namespace RichCanvas
             return (double)value < min ? min : value;
         }
 
-        public static DependencyProperty MinScaleProperty = DependencyProperty.Register("MinScale", typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(0.1d, OnMinimumScaleChanged, CoerceMinimumScale));
+        public static DependencyProperty MinScaleProperty = DependencyProperty.Register(nameof(MinScale), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(0.1d, OnMinimumScaleChanged, CoerceMinimumScale));
         public double MinScale
         {
             get => (double)GetValue(MinScaleProperty);
@@ -179,7 +181,7 @@ namespace RichCanvas
             zoom.CoerceValue(ScaleProperty);
         }
 
-        public static DependencyProperty ScaleProperty = DependencyProperty.Register("Scale", typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(1d, OnScaleChanged, ConstarainScaleToRange));
+        public static DependencyProperty ScaleProperty = DependencyProperty.Register(nameof(Scale), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(1d, OnScaleChanged, ConstarainScaleToRange));
         public double Scale
         {
             get => (double)GetValue(ScaleProperty);
@@ -218,7 +220,8 @@ namespace RichCanvas
             ScaleTransform.ScaleY = newValue;
         }
 
-        public static DependencyProperty SelectedItemsProperty = DependencyProperty.Register("SelectedItems", typeof(IList), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(IList)));
+        public static DependencyProperty SelectedItemsProperty = DependencyProperty.Register(nameof(SelectedItems), typeof(IList), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(IList)));
+        private bool _isResizing;
 
         public IList SelectedItems
         {
@@ -226,8 +229,7 @@ namespace RichCanvas
             set => SetValue(SelectedItemsProperty, value);
         }
 
-        public static readonly RoutedEvent DrawingEndedEvent = EventManager.RegisterRoutedEvent(
-            "DrawingEnded", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(RichItemsControl));
+        public static readonly RoutedEvent DrawingEndedEvent = EventManager.RegisterRoutedEvent(nameof(DrawingEnded), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(RichItemsControl));
 
         public event RoutedEventHandler DrawingEnded
         {
@@ -262,9 +264,12 @@ namespace RichCanvas
             _selectingGesture = new Selecting(this);
             _drawingGesture = new Gestures.Drawing(this);
         }
-
         internal void AddSelection(RichItemContainer container) => _selectingGesture.AddSelection(container);
 
+        internal void ClearSelections()
+        {
+            _selectingGesture.UnselectAll();
+        }
         internal void UpdateSelections()
         {
             // TODO: snap all selections on release
@@ -277,6 +282,7 @@ namespace RichCanvas
             ScrollContainer.AdjustScrollVertically();
             ScrollContainer.AdjustScrollHorizontally();
         }
+
         public override void OnApplyTemplate()
         {
             var selectionRectangle = (Rectangle)GetTemplateChild(SelectionRectangleName);
@@ -319,7 +325,7 @@ namespace RichCanvas
         {
             RenderTransform = new TransformGroup()
             {
-                Children = new TransformCollection { new ScaleTransform(), new TranslateTransform() }
+                Children = new TransformCollection { new ScaleTransform(), new TranslateTransform(), new RotateTransform() }
             },
             IsHitTestVisible = true
         };
@@ -334,30 +340,37 @@ namespace RichCanvas
             else
             {
                 Point position = e.GetPosition(ItemsHost);
-                if (!VisualHelper.IsScrollBarParent((DependencyObject)e.OriginalSource))
+                if (!VisualHelper.HasScrollBarParent((DependencyObject)e.OriginalSource))
                 {
-                    for (int i = 0; i < _currentDrawingIndexes.Count; i++)
+                    if (_currentDrawingIndexes.Count > 0)
                     {
-                        RichItemContainer container = (RichItemContainer)ItemContainerGenerator.ContainerFromIndex(_currentDrawingIndexes[i]);
-                        if (container != null)
+                        for (int i = 0; i < _currentDrawingIndexes.Count; i++)
                         {
-                            container.Host = this;
-                            if (container.IsValid())
+                            RichItemContainer container = (RichItemContainer)ItemContainerGenerator.ContainerFromIndex(_currentDrawingIndexes[i]);
+                            if (container != null)
                             {
-                                container.IsDrawn = true;
-                                _currentDrawingIndexes.Remove(_currentDrawingIndexes[i]);
-                            }
-                            else
-                            {
-                                _currentDrawingIndexes.Remove(_currentDrawingIndexes[i]);
-                                CaptureMouse();
-                                _drawingGesture.OnMouseDown(container, position);
-                                _isDrawing = true;
-                                break;
+                                if (container.IsValid())
+                                {
+                                    container.IsDrawn = true;
+                                    _currentDrawingIndexes.Remove(_currentDrawingIndexes[i]);
+                                }
+                                else
+                                {
+                                    _currentDrawingIndexes.Remove(_currentDrawingIndexes[i]);
+                                    CaptureMouse();
+                                    _drawingGesture.OnMouseDown(container, position);
+                                    _isDrawing = true;
+                                    break;
+                                }
                             }
                         }
                     }
-                    if (!_isDrawing && !DragBehavior.IsDragging && !IsPanning)
+                    if (VisualHelper.HasAdornerThumbParent((DependencyObject)e.OriginalSource))
+                    {
+                        _isResizing = true;
+                    }
+
+                    if (!_isDrawing && !DragBehavior.IsDragging && !IsPanning && !_isResizing)
                     {
                         IsSelecting = true;
                         _selectingGesture.OnMouseDown(position);
@@ -403,10 +416,18 @@ namespace RichCanvas
                 _isDrawing = false;
                 NeedMeasure = true;
                 var drawnItem = _drawingGesture.OnMouseUp();
+
+                ItemsHost.InvalidateMeasure();
+                ItemsHost.InvalidateArrange();
+
                 RaiseDrawEndedEvent(drawnItem.DataContext);
                 _drawingGesture.Dispose();
 
                 ItemsHost.InvalidateMeasure();
+            }
+            else if (_isResizing)
+            {
+                _isResizing = false;
             }
             else if (!DragBehavior.IsDragging && IsSelecting)
             {
@@ -543,8 +564,10 @@ namespace RichCanvas
 
         private HitTestResultBehavior OnHitTestResultCallback(HitTestResult result)
         {
-            if (result.VisualHit is RichItemContainer container)
+            var geometryHitTestResult = (GeometryHitTestResult)result;
+            if (geometryHitTestResult.IntersectionDetail != IntersectionDetail.Empty)
             {
+                var container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
                 _selectingGesture.AddSelection(container);
             }
             return HitTestResultBehavior.Continue;

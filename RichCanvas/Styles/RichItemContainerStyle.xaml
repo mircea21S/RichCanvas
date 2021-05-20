@@ -9,9 +9,7 @@
                             BorderThickness="1"
                             Background="Transparent"
                             IsHitTestVisible="True">
-                        <AdornerDecorator>
-                            <ContentPresenter></ContentPresenter>
-                        </AdornerDecorator>
+                        <ContentPresenter x:Name="PART_ContentPresenter"></ContentPresenter>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

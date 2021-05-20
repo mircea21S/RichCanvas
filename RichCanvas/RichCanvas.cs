@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace RichCanvas
 {
@@ -85,6 +86,8 @@ namespace RichCanvas
                 for (int i = 0; i < ItemsOwner.Items.Count; i++)
                 {
                     var container = (RichItemContainer)generator.GenerateNext(out bool isNewlyRealized);
+                    container.Host = ItemsOwner;
+
                     if (container.IsValid())
                     {
                         if (ContainerInViewport(container) && ItemsOwner.EnableVirtualization)

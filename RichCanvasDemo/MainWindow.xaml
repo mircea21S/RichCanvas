@@ -9,7 +9,7 @@
         xmlns:converters="clr-namespace:RichCanvasDemo.Converters"
         mc:Ignorable="d"
         Title="MainWindow"
-        Height="450"
+        Height="650"
         Width="800">
 
     <Window.DataContext>
@@ -35,13 +35,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Button Content="Draw Rect"
-                Command="{Binding DrawRectCommand}"
-                Width="100"
-                Height="30"
-                HorizontalAlignment="Right"
-                Grid.Column="3" />
-
+        
         <StackPanel Width="200">
             <Label Content="{Binding MousePosition, ElementName=source, Converter={StaticResource PointToStringConverter}}"
                    HorizontalAlignment="Left"></Label>
@@ -68,6 +62,25 @@
 
         <StackPanel Grid.Column="2"
                     Margin="10 0 0 0">
+            <Button Content="Draw Line"
+                    Command="{Binding DrawLineCommand}"
+                    Width="100"
+                    Height="30"
+                    HorizontalAlignment="Right"
+                    Grid.Column="2" />
+            <Button Content="Draw Rect"
+                    Command="{Binding DrawRectCommand}"
+                    Width="100"
+                    Height="30"
+                    HorizontalAlignment="Right"
+                    Grid.Column="2" />
+            <Button Content="Resize"
+                    Command="{Binding ResizeCommand}"
+                    Width="100"
+                    Height="30"
+                    HorizontalAlignment="Right"
+                    Grid.Column="2" />
+
             <TextBlock Text="{Binding ElementName=source, Path=ViewportRect.Location, StringFormat= '\{0\} (left, top of bounding box)'}" />
             <TextBlock Text="{Binding SelectedItems.Count, StringFormat= '\{0\} (selected items)'}" />
         </StackPanel>
@@ -94,7 +107,7 @@
                 <DataTemplate DataType="{x:Type vm:Line}">
                     <Line Fill="Red"
                           Stroke="Red"
-                          StrokeThickness="1.5"
+                          StrokeThickness="3"
                           X2="{Binding Width}"
                           Y2="{Binding Height}">
                     </Line>

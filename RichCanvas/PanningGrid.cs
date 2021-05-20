@@ -146,6 +146,10 @@ namespace RichCanvas
 
                     AdjustScrollVertically();
                     AdjustScrollHorizontally();
+                    if (_parent.EnableVirtualization)
+                    {
+                        _parent.ItemsHost.InvalidateMeasure();
+                    }
                 }
                 ScrollOwner.InvalidateScrollInfo();
             }
@@ -223,7 +227,11 @@ namespace RichCanvas
 
         public Rect MakeVisible(Visual visual, Rect rectangle)
         {
-            throw new System.NotImplementedException();
+            if (visual is RichItemContainer container)
+            {
+                return new Rect(container.Left, container.Top, container.Width, container.Height);
+            }
+            return new Rect(ScrollOwner.RenderSize);
         }
 
         public void MouseWheelDown()
@@ -432,8 +440,8 @@ namespace RichCanvas
         internal void Initalize(RichItemsControl richItemsControl)
         {
             _parent = richItemsControl;
-            _translateTransform = (TranslateTransform)(richItemsControl.AppliedTransform).Children[1];
-            _scaleTransform = (ScaleTransform)(richItemsControl.AppliedTransform).Children[0];
+            _translateTransform = _parent.TranslateTransform;
+            _scaleTransform = _parent.ScaleTransform;
             _zoomGesture = new Zoom(_scaleTransform, _translateTransform);
         }
 

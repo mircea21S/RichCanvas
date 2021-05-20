@@ -52,7 +52,14 @@ namespace RichCanvas.Helpers
         private static void OnSelectedContainerClicked(object sender, MouseButtonEventArgs e)
         {
             RichItemContainer container = (RichItemContainer)sender;
+
+            if (!ItemsControl.HasSelections)
+            {
+                ItemsControl.ClearSelections();
+            }
             ItemsControl.AddSelection(container);
+            container.BringIntoView();
+
             _initialPosition = new Point(e.GetPosition(ItemsControl.ItemsHost).X, e.GetPosition(ItemsControl.ItemsHost).Y);
             container.CaptureMouse();
             ItemsControl.Cursor = Cursors.Hand;
@@ -106,8 +113,10 @@ namespace RichCanvas.Helpers
                     translateTransform.X += currentPosition.X - _initialPosition.X;
                     translateTransform.Y += currentPosition.Y - _initialPosition.Y;
                 }
-
-                DragDelta?.Invoke(new Point(currentPosition.X - _initialPosition.X, currentPosition.Y - _initialPosition.Y));
+                else
+                {
+                    DragDelta?.Invoke(new Point(currentPosition.X - _initialPosition.X, currentPosition.Y - _initialPosition.Y));
+                }
 
                 if (container.Top + translateTransform.Y < ItemsControl.ItemsHost.TopLimit || container.Top == ItemsControl.ItemsHost.TopLimit
                      || container.Top + translateTransform.Y + container.Height > ItemsControl.ItemsHost.BottomLimit || container.Top + container.Height == ItemsControl.ItemsHost.BottomLimit
