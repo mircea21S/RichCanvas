@@ -11,6 +11,7 @@ using System.Windows.Controls.Primitives;
 using System.Collections.Specialized;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RichCanvas
 {
@@ -38,6 +39,8 @@ namespace RichCanvas
         internal bool HasSelections => _selectingGesture.HasSelections;
         internal RichCanvas ItemsHost => _mainPanel;
         internal PanningGrid ScrollContainer => _canvasContainer;
+
+        #region Properties API
 
         public static DependencyProperty MousePositionProperty = DependencyProperty.Register(nameof(MousePosition), typeof(Point), typeof(RichItemsControl));
         public Point MousePosition
@@ -237,6 +240,8 @@ namespace RichCanvas
             remove { RemoveHandler(DrawingEndedEvent, value); }
         }
 
+        #endregion
+
         public double TopLimit { get; set; }
         public double RightLimit { get; set; }
         public double BottomLimit { get; set; }
@@ -281,6 +286,11 @@ namespace RichCanvas
         {
             ScrollContainer.AdjustScrollVertically();
             ScrollContainer.AdjustScrollHorizontally();
+        }
+
+        internal void AddVirtualizableItem(RichItemContainer container)
+        {
+            var index = ItemContainerGenerator.IndexFromContainer(container);
         }
 
         public override void OnApplyTemplate()
@@ -347,23 +357,21 @@ namespace RichCanvas
                         for (int i = 0; i < _currentDrawingIndexes.Count; i++)
                         {
                             RichItemContainer container = (RichItemContainer)ItemContainerGenerator.ContainerFromIndex(_currentDrawingIndexes[i]);
-                            if (container != null)
+                            container.Host = this;
+
+                            if (container.IsValid())
                             {
-                                if (container.IsValid())
-                                {
-                                    container.IsDrawn = true;
-                                    _currentDrawingIndexes.Remove(_currentDrawingIndexes[i]);
-                                }
-                                else
-                                {
-                                    _currentDrawingIndexes.Remove(_currentDrawingIndexes[i]);
-                                    CaptureMouse();
-                                    _drawingGesture.OnMouseDown(container, position);
-                                    _isDrawing = true;
-                                    break;
-                                }
+                                container.IsDrawn = true;
+                            }
+                            else
+                            {
+                                CaptureMouse();
+                                _drawingGesture.OnMouseDown(container, position);
+                                _isDrawing = true;
+                                break;
                             }
                         }
+                        _currentDrawingIndexes.Clear();
                     }
                     if (VisualHelper.HasAdornerThumbParent((DependencyObject)e.OriginalSource))
                     {
@@ -447,7 +455,7 @@ namespace RichCanvas
 
         protected override void OnItemsChanged(NotifyCollectionChangedEventArgs e)
         {
-            if (e.NewStartingIndex != -1)
+            if (e.NewStartingIndex != -1 && e.Action == NotifyCollectionChangedAction.Add)
             {
                 _currentDrawingIndexes.Add(e.NewStartingIndex);
             }
@@ -591,7 +599,7 @@ namespace RichCanvas
         {
             _autoPanTimer.Interval = TimeSpan.FromMilliseconds(AutoPanTickRate);
         }
-        private void RaiseDrawEndedEvent(object context)
+        internal void RaiseDrawEndedEvent(object context)
         {
             RoutedEventArgs newEventArgs = new RoutedEventArgs(DrawingEndedEvent, context);
             RaiseEvent(newEventArgs);

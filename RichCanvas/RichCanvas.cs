@@ -2,13 +2,10 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Input;
-using System.Windows.Media;
 
 namespace RichCanvas
 {
-    public class RichCanvas : VirtualizingPanel
+    public class RichCanvas : Panel
     {
         private bool _boundingBoxInitialized;
 
@@ -25,8 +22,6 @@ namespace RichCanvas
             {
                 return default;
             }
-
-            VirtualizeItems();
 
             double minX = double.MaxValue;
             double minY = double.MaxValue;
@@ -55,12 +50,6 @@ namespace RichCanvas
                 ItemsOwner.AdjustScroll();
             }
 
-            if (ItemsOwner.EnableVirtualization)
-            {
-                CleanupItems();
-            }
-            ItemsOwner.VisibleElementsCount = InternalChildren.Count;
-
             return default;
         }
 
@@ -76,82 +65,5 @@ namespace RichCanvas
             return arrangeSize;
         }
 
-        internal void VirtualizeItems()
-        {
-            IItemContainerGenerator generator = ItemsOwner.ItemContainerGenerator;
-            var pos = generator.GeneratorPositionFromIndex(0);
-
-            using (generator.StartAt(pos, GeneratorDirection.Forward, true))
-            {
-                for (int i = 0; i < ItemsOwner.Items.Count; i++)
-                {
-                    var container = (RichItemContainer)generator.GenerateNext(out bool isNewlyRealized);
-                    container.Host = ItemsOwner;
-
-                    if (container.IsValid())
-                    {
-                        if (ContainerInViewport(container) && ItemsOwner.EnableVirtualization)
-                        {
-                            if (isNewlyRealized)
-                            {
-                                if (i >= InternalChildren.Count)
-                                {
-                                    AddInternalChild(container);
-                                }
-                                else
-                                {
-                                    InsertInternalChild(i, container);
-                                }
-                            }
-                        }
-                        else if (!ItemsOwner.EnableVirtualization)
-                        {
-                            if (isNewlyRealized)
-                            {
-                                AddInternalChild(container);
-                            }
-                        }
-                    }
-                    else if (!container.IsDrawn)
-                    {
-                        if (isNewlyRealized)
-                        {
-                            if (i >= InternalChildren.Count)
-                            {
-                                AddInternalChild(container);
-                            }
-                            else
-                            {
-                                InsertInternalChild(i, container);
-                            }
-                        }
-                    }
-                    generator.PrepareItemContainer(container);
-                }
-            }
-        }
-
-        private void CleanupItems()
-        {
-            IItemContainerGenerator generator = ItemsOwner.ItemContainerGenerator;
-            for (int i = InternalChildren.Count - 1; i >= 0; i--)
-            {
-                GeneratorPosition position = new GeneratorPosition(i, 0);
-                int itemIndex = generator.IndexFromGeneratorPosition(position);
-                var container = (RichItemContainer)ItemsOwner.ItemContainerGenerator.ContainerFromIndex(itemIndex);
-
-                if (!ContainerInViewport(container) && container.IsValid() && container != ItemsOwner.CurrentDrawingItem && ((DragBehavior.IsDragging && Mouse.LeftButton == MouseButtonState.Released) || !DragBehavior.IsDragging))
-                {
-                    generator.Remove(position, 1);
-                    RemoveInternalChildRange(i, 1);
-                }
-            }
-        }
-
-        private bool ContainerInViewport(RichItemContainer container)
-        {
-            return container.Top + container.Height >= ItemsOwner.ScrollContainer.TopLimit && container.Left + container.Width >= ItemsOwner.ScrollContainer.LeftLimit
-                && container.Top <= ItemsOwner.ScrollContainer.BottomLimit && container.Left <= ItemsOwner.ScrollContainer.RightLimit;
-        }
     }
 }

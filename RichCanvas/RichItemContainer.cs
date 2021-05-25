@@ -1,8 +1,6 @@
 ﻿using RichCanvas.Helpers;
-using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace RichCanvas
@@ -50,6 +48,7 @@ namespace RichCanvas
         }
 
         internal bool IsDrawn { get; set; }
+
         internal RichItemsControl Host { get; set; }
 
         protected override void OnMouseEnter(MouseEventArgs e)
@@ -67,12 +66,6 @@ namespace RichCanvas
                 DragBehavior.SetIsDragging((RichItemContainer)e.OriginalSource, false);
             }
         }
-
-        //protected override GeometryHitTestResult HitTestCore(GeometryHitTestParameters hitTestParameters)
-        //{
-        //    var intersection = hitTestParameters.HitGeometry.FillContainsWithDetail(new RectangleGeometry(new Rect(Left, Top, Width, Height)));
-        //    return new GeometryHitTestResult(this, intersection);
-        //}
 
         internal bool IsValid()
         {

@@ -117,5 +117,6 @@ namespace RichCanvas.Gestures
             }
             _context.ItemsHost.InvalidateMeasure();
         }
+
     }
 }

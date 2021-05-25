@@ -41,6 +41,10 @@ namespace RichCanvas.Helpers
         }
         internal static RichItemContainer GetParentContainer(DependencyObject d)
         {
+            if (d is RichItemContainer container)
+            {
+                return container;
+            }
             var parent = VisualTreeHelper.GetParent(d);
             while (!(parent is RichItemContainer))
             {

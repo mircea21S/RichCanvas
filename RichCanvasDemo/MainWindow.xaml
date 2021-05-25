@@ -35,7 +35,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        
+
         <StackPanel Width="200">
             <Label Content="{Binding MousePosition, ElementName=source, Converter={StaticResource PointToStringConverter}}"
                    HorizontalAlignment="Left"></Label>
@@ -83,6 +83,14 @@
 
             <TextBlock Text="{Binding ElementName=source, Path=ViewportRect.Location, StringFormat= '\{0\} (left, top of bounding box)'}" />
             <TextBlock Text="{Binding SelectedItems.Count, StringFormat= '\{0\} (selected items)'}" />
+        </StackPanel>
+        <StackPanel Grid.Column="3">
+            <Button Content="Delete"
+                    Command="{Binding DeleteCommand}"
+                    Width="100"
+                    Height="30"
+                    HorizontalAlignment="Right"
+                    Grid.Column="2" />
         </StackPanel>
 
         <richCanvas:RichItemsControl ItemsSource="{Binding Items}"

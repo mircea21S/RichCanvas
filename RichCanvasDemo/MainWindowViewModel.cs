@@ -17,6 +17,7 @@ namespace RichCanvasDemo
         private bool _enableVirtualization;
         private ICommand drawLineCommand;
         private ICommand resizeCommand;
+        private RelayCommand deleteCommand;
 
         public ObservableCollection<Drawable> Items { get; }
         public ObservableCollection<Drawable> SelectedItems { get; }
@@ -25,6 +26,7 @@ namespace RichCanvasDemo
         public ICommand DrawLines { get; }
         public ICommand DrawLineCommand => drawLineCommand ??= new RelayCommand(DrawLine);
         public ICommand ResizeCommand => resizeCommand ??= new RelayCommand(Resize);
+        public ICommand DeleteCommand => deleteCommand ??= new RelayCommand(Delete);
 
         public bool EnableGrid
         {
@@ -58,21 +60,36 @@ namespace RichCanvasDemo
 
         private void OnGenerateElements()
         {
-            int elementsCount = int.Parse(ElementsCount);
-            for (int i = 0; i < elementsCount; i++)
+            if (!string.IsNullOrEmpty(ElementsCount))
             {
-                Random rnd = new Random();
-                double left = rnd.Next(-1000, 1000);
-                double top = rnd.Next(-1000, 1000);
-                var item = new Line
+                int elementsCount = int.Parse(ElementsCount);
+                for (int i = 0; i < elementsCount; i++)
                 {
-                    Left = left,
-                    Top = top,
-                    Width = Math.Abs(left + 30),
-                    Height = Math.Abs(top + 30)
-                };
-                Items.Add(item);
+                    Random rnd = new Random();
+                    double left = rnd.Next(-1000, 1000);
+                    double top = rnd.Next(-1000, 1000);
+                    var item = new Line
+                    {
+                        Left = left,
+                        Top = top,
+                        Width = Math.Abs(left / 2 + 30),
+                        Height = Math.Abs(top / 2 + 30)
+                    };
+                    if (item.Width == 0)
+                    {
+                        item.Width = 10;
+                    }
+                    if (item.Height == 0)
+                    {
+                        item.Height = 10;
+                    }
+                    Items.Add(item);
+                }
             }
+        }
+        private void Delete()
+        {
+            Items.Remove(SelectedItems[0]);
         }
 
         private void OnDrawCommand()
