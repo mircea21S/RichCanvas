@@ -8,36 +8,47 @@ namespace RichCanvas.Gestures
         private readonly ScaleTransform _scaleTransform;
         private readonly TranslateTransform _translateTransform;
 
-        internal static double ScaleX { get; set; }
-        internal static double ScaleY { get; set; }
-        public Zoom(ScaleTransform scaleTransform, TranslateTransform translateTransform)
+        internal double MinScale { get; set; }
+        internal double MaxScale { get; set; }
+
+        internal Zoom(ScaleTransform scaleTransform, TranslateTransform translateTransform)
         {
             _scaleTransform = scaleTransform;
             _translateTransform = translateTransform;
         }
-        internal void ZoomToPosition(Point position, int delta)
+
+        internal void ZoomToPosition(Point position, int delta, double factor)
         {
             var originX = (position.X - _translateTransform.X) / _scaleTransform.ScaleX;
             var originY = (position.Y - _translateTransform.Y) / _scaleTransform.ScaleY;
 
             if (delta > 0)
             {
-                _scaleTransform.ScaleY *= 1.1;
-                _scaleTransform.ScaleX *= 1.1;
+                _scaleTransform.ScaleY *= factor;
+                _scaleTransform.ScaleX *= factor;
             }
             else
             {
-                _scaleTransform.ScaleY /= 1.1;
-                _scaleTransform.ScaleX /= 1.1;
+                _scaleTransform.ScaleY /= factor;
+                _scaleTransform.ScaleX /= factor;
             }
-            if (_scaleTransform.ScaleX < 0 || _scaleTransform.ScaleX == 0)
+            if (_scaleTransform.ScaleX <= MinScale)
             {
-                _scaleTransform.ScaleX = 0.1;
+                _scaleTransform.ScaleX = MinScale;
             }
-            if (_scaleTransform.ScaleY < 0 || _scaleTransform.ScaleY == 0)
+            if (_scaleTransform.ScaleY <= MinScale)
             {
-                _scaleTransform.ScaleY = 0.1;
+                _scaleTransform.ScaleY = MinScale;
             }
+            if (_scaleTransform.ScaleX >= MaxScale)
+            {
+                _scaleTransform.ScaleX = MaxScale;
+            }
+            if (_scaleTransform.ScaleY >= MaxScale)
+            {
+                _scaleTransform.ScaleY = MaxScale;
+            }
+
             _translateTransform.X = position.X - originX * _scaleTransform.ScaleX;
             _translateTransform.Y = position.Y - originY * _scaleTransform.ScaleY;
         }

@@ -11,34 +11,36 @@ using System.Windows.Controls.Primitives;
 using System.Collections.Specialized;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace RichCanvas
 {
     [TemplatePart(Name = DrawingPanelName, Type = typeof(Panel))]
     [TemplatePart(Name = SelectionRectangleName, Type = typeof(Rectangle))]
+    [StyleTypedProperty(Property = nameof(SelectionRectangleStyle), StyleTargetType = typeof(Rectangle))]
     public class RichItemsControl : ItemsControl
     {
+        #region Constants
+
         private const string DrawingPanelName = "PART_Panel";
         private const string SelectionRectangleName = "PART_SelectionRectangle";
         private const string CanvasContainerName = "CanvasContainer";
 
+        #endregion
+
+        #region Private Fields
+
         internal readonly ScaleTransform ScaleTransform = new ScaleTransform();
         internal readonly TranslateTransform TranslateTransform = new TranslateTransform();
-
-        public TransformGroup SelectionRectanlgeTransform { get; private set; }
 
         private RichCanvas _mainPanel;
         private PanningGrid _canvasContainer;
         private bool _isDrawing;
-        private Gestures.Drawing _drawingGesture;
-        private Selecting _selectingGesture;
+        private readonly Gestures.Drawing _drawingGesture;
+        private readonly Selecting _selectingGesture;
         private DispatcherTimer _autoPanTimer;
-        private List<int> _currentDrawingIndexes = new List<int>();
+        private readonly List<int> _currentDrawingIndexes = new List<int>();
 
-        internal bool HasSelections => _selectingGesture.HasSelections;
-        internal RichCanvas ItemsHost => _mainPanel;
-        internal PanningGrid ScrollContainer => _canvasContainer;
+        #endregion
 
         #region Properties API
 
@@ -56,12 +58,12 @@ namespace RichCanvas
             set => SetValue(SelectionRectangleProperty, value);
         }
 
-
-        public static DependencyProperty IsSelectingProperty = DependencyProperty.Register(nameof(IsSelecting), typeof(bool), typeof(RichItemsControl));
+        protected static readonly DependencyPropertyKey IsSelectingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsSelecting), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
+        public static readonly DependencyProperty IsSelectingProperty = IsSelectingPropertyKey.DependencyProperty;
         public bool IsSelecting
         {
             get => (bool)GetValue(IsSelectingProperty);
-            set => SetValue(IsSelectingProperty, value);
+            internal set => SetValue(IsSelectingPropertyKey, value);
         }
 
         public static DependencyProperty AppliedTransformProperty = DependencyProperty.Register(nameof(AppliedTransform), typeof(TransformGroup), typeof(RichItemsControl));
@@ -72,7 +74,6 @@ namespace RichCanvas
         }
 
         public static DependencyProperty DisableAutoPanningProperty = DependencyProperty.Register(nameof(DisableAutoPanning), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true, OnDisableAutoPanningChanged));
-
         public bool DisableAutoPanning
         {
             get => (bool)GetValue(DisableAutoPanningProperty);
@@ -80,7 +81,6 @@ namespace RichCanvas
         }
 
         public static DependencyProperty AutoPanTickRateProperty = DependencyProperty.Register(nameof(AutoPanTickRate), typeof(float), typeof(RichItemsControl), new FrameworkPropertyMetadata(1f, OnAutoPanTickRateChanged));
-
         public float AutoPanTickRate
         {
             get => (float)GetValue(AutoPanTickRateProperty);
@@ -88,7 +88,6 @@ namespace RichCanvas
         }
 
         public static DependencyProperty AutoPanSpeedProperty = DependencyProperty.Register(nameof(AutoPanSpeed), typeof(float), typeof(RichItemsControl), new FrameworkPropertyMetadata(1f));
-
         public float AutoPanSpeed
         {
             get => (float)GetValue(AutoPanSpeedProperty);
@@ -96,9 +95,6 @@ namespace RichCanvas
         }
 
         public static DependencyProperty EnableVirtualizationProperty = DependencyProperty.Register(nameof(EnableVirtualization), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true, OnEnableVirtualizationChanged));
-
-        private static void OnEnableVirtualizationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).ItemsHost?.InvalidateMeasure();
-
         public bool EnableVirtualization
         {
             get => (bool)GetValue(EnableVirtualizationProperty);
@@ -106,7 +102,6 @@ namespace RichCanvas
         }
 
         public static DependencyProperty EnableGridProperty = DependencyProperty.Register(nameof(EnableGrid), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
-
         public bool EnableGrid
         {
             get => (bool)GetValue(EnableGridProperty);
@@ -114,7 +109,6 @@ namespace RichCanvas
         }
 
         public static DependencyProperty GridSpacingProperty = DependencyProperty.Register(nameof(GridSpacing), typeof(float), typeof(RichItemsControl), new FrameworkPropertyMetadata(10f));
-
         public float GridSpacing
         {
             get => (float)GetValue(GridSpacingProperty);
@@ -123,7 +117,6 @@ namespace RichCanvas
 
         internal static readonly DependencyPropertyKey ViewportRectPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewportRect), typeof(Rect), typeof(RichItemsControl), new FrameworkPropertyMetadata(Rect.Empty));
         public static readonly DependencyProperty ViewportRectProperty = ViewportRectPropertyKey.DependencyProperty;
-
         public Rect ViewportRect
         {
             get => (Rect)GetValue(ViewportRectProperty);
@@ -131,41 +124,78 @@ namespace RichCanvas
 
         //readonly todo
         public static DependencyProperty VisibleElementsProperty = DependencyProperty.Register(nameof(VisibleElementsCount), typeof(int), typeof(RichItemsControl));
-
         public int VisibleElementsCount
         {
             get => (int)GetValue(VisibleElementsProperty);
             set => SetValue(VisibleElementsProperty, value);
         }
 
-        public static readonly DependencyProperty HighlightTemplateProperty = DependencyProperty.Register(nameof(HighlightTemplate), typeof(DataTemplate), typeof(RichItemsControl));
-        public DataTemplate HighlightTemplate
+        public static DependencyProperty TranslateOffsetProperty = DependencyProperty.Register(nameof(TranslateOffset), typeof(Point), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(Point), OnOffsetChanged));
+        public Point TranslateOffset
         {
-            get => (DataTemplate)GetValue(HighlightTemplateProperty);
-            set => SetValue(HighlightTemplateProperty, value);
+            get => (Point)GetValue(TranslateOffsetProperty);
+            set => SetValue(TranslateOffsetProperty, value);
         }
 
-        //disable scroll, disable zoom, scrollSpeed, SelectionRectangleStyle, GridStyle TBD, EnableSnapping
+        public static DependencyProperty EnableSnappingProperty = DependencyProperty.Register(nameof(EnableSnapping), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
+        public bool EnableSnapping
+        {
+            get => (bool)GetValue(EnableSnappingProperty);
+            set => SetValue(EnableSnappingProperty, value);
+        }
 
-        public static DependencyProperty MaxScaleProperty = DependencyProperty.Register(nameof(MaxScale), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(0.1d, OnMaxScaleChanged, CoerceMaxScale));
+        public static DependencyProperty GridStyleProperty = DependencyProperty.Register(nameof(GridStyle), typeof(System.Windows.Media.Drawing), typeof(RichItemsControl), new FrameworkPropertyMetadata(OnGridStyleChanged));
 
+        private static void OnGridStyleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+        }
+
+        public System.Windows.Media.Drawing GridStyle
+        {
+            get => (System.Windows.Media.Drawing)GetValue(GridStyleProperty);
+            set => SetValue(GridStyleProperty, value);
+        }
+
+        public static DependencyProperty SelectionRectangleStyleProperty = DependencyProperty.Register(nameof(SelectionRectangleStyle), typeof(Style), typeof(RichItemsControl));
+        public Style SelectionRectangleStyle
+        {
+            get => (Style)GetValue(SelectionRectangleStyleProperty);
+            set => SetValue(SelectionRectangleStyleProperty, value);
+        }
+
+        public static DependencyProperty ScrollFactorProperty = DependencyProperty.Register(nameof(ScrollFactor), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(10d));
+        public double ScrollFactor
+        {
+            get => (double)GetValue(ScrollFactorProperty);
+            set => SetValue(ScrollFactorProperty, value);
+        }
+
+        public static DependencyProperty ScaleFactorProperty = DependencyProperty.Register(nameof(ScaleFactor), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(1.1d));
+        public double ScaleFactor
+        {
+            get => (double)GetValue(ScaleFactorProperty);
+            set => SetValue(ScaleFactorProperty, value);
+        }
+
+        public static DependencyProperty DisableScrollProperty = DependencyProperty.Register(nameof(DisableScroll), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
+        public bool DisableScroll
+        {
+            get => (bool)GetValue(DisableScrollProperty);
+            set => SetValue(DisableScrollProperty, value);
+        }
+
+        public static DependencyProperty DisableZoomProperty = DependencyProperty.Register(nameof(DisableZoom), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
+        public bool DisableZoom
+        {
+            get => (bool)GetValue(DisableZoomProperty);
+            set => SetValue(DisableZoomProperty, value);
+        }
+
+        public static DependencyProperty MaxScaleProperty = DependencyProperty.Register(nameof(MaxScale), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(2d, OnMaxScaleChanged, CoerceMaxScale));
         public double MaxScale
         {
             get => (double)GetValue(MaxScaleProperty);
             set => SetValue(MaxScaleProperty, value);
-        }
-
-        private static void OnMaxScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var zoom = (RichItemsControl)d;
-            zoom.CoerceValue(ScaleProperty);
-        }
-        private static object CoerceMaxScale(DependencyObject d, object value)
-        {
-            var zoom = (RichItemsControl)d;
-            var min = zoom.MinScale;
-
-            return (double)value < min ? min : value;
         }
 
         public static DependencyProperty MinScaleProperty = DependencyProperty.Register(nameof(MinScale), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(0.1d, OnMinimumScaleChanged, CoerceMinimumScale));
@@ -173,15 +203,6 @@ namespace RichCanvas
         {
             get => (double)GetValue(MinScaleProperty);
             set => SetValue(MinScaleProperty, value);
-        }
-        private static object CoerceMinimumScale(DependencyObject d, object value)
-            => (double)value > 0 ? value : 0.1;
-
-        private static void OnMinimumScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var zoom = (RichItemsControl)d;
-            zoom.CoerceValue(MaxScaleProperty);
-            zoom.CoerceValue(ScaleProperty);
         }
 
         public static DependencyProperty ScaleProperty = DependencyProperty.Register(nameof(Scale), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(1d, OnScaleChanged, ConstarainScaleToRange));
@@ -191,41 +212,7 @@ namespace RichCanvas
             set => SetValue(ScaleProperty, value);
         }
 
-        private static object ConstarainScaleToRange(DependencyObject d, object value)
-        {
-            var itemsControl = (RichItemsControl)d;
-
-            //if (itemsControl.DisableZooming)
-            //{
-            //    return itemsControl.Scale;
-            //}
-
-            double num = (double)value;
-            double minimum = itemsControl.MinScale;
-            if (num < minimum)
-            {
-                return minimum;
-            }
-
-            double maximum = itemsControl.MaxScale;
-            if (num > maximum)
-            {
-                return maximum;
-            }
-
-            return value;
-        }
-        private static void OnScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).OverrideScale((double)e.NewValue);
-        private void OverrideScale(double newValue)
-        {
-            CoerceValue(ScaleProperty);
-            ScaleTransform.ScaleX = newValue;
-            ScaleTransform.ScaleY = newValue;
-        }
-
         public static DependencyProperty SelectedItemsProperty = DependencyProperty.Register(nameof(SelectedItems), typeof(IList), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(IList)));
-        private bool _isResizing;
-
         public IList SelectedItems
         {
             get => (IList)GetValue(SelectedItemsProperty);
@@ -233,7 +220,6 @@ namespace RichCanvas
         }
 
         public static readonly RoutedEvent DrawingEndedEvent = EventManager.RegisterRoutedEvent(nameof(DrawingEnded), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(RichItemsControl));
-
         public event RoutedEventHandler DrawingEnded
         {
             add { AddHandler(DrawingEndedEvent, value); }
@@ -242,15 +228,23 @@ namespace RichCanvas
 
         #endregion
 
-        public double TopLimit { get; set; }
-        public double RightLimit { get; set; }
-        public double BottomLimit { get; set; }
-        public double LeftLimit { get; set; }
-        public bool IsPanning { get; private set; }
-        public bool IsZooming { get; private set; }
+        #region Internal Properties
+        internal bool HasSelections => _selectingGesture.HasSelections;
+        internal RichCanvas ItemsHost => _mainPanel;
+        internal PanningGrid ScrollContainer => _canvasContainer;
+        internal TransformGroup SelectionRectangleTransform { get; private set; }
+        internal double TopLimit { get; set; }
+        internal double RightLimit { get; set; }
+        internal double BottomLimit { get; set; }
+        internal double LeftLimit { get; set; }
+        internal bool IsPanning { get; private set; }
+        internal bool IsZooming { get; private set; }
         internal bool IsDrawing => _isDrawing;
         internal bool NeedMeasure { get; set; }
         internal RichItemContainer CurrentDrawingItem => _drawingGesture.CurrentItem;
+        #endregion
+
+        #region Constructors
 
         static RichItemsControl()
         {
@@ -269,29 +263,10 @@ namespace RichCanvas
             _selectingGesture = new Selecting(this);
             _drawingGesture = new Gestures.Drawing(this);
         }
-        internal void AddSelection(RichItemContainer container) => _selectingGesture.AddSelection(container);
 
-        internal void ClearSelections()
-        {
-            _selectingGesture.UnselectAll();
-        }
-        internal void UpdateSelections()
-        {
-            // TODO: snap all selections on release
-            _selectingGesture.UpdateSelectionsPosition();
-            AdjustScroll();
-        }
+        #endregion
 
-        internal void AdjustScroll()
-        {
-            ScrollContainer.AdjustScrollVertically();
-            ScrollContainer.AdjustScrollHorizontally();
-        }
-
-        internal void AddVirtualizableItem(RichItemContainer container)
-        {
-            var index = ItemContainerGenerator.IndexFromContainer(container);
-        }
+        #region Override Methods
 
         public override void OnApplyTemplate()
         {
@@ -303,14 +278,13 @@ namespace RichCanvas
                     new ScaleTransform()
                 }
             };
-            SelectionRectanlgeTransform = (TransformGroup)selectionRectangle.RenderTransform;
+            SelectionRectangleTransform = (TransformGroup)selectionRectangle.RenderTransform;
 
             _mainPanel = (RichCanvas)GetTemplateChild(DrawingPanelName);
             _mainPanel.ItemsOwner = this;
 
             _canvasContainer = (PanningGrid)GetTemplateChild(CanvasContainerName);
             _canvasContainer.Initalize(this);
-            HighlightTemplate = (DataTemplate)FindResource("HighlightAdornerStyle");
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
@@ -366,19 +340,16 @@ namespace RichCanvas
                             else
                             {
                                 CaptureMouse();
-                                _drawingGesture.OnMouseDown(container, position);
                                 _isDrawing = true;
+                                ClearSelections();
+                                _drawingGesture.OnMouseDown(container, position);
                                 break;
                             }
                         }
                         _currentDrawingIndexes.Clear();
                     }
-                    if (VisualHelper.HasAdornerThumbParent((DependencyObject)e.OriginalSource))
-                    {
-                        _isResizing = true;
-                    }
 
-                    if (!_isDrawing && !DragBehavior.IsDragging && !IsPanning && !_isResizing)
+                    if (!_isDrawing && !DragBehavior.IsDragging && !IsPanning)
                     {
                         IsSelecting = true;
                         _selectingGesture.OnMouseDown(position);
@@ -433,10 +404,6 @@ namespace RichCanvas
 
                 ItemsHost.InvalidateMeasure();
             }
-            else if (_isResizing)
-            {
-                _isResizing = false;
-            }
             else if (!DragBehavior.IsDragging && IsSelecting)
             {
                 IsSelecting = false;
@@ -461,8 +428,104 @@ namespace RichCanvas
             }
         }
 
+        #endregion
+
+        #region Properties Callbacks
+        private static void OnOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).OverrideTranslate((Point)e.NewValue);
+
+        private static object ConstarainScaleToRange(DependencyObject d, object value)
+        {
+            var itemsControl = (RichItemsControl)d;
+
+            if (itemsControl.DisableZoom)
+            {
+                return itemsControl.Scale;
+            }
+
+            double num = (double)value;
+            double minimum = itemsControl.MinScale;
+            if (num < minimum)
+            {
+                return minimum;
+            }
+
+            double maximum = itemsControl.MaxScale;
+            if (num > maximum)
+            {
+                return maximum;
+            }
+
+            return value;
+        }
+        private static void OnScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).OverrideScale((double)e.NewValue);
+
+        private static object CoerceMinimumScale(DependencyObject d, object value)
+            => (double)value > 0 ? value : 0.1;
+
+        private static void OnMinimumScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var zoom = (RichItemsControl)d;
+            zoom.CoerceValue(MaxScaleProperty);
+            zoom.CoerceValue(ScaleProperty);
+        }
+
+        private static void OnMaxScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var zoom = (RichItemsControl)d;
+            zoom.CoerceValue(ScaleProperty);
+        }
+
+        private static object CoerceMaxScale(DependencyObject d, object value)
+        {
+            var zoom = (RichItemsControl)d;
+            var min = zoom.MinScale;
+
+            return (double)value < min ? min : value;
+        }
+
+        private static void OnEnableVirtualizationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).ItemsHost?.InvalidateMeasure();
+
         private static void OnDisableAutoPanningChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
             => ((RichItemsControl)d).OnDisableAutoPanningChanged((bool)e.NewValue);
+
+        private static void OnAutoPanTickRateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).UpdateTimerInterval();
+
+        #endregion
+
+        #region Internal Methods
+
+        internal void AddSelection(RichItemContainer container) => _selectingGesture.AddSelection(container);
+
+        internal void ClearSelections() => _selectingGesture.UnselectAll();
+
+        internal void UpdateSelections(bool snap = false)
+        {
+            _selectingGesture.UpdateSelectionsPosition(snap);
+            AdjustScroll();
+        }
+
+        internal void AdjustScroll()
+        {
+            ScrollContainer.AdjustScrollVertically();
+            ScrollContainer.AdjustScrollHorizontally();
+        }
+
+        #endregion
+
+        #region Handlers And Private Methods
+
+        private void OverrideTranslate(Point newValue)
+        {
+            TranslateTransform.X = newValue.X;
+            TranslateTransform.Y = newValue.Y;
+        }
+
+        private void OverrideScale(double newValue)
+        {
+            CoerceValue(ScaleProperty);
+            ScaleTransform.ScaleX = newValue;
+            ScaleTransform.ScaleY = newValue;
+        }
 
         private void OnDisableAutoPanningChanged(bool shouldDisable)
         {
@@ -504,16 +567,8 @@ namespace RichCanvas
                 {
                     if (_isDrawing)
                     {
-                        if (Items.Count == 1)
-                        {
-                            TopLimit = _drawingGesture.GetCurrentTop();
-                            BottomLimit = _drawingGesture.GetCurrentBottom();
-                        }
-                        else
-                        {
-                            BottomLimit = Math.Max(ItemsHost.BottomLimit, _drawingGesture.GetCurrentBottom());
-                            TopLimit = Math.Min(ItemsHost.TopLimit, _drawingGesture.GetCurrentTop());
-                        }
+                        BottomLimit = Math.Max(ItemsHost.BottomLimit, _drawingGesture.GetCurrentBottom());
+                        TopLimit = Math.Min(ItemsHost.TopLimit, _drawingGesture.GetCurrentTop());
 
                         CurrentDrawingItem.Height = Math.Abs(transformedPosition.Y - CurrentDrawingItem.Top);
                     }
@@ -527,6 +582,7 @@ namespace RichCanvas
                         LeftLimit = Math.Min(ItemsHost.LeftLimit, _drawingGesture.GetCurrentLeft());
                         // left is not set yet so after drawing the right limit will become the intial left
                         RightLimit = Math.Max(ItemsHost.RightLimit, CurrentDrawingItem.Left);
+
                         CurrentDrawingItem.Width = Math.Abs(transformedPosition.X - CurrentDrawingItem.Left);
                     }
                     ScrollContainer.PanHorizontally(AutoPanSpeed, true);
@@ -535,16 +591,9 @@ namespace RichCanvas
                 {
                     if (_isDrawing)
                     {
-                        if (Items.Count == 1)
-                        {
-                            LeftLimit = _drawingGesture.GetCurrentLeft();
-                            RightLimit = _drawingGesture.GetCurrentRight();
-                        }
-                        else
-                        {
-                            LeftLimit = Math.Min(ItemsHost.LeftLimit, _drawingGesture.GetCurrentLeft());
-                            RightLimit = Math.Max(ItemsHost.RightLimit, _drawingGesture.GetCurrentRight());
-                        }
+                        LeftLimit = Math.Min(ItemsHost.LeftLimit, _drawingGesture.GetCurrentLeft());
+                        RightLimit = Math.Max(ItemsHost.RightLimit, _drawingGesture.GetCurrentRight());
+
                         CurrentDrawingItem.Width = Math.Abs(transformedPosition.X - CurrentDrawingItem.Left);
                     }
                     ScrollContainer.PanHorizontally(-AutoPanSpeed, true);
@@ -588,21 +637,23 @@ namespace RichCanvas
 
         private RectangleGeometry GetSelectionRectangleCurrentGeometry()
         {
-            var scaleTransform = (ScaleTransform)SelectionRectanlgeTransform.Children[0];
+            var scaleTransform = (ScaleTransform)SelectionRectangleTransform.Children[0];
             var currentSelectionTop = scaleTransform.ScaleY < 0 ? SelectionRectangle.Top - SelectionRectangle.Height : SelectionRectangle.Top;
             var currentSelectionLeft = scaleTransform.ScaleX < 0 ? SelectionRectangle.Left - SelectionRectangle.Width : SelectionRectangle.Left;
             return new RectangleGeometry(new Rect(currentSelectionLeft, currentSelectionTop, SelectionRectangle.Width, SelectionRectangle.Height));
         }
-        private static void OnAutoPanTickRateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).UpdateTimerInterval();
 
         private void UpdateTimerInterval()
         {
             _autoPanTimer.Interval = TimeSpan.FromMilliseconds(AutoPanTickRate);
         }
-        internal void RaiseDrawEndedEvent(object context)
+        private void RaiseDrawEndedEvent(object context)
         {
             RoutedEventArgs newEventArgs = new RoutedEventArgs(DrawingEndedEvent, context);
             RaiseEvent(newEventArgs);
         }
+
+        #endregion
+
     }
 }

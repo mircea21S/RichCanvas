@@ -9,8 +9,8 @@ namespace RichCanvas.Gestures
     internal class Selecting
     {
         private Point _selectionRectangleInitialPosition;
-        private List<RichItemContainer> _selections = new List<RichItemContainer>();
-        private RichItemsControl _context;
+        private readonly List<RichItemContainer> _selections = new List<RichItemContainer>();
+        private readonly RichItemsControl _context;
 
         internal bool HasSelections => _selections.Count > 1;
 
@@ -46,7 +46,7 @@ namespace RichCanvas.Gestures
 
         internal void OnMouseMove(Point position)
         {
-            var transformGroup = _context.SelectionRectanlgeTransform;
+            var transformGroup = _context.SelectionRectangleTransform;
             var scaleTransform = (ScaleTransform)transformGroup.Children[0];
 
             double width = position.X - _selectionRectangleInitialPosition.X;
@@ -81,6 +81,7 @@ namespace RichCanvas.Gestures
                 if (!_selections.Contains(container))
                 {
                     _selections.Add(container);
+
                     if (_context.SelectedItems != null)
                     {
                         _context.SelectedItems.Add(container.DataContext);
@@ -102,7 +103,7 @@ namespace RichCanvas.Gestures
             }
         }
 
-        internal void UpdateSelectionsPosition()
+        internal void UpdateSelectionsPosition(bool snap = false)
         {
             for (int i = 0; i < _selections.Count; i++)
             {
@@ -111,6 +112,12 @@ namespace RichCanvas.Gestures
 
                 _selections[i].Top += translateTransform.Y;
                 _selections[i].Left += translateTransform.X;
+
+                if (_context.EnableGrid && _context.EnableSnapping && snap)
+                {
+                    _selections[i].Left = Math.Round(_selections[i].Left / _context.GridSpacing) * _context.GridSpacing;
+                    _selections[i].Top = Math.Round(_selections[i].Top / _context.GridSpacing) * _context.GridSpacing;
+                }
 
                 translateTransform.X = 0;
                 translateTransform.Y = 0;

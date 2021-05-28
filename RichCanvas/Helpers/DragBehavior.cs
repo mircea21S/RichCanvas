@@ -73,12 +73,11 @@ namespace RichCanvas.Helpers
 
             var transformGroup = (TransformGroup)container.RenderTransform;
             var translateTransform = (TranslateTransform)transformGroup.Children[1];
-           
 
             container.Top += translateTransform.Y;
             container.Left += translateTransform.X;
 
-            if (ItemsControl.EnableGrid)
+            if (ItemsControl.EnableGrid && ItemsControl.EnableSnapping)
             {
                 container.Left = Math.Round(container.Left / ItemsControl.GridSpacing) * ItemsControl.GridSpacing;
                 container.Top = Math.Round(container.Top / ItemsControl.GridSpacing) * ItemsControl.GridSpacing;
@@ -92,19 +91,18 @@ namespace RichCanvas.Helpers
 
             if (ItemsControl.HasSelections)
             {
-                ItemsControl.UpdateSelections();
+                ItemsControl.UpdateSelections(true);
+
                 if (!TranslateChanged)
                 {
                     ItemsControl.ClearSelections();
                     ItemsControl.AddSelection(container);
                 }
             }
-            else
-            {
-                ItemsControl.AdjustScroll();
-            }
+
             translateTransform.Changed -= OnTranslateChanged;
             TranslateChanged = false;
+
             ItemsControl.Cursor = Cursors.Arrow;
         }
 
@@ -129,24 +127,8 @@ namespace RichCanvas.Helpers
                     DragDelta?.Invoke(new Point(currentPosition.X - _initialPosition.X, currentPosition.Y - _initialPosition.Y));
                 }
 
-                if (container.Top + translateTransform.Y < ItemsControl.ItemsHost.TopLimit || container.Top == ItemsControl.ItemsHost.TopLimit
-                     || container.Top + translateTransform.Y + container.Height > ItemsControl.ItemsHost.BottomLimit || container.Top + container.Height == ItemsControl.ItemsHost.BottomLimit
-                     || container.Left + translateTransform.X < ItemsControl.ItemsHost.LeftLimit || container.Left == ItemsControl.ItemsHost.LeftLimit ||
-                     container.Left + translateTransform.X + container.Width > ItemsControl.ItemsHost.RightLimit || container.Left + container.Width == ItemsControl.ItemsHost.RightLimit)
-                {
-                    container.Top += translateTransform.Y;
-                    container.Left += translateTransform.X;
-                    translateTransform.X = 0;
-                    translateTransform.Y = 0;
-                    ItemsControl.NeedMeasure = true;
-                    ItemsControl.ItemsHost.InvalidateMeasure();
-                }
-
-
-                if (ItemsControl.HasSelections)
-                {
-                    ItemsControl.UpdateSelections();
-                }
+                ItemsControl.NeedMeasure = true;
+                ItemsControl.UpdateSelections();
 
                 ItemsControl.AdjustScroll();
                 _initialPosition = currentPosition;

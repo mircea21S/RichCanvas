@@ -14,7 +14,7 @@ namespace RichCanvas.Converters
             {
                 return parameter;
             }
-            return new GeometryDrawing(Brushes.AliceBlue, new Pen() { Brush = Brushes.AliceBlue }, new RectangleGeometry(new System.Windows.Rect(0, 0, 1, 1)));
+            return Brushes.Transparent;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

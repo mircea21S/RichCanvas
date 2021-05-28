@@ -64,6 +64,5 @@ namespace RichCanvas
             }
             return arrangeSize;
         }
-
     }
 }

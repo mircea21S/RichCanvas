@@ -2,63 +2,76 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:RichCanvas"
                     xmlns:converters="clr-namespace:RichCanvas.Converters">
+    <Style x:Key="SelectionRectangleStyle"
+           TargetType="Rectangle">
+        <Setter Property="Stroke"
+                Value="DodgerBlue" />
+        <Setter Property="StrokeThickness"
+                Value="1" />
+        <Setter Property="Fill">
+            <Setter.Value>
+                <SolidColorBrush Opacity="0.1"
+                                 Color="DodgerBlue" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <GeometryDrawing x:Key="GridStyle"
+                     Geometry="M0,0 L0,1 0.03,1 0.03,0.03 1,0.03 1,0 Z"
+                     Brush="Red" />
+
     <Style TargetType="{x:Type local:RichItemsControl}">
         <Style.Resources>
             <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
-            <converters:BoolToGeometryConverter x:Key="BoolToGeometry" />
+            <converters:BoolToGeometryConverter x:Key="BoolToBackground" />
             <converters:UIntToRectConverter x:Key="UIntToRect" />
+
         </Style.Resources>
+
+        <Setter Property="SelectionRectangleStyle"
+                Value="{StaticResource SelectionRectangleStyle}" />
+
+        <Setter Property="GridStyle"
+                Value="{StaticResource GridStyle}" />
+
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:RichItemsControl}">
-                    <ControlTemplate.Resources>
-                        <DataTemplate x:Key="HighlightAdornerStyle">
-                            <Border BorderBrush="#29A6F9"
-                                    BorderThickness="2"
-                                    SnapsToDevicePixels="True">
-                            </Border>
-                        </DataTemplate>
-                    </ControlTemplate.Resources>
                     <Grid Background="{TemplateBinding Background}">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
                         <Grid.Resources>
-                            <GeometryDrawing x:Key="SmallGridGeometry"
-                                             Geometry="M0,0 L0,1 0.03,1 0.03,0.03 1,0.03 1,0 Z"
-                                             Brush="Red" />
-
-                            <DrawingBrush x:Key="SmallGridLinesDrawingBrush"
+                            <DrawingBrush x:Key="GridBrush"
                                           TileMode="Tile"
                                           ViewportUnits="Absolute"
                                           Viewport="{Binding GridSpacing, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource UIntToRect}}"
                                           Transform="{Binding AppliedTransform, RelativeSource={RelativeSource TemplatedParent}}"
-                                          Drawing="{Binding EnableGrid, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToGeometry}, ConverterParameter={StaticResource SmallGridGeometry}}" />
+                                          Drawing="{Binding GridStyle, RelativeSource={RelativeSource TemplatedParent}}" />
                         </Grid.Resources>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
 
                         <ScrollViewer CanContentScroll="True"
                                       HorizontalScrollBarVisibility="Auto"
                                       VerticalScrollBarVisibility="Auto">
                             <local:PanningGrid x:Name="CanvasContainer"
-                                               Background="{StaticResource SmallGridLinesDrawingBrush}">
+                                               Background="{Binding EnableGrid, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToBackground}, ConverterParameter={StaticResource GridBrush}}">
 
                                 <Canvas RenderTransform="{Binding AppliedTransform, RelativeSource={RelativeSource TemplatedParent}}"
                                         x:Name="containerDrawing">
                                     <local:RichCanvas x:Name="PART_Panel"
                                                       IsItemsHost="True" />
                                     <Rectangle x:Name="PART_SelectionRectangle"
-                                               Stroke="Black"
-                                               StrokeThickness="1"
-                                               Visibility="{Binding IsSelecting, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToVisConverter}}"
+                                               Visibility="{TemplateBinding IsSelecting, Converter={StaticResource BoolToVisConverter}}"
                                                Canvas.Top="{Binding SelectionRectangle.Y, RelativeSource={RelativeSource TemplatedParent}}"
                                                Canvas.Left="{Binding SelectionRectangle.X, RelativeSource={RelativeSource TemplatedParent}}"
                                                Width="{Binding SelectionRectangle.Width, RelativeSource={RelativeSource TemplatedParent}}"
-                                               Height="{Binding SelectionRectangle.Height, RelativeSource={RelativeSource TemplatedParent}}" />
+                                               Height="{Binding SelectionRectangle.Height, RelativeSource={RelativeSource TemplatedParent}}"
+                                               Style="{TemplateBinding SelectionRectangleStyle}" />
                                 </Canvas>
 
                             </local:PanningGrid>
                         </ScrollViewer>
                     </Grid>
+
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

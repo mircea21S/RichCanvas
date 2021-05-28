@@ -155,7 +155,7 @@ namespace RichCanvas.Gestures
                 translateTransformItem.Y += _currentItem.Height;
             }
 
-            if (_context.EnableGrid)
+            if (_context.EnableGrid && _context.EnableSnapping)
             {
                 _currentItem.Left = Math.Round(_currentItem.Left / _context.GridSpacing) * _context.GridSpacing;
                 _currentItem.Top = Math.Round(_currentItem.Top / _context.GridSpacing) * _context.GridSpacing;

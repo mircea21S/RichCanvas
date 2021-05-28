@@ -20,6 +20,9 @@
         <local:DebugConverter x:Key="DebugConverter" />
         <local:PointToStringConverter x:Key="PointToStringConverter" />
         <converters:StringToFloatConverter x:Key="StringToFloatConverter" />
+        <GeometryDrawing x:Key="GridStyle"
+                         Geometry="M0,0 L0,1 0.03,1 0.03,0.03 1,0.03 1,0 Z"
+                         Brush="Green" />
     </Window.Resources>
 
     <Grid>
@@ -45,8 +48,8 @@
             <TextBox Text="{Binding GridSpacing, Mode=TwoWay}"
                      Width="100"
                      HorizontalAlignment="Left" />
-            <CheckBox Content="Enable Virtualization"
-                      IsChecked="{Binding EnableVirtualization, Mode=TwoWay}" />
+            <!--<CheckBox Content="Enable Virtualization"
+                      IsChecked="{Binding EnableVirtualization, Mode=TwoWay}" />-->
         </StackPanel>
 
         <StackPanel Grid.Column="1">
@@ -103,8 +106,10 @@
                                      AutoPanSpeed="0.1"
                                      SelectedItems="{Binding SelectedItems}"
                                      EnableGrid="{Binding EnableGrid}"
-                                     GridSpacing="{Binding GridSpacing, Converter={StaticResource StringToFloatConverter}}"
-                                     EnableVirtualization="{Binding EnableVirtualization}">
+                                     EnableSnapping="True"
+                                     GridStyle="{StaticResource GridStyle}"
+                                     Background="AliceBlue"
+                                     GridSpacing="{Binding GridSpacing, Converter={StaticResource StringToFloatConverter}}">
 
             <richCanvas:RichItemsControl.Resources>
                 <DataTemplate DataType="{x:Type vm:Rectangle}">

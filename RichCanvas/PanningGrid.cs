@@ -10,7 +10,7 @@ namespace RichCanvas
 {
     internal class PanningGrid : Grid, IScrollInfo
     {
-        private const double DEFAULT_DELTA = 10;
+        #region Private Fields
 
         private TranslateTransform _translateTransform;
         private ScaleTransform _scaleTransform;
@@ -32,6 +32,10 @@ namespace RichCanvas
 
         private double MostRightElement => _parent.IsDrawing ? _parent.RightLimit : _parent.ItemsHost.RightLimit;
 
+        #endregion
+
+        #region Internal Properties
+
         internal double TopOffset => Math.Abs(TopLimit - HighestElement) * _scaleTransform.ScaleY;
 
         internal double BottomOffset => (BottomLimit - LowestElement) * _scaleTransform.ScaleY;
@@ -47,6 +51,10 @@ namespace RichCanvas
         internal double LeftLimit => TranslatePoint(_viewportTopLeftInitial, _parent.ItemsHost).X;
 
         internal double RightLimit => TranslatePoint(_viewportBottomRightInitial, _parent.ItemsHost).X;
+
+        #endregion
+
+        #region IScrollInfo
 
         public bool CanHorizontallyScroll { get; set; }
 
@@ -65,6 +73,180 @@ namespace RichCanvas
         public double ViewportHeight => _viewport.Height;
 
         public double ViewportWidth => _viewport.Width;
+
+        public void LineDown()
+        {
+            if (!_parent.IsZooming && !_parent.DisableScroll)
+            {
+                PanVertically(_parent.ScrollFactor);
+                ScrollOwner.InvalidateScrollInfo();
+            }
+        }
+
+        public void LineLeft()
+        {
+            if (!_parent.IsZooming && !_parent.DisableScroll)
+            {
+                PanHorizontally(_parent.ScrollFactor);
+                ScrollOwner.InvalidateScrollInfo();
+            }
+        }
+
+        public void LineRight()
+        {
+            if (!_parent.IsZooming && !_parent.DisableScroll)
+            {
+                PanHorizontally(-_parent.ScrollFactor);
+                ScrollOwner.InvalidateScrollInfo();
+            }
+        }
+
+        public void LineUp()
+        {
+            if (!_parent.IsZooming && !_parent.DisableScroll)
+            {
+                PanVertically(-_parent.ScrollFactor);
+                ScrollOwner.InvalidateScrollInfo();
+            }
+        }
+
+        public Rect MakeVisible(Visual visual, Rect rectangle)
+        {
+            if (visual is RichItemContainer container)
+            {
+                return new Rect(container.Left, container.Top, container.Width, container.Height);
+            }
+            return new Rect(ScrollOwner.RenderSize);
+        }
+
+        public void MouseWheelDown()
+        {
+            if (!_parent.IsZooming && !_parent.DisableScroll)
+            {
+                PanVertically(_parent.ScrollFactor);
+                ScrollOwner.InvalidateScrollInfo();
+            }
+        }
+
+        public void MouseWheelLeft()
+        {
+            if (!_parent.IsZooming && !_parent.DisableScroll)
+            {
+                PanHorizontally(_parent.ScrollFactor);
+                ScrollOwner.InvalidateScrollInfo();
+            }
+        }
+
+        public void MouseWheelRight()
+        {
+            if (!_parent.IsZooming && !_parent.DisableScroll)
+            {
+                PanHorizontally(-_parent.ScrollFactor);
+                ScrollOwner.InvalidateScrollInfo();
+            }
+        }
+
+        public void MouseWheelUp()
+        {
+            if (!_parent.IsZooming && !_parent.DisableScroll)
+            {
+                PanVertically(-_parent.ScrollFactor);
+                ScrollOwner.InvalidateScrollInfo();
+            }
+        }
+
+        public void PageDown()
+        {
+            if (!_parent.IsZooming && !_parent.DisableScroll)
+            {
+                PanVertically(_parent.ScrollFactor);
+                ScrollOwner.InvalidateScrollInfo();
+            }
+        }
+
+        public void PageLeft()
+        {
+            if (!_parent.IsZooming && !_parent.DisableScroll)
+            {
+                PanHorizontally(_parent.ScrollFactor);
+                ScrollOwner.InvalidateScrollInfo();
+            }
+        }
+
+        public void PageRight()
+        {
+            if (!_parent.IsZooming && !_parent.DisableScroll)
+            {
+                PanHorizontally(-_parent.ScrollFactor);
+                ScrollOwner.InvalidateScrollInfo();
+            }
+        }
+
+        public void PageUp()
+        {
+            if (!_parent.IsZooming && !_parent.DisableScroll)
+            {
+                PanVertically(-_parent.ScrollFactor);
+                ScrollOwner.InvalidateScrollInfo();
+            }
+        }
+
+        public void SetHorizontalOffset(double offset)
+        {
+            if (!_parent.DisableScroll)
+            {
+                if (offset == 0)
+                {
+                    // reset
+                    _offset.X = 0;
+                    _extent.Width = _viewport.Width;
+                }
+                if (LeftLimit > MostLeftElement)
+                {
+                    _offset.X = LeftOffset;
+                }
+                else if (RightLimit < MostRightElement)
+                {
+                    _offset.X = Math.Min(_offset.X + offset, RightOffset);
+                }
+                else
+                {
+                    // reset
+                    _offset.X = 0;
+                    _extent.Width = _viewport.Width;
+                }
+            }
+        }
+
+        public void SetVerticalOffset(double offset)
+        {
+            if (!_parent.DisableScroll)
+            {
+                if (offset == 0)
+                {
+                    // reset
+                    _offset.Y = 0;
+                    _extent.Height = _viewport.Height;
+                }
+                if (TopLimit > HighestElement)
+                {
+                    _offset.Y = TopOffset;
+                }
+                else if (BottomLimit < LowestElement)
+                {
+                    _offset.Y = Math.Min(_offset.Y + offset, BottomOffset);
+                }
+                else
+                {
+                    // reset
+                    _offset.Y = 0;
+                    _extent.Height = _viewport.Height;
+                }
+            }
+        }
+        #endregion
+
+        #region Override Methods
 
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
         {
@@ -107,20 +289,18 @@ namespace RichCanvas
         {
             if (Keyboard.IsKeyDown(Key.LeftCtrl))
             {
-                var position = e.GetPosition(this);
-                _zoomGesture.ZoomToPosition(position, e.Delta);
-
-                SetVerticalOffset(TopOffset);
-                UpdateExtentHeight();
-
-                SetHorizontalOffset(LeftOffset);
-                UpdateExtentWidth();
-
-                ScrollOwner.InvalidateScrollInfo();
-                if (_parent.EnableVirtualization)
+                if (!_parent.DisableZoom)
                 {
-                    _parent.NeedMeasure = true;
-                    _parent.ItemsHost.InvalidateMeasure();
+                    var position = e.GetPosition(this);
+                    _zoomGesture.ZoomToPosition(position, e.Delta, _parent.ScaleFactor);
+
+                    SetVerticalOffset(TopOffset);
+                    UpdateExtentHeight();
+
+                    SetHorizontalOffset(LeftOffset);
+                    UpdateExtentWidth();
+
+                    ScrollOwner.InvalidateScrollInfo();
                 }
             }
         }
@@ -183,190 +363,11 @@ namespace RichCanvas
             return base.ArrangeOverride(arrangeSize);
         }
 
-        public void LineDown()
-        {
-            if (!_parent.IsZooming)
-            {
-                var scrollOffset = 10;
-                PanVertically(scrollOffset);
-                ScrollOwner.InvalidateScrollInfo();
-            }
-        }
+        #endregion
 
-        public void LineLeft()
-        {
-            if (!_parent.IsZooming)
-            {
-                var scrollOffset = 10;
-                PanHorizontally(scrollOffset);
-                ScrollOwner.InvalidateScrollInfo();
-            }
-        }
+        #region Internal Methods
 
-        public void LineRight()
-        {
-            if (!_parent.IsZooming)
-            {
-                var scrollOffset = 10;
-
-                PanHorizontally(-scrollOffset);
-                ScrollOwner.InvalidateScrollInfo();
-            }
-        }
-
-        public void LineUp()
-        {
-            if (!_parent.IsZooming)
-            {
-                var scrollOffset = 10;
-
-                PanVertically(-scrollOffset);
-                ScrollOwner.InvalidateScrollInfo();
-            }
-        }
-
-        public Rect MakeVisible(Visual visual, Rect rectangle)
-        {
-            if (visual is RichItemContainer container)
-            {
-                return new Rect(container.Left, container.Top, container.Width, container.Height);
-            }
-            return new Rect(ScrollOwner.RenderSize);
-        }
-
-        public void MouseWheelDown()
-        {
-            if (!_parent.IsZooming)
-            {
-                var scrollOffset = 10;
-                PanVertically(scrollOffset);
-                ScrollOwner.InvalidateScrollInfo();
-            }
-        }
-
-        public void MouseWheelLeft()
-        {
-            if (!_parent.IsZooming)
-            {
-                var scrollOffset = 10;
-                PanHorizontally(scrollOffset);
-                ScrollOwner.InvalidateScrollInfo();
-            }
-        }
-
-        public void MouseWheelRight()
-        {
-            if (!_parent.IsZooming)
-            {
-                var scrollOffset = 10;
-
-                PanHorizontally(-scrollOffset);
-                ScrollOwner.InvalidateScrollInfo();
-            }
-        }
-
-        public void MouseWheelUp()
-        {
-            if (!_parent.IsZooming)
-            {
-                var scrollOffset = 10;
-
-                PanVertically(-scrollOffset);
-                ScrollOwner.InvalidateScrollInfo();
-            }
-        }
-
-        public void PageDown()
-        {
-            if (!_parent.IsZooming)
-            {
-                var scrollOffset = 10;
-                PanVertically(scrollOffset);
-                ScrollOwner.InvalidateScrollInfo();
-            }
-        }
-
-        public void PageLeft()
-        {
-            if (!_parent.IsZooming)
-            {
-                var scrollOffset = 10;
-                PanHorizontally(scrollOffset);
-                ScrollOwner.InvalidateScrollInfo();
-            }
-        }
-
-        public void PageRight()
-        {
-            if (!_parent.IsZooming)
-            {
-                var scrollOffset = 10;
-
-                PanHorizontally(-scrollOffset);
-                ScrollOwner.InvalidateScrollInfo();
-            }
-        }
-
-        public void PageUp()
-        {
-            if (!_parent.IsZooming)
-            {
-                var scrollOffset = 10;
-
-                PanVertically(-scrollOffset);
-                ScrollOwner.InvalidateScrollInfo();
-            }
-        }
-
-        public void SetHorizontalOffset(double offset)
-        {
-            if (offset == 0)
-            {
-                // reset
-                _offset.X = 0;
-                _extent.Width = _viewport.Width;
-            }
-            if (LeftLimit > MostLeftElement)
-            {
-                _offset.X = LeftOffset;
-            }
-            else if (RightLimit < MostRightElement)
-            {
-                _offset.X = Math.Min(_offset.X + offset, RightOffset);
-            }
-            else
-            {
-                // reset
-                _offset.X = 0;
-                _extent.Width = _viewport.Width;
-            }
-        }
-
-        public void SetVerticalOffset(double offset)
-        {
-            if (offset == 0)
-            {
-                // reset
-                _offset.Y = 0;
-                _extent.Height = _viewport.Height;
-            }
-            if (TopLimit > HighestElement)
-            {
-                _offset.Y = TopOffset;
-            }
-            else if (BottomLimit < LowestElement)
-            {
-                _offset.Y = Math.Min(_offset.Y + offset, BottomOffset);
-            }
-            else
-            {
-                // reset
-                _offset.Y = 0;
-                _extent.Height = _viewport.Height;
-            }
-        }
-
-        public void AdjustScrollVertically()
+        internal void AdjustScrollVertically()
         {
             SetVerticalOffset(TopOffset);
             UpdateExtentHeight();
@@ -374,7 +375,7 @@ namespace RichCanvas
             ScrollOwner.InvalidateScrollInfo();
         }
 
-        public void AdjustScrollHorizontally()
+        internal void AdjustScrollHorizontally()
         {
             SetHorizontalOffset(LeftOffset);
             UpdateExtentWidth();
@@ -384,12 +385,6 @@ namespace RichCanvas
 
         internal void PanVertically(double offset, bool reverseScroll = false)
         {
-            if (_parent.EnableVirtualization)
-            {
-                _parent.NeedMeasure = true;
-                _parent.ItemsHost.InvalidateMeasure();
-            }
-
             if (reverseScroll)
             {
                 ScrollVertically(-offset);
@@ -411,12 +406,6 @@ namespace RichCanvas
         }
         internal void PanHorizontally(double offset, bool reverseScroll = false)
         {
-            if (_parent.EnableVirtualization)
-            {
-                _parent.NeedMeasure = true;
-                _parent.ItemsHost.InvalidateMeasure();
-            }
-
             if (reverseScroll)
             {
                 ScrollHorizontally(-offset);
@@ -442,22 +431,33 @@ namespace RichCanvas
             _parent = richItemsControl;
             _translateTransform = _parent.TranslateTransform;
             _scaleTransform = _parent.ScaleTransform;
-            _zoomGesture = new Zoom(_scaleTransform, _translateTransform);
+            _zoomGesture = new Zoom(_scaleTransform, _translateTransform)
+            {
+                MinScale = _parent.MinScale,
+                MaxScale = _parent.MaxScale,
+            };
         }
+
+        #endregion
+
+        #region Private Methods
 
         private void UpdateExtentWidth()
         {
-            if (LeftLimit > MostLeftElement && RightLimit > MostRightElement)
+            if (!_parent.DisableScroll)
             {
-                _extent.Width = _initialExtent.Width + Math.Abs(LeftOffset);
-            }
-            else if (RightLimit < MostRightElement && LeftLimit < MostLeftElement)
-            {
-                _extent.Width = _initialExtent.Width + Math.Abs(RightOffset);
-            }
-            else if (LeftLimit > MostLeftElement && RightLimit < MostRightElement)
-            {
-                _extent.Width = _initialExtent.Width + LeftOffset + Math.Abs(RightOffset);
+                if (LeftLimit > MostLeftElement && RightLimit > MostRightElement)
+                {
+                    _extent.Width = _initialExtent.Width + Math.Abs(LeftOffset);
+                }
+                else if (RightLimit < MostRightElement && LeftLimit < MostLeftElement)
+                {
+                    _extent.Width = _initialExtent.Width + Math.Abs(RightOffset);
+                }
+                else if (LeftLimit > MostLeftElement && RightLimit < MostRightElement)
+                {
+                    _extent.Width = _initialExtent.Width + LeftOffset + Math.Abs(RightOffset);
+                }
             }
         }
         private void ScrollVertically(double offset)
@@ -472,18 +472,24 @@ namespace RichCanvas
 
         private void UpdateExtentHeight()
         {
-            if (TopLimit > HighestElement && BottomLimit > LowestElement)
+            if (!_parent.DisableScroll)
             {
-                _extent.Height = _initialExtent.Height + Math.Abs(TopOffset);
-            }
-            else if (BottomLimit < LowestElement && TopLimit < HighestElement)
-            {
-                _extent.Height = _initialExtent.Height + Math.Abs(BottomOffset);
-            }
-            else if (TopLimit > HighestElement && BottomLimit < LowestElement)
-            {
-                _extent.Height = _initialExtent.Height + TopOffset + Math.Abs(BottomOffset);
+                if (TopLimit > HighestElement && BottomLimit > LowestElement)
+                {
+                    _extent.Height = _initialExtent.Height + Math.Abs(TopOffset);
+                }
+                else if (BottomLimit < LowestElement && TopLimit < HighestElement)
+                {
+                    _extent.Height = _initialExtent.Height + Math.Abs(BottomOffset);
+                }
+                else if (TopLimit > HighestElement && BottomLimit < LowestElement)
+                {
+                    _extent.Height = _initialExtent.Height + TopOffset + Math.Abs(BottomOffset);
+                }
             }
         }
+
+        #endregion
+
     }
 }
