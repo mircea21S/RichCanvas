@@ -46,7 +46,7 @@ namespace RichCanvas
                 LeftLimit = minX;
                 BottomLimit = maxY;
                 RightLimit = maxX;
-                ItemsOwner.SetValue(RichItemsControl.ViewportRectPropertyKey, new Rect(LeftLimit, TopLimit, 0, 0));
+                ItemsOwner.ViewportRect = new Rect(LeftLimit, TopLimit, 0, 0);
                 ItemsOwner.AdjustScroll();
             }
 

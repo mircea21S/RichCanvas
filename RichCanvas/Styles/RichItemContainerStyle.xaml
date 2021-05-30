@@ -5,12 +5,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:RichItemContainer}">
-                    <Border BorderBrush="Black"
-                            BorderThickness="1"
-                            Background="Transparent"
-                            IsHitTestVisible="True">
-                        <ContentPresenter x:Name="PART_ContentPresenter"></ContentPresenter>
-                    </Border>
+                    <ContentPresenter x:Name="PART_ContentPresenter"></ContentPresenter>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

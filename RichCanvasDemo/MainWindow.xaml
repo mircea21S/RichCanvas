@@ -60,7 +60,6 @@
                     Height="30"
                     Command="{Binding GenerateElements}" />
             <TextBlock Text="{Binding Items.Count, StringFormat= '\{0\} (elements)'}" />
-            <TextBlock Text="{Binding ElementName=source, Path=VisibleElementsCount, StringFormat= '\{0\} (visible elements)'}" />
         </StackPanel>
 
         <StackPanel Grid.Column="2"
@@ -120,7 +119,7 @@
                 <DataTemplate DataType="{x:Type vm:Line}">
                     <Line Fill="Red"
                           Stroke="Red"
-                          StrokeThickness="3"
+                          StrokeThickness="5"
                           X2="{Binding Width}"
                           Y2="{Binding Height}">
                     </Line>

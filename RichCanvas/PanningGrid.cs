@@ -52,6 +52,10 @@ namespace RichCanvas
 
         internal double RightLimit => TranslatePoint(_viewportBottomRightInitial, _parent.ItemsHost).X;
 
+        internal bool TranslatedVertically { get; private set; }
+
+        internal bool TranslatedHorizontally { get; private set; }
+
         #endregion
 
         #region IScrollInfo
@@ -73,6 +77,7 @@ namespace RichCanvas
         public double ViewportHeight => _viewport.Height;
 
         public double ViewportWidth => _viewport.Width;
+
 
         public void LineDown()
         {
@@ -195,26 +200,40 @@ namespace RichCanvas
         {
             if (!_parent.DisableScroll)
             {
-                if (offset == 0)
+                if (!TranslatedHorizontally)
                 {
-                    // reset
-                    _offset.X = 0;
-                    _extent.Width = _viewport.Width;
-                }
-                if (LeftLimit > MostLeftElement)
-                {
-                    _offset.X = LeftOffset;
-                }
-                else if (RightLimit < MostRightElement)
-                {
-                    _offset.X = Math.Min(_offset.X + offset, RightOffset);
+                    if (offset != _offset.X)
+                    {
+                        if (offset > _offset.X)
+                        {
+                            if (LeftLimit < MostLeftElement)
+                            {
+                                ScrollHorizontally(_parent.ScrollFactor);
+                            }
+                            else
+                            {
+                                ScrollHorizontally(offset - _offset.X);
+                            }
+                        }
+                        else
+                        {
+                            ScrollHorizontally(offset - _offset.X);
+                        }
+                        _offset.X = offset;
+                    }
                 }
                 else
                 {
-                    // reset
-                    _offset.X = 0;
+                    offset = CoerceHorizontalOffset(offset);
+                    _offset.X = offset;
+                }
+
+                if (_offset.X == 0 && LeftLimit < MostLeftElement && RightLimit > MostRightElement)
+                {
                     _extent.Width = _viewport.Width;
                 }
+
+                TranslatedHorizontally = false;
             }
         }
 
@@ -222,28 +241,44 @@ namespace RichCanvas
         {
             if (!_parent.DisableScroll)
             {
-                if (offset == 0)
+                if (!TranslatedVertically)
                 {
-                    // reset
-                    _offset.Y = 0;
-                    _extent.Height = _viewport.Height;
-                }
-                if (TopLimit > HighestElement)
-                {
-                    _offset.Y = TopOffset;
-                }
-                else if (BottomLimit < LowestElement)
-                {
-                    _offset.Y = Math.Min(_offset.Y + offset, BottomOffset);
+                    if (offset != _offset.Y)
+                    {
+                        Console.WriteLine(offset);
+                        if (offset > _offset.Y)
+                        {
+                            if (TopLimit < HighestElement)
+                            {
+                                ScrollVertically(_parent.ScrollFactor);
+                            }
+                            else
+                            {
+                                ScrollVertically(offset - _offset.Y);
+                            }
+                        }
+                        else
+                        {
+                            ScrollVertically(offset - _offset.Y);
+                        }
+                        _offset.Y = offset;
+                    }
                 }
                 else
                 {
-                    // reset
-                    _offset.Y = 0;
+                    offset = CoerceVerticalOffset(offset);
+                    _offset.Y = offset;
+                }
+
+                if (_offset.Y == 0 && TopLimit < HighestElement && BottomLimit > LowestElement)
+                {
                     _extent.Height = _viewport.Height;
                 }
+
+                TranslatedVertically = false;
             }
         }
+
         #endregion
 
         #region Override Methods
@@ -293,6 +328,8 @@ namespace RichCanvas
                 {
                     var position = e.GetPosition(this);
                     _zoomGesture.ZoomToPosition(position, e.Delta, _parent.ScaleFactor);
+                    TranslatedVertically = true;
+                    TranslatedHorizontally = true;
 
                     SetVerticalOffset(TopOffset);
                     UpdateExtentHeight();
@@ -308,6 +345,7 @@ namespace RichCanvas
         {
             if (ScrollOwner != null)
             {
+
                 if (_viewport != constraint)
                 {
                     _viewportTopLeftInitial = new Point(0, 0);
@@ -369,6 +407,7 @@ namespace RichCanvas
 
         internal void AdjustScrollVertically()
         {
+            TranslatedVertically = true;
             SetVerticalOffset(TopOffset);
             UpdateExtentHeight();
 
@@ -377,6 +416,7 @@ namespace RichCanvas
 
         internal void AdjustScrollHorizontally()
         {
+            TranslatedHorizontally = true;
             SetHorizontalOffset(LeftOffset);
             UpdateExtentWidth();
 
@@ -385,6 +425,7 @@ namespace RichCanvas
 
         internal void PanVertically(double offset, bool reverseScroll = false)
         {
+            TranslatedVertically = false;
             if (reverseScroll)
             {
                 ScrollVertically(-offset);
@@ -395,7 +436,7 @@ namespace RichCanvas
             }
             if (TopLimit > HighestElement || BottomLimit < LowestElement)
             {
-                SetVerticalOffset(offset);
+                SetVerticalOffset(VerticalOffset + offset);
                 UpdateExtentHeight();
             }
             else
@@ -404,8 +445,10 @@ namespace RichCanvas
             }
             ScrollOwner.InvalidateScrollInfo();
         }
+
         internal void PanHorizontally(double offset, bool reverseScroll = false)
         {
+            TranslatedHorizontally = false;
             if (reverseScroll)
             {
                 ScrollHorizontally(-offset);
@@ -441,6 +484,49 @@ namespace RichCanvas
         #endregion
 
         #region Private Methods
+        private double CoerceVerticalOffset(double offset)
+        {
+            if (double.IsNaN(offset) || double.IsInfinity(offset))
+            {
+                offset = 0;
+            }
+            if (TopLimit > HighestElement)
+            {
+                offset = TopOffset;
+            }
+            else if (offset > 0)
+            {
+                offset = Math.Min(_offset.Y + offset, BottomOffset);
+            }
+            if (TopLimit < HighestElement && BottomLimit > LowestElement)
+            {
+                offset = 0;
+            }
+
+            return offset;
+        }
+
+        private double CoerceHorizontalOffset(double offset)
+        {
+            if (double.IsNaN(offset) || double.IsInfinity(offset))
+            {
+                offset = 0;
+            }
+            if (LeftLimit > MostLeftElement)
+            {
+                offset = LeftOffset;
+            }
+            else if (offset > 0)
+            {
+                offset = Math.Min(_offset.X + offset, RightOffset);
+            }
+            if (LeftLimit < MostLeftElement && RightLimit > MostRightElement)
+            {
+                offset = 0;
+            }
+
+            return offset;
+        }
 
         private void UpdateExtentWidth()
         {
@@ -463,11 +549,13 @@ namespace RichCanvas
         private void ScrollVertically(double offset)
         {
             _translateTransform.Y += -offset;
+            TranslatedVertically = true;
         }
 
         private void ScrollHorizontally(double offset)
         {
             _translateTransform.X += -offset;
+            TranslatedHorizontally = true;
         }
 
         private void UpdateExtentHeight()

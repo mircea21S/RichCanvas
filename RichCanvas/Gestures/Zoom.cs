@@ -19,6 +19,8 @@ namespace RichCanvas.Gestures
 
         internal void ZoomToPosition(Point position, int delta, double factor)
         {
+            var previousScaleX = _scaleTransform.ScaleX;
+            var previousScaleY = _scaleTransform.ScaleY;
             var originX = (position.X - _translateTransform.X) / _scaleTransform.ScaleX;
             var originY = (position.Y - _translateTransform.Y) / _scaleTransform.ScaleY;
 
@@ -49,8 +51,14 @@ namespace RichCanvas.Gestures
                 _scaleTransform.ScaleY = MaxScale;
             }
 
-            _translateTransform.X = position.X - originX * _scaleTransform.ScaleX;
-            _translateTransform.Y = position.Y - originY * _scaleTransform.ScaleY;
+            if (previousScaleX != _scaleTransform.ScaleX)
+            {
+                _translateTransform.X = position.X - originX * _scaleTransform.ScaleX;
+            }
+            if (previousScaleY != _scaleTransform.ScaleY)
+            {
+                _translateTransform.Y = position.Y - originY * _scaleTransform.ScaleY;
+            }
         }
 
     }

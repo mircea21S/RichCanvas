@@ -120,14 +120,7 @@ namespace RichCanvas
         public Rect ViewportRect
         {
             get => (Rect)GetValue(ViewportRectProperty);
-        }
-
-        //readonly todo
-        public static DependencyProperty VisibleElementsProperty = DependencyProperty.Register(nameof(VisibleElementsCount), typeof(int), typeof(RichItemsControl));
-        public int VisibleElementsCount
-        {
-            get => (int)GetValue(VisibleElementsProperty);
-            set => SetValue(VisibleElementsProperty, value);
+            internal set => SetValue(ViewportRectPropertyKey, value);
         }
 
         public static DependencyProperty TranslateOffsetProperty = DependencyProperty.Register(nameof(TranslateOffset), typeof(Point), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(Point), OnOffsetChanged));
@@ -144,12 +137,7 @@ namespace RichCanvas
             set => SetValue(EnableSnappingProperty, value);
         }
 
-        public static DependencyProperty GridStyleProperty = DependencyProperty.Register(nameof(GridStyle), typeof(System.Windows.Media.Drawing), typeof(RichItemsControl), new FrameworkPropertyMetadata(OnGridStyleChanged));
-
-        private static void OnGridStyleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-        }
-
+        public static DependencyProperty GridStyleProperty = DependencyProperty.Register(nameof(GridStyle), typeof(System.Windows.Media.Drawing), typeof(RichItemsControl));
         public System.Windows.Media.Drawing GridStyle
         {
             get => (System.Windows.Media.Drawing)GetValue(GridStyleProperty);
@@ -242,6 +230,8 @@ namespace RichCanvas
         internal bool IsDrawing => _isDrawing;
         internal bool NeedMeasure { get; set; }
         internal RichItemContainer CurrentDrawingItem => _drawingGesture.CurrentItem;
+
+        public bool NeedScroll { get; internal set; }
         #endregion
 
         #region Constructors
@@ -551,7 +541,7 @@ namespace RichCanvas
                 NeedMeasure = false;
                 var mousePosition = Mouse.GetPosition(ScrollContainer);
                 var transformedPosition = Mouse.GetPosition(ItemsHost);
-                if (mousePosition.Y < 0)
+                if (mousePosition.Y <= 0)
                 {
                     if (_isDrawing)
                     {
@@ -563,7 +553,7 @@ namespace RichCanvas
                     }
                     ScrollContainer.PanVertically(AutoPanSpeed, true);
                 }
-                else if (mousePosition.Y > ScrollContainer.ViewportHeight)
+                else if (mousePosition.Y >= ScrollContainer.ViewportHeight)
                 {
                     if (_isDrawing)
                     {
@@ -575,7 +565,7 @@ namespace RichCanvas
                     ScrollContainer.PanVertically(-AutoPanSpeed, true);
                 }
 
-                if (mousePosition.X < 0)
+                if (mousePosition.X <= 0)
                 {
                     if (_isDrawing)
                     {
@@ -587,7 +577,7 @@ namespace RichCanvas
                     }
                     ScrollContainer.PanHorizontally(AutoPanSpeed, true);
                 }
-                else if (mousePosition.X > ScrollContainer.ViewportWidth)
+                else if (mousePosition.X >= ScrollContainer.ViewportWidth)
                 {
                     if (_isDrawing)
                     {
