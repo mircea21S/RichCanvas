@@ -364,10 +364,6 @@ namespace RichCanvas
 
                     AdjustScrollVertically();
                     AdjustScrollHorizontally();
-                    if (_parent.EnableVirtualization)
-                    {
-                        _parent.ItemsHost.InvalidateMeasure();
-                    }
                 }
                 ScrollOwner.InvalidateScrollInfo();
             }

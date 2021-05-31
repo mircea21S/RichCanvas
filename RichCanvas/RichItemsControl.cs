@@ -94,13 +94,6 @@ namespace RichCanvas
             set => SetValue(AutoPanSpeedProperty, value);
         }
 
-        public static DependencyProperty EnableVirtualizationProperty = DependencyProperty.Register(nameof(EnableVirtualization), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true, OnEnableVirtualizationChanged));
-        public bool EnableVirtualization
-        {
-            get => (bool)GetValue(EnableVirtualizationProperty);
-            set => SetValue(EnableVirtualizationProperty, value);
-        }
-
         public static DependencyProperty EnableGridProperty = DependencyProperty.Register(nameof(EnableGrid), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
         public bool EnableGrid
         {
@@ -214,6 +207,9 @@ namespace RichCanvas
             remove { RemoveHandler(DrawingEndedEvent, value); }
         }
 
+        // selection mode/type? tbd
+        // key binding ctrl and select
+
         #endregion
 
         #region Internal Properties
@@ -326,6 +322,7 @@ namespace RichCanvas
                             if (container.IsValid())
                             {
                                 container.IsDrawn = true;
+                                _currentDrawingIndexes.Remove(_currentDrawingIndexes[i]);
                             }
                             else
                             {
@@ -333,10 +330,10 @@ namespace RichCanvas
                                 _isDrawing = true;
                                 ClearSelections();
                                 _drawingGesture.OnMouseDown(container, position);
+                                _currentDrawingIndexes.Remove(_currentDrawingIndexes[i]);
                                 break;
                             }
                         }
-                        _currentDrawingIndexes.Clear();
                     }
 
                     if (!_isDrawing && !DragBehavior.IsDragging && !IsPanning)

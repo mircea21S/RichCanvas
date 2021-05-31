@@ -7,6 +7,7 @@
         xmlns:richCanvas="clr-namespace:RichCanvas;assembly=RichCanvas"
         xmlns:vm="clr-namespace:RichCanvasDemo.ViewModels"
         xmlns:converters="clr-namespace:RichCanvasDemo.Converters"
+        xmlns:helpers="clr-namespace:RichCanvasDemo.Helpers"
         mc:Ignorable="d"
         Title="MainWindow"
         Height="650"
@@ -48,8 +49,6 @@
             <TextBox Text="{Binding GridSpacing, Mode=TwoWay}"
                      Width="100"
                      HorizontalAlignment="Left" />
-            <!--<CheckBox Content="Enable Virtualization"
-                      IsChecked="{Binding EnableVirtualization, Mode=TwoWay}" />-->
         </StackPanel>
 
         <StackPanel Grid.Column="1">
@@ -59,7 +58,6 @@
                     Width="100"
                     Height="30"
                     Command="{Binding GenerateElements}" />
-            <TextBlock Text="{Binding Items.Count, StringFormat= '\{0\} (elements)'}" />
         </StackPanel>
 
         <StackPanel Grid.Column="2"
@@ -111,23 +109,45 @@
                                      GridSpacing="{Binding GridSpacing, Converter={StaticResource StringToFloatConverter}}">
 
             <richCanvas:RichItemsControl.Resources>
+                <DataTemplate x:Key="SelectedAdornerTemplate">
+                    <Border BorderBrush="DodgerBlue"
+                            BorderThickness="1">
+                        <TextBlock Text="HELLO"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+                    </Border>
+                </DataTemplate>
+                <DataTemplate x:Key="HoverAdornerTemplate">
+                    <Border BorderBrush="DodgerBlue"
+                            BorderThickness="3">
+                    </Border>
+                </DataTemplate>
+
                 <DataTemplate DataType="{x:Type vm:Rectangle}">
-                    <Rectangle Fill="Red"
+                    <Rectangle Fill="Gray"
                                Width="{Binding Width}"
                                Height="{Binding Height}"></Rectangle>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:Line}">
-                    <Line Fill="Red"
-                          Stroke="Red"
-                          StrokeThickness="5"
+                    <Line Fill="Gray"
+                          Stroke="Gray"
+                          StrokeThickness="2"
                           X2="{Binding Width}"
-                          Y2="{Binding Height}">
+                          Y2="{Binding Height}"
+                          helpers:AttachedAdorner.HasLineHoverAdorner="True">
                     </Line>
                 </DataTemplate>
             </richCanvas:RichItemsControl.Resources>
 
             <richCanvas:RichItemsControl.ItemContainerStyle>
                 <Style TargetType="richCanvas:RichItemContainer">
+
+                    <Setter Property="helpers:AttachedAdorner.HasHoverAdorner"
+                            Value="True" />
+                    <!--Replace with property-->
+                    <Setter Property="helpers:AttachedAdorner.HasResizeAdorner"
+                            Value="{Binding IsSelected}" />
+
                     <Setter Property="Top"
                             Value="{Binding Top, Mode=TwoWay}" />
                     <Setter Property="Left"
@@ -138,6 +158,7 @@
                             Value="{Binding Width, Mode=TwoWay}" />
                     <Setter Property="Height"
                             Value="{Binding Height, Mode=TwoWay}" />
+
                     <Style.Triggers>
                         <Trigger Property="IsSelected"
                                  Value="True">
@@ -145,6 +166,7 @@
                                     Value="0.6" />
                         </Trigger>
                     </Style.Triggers>
+
                 </Style>
             </richCanvas:RichItemsControl.ItemContainerStyle>
 
