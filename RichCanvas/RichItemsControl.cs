@@ -207,6 +207,13 @@ namespace RichCanvas
             remove { RemoveHandler(DrawingEndedEvent, value); }
         }
 
+        public static readonly RoutedEvent ScrollingEvent = EventManager.RegisterRoutedEvent(nameof(Scrolling), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(RichItemsControl));
+        public event RoutedEventHandler Scrolling
+        {
+            add { AddHandler(ScrollingEvent, value); }
+            remove { RemoveHandler(ScrollingEvent, value); }
+        }
+
         // selection mode/type? tbd
         // key binding ctrl and select
 
@@ -271,6 +278,13 @@ namespace RichCanvas
 
             _canvasContainer = (PanningGrid)GetTemplateChild(CanvasContainerName);
             _canvasContainer.Initalize(this);
+
+            TranslateTransform.Changed += OnTranslateChanged;
+        }
+
+        private void OnTranslateChanged(object sender, EventArgs e)
+        {
+            RaiseScrollingEvent(e);
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
@@ -295,7 +309,7 @@ namespace RichCanvas
         {
             RenderTransform = new TransformGroup()
             {
-                Children = new TransformCollection { new ScaleTransform(), new TranslateTransform(), new RotateTransform() }
+                Children = new TransformCollection { new ScaleTransform(), new TranslateTransform() }
             },
             IsHitTestVisible = true
         };
@@ -317,7 +331,6 @@ namespace RichCanvas
                         for (int i = 0; i < _currentDrawingIndexes.Count; i++)
                         {
                             RichItemContainer container = (RichItemContainer)ItemContainerGenerator.ContainerFromIndex(_currentDrawingIndexes[i]);
-                            container.Host = this;
 
                             if (container.IsValid())
                             {
@@ -495,6 +508,12 @@ namespace RichCanvas
         {
             ScrollContainer.AdjustScrollVertically();
             ScrollContainer.AdjustScrollHorizontally();
+        }
+
+        internal void RaiseScrollingEvent(object context)
+        {
+            RoutedEventArgs newEventArgs = new RoutedEventArgs(ScrollingEvent, context);
+            RaiseEvent(newEventArgs);
         }
 
         #endregion

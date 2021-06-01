@@ -1,5 +1,4 @@
 ﻿using RichCanvas;
-using RichCanvasDemo.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -22,10 +21,7 @@ namespace RichCanvasDemo.Adorners
         protected override Size ArrangeOverride(Size finalSize)
         {
             var container = (RichItemContainer)AdornedElement;
-            if (!(container.DataContext is Line))
-            {
-                Container.Arrange(new Rect(new Point(0, 0), new Size(container.Width, container.Height)));
-            }
+            Container.Arrange(new Rect(new Point(0, 0), new Size(container.Width, container.Height)));
             return finalSize;
         }
 

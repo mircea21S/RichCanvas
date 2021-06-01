@@ -1,4 +1,5 @@
-﻿using RichCanvasDemo.ViewModels.Base;
+﻿using RichCanvasDemo.Helpers;
+using RichCanvasDemo.ViewModels.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,11 @@ namespace RichCanvasDemo
             //var drawable = context as Drawable;
             //(this.DataContext as MainWindowViewModel).DrawConnectedLine(new Point(drawable.Left - drawable.Width, drawable.Top + drawable.Height));
 
+        }
+
+        private void OnScrolling(object sender, RoutedEventArgs e)
+        {
+            AttachedAdorner.OnScrolling();
         }
     }
 }

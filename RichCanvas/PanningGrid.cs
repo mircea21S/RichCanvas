@@ -117,6 +117,7 @@ namespace RichCanvas
 
         public Rect MakeVisible(Visual visual, Rect rectangle)
         {
+            //not implemented
             if (visual is RichItemContainer container)
             {
                 return new Rect(container.Left, container.Top, container.Width, container.Height);

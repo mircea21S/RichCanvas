@@ -106,15 +106,24 @@
                                      EnableSnapping="True"
                                      GridStyle="{StaticResource GridStyle}"
                                      Background="AliceBlue"
-                                     GridSpacing="{Binding GridSpacing, Converter={StaticResource StringToFloatConverter}}">
+                                     GridSpacing="{Binding GridSpacing, Converter={StaticResource StringToFloatConverter}}"
+                                     Scrolling="OnScrolling">
 
             <richCanvas:RichItemsControl.Resources>
                 <DataTemplate x:Key="SelectedAdornerTemplate">
                     <Border BorderBrush="DodgerBlue"
-                            BorderThickness="1">
-                        <TextBlock Text="HELLO"
+                            BorderThickness="1"
+                            Background="DodgerBlue">
+                        <TextBlock Foreground="White"
                                    HorizontalAlignment="Center"
-                                   VerticalAlignment="Center" />
+                                   VerticalAlignment="Center">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} x {1}">
+                                    <Binding Path="Width" />
+                                    <Binding Path="Height" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
                     </Border>
                 </DataTemplate>
                 <DataTemplate x:Key="HoverAdornerTemplate">
@@ -145,9 +154,8 @@
                     <Setter Property="helpers:AttachedAdorner.HasHoverAdorner"
                             Value="True" />
                     <!--Replace with property-->
-                    <Setter Property="helpers:AttachedAdorner.HasResizeAdorner"
+                    <Setter Property="helpers:AttachedAdorner.ShowResizeAdorner"
                             Value="{Binding IsSelected}" />
-
                     <Setter Property="Top"
                             Value="{Binding Top, Mode=TwoWay}" />
                     <Setter Property="Left"

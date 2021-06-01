@@ -57,6 +57,12 @@
 
                                 <Canvas RenderTransform="{Binding AppliedTransform, RelativeSource={RelativeSource TemplatedParent}}"
                                         x:Name="containerDrawing">
+                                    <Canvas.CacheMode>
+                                        <BitmapCache EnableClearType="False"
+                                                     RenderAtScale="1"
+                                                     SnapsToDevicePixels="True" />
+                                    </Canvas.CacheMode>
+                                    
                                     <local:RichCanvas x:Name="PART_Panel"
                                                       IsItemsHost="True" />
                                     <Rectangle x:Name="PART_SelectionRectangle"
@@ -66,6 +72,7 @@
                                                Width="{Binding SelectionRectangle.Width, RelativeSource={RelativeSource TemplatedParent}}"
                                                Height="{Binding SelectionRectangle.Height, RelativeSource={RelativeSource TemplatedParent}}"
                                                Style="{TemplateBinding SelectionRectangleStyle}" />
+                                    
                                 </Canvas>
 
                             </local:PanningGrid>
