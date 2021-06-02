@@ -100,7 +100,7 @@
                                      DrawingEnded="RichItemsControl_OnDrawEnded"
                                      DisableAutoPanning="False"
                                      AutoPanTickRate="0.9"
-                                     AutoPanSpeed="0.1"
+                                     AutoPanSpeed="0.5"
                                      SelectedItems="{Binding SelectedItems}"
                                      EnableGrid="{Binding EnableGrid}"
                                      EnableSnapping="True"

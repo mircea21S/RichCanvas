@@ -214,6 +214,26 @@ namespace RichCanvas
             remove { RemoveHandler(ScrollingEvent, value); }
         }
 
+        public static DependencyProperty DisableCacheProperty = DependencyProperty.Register(nameof(DisableCache), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false, OnDisableCacheChanged));
+        public bool DisableCache
+        {
+            get => (bool)GetValue(DisableCacheProperty);
+            set => SetValue(DisableCacheProperty, value);
+        }
+
+        public static DependencyProperty ZoomKeyProperty = DependencyProperty.Register(nameof(ZoomKey), typeof(Key), typeof(RichItemsControl), new FrameworkPropertyMetadata(Key.LeftCtrl));
+        public Key ZoomKey
+        {
+            get => (Key)GetValue(ZoomKeyProperty);
+            set => SetValue(ZoomKeyProperty, value);
+        }
+
+        public static DependencyProperty PanningKeyProperty = DependencyProperty.Register(nameof(PanningKey), typeof(Key), typeof(RichItemsControl), new FrameworkPropertyMetadata(Key.Space));
+        public Key PanningKey
+        {
+            get => (Key)GetValue(PanningKeyProperty);
+            set => SetValue(PanningKeyProperty, value);
+        }
         // selection mode/type? tbd
         // key binding ctrl and select
 
@@ -228,8 +248,8 @@ namespace RichCanvas
         internal double RightLimit { get; set; }
         internal double BottomLimit { get; set; }
         internal double LeftLimit { get; set; }
-        internal bool IsPanning { get; private set; }
-        internal bool IsZooming { get; private set; }
+        internal bool IsPanning => Keyboard.IsKeyDown(PanningKey);
+        internal bool IsZooming => Keyboard.IsKeyDown(ZoomKey);
         internal bool IsDrawing => _isDrawing;
         internal bool NeedMeasure { get; set; }
         internal RichItemContainer CurrentDrawingItem => _drawingGesture.CurrentItem;
@@ -275,6 +295,7 @@ namespace RichCanvas
 
             _mainPanel = (RichCanvas)GetTemplateChild(DrawingPanelName);
             _mainPanel.ItemsOwner = this;
+            SetCachingMode(DisableCache);
 
             _canvasContainer = (PanningGrid)GetTemplateChild(CanvasContainerName);
             _canvasContainer.Initalize(this);
@@ -285,22 +306,6 @@ namespace RichCanvas
         private void OnTranslateChanged(object sender, EventArgs e)
         {
             RaiseScrollingEvent(e);
-        }
-
-        protected override void OnKeyDown(KeyEventArgs e)
-        {
-            if (e.Key == Key.LeftCtrl)
-            {
-                IsZooming = true;
-            }
-        }
-
-        protected override void OnKeyUp(KeyEventArgs e)
-        {
-            if (e.Key == Key.LeftCtrl)
-            {
-                IsZooming = false;
-            }
         }
 
         protected override bool IsItemItsOwnContainerOverride(object item) => item is RichItemContainer;
@@ -316,9 +321,8 @@ namespace RichCanvas
 
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
         {
-            if (Keyboard.IsKeyDown(Key.Space))
+            if (IsPanning)
             {
-                IsPanning = true;
                 Cursor = Cursors.Hand;
             }
             else
@@ -331,20 +335,22 @@ namespace RichCanvas
                         for (int i = 0; i < _currentDrawingIndexes.Count; i++)
                         {
                             RichItemContainer container = (RichItemContainer)ItemContainerGenerator.ContainerFromIndex(_currentDrawingIndexes[i]);
-
-                            if (container.IsValid())
+                            if (container != null)
                             {
-                                container.IsDrawn = true;
-                                _currentDrawingIndexes.Remove(_currentDrawingIndexes[i]);
-                            }
-                            else
-                            {
-                                CaptureMouse();
-                                _isDrawing = true;
-                                ClearSelections();
-                                _drawingGesture.OnMouseDown(container, position);
-                                _currentDrawingIndexes.Remove(_currentDrawingIndexes[i]);
-                                break;
+                                if (container.IsValid())
+                                {
+                                    container.IsDrawn = true;
+                                    _currentDrawingIndexes.Remove(_currentDrawingIndexes[i]);
+                                }
+                                else
+                                {
+                                    CaptureMouse();
+                                    _isDrawing = true;
+                                    ClearSelections();
+                                    _drawingGesture.OnMouseDown(container, position);
+                                    _currentDrawingIndexes.Remove(_currentDrawingIndexes[i]);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -411,7 +417,6 @@ namespace RichCanvas
             if (IsPanning)
             {
                 Cursor = Cursors.Arrow;
-                IsPanning = false;
             }
             if (IsMouseCaptured)
             {
@@ -431,6 +436,9 @@ namespace RichCanvas
         #endregion
 
         #region Properties Callbacks
+
+        private static void OnDisableCacheChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).SetCachingMode((bool)e.NewValue);
+
         private static void OnOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).OverrideTranslate((Point)e.NewValue);
 
         private static object ConstarainScaleToRange(DependencyObject d, object value)
@@ -483,8 +491,6 @@ namespace RichCanvas
             return (double)value < min ? min : value;
         }
 
-        private static void OnEnableVirtualizationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).ItemsHost?.InvalidateMeasure();
-
         private static void OnDisableAutoPanningChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
             => ((RichItemsControl)d).OnDisableAutoPanningChanged((bool)e.NewValue);
 
@@ -519,6 +525,25 @@ namespace RichCanvas
         #endregion
 
         #region Handlers And Private Methods
+        private void SetCachingMode(bool disable)
+        {
+            if (_mainPanel != null)
+            {
+                if (!disable)
+                {
+                    _mainPanel.CacheMode = new BitmapCache()
+                    {
+                        EnableClearType = false,
+                        SnapsToDevicePixels = false,
+                        RenderAtScale = Scale
+                    };
+                }
+                else
+                {
+                    _mainPanel.CacheMode = null;
+                }
+            }
+        }
 
         private void OverrideTranslate(Point newValue)
         {

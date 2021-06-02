@@ -295,7 +295,7 @@ namespace RichCanvas
 
         protected override void OnPreviewMouseMove(MouseEventArgs e)
         {
-            if (Keyboard.IsKeyDown(Key.Space) && Mouse.LeftButton == MouseButtonState.Pressed && _parent.IsPanning)
+            if (Mouse.LeftButton == MouseButtonState.Pressed && _parent.IsPanning)
             {
                 var currentPosition = e.GetPosition(this);
                 var deltaHeight = currentPosition.Y - _panInitialPosition.Y;
@@ -323,30 +323,17 @@ namespace RichCanvas
         }
         protected override void OnPreviewMouseWheel(MouseWheelEventArgs e)
         {
-            if (Keyboard.IsKeyDown(Key.LeftCtrl))
+            if (_parent.IsZooming && !_parent.DisableZoom)
             {
-                if (!_parent.DisableZoom)
-                {
-                    var position = e.GetPosition(this);
-                    _zoomGesture.ZoomToPosition(position, e.Delta, _parent.ScaleFactor);
-                    TranslatedVertically = true;
-                    TranslatedHorizontally = true;
-
-                    SetVerticalOffset(TopOffset);
-                    UpdateExtentHeight();
-
-                    SetHorizontalOffset(LeftOffset);
-                    UpdateExtentWidth();
-
-                    ScrollOwner.InvalidateScrollInfo();
-                }
+                var position = e.GetPosition(this);
+                Zoom(position, e.Delta);
             }
         }
+
         protected override Size MeasureOverride(Size constraint)
         {
             if (ScrollOwner != null)
             {
-
                 if (_viewport != constraint)
                 {
                     _viewportTopLeftInitial = new Point(0, 0);
@@ -401,6 +388,20 @@ namespace RichCanvas
         #endregion
 
         #region Internal Methods
+        internal void Zoom(Point position, int delta)
+        {
+            _zoomGesture.ZoomToPosition(position, delta, _parent.ScaleFactor);
+            TranslatedVertically = true;
+            TranslatedHorizontally = true;
+
+            SetVerticalOffset(TopOffset);
+            UpdateExtentHeight();
+
+            SetHorizontalOffset(LeftOffset);
+            UpdateExtentWidth();
+
+            ScrollOwner.InvalidateScrollInfo();
+        }
 
         internal void AdjustScrollVertically()
         {
@@ -481,6 +482,7 @@ namespace RichCanvas
         #endregion
 
         #region Private Methods
+
         private double CoerceVerticalOffset(double offset)
         {
             if (double.IsNaN(offset) || double.IsInfinity(offset))
