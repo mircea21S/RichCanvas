@@ -18,15 +18,31 @@ namespace RichCanvasDemo
         private ICommand drawLineCommand;
         private ICommand resizeCommand;
         private RelayCommand deleteCommand;
+        private RelayCommand generateElementsCommand;
+        private RelayCommand drawRectCommand;
+        private RelayCommand drawBezierCommand;
+        private ICommand drawEndedCommand;
+        private bool enableSnapping;
+        private bool disableCache;
+        private bool disableZoom;
+        private bool disableScroll;
+        private bool disableAutoPanning;
+        private string autoPanSpeed;
+        private string autoPanTickRate;
+        private string scrollFactor;
+        private string zoomFactor;
+        private string maxScale;
+        private string minScale;
 
+        public ICommand DrawEndedCommand => drawEndedCommand ??= new RelayCommand<RoutedEventArgs>(DrawEnded);
         public ObservableCollection<Drawable> Items { get; }
         public ObservableCollection<Drawable> SelectedItems { get; }
-        public ICommand DrawRectCommand { get; }
-        public ICommand GenerateElements { get; }
-        public ICommand DrawLines { get; }
+        public ICommand DrawRectCommand => drawRectCommand ??= new RelayCommand(OnDrawCommand);
+        public ICommand GenerateElements => generateElementsCommand ??= new RelayCommand(OnGenerateElements);
         public ICommand DrawLineCommand => drawLineCommand ??= new RelayCommand(DrawLine);
         public ICommand ResizeCommand => resizeCommand ??= new RelayCommand(Resize);
         public ICommand DeleteCommand => deleteCommand ??= new RelayCommand(Delete);
+        public ICommand DrawBezierCommand => drawBezierCommand ??= new RelayCommand(OnDrawBezier);
 
         public bool EnableGrid
         {
@@ -50,12 +66,54 @@ namespace RichCanvasDemo
             set => SetProperty(ref _enableVirtualization, value);
         }
 
+        public bool EnableSnapping { get => enableSnapping; set => SetProperty(ref enableSnapping, value); }
+
+
+        public bool DisableCache { get => disableCache; set => SetProperty(ref disableCache, value); }
+
+
+        public bool DisableZoom { get => disableZoom; set => SetProperty(ref disableZoom, value); }
+
+
+        public bool DisableScroll { get => disableScroll; set => SetProperty(ref disableScroll, value); }
+
+
+        public bool DisableAutoPanning { get => disableAutoPanning; set => SetProperty(ref disableAutoPanning, value); }
+
+
+        public string AutoPanSpeed { get => autoPanSpeed; set => SetProperty(ref autoPanSpeed, value); }
+
+
+        public string AutoPanTickRate { get => autoPanTickRate; set => SetProperty(ref autoPanTickRate, value); }
+
+
+        public string ScrollFactor { get => scrollFactor; set => SetProperty(ref scrollFactor, value); }
+
+
+        public string ZoomFactor { get => zoomFactor; set => SetProperty(ref zoomFactor, value); }
+
+
+        public string MaxScale { get => maxScale; set => SetProperty(ref maxScale, value); }
+
+
+        public string MinScale { get => minScale; set => SetProperty(ref minScale, value); }
+
         public MainWindowViewModel()
         {
             Items = new ObservableCollection<Drawable>();
-            DrawRectCommand = new RelayCommand(OnDrawCommand);
             SelectedItems = new ObservableCollection<Drawable>();
-            GenerateElements = new RelayCommand(OnGenerateElements);
+        }
+
+        private void OnDrawBezier()
+        {
+            var bezier = new Bezier
+            {
+                Points = new List<Point>(),
+            };
+            bezier.Point1 = new Point(bezier.Width - 20, 0);
+            bezier.Point2 = new Point(bezier.Width - 10, 0);
+            bezier.Point3 = new Point(bezier.Width, bezier.Height);
+            Items.Add(bezier);
         }
 
         private void OnGenerateElements()
@@ -112,5 +170,15 @@ namespace RichCanvasDemo
             x.Height += 20;
         }
 
+        private void DrawEnded(RoutedEventArgs args)
+        {
+            var element = (Drawable)args.OriginalSource;
+            if (element is Bezier bezier)
+            {
+                bezier.Point1 = new Point(bezier.Width - 20, 0);
+                bezier.Point2 = new Point(bezier.Width - 10, 0);
+                bezier.Point3 = new Point(bezier.Width, bezier.Height);
+            }
+        }
     }
 }

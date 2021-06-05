@@ -26,16 +26,6 @@ namespace RichCanvasDemo
         {
             InitializeComponent();
         }
-        private void RichItemsControl_OnDrawEnded(object sender, RoutedEventArgs e)
-        {
-            //e.OriginalSource is DataContext
-            //Testing connecting lines
-            //TODO: Information about xOy square position (-x,-y) (-x,y) (x,y) (x, -y)
-
-            //var drawable = context as Drawable;
-            //(this.DataContext as MainWindowViewModel).DrawConnectedLine(new Point(drawable.Left - drawable.Width, drawable.Top + drawable.Height));
-
-        }
 
         private void OnScrolling(object sender, RoutedEventArgs e)
         {

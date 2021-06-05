@@ -8,6 +8,7 @@
         xmlns:vm="clr-namespace:RichCanvasDemo.ViewModels"
         xmlns:converters="clr-namespace:RichCanvasDemo.Converters"
         xmlns:helpers="clr-namespace:RichCanvasDemo.Helpers"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Title="MainWindow"
         Height="650"
@@ -24,90 +25,205 @@
         <GeometryDrawing x:Key="GridStyle"
                          Geometry="M0,0 L0,1 0.03,1 0.03,0.03 1,0.03 1,0 Z"
                          Brush="Green" />
+        <converters:ListToPointCollectionConverter x:Key="ListToPointCollectionConverter" />
+
     </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
-            <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
 
 
-        <StackPanel Width="200">
-            <Label Content="{Binding MousePosition, ElementName=source, Converter={StaticResource PointToStringConverter}}"
-                   HorizontalAlignment="Left"></Label>
-            <CheckBox Content="Enable Grid"
-                      IsChecked="{Binding EnableGrid, Mode=TwoWay}" />
-            <TextBlock Text="Grid spacing value" />
-            <TextBox Text="{Binding GridSpacing, Mode=TwoWay}"
-                     Width="100"
-                     HorizontalAlignment="Left" />
-        </StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
 
-        <StackPanel Grid.Column="1">
-            <TextBlock Text="Number of elements" />
-            <TextBox Text="{Binding ElementsCount, Mode=TwoWay}" />
-            <Button Content="Generate"
-                    Width="100"
-                    Height="30"
-                    Command="{Binding GenerateElements}" />
-        </StackPanel>
+            <StackPanel>
+                <CheckBox Content="Enable Grid"
+                          IsChecked="{Binding EnableGrid, Mode=TwoWay}"
+                          HorizontalAlignment="Left" />
+                <TextBlock Text="Grid spacing value" />
+                <TextBox Text="{Binding GridSpacing, Mode=TwoWay}"
+                         Width="100"
+                         HorizontalAlignment="Left" />
+            </StackPanel>
+            <StackPanel Grid.Row="1">
+                <CheckBox Content="Enable Snapping"
+                          IsChecked="{Binding EnableSnapping, Mode=TwoWay}"
+                          HorizontalAlignment="Left" />
+            </StackPanel>
+            <StackPanel Grid.Row="2">
+                <CheckBox Content="Disable Cache"
+                          IsChecked="{Binding DisableCache, Mode=TwoWay}"
+                          HorizontalAlignment="Left" />
+            </StackPanel>
+            <StackPanel Grid.Row="3">
+                <CheckBox Content="Disable Zoom"
+                          IsChecked="{Binding DisableZoom, Mode=TwoWay}"
+                          HorizontalAlignment="Left" />
+            </StackPanel>
+            <StackPanel Grid.Row="4">
+                <CheckBox Content="Disable Scroll"
+                          IsChecked="{Binding DisableScroll, Mode=TwoWay}"
+                          HorizontalAlignment="Left" />
+            </StackPanel>
+            <StackPanel Grid.Row="5">
+                <CheckBox Content="Disable AutoPanning"
+                          IsChecked="{Binding DisableAutoPanning, Mode=TwoWay}"
+                          HorizontalAlignment="Left" />
+                <TextBlock Text="Auto-Pan speed" />
+                <TextBox Text="{Binding AutoPanSpeed, Mode=TwoWay}"
+                         Width="100"
+                         HorizontalAlignment="Left" />
+                <TextBlock Text="Auto-Pan TickRate" />
+                <TextBox Text="{Binding AutoPanTickRate, Mode=TwoWay}"
+                         Width="100"
+                         HorizontalAlignment="Left" />
+            </StackPanel>
+            <StackPanel Grid.Row="6">
+                <TextBlock Text="Scroll Factor" />
+                <TextBox Text="{Binding ScrollFactor, Mode=TwoWay}"
+                         Width="100"
+                         HorizontalAlignment="Left" />
+                <TextBlock Text="Zoom Factor" />
+                <TextBox Text="{Binding ZoomFactor, Mode=TwoWay}"
+                         Width="100"
+                         HorizontalAlignment="Left" />
+                <TextBlock Text="Max Scale" />
+                <TextBox Text="{Binding MaxScale, Mode=TwoWay}"
+                         Width="100"
+                         HorizontalAlignment="Left" />
+                <TextBlock Text="Min Scale" />
+                <TextBox Text="{Binding MinScale, Mode=TwoWay}"
+                         Width="100"
+                         HorizontalAlignment="Left" />
+            </StackPanel>
 
-        <StackPanel Grid.Column="2"
-                    Margin="10 0 0 0">
+            <StackPanel Grid.Row="10">
+                <TextBlock Text="Number of elements" />
+                <TextBox Text="{Binding ElementsCount, Mode=TwoWay}" />
+                <Button Content="Generate"
+                        Width="100"
+                        Height="30"
+                        HorizontalAlignment="Left"
+                        Command="{Binding GenerateElements}" />
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+
             <Button Content="Draw Line"
                     Command="{Binding DrawLineCommand}"
                     Width="100"
                     Height="30"
-                    HorizontalAlignment="Right"
-                    Grid.Column="2" />
+                    HorizontalAlignment="Right" />
             <Button Content="Draw Rect"
                     Command="{Binding DrawRectCommand}"
                     Width="100"
                     Height="30"
                     HorizontalAlignment="Right"
-                    Grid.Column="2" />
+                    Grid.Row="1" />
             <Button Content="Resize"
                     Command="{Binding ResizeCommand}"
                     Width="100"
                     Height="30"
                     HorizontalAlignment="Right"
-                    Grid.Column="2" />
+                    Grid.Row="2" />
 
-            <TextBlock Text="{Binding ElementName=source, Path=ViewportRect.Location, StringFormat= '\{0\} (left, top of bounding box)'}" />
-            <TextBlock Text="{Binding SelectedItems.Count, StringFormat= '\{0\} (selected items)'}" />
-        </StackPanel>
-        <StackPanel Grid.Column="3">
+            <Button Content="Draw Bezier"
+                    Command="{Binding DrawBezierCommand}"
+                    Width="100"
+                    Height="30"
+                    HorizontalAlignment="Right"
+                    Grid.Row="3" />
+
             <Button Content="Delete"
                     Command="{Binding DeleteCommand}"
                     Width="100"
                     Height="30"
                     HorizontalAlignment="Right"
-                    Grid.Column="2" />
-        </StackPanel>
+                    Grid.Row="4" />
+        </Grid>
+
+        <Grid Grid.Row="1"
+              Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal"
+                        Margin="2"
+                        Grid.Column="1">
+                <TextBlock Text="Mouse Location: " />
+                <TextBlock Text="{Binding MousePosition, ElementName=source, Converter={StaticResource PointToStringConverter}}"
+                           HorizontalAlignment="Left"></TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        Grid.Column="2"
+                        Margin="2">
+                <TextBlock Text="Zoom: " />
+                <TextBlock Text="{Binding Scale, ElementName=source}"
+                           HorizontalAlignment="Left"></TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        Grid.Column="3"
+                        Margin="2">
+                <TextBlock Text="Bounding Box: " />
+                <TextBlock Text="{Binding ElementName=source, Path=ViewportRect.Location, StringFormat= '\{0\} (left, top)'}"></TextBlock>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock HorizontalAlignment="Left"
+                           Text="{Binding SelectedItems.Count, StringFormat= '\{0\} (selected items)'}" />
+            </StackPanel>
+        </Grid>
 
         <richCanvas:RichItemsControl ItemsSource="{Binding Items}"
-                                     Grid.Row="1"
-                                     Grid.ColumnSpan="10"
+                                     Grid.Column="1"
                                      Name="source"
-                                     DrawingEnded="RichItemsControl_OnDrawEnded"
-                                     DisableAutoPanning="False"
-                                     AutoPanTickRate="0.9"
-                                     AutoPanSpeed="0.5"
                                      SelectedItems="{Binding SelectedItems}"
                                      EnableGrid="{Binding EnableGrid}"
-                                     EnableSnapping="True"
+                                     EnableSnapping="{Binding EnableSnapping}"
                                      GridStyle="{StaticResource GridStyle}"
                                      Background="AliceBlue"
                                      GridSpacing="{Binding GridSpacing, Converter={StaticResource StringToFloatConverter}}"
-                                     Scrolling="OnScrolling">
+                                     Scrolling="OnScrolling"
+                                     DisableCache="{Binding DisableCache}"
+                                     DisableZoom="{Binding DisableZoom}"
+                                     DisableScroll="{Binding DisableScroll}"
+                                     DisableAutoPanning="{Binding DisableAutoPanning}"
+                                     AutoPanSpeed="{Binding AutoPanSpeed, Converter={StaticResource StringToFloatConverter}}"
+                                     AutoPanTickRate="{Binding AutoPanTickRate, Converter={StaticResource StringToFloatConverter}}">
+            
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="DrawingEnded">
+                    <i:InvokeCommandAction Command="{Binding DrawEndedCommand}" PassEventArgsToCommand="True"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
 
             <richCanvas:RichItemsControl.Resources>
                 <DataTemplate x:Key="SelectedAdornerTemplate">
@@ -132,6 +248,30 @@
                     </Border>
                 </DataTemplate>
 
+                <DataTemplate DataType="{x:Type vm:Bezier}">
+                    <Path Stroke="Black"
+                          StrokeThickness="3">
+                        <Path.Data>
+                            <PathGeometry>
+                                <PathGeometry.Figures>
+                                    <PathFigureCollection>
+                                        <PathFigure StartPoint="0,0">
+                                            <PathFigure.Segments>
+                                                <PathSegmentCollection>
+                                                    <BezierSegment Point1="{Binding Point1}"
+                                                                   Point2="{Binding Point2}"
+                                                                   Point3="{Binding Point3}">
+                                                    </BezierSegment>
+                                                </PathSegmentCollection>
+                                            </PathFigure.Segments>
+                                        </PathFigure>
+                                    </PathFigureCollection>
+                                </PathGeometry.Figures>
+                            </PathGeometry>
+                        </Path.Data>
+                    </Path>
+                </DataTemplate>
+
                 <DataTemplate DataType="{x:Type vm:Rectangle}">
                     <Rectangle Fill="Gray"
                                Width="{Binding Width}"
@@ -140,7 +280,7 @@
                 <DataTemplate DataType="{x:Type vm:Line}">
                     <Line Fill="Gray"
                           Stroke="Gray"
-                          StrokeThickness="2"
+                          StrokeThickness="3"
                           X2="{Binding Width}"
                           Y2="{Binding Height}"
                           helpers:AttachedAdorner.HasLineHoverAdorner="True">

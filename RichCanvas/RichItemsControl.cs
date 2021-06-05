@@ -234,8 +234,14 @@ namespace RichCanvas
             get => (Key)GetValue(PanningKeyProperty);
             set => SetValue(PanningKeyProperty, value);
         }
+
+        public static readonly RoutedEvent ZoomingEvent = EventManager.RegisterRoutedEvent(nameof(Zooming), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(RichItemsControl));
+        public event RoutedEventHandler Zooming
+        {
+            add { AddHandler(ZoomingEvent, value); }
+            remove { RemoveHandler(ZoomingEvent, value); }
+        }
         // selection mode/type? tbd
-        // key binding ctrl and select
 
         #endregion
 
@@ -301,11 +307,7 @@ namespace RichCanvas
             _canvasContainer.Initalize(this);
 
             TranslateTransform.Changed += OnTranslateChanged;
-        }
-
-        private void OnTranslateChanged(object sender, EventArgs e)
-        {
-            RaiseScrollingEvent(e);
+            ScaleTransform.Changed += OnScaleChanged;
         }
 
         protected override bool IsItemItsOwnContainerOverride(object item) => item is RichItemContainer;
@@ -525,6 +527,20 @@ namespace RichCanvas
         #endregion
 
         #region Handlers And Private Methods
+
+        private void OnScaleChanged(object sender, EventArgs e)
+        {
+            Scale = ScaleTransform.ScaleX;
+            RoutedEventArgs newEventArgs = new RoutedEventArgs(ZoomingEvent, new Point(ScaleTransform.ScaleX, ScaleTransform.ScaleY));
+            RaiseEvent(newEventArgs);
+        }
+
+        private void OnTranslateChanged(object sender, EventArgs e)
+        {
+            RaiseScrollingEvent(e);
+        }
+
+
         private void SetCachingMode(bool disable)
         {
             if (_mainPanel != null)
@@ -571,6 +587,13 @@ namespace RichCanvas
                 {
                     _autoPanTimer.Interval = TimeSpan.FromMilliseconds(AutoPanTickRate);
                     _autoPanTimer.Start();
+                }
+            }
+            else
+            {
+                if(_autoPanTimer != null)
+                {
+                    _autoPanTimer.Stop();
                 }
             }
         }
@@ -676,7 +699,10 @@ namespace RichCanvas
 
         private void UpdateTimerInterval()
         {
-            _autoPanTimer.Interval = TimeSpan.FromMilliseconds(AutoPanTickRate);
+            if (_autoPanTimer != null)
+            {
+                _autoPanTimer.Interval = TimeSpan.FromMilliseconds(AutoPanTickRate);
+            }
         }
         private void RaiseDrawEndedEvent(object context)
         {
