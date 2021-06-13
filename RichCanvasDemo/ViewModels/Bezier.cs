@@ -1,4 +1,5 @@
 ﻿using RichCanvasDemo.ViewModels.Base;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 
@@ -27,6 +28,29 @@ namespace RichCanvasDemo.ViewModels
         {
             get => _point3;
             set => SetProperty(ref _point3, value);
+        }
+
+        public Bezier()
+        {
+            SetPoints();
+        }
+
+        protected override void OnWidthUpdated()
+        {
+            SetPoints();
+        }
+
+        protected override void OnHeightUpdated()
+        {
+            SetPoints();
+        }
+
+        public void SetPoints()
+        {
+            Console.WriteLine("sdsd");
+            Point1 = new Point(Width - 20, 0);
+            Point2 = new Point(Width - 10, 0);
+            Point3 = new Point(Width, Height);
         }
     }
 }

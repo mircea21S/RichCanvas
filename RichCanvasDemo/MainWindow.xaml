@@ -9,6 +9,8 @@
         xmlns:converters="clr-namespace:RichCanvasDemo.Converters"
         xmlns:helpers="clr-namespace:RichCanvasDemo.Helpers"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:views="clr-namespace:RichCanvasDemo.CustomControls"
         mc:Ignorable="d"
         Title="MainWindow"
         Height="650"
@@ -26,7 +28,19 @@
                          Geometry="M0,0 L0,1 0.03,1 0.03,0.03 1,0.03 1,0 Z"
                          Brush="Green" />
         <converters:ListToPointCollectionConverter x:Key="ListToPointCollectionConverter" />
-
+        <Style BasedOn="{StaticResource MaterialDesignTextBlock}"
+               TargetType="TextBlock">
+        </Style>
+        <Style BasedOn="{StaticResource MaterialDesignRaisedButton}"
+               TargetType="Button">
+            <Setter Property="Margin"
+                    Value="0,0,0,4" />
+        </Style>
+        <Style BasedOn="{StaticResource MaterialDesignTextBoxBase}"
+               TargetType="TextBox">
+            <Setter Property="Margin"
+                    Value="0,2,0,8" />
+        </Style>
     </Window.Resources>
 
     <Grid>
@@ -41,7 +55,7 @@
             <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
 
-
+        <!--INFORMATIONS PROPS API-->
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
@@ -58,66 +72,85 @@
                 <CheckBox Content="Enable Grid"
                           IsChecked="{Binding EnableGrid, Mode=TwoWay}"
                           HorizontalAlignment="Left" />
-                <TextBlock Text="Grid spacing value" />
+
                 <TextBox Text="{Binding GridSpacing, Mode=TwoWay}"
                          Width="100"
-                         HorizontalAlignment="Left" />
+                         HorizontalAlignment="Left"
+                         md:HintAssist.Hint="Grid spacing value"
+                         md:HintAssist.IsFloating="True" />
             </StackPanel>
+
             <StackPanel Grid.Row="1">
                 <CheckBox Content="Enable Snapping"
                           IsChecked="{Binding EnableSnapping, Mode=TwoWay}"
                           HorizontalAlignment="Left" />
             </StackPanel>
+
             <StackPanel Grid.Row="2">
                 <CheckBox Content="Disable Cache"
                           IsChecked="{Binding DisableCache, Mode=TwoWay}"
                           HorizontalAlignment="Left" />
             </StackPanel>
+
             <StackPanel Grid.Row="3">
                 <CheckBox Content="Disable Zoom"
                           IsChecked="{Binding DisableZoom, Mode=TwoWay}"
                           HorizontalAlignment="Left" />
             </StackPanel>
+
             <StackPanel Grid.Row="4">
                 <CheckBox Content="Disable Scroll"
                           IsChecked="{Binding DisableScroll, Mode=TwoWay}"
                           HorizontalAlignment="Left" />
             </StackPanel>
+
             <StackPanel Grid.Row="5">
                 <CheckBox Content="Disable AutoPanning"
                           IsChecked="{Binding DisableAutoPanning, Mode=TwoWay}"
                           HorizontalAlignment="Left" />
-                <TextBlock Text="Auto-Pan speed" />
+
                 <TextBox Text="{Binding AutoPanSpeed, Mode=TwoWay}"
                          Width="100"
-                         HorizontalAlignment="Left" />
-                <TextBlock Text="Auto-Pan TickRate" />
+                         HorizontalAlignment="Left"
+                         md:HintAssist.Hint="Auto-Pan speed"
+                         md:HintAssist.IsFloating="True" />
+
                 <TextBox Text="{Binding AutoPanTickRate, Mode=TwoWay}"
                          Width="100"
-                         HorizontalAlignment="Left" />
+                         HorizontalAlignment="Left"
+                         md:HintAssist.Hint="Auto-Pan TickRate"
+                         md:HintAssist.IsFloating="True" />
             </StackPanel>
             <StackPanel Grid.Row="6">
-                <TextBlock Text="Scroll Factor" />
                 <TextBox Text="{Binding ScrollFactor, Mode=TwoWay}"
                          Width="100"
-                         HorizontalAlignment="Left" />
-                <TextBlock Text="Zoom Factor" />
+                         HorizontalAlignment="Left"
+                         md:HintAssist.Hint="Scroll Factor"
+                         md:HintAssist.IsFloating="True" />
+
                 <TextBox Text="{Binding ZoomFactor, Mode=TwoWay}"
                          Width="100"
-                         HorizontalAlignment="Left" />
-                <TextBlock Text="Max Scale" />
+                         HorizontalAlignment="Left"
+                         md:HintAssist.Hint="Zoom Factor"
+                         md:HintAssist.IsFloating="True" />
+
                 <TextBox Text="{Binding MaxScale, Mode=TwoWay}"
                          Width="100"
-                         HorizontalAlignment="Left" />
-                <TextBlock Text="Min Scale" />
+                         HorizontalAlignment="Left"
+                         md:HintAssist.Hint="Max Scale"
+                         md:HintAssist.IsFloating="True" />
+
                 <TextBox Text="{Binding MinScale, Mode=TwoWay}"
                          Width="100"
-                         HorizontalAlignment="Left" />
+                         HorizontalAlignment="Left"
+                         md:HintAssist.Hint="Min Scale"
+                         md:HintAssist.IsFloating="True" />
             </StackPanel>
 
             <StackPanel Grid.Row="10">
-                <TextBlock Text="Number of elements" />
-                <TextBox Text="{Binding ElementsCount, Mode=TwoWay}" />
+                <TextBox Text="{Binding ElementsCount, Mode=TwoWay}"
+                         md:HintAssist.Hint="Number of elements"
+                         md:HintAssist.IsFloating="True" />
                 <Button Content="Generate"
                         Width="100"
                         Height="30"
@@ -126,6 +159,7 @@
             </StackPanel>
         </Grid>
 
+        <!--ACTIONS-->
         <Grid Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
@@ -133,41 +167,48 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <Button Content="Draw Line"
                     Command="{Binding DrawLineCommand}"
-                    Width="100"
+                    Width="120"
                     Height="30"
                     HorizontalAlignment="Right" />
+
             <Button Content="Draw Rect"
                     Command="{Binding DrawRectCommand}"
-                    Width="100"
+                    Width="120"
                     Height="30"
                     HorizontalAlignment="Right"
                     Grid.Row="1" />
+
             <Button Content="Resize"
                     Command="{Binding ResizeCommand}"
-                    Width="100"
+                    MinWidth="120"
                     Height="30"
                     HorizontalAlignment="Right"
                     Grid.Row="2" />
 
             <Button Content="Draw Bezier"
                     Command="{Binding DrawBezierCommand}"
-                    Width="100"
+                    Width="120"
                     Height="30"
                     HorizontalAlignment="Right"
                     Grid.Row="3" />
 
             <Button Content="Delete"
                     Command="{Binding DeleteCommand}"
-                    Width="100"
+                    Width="120"
                     Height="30"
                     HorizontalAlignment="Right"
                     Grid.Row="4" />
+            <StackPanel Grid.Row="5">
+                <views:PropertiesInfo DataContext="{Binding SelectedItem}" />
+            </StackPanel>
         </Grid>
 
+        <!--INFO FOOTER-->
         <Grid Grid.Row="1"
               Grid.ColumnSpan="3">
             <Grid.ColumnDefinitions>
@@ -218,10 +259,11 @@
                                      DisableAutoPanning="{Binding DisableAutoPanning}"
                                      AutoPanSpeed="{Binding AutoPanSpeed, Converter={StaticResource StringToFloatConverter}}"
                                      AutoPanTickRate="{Binding AutoPanTickRate, Converter={StaticResource StringToFloatConverter}}">
-            
+
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="DrawingEnded">
-                    <i:InvokeCommandAction Command="{Binding DrawEndedCommand}" PassEventArgsToCommand="True"/>
+                    <i:InvokeCommandAction Command="{Binding DrawEndedCommand}"
+                                           PassEventArgsToCommand="True" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
 

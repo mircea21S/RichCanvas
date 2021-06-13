@@ -28,12 +28,23 @@ namespace RichCanvasDemo.ViewModels.Base
         public double Width
         {
             get => _width;
-            set => SetProperty(ref _width, value);
+            set
+            {
+                SetProperty(ref _width, value);
+                OnWidthUpdated();
+            }
         }
         public double Height
         {
             get => _height;
-            set => SetProperty(ref _height, value);
+            set
+            {
+                SetProperty(ref _height, value);
+                OnHeightUpdated();
+            }
         }
+
+        protected virtual void OnWidthUpdated() { }
+        protected virtual void OnHeightUpdated() { }
     }
 }

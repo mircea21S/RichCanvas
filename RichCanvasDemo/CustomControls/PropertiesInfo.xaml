@@ -1,0 +1,67 @@
+﻿<UserControl x:Class="RichCanvasDemo.CustomControls.PropertiesInfo"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:RichCanvasDemo.CustomControls"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             Background="White">
+    <UserControl.Resources>
+        <Style BasedOn="{StaticResource MaterialDesignTextBoxBase}"
+               TargetType="TextBox">
+            <Setter Property="Margin"
+                    Value="0,0,10,0" />
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel>
+            <TextBlock Style="{DynamicResource MaterialDesignTextBlock}"
+                       Text="Border Color" />
+            <md:ColorPicker Color="{Binding BorderColor, Mode=TwoWay}" />
+
+            <TextBlock Style="{DynamicResource MaterialDesignTextBlock}"
+                       Text="Fill Color" />
+            <md:ColorPicker Color="{Binding FillColor, Mode=TwoWay}" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal">
+
+            <TextBox md:HintAssist.Hint="X"
+                     md:HintAssist.IsFloating="True"
+                     MinHeight="30"
+                     MinWidth="100" />
+
+            <TextBox md:HintAssist.Hint="Y"
+                     md:HintAssist.IsFloating="True"
+                     MinHeight="30"
+                     MinWidth="100" />
+
+        </StackPanel>
+
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal">
+
+            <TextBox MinHeight="30"
+                     MinWidth="100"
+                     md:HintAssist.Hint="Width"
+                     md:HintAssist.IsFloating="True" />
+
+            <TextBox MinHeight="30"
+                     MinWidth="100"
+                     md:HintAssist.Hint="Height"
+                     md:HintAssist.IsFloating="True" />
+
+        </StackPanel>
+    </Grid>
+</UserControl>
