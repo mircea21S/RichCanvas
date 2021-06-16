@@ -28,6 +28,7 @@
                          Geometry="M0,0 L0,1 0.03,1 0.03,0.03 1,0.03 1,0 Z"
                          Brush="Green" />
         <converters:ListToPointCollectionConverter x:Key="ListToPointCollectionConverter" />
+        <converters:ColorToSolidBrushColorConverter x:Key="ColorToSolidBrushColorConverter" />
         <Style BasedOn="{StaticResource MaterialDesignTextBlock}"
                TargetType="TextBlock">
         </Style>
@@ -203,14 +204,17 @@
                     Height="30"
                     HorizontalAlignment="Right"
                     Grid.Row="4" />
-            <StackPanel Grid.Row="5">
-                <views:PropertiesInfo DataContext="{Binding SelectedItem}" />
+            <StackPanel Grid.Row="5"
+                        Visibility="{Binding ShowProperties, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <views:PropertiesInfo DataContext="{Binding SelectedItem.VisualProperties}" />
             </StackPanel>
         </Grid>
 
         <!--INFO FOOTER-->
-        <Grid Grid.Row="1"
-              Grid.ColumnSpan="3">
+        <Grid Grid.Row="
+                    1"
+              Grid.ColumnSpan="
+                    3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="auto" />
@@ -257,6 +261,10 @@
                                      DisableZoom="{Binding DisableZoom}"
                                      DisableScroll="{Binding DisableScroll}"
                                      DisableAutoPanning="{Binding DisableAutoPanning}"
+                                     ScrollFactor="{Binding ScrollFactor, Converter={StaticResource StringToFloatConverter},ConverterParameter=double}"
+                                     ScaleFactor="{Binding ZoomFactor, Converter={StaticResource StringToFloatConverter},ConverterParameter=double}"
+                                     MinScale="{Binding MinScale, Converter={StaticResource StringToFloatConverter},ConverterParameter=double}"
+                                     MaxScale="{Binding MaxScale, Converter={StaticResource StringToFloatConverter},ConverterParameter=double}"
                                      AutoPanSpeed="{Binding AutoPanSpeed, Converter={StaticResource StringToFloatConverter}}"
                                      AutoPanTickRate="{Binding AutoPanTickRate, Converter={StaticResource StringToFloatConverter}}">
 
@@ -315,7 +323,9 @@
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type vm:Rectangle}">
-                    <Rectangle Fill="Gray"
+                    <Rectangle Stroke="{Binding VisualProperties.BorderColor, Converter={StaticResource ColorToSolidBrushColorConverter}}"
+                               Fill="{Binding VisualProperties.FillColor, Converter={StaticResource ColorToSolidBrushColorConverter}}"
+                               StrokeThickness="2"
                                Width="{Binding Width}"
                                Height="{Binding Height}"></Rectangle>
                 </DataTemplate>

@@ -9,6 +9,7 @@ namespace RichCanvasDemo.ViewModels.Base
         private bool _isSelected;
         private double _width;
         private double _height;
+        private VisualProperties _visualProperties;
 
         public double Top
         {
@@ -42,6 +43,16 @@ namespace RichCanvasDemo.ViewModels.Base
                 SetProperty(ref _height, value);
                 OnHeightUpdated();
             }
+        }
+
+        public VisualProperties VisualProperties
+        {
+            get => _visualProperties;
+            set => SetProperty(ref _visualProperties, value);
+        }
+        public Drawable()
+        {
+            VisualProperties = new VisualProperties();
         }
 
         protected virtual void OnWidthUpdated() { }

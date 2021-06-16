@@ -144,7 +144,7 @@ namespace RichCanvas
             set => SetValue(SelectionRectangleStyleProperty, value);
         }
 
-        public static DependencyProperty ScrollFactorProperty = DependencyProperty.Register(nameof(ScrollFactor), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(10d));
+        public static DependencyProperty ScrollFactorProperty = DependencyProperty.Register(nameof(ScrollFactor), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(10d, null, CoerceScrollFactor));
         public double ScrollFactor
         {
             get => (double)GetValue(ScrollFactorProperty);
@@ -476,13 +476,12 @@ namespace RichCanvas
         {
             var zoom = (RichItemsControl)d;
             zoom.CoerceValue(MaxScaleProperty);
-            zoom.CoerceValue(ScaleProperty);
         }
 
         private static void OnMaxScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var zoom = (RichItemsControl)d;
-            zoom.CoerceValue(ScaleProperty);
+            zoom.CoerceValue(MinScaleProperty);
         }
 
         private static object CoerceMaxScale(DependencyObject d, object value)
@@ -497,6 +496,9 @@ namespace RichCanvas
             => ((RichItemsControl)d).OnDisableAutoPanningChanged((bool)e.NewValue);
 
         private static void OnAutoPanTickRateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).UpdateTimerInterval();
+
+        private static object CoerceScrollFactor(DependencyObject d, object value)
+            => (double)value == 0 ? 10d : value;
 
         #endregion
 

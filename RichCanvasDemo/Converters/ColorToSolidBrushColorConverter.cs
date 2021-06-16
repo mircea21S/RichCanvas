@@ -1,22 +1,16 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
+using System.Windows.Media;
 
 namespace RichCanvasDemo.Converters
 {
-    public class StringToFloatConverter : IValueConverter
+    public class ColorToSolidBrushColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value != null)
-            {
-                if(parameter != null && (string)parameter == "double")
-                {
-                    return double.Parse((string)value);
-                }
-                return float.Parse((string)value);
-            }
-            return 0f;
+            var color = (Color)value;
+            return new SolidColorBrush(color);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

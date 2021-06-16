@@ -4,6 +4,7 @@ using RichCanvasDemo.ViewModels.Base;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Input;
 
@@ -33,6 +34,8 @@ namespace RichCanvasDemo
         private string _zoomFactor;
         private string _maxScale;
         private string _minScale;
+        private bool _showProperties;
+        private Drawable _selectedItem;
 
         public ICommand DrawEndedCommand => drawEndedCommand ??= new RelayCommand<RoutedEventArgs>(DrawEnded);
         public ObservableCollection<Drawable> Items { get; }
@@ -88,12 +91,31 @@ namespace RichCanvasDemo
 
         public string MinScale { get => _minScale; set => SetProperty(ref _minScale, value); }
 
-        public Drawable SelectedItem => SelectedItems.Count > 0 ? SelectedItems[0] : null;
+        public Drawable SelectedItem { get => _selectedItem; set => SetProperty(ref _selectedItem, value); }
+
+        public bool ShowProperties { get => _showProperties; set => SetProperty(ref _showProperties, value); }
 
         public MainWindowViewModel()
         {
             Items = new ObservableCollection<Drawable>();
             SelectedItems = new ObservableCollection<Drawable>();
+            SelectedItems.CollectionChanged += SelectedItemsChanged;
+        }
+
+        private void SelectedItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                if (SelectedItems.Count == 1)
+                {
+                    SelectedItem = SelectedItems[0];
+                }
+                else
+                {
+                    SelectedItem = null;
+                }
+            }
+            ShowProperties = SelectedItem != null && SelectedItem.IsSelected;
         }
 
         private void OnDrawBezier()
@@ -136,7 +158,7 @@ namespace RichCanvasDemo
         }
         private void Delete()
         {
-            Items.Remove(SelectedItems[0]);
+            Items.Remove(SelectedItem);
         }
 
         private void OnDrawCommand()
@@ -155,8 +177,7 @@ namespace RichCanvasDemo
 
         private void Resize()
         {
-            var x = SelectedItems[0];
-            x.Height += 20;
+            SelectedItem.Height += 20;
         }
 
         private void DrawEnded(RoutedEventArgs args)
@@ -169,5 +190,6 @@ namespace RichCanvasDemo
                 bezier.Point3 = new Point(bezier.Width, bezier.Height);
             }
         }
+
     }
 }
