@@ -50,6 +50,7 @@ namespace RichCanvasDemo.ViewModels.Base
             get => _visualProperties;
             set => SetProperty(ref _visualProperties, value);
         }
+
         public Drawable()
         {
             VisualProperties = new VisualProperties();

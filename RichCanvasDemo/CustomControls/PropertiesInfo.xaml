@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:viewmodels="clr-namespace:RichCanvasDemo.ViewModels.Base"
+             d:DataContext="{d:DesignInstance Type=viewmodels:Drawable}"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800"
@@ -26,11 +28,11 @@
         <StackPanel>
             <TextBlock Style="{DynamicResource MaterialDesignTextBlock}"
                        Text="Border Color" />
-            <md:ColorPicker Color="{Binding BorderColor, Mode=TwoWay}" />
+            <md:ColorPicker Color="{Binding VisualProperties.BorderColor, Mode=TwoWay}" />
 
             <TextBlock Style="{DynamicResource MaterialDesignTextBlock}"
                        Text="Fill Color" />
-            <md:ColorPicker Color="{Binding FillColor, Mode=TwoWay}" />
+            <md:ColorPicker Color="{Binding VisualProperties.FillColor, Mode=TwoWay}" />
         </StackPanel>
 
         <StackPanel Grid.Row="1"
@@ -53,6 +55,7 @@
 
             <TextBox MinHeight="30"
                      MinWidth="100"
+                     Text="{Binding Width, Mode=TwoWay}"
                      md:HintAssist.Hint="Width"
                      md:HintAssist.IsFloating="True" />
 

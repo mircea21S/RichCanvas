@@ -151,7 +151,7 @@ namespace RichCanvas
             set => SetValue(ScrollFactorProperty, value);
         }
 
-        public static DependencyProperty ScaleFactorProperty = DependencyProperty.Register(nameof(ScaleFactor), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(1.1d));
+        public static DependencyProperty ScaleFactorProperty = DependencyProperty.Register(nameof(ScaleFactor), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(1.1d, null, CoerceScaleFactor));
         public double ScaleFactor
         {
             get => (double)GetValue(ScaleFactorProperty);
@@ -476,12 +476,14 @@ namespace RichCanvas
         {
             var zoom = (RichItemsControl)d;
             zoom.CoerceValue(MaxScaleProperty);
+            zoom.ScrollContainer.UpdateScaleBounds();
         }
 
         private static void OnMaxScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var zoom = (RichItemsControl)d;
             zoom.CoerceValue(MinScaleProperty);
+            zoom.ScrollContainer.UpdateScaleBounds();
         }
 
         private static object CoerceMaxScale(DependencyObject d, object value)
@@ -489,7 +491,7 @@ namespace RichCanvas
             var zoom = (RichItemsControl)d;
             var min = zoom.MinScale;
 
-            return (double)value < min ? min : value;
+            return (double)value < min ? 2d : value;
         }
 
         private static void OnDisableAutoPanningChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -499,6 +501,9 @@ namespace RichCanvas
 
         private static object CoerceScrollFactor(DependencyObject d, object value)
             => (double)value == 0 ? 10d : value;
+
+        private static object CoerceScaleFactor(DependencyObject d, object value)
+            => (double)value == 0 ? 1.1d : value;
 
         #endregion
 
@@ -532,7 +537,6 @@ namespace RichCanvas
 
         private void OnScaleChanged(object sender, EventArgs e)
         {
-            Scale = ScaleTransform.ScaleX;
             RoutedEventArgs newEventArgs = new RoutedEventArgs(ZoomingEvent, new Point(ScaleTransform.ScaleX, ScaleTransform.ScaleY));
             RaiseEvent(newEventArgs);
         }

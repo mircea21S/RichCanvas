@@ -206,7 +206,7 @@
                     Grid.Row="4" />
             <StackPanel Grid.Row="5"
                         Visibility="{Binding ShowProperties, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <views:PropertiesInfo DataContext="{Binding SelectedItem.VisualProperties}" />
+                <views:PropertiesInfo DataContext="{Binding SelectedItem}" />
             </StackPanel>
         </Grid>
 

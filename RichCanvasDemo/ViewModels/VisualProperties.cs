@@ -5,8 +5,8 @@ namespace RichCanvasDemo.ViewModels
 {
     public class VisualProperties : ObservableObject
     {
-        private Color _fillColor = Colors.Gray;
-        private Color _borderColor = Colors.Gray;
+        private Color _fillColor;
+        private Color _borderColor;
 
         public Color FillColor
         {
