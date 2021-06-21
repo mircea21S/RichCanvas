@@ -36,6 +36,8 @@
                TargetType="Button">
             <Setter Property="Margin"
                     Value="0,0,0,4" />
+            <Setter Property="FontSize"
+                    Value="12" />
         </Style>
         <Style BasedOn="{StaticResource MaterialDesignTextBoxBase}"
                TargetType="TextBox">
@@ -46,6 +48,7 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
@@ -57,7 +60,7 @@
         </Grid.ColumnDefinitions>
 
         <!--INFORMATIONS PROPS API-->
-        <Grid>
+        <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
@@ -146,6 +149,12 @@
                          HorizontalAlignment="Left"
                          md:HintAssist.Hint="Min Scale"
                          md:HintAssist.IsFloating="True" />
+
+                <TextBox Text="{Binding Scale, Mode=TwoWay}"
+                         Width="100"
+                         HorizontalAlignment="Left"
+                         md:HintAssist.Hint="Scale"
+                         md:HintAssist.IsFloating="True" />
             </StackPanel>
 
             <StackPanel Grid.Row="10">
@@ -161,7 +170,8 @@
         </Grid>
 
         <!--ACTIONS-->
-        <Grid Grid.Column="2">
+        <Grid Grid.Column="2"
+              Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
@@ -211,10 +221,8 @@
         </Grid>
 
         <!--INFO FOOTER-->
-        <Grid Grid.Row="
-                    1"
-              Grid.ColumnSpan="
-                    3">
+        <Grid Grid.Row="2"
+              Grid.ColumnSpan="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="auto" />
@@ -249,6 +257,7 @@
 
         <richCanvas:RichItemsControl ItemsSource="{Binding Items}"
                                      Grid.Column="1"
+                                     Grid.Row="1"
                                      Name="source"
                                      SelectedItems="{Binding SelectedItems}"
                                      EnableGrid="{Binding EnableGrid}"
@@ -261,12 +270,22 @@
                                      DisableZoom="{Binding DisableZoom}"
                                      DisableScroll="{Binding DisableScroll}"
                                      DisableAutoPanning="{Binding DisableAutoPanning}"
+                                     MousePosition="{Binding MousePosition, Mode=OneWayToSource}"
+                                     Scale="{Binding Scale, Converter={StaticResource StringToFloatConverter}, Mode=TwoWay}"
                                      ScrollFactor="{Binding ScrollFactor, Converter={StaticResource StringToFloatConverter},ConverterParameter=double}"
                                      ScaleFactor="{Binding ZoomFactor, Converter={StaticResource StringToFloatConverter},ConverterParameter=double}"
                                      MinScale="{Binding MinScale, Converter={StaticResource StringToFloatConverter},ConverterParameter=double}"
                                      MaxScale="{Binding MaxScale, Converter={StaticResource StringToFloatConverter},ConverterParameter=double}"
                                      AutoPanSpeed="{Binding AutoPanSpeed, Converter={StaticResource StringToFloatConverter}}"
                                      AutoPanTickRate="{Binding AutoPanTickRate, Converter={StaticResource StringToFloatConverter}}">
+            <richCanvas:RichItemsControl.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Add Image"
+                              Command="{Binding AddImageCommand}" />
+                    <MenuItem Header="Add Text"
+                              Command="{Binding AddTextCommand}" />
+                </ContextMenu>
+            </richCanvas:RichItemsControl.ContextMenu>
 
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="DrawingEnded">
@@ -292,6 +311,7 @@
                         </TextBlock>
                     </Border>
                 </DataTemplate>
+
                 <DataTemplate x:Key="HoverAdornerTemplate">
                     <Border BorderBrush="DodgerBlue"
                             BorderThickness="3">
@@ -299,44 +319,31 @@
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type vm:Bezier}">
-                    <Path Stroke="Black"
-                          StrokeThickness="3">
-                        <Path.Data>
-                            <PathGeometry>
-                                <PathGeometry.Figures>
-                                    <PathFigureCollection>
-                                        <PathFigure StartPoint="0,0">
-                                            <PathFigure.Segments>
-                                                <PathSegmentCollection>
-                                                    <BezierSegment Point1="{Binding Point1}"
-                                                                   Point2="{Binding Point2}"
-                                                                   Point3="{Binding Point3}">
-                                                    </BezierSegment>
-                                                </PathSegmentCollection>
-                                            </PathFigure.Segments>
-                                        </PathFigure>
-                                    </PathFigureCollection>
-                                </PathGeometry.Figures>
-                            </PathGeometry>
-                        </Path.Data>
-                    </Path>
+                    <views:BezierLine DataContext="{Binding}"></views:BezierLine>
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type vm:Rectangle}">
                     <Rectangle Stroke="{Binding VisualProperties.BorderColor, Converter={StaticResource ColorToSolidBrushColorConverter}}"
                                Fill="{Binding VisualProperties.FillColor, Converter={StaticResource ColorToSolidBrushColorConverter}}"
-                               StrokeThickness="2"
+                               StrokeThickness="3"
                                Width="{Binding Width}"
                                Height="{Binding Height}"></Rectangle>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:Line}">
-                    <Line Fill="Gray"
-                          Stroke="Gray"
-                          StrokeThickness="3"
-                          X2="{Binding Width}"
-                          Y2="{Binding Height}"
-                          helpers:AttachedAdorner.HasLineHoverAdorner="True">
+                    <Line  Stroke="{Binding VisualProperties.BorderColor, Converter={StaticResource ColorToSolidBrushColorConverter}}"
+                           StrokeThickness="3"
+                           X2="{Binding Width}"
+                           Y2="{Binding Height}"
+                           helpers:AttachedAdorner.HasLineHoverAdorner="True">
                     </Line>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:ImageVisual}">
+                    <Image Source="{Binding ImageSource}" />
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:TextVisual}">
+                    <TextBlock Text="{Binding Text}"
+                               TextAlignment="Center"
+                               VerticalAlignment="Center" />
                 </DataTemplate>
             </richCanvas:RichItemsControl.Resources>
 
@@ -358,6 +365,19 @@
                             Value="{Binding Width, Mode=TwoWay}" />
                     <Setter Property="Height"
                             Value="{Binding Height, Mode=TwoWay}" />
+                    <Setter Property="IsSelectable"
+                            Value="{Binding IsSelectable}" />
+                    <Setter Property="IsDraggable"
+                            Value="{Binding IsDraggable}" />
+                    <Setter Property="ContextMenu">
+                        <Setter.Value>
+                            <ContextMenu>
+                                <MenuItem Header="Copy" />
+                                <MenuItem Header="Paste"
+                                          IsEnabled="True" />
+                            </ContextMenu>
+                        </Setter.Value>
+                    </Setter>
 
                     <Style.Triggers>
                         <Trigger Property="IsSelected"

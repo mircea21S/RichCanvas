@@ -7,6 +7,8 @@ namespace RichCanvasDemo.ViewModels.Base
         private double _top;
         private double _left;
         private bool _isSelected;
+        private bool _isSelectable = true;
+        private bool _isDraggable = true;
         private double _width;
         private double _height;
         private VisualProperties _visualProperties;
@@ -49,6 +51,18 @@ namespace RichCanvasDemo.ViewModels.Base
         {
             get => _visualProperties;
             set => SetProperty(ref _visualProperties, value);
+        }
+
+        public bool IsSelectable
+        {
+            get => _isSelectable;
+            set => SetProperty(ref _isSelectable, value);
+        }
+
+        public bool IsDraggable
+        {
+            get => _isDraggable;
+            set => SetProperty(ref _isDraggable, value);
         }
 
         public Drawable()

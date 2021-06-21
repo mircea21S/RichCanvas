@@ -4,13 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vm="clr-namespace:RichCanvasDemo.ViewModels"
+             xmlns:converters="clr-namespace:RichCanvasDemo.Converters"
+             d:DataContext="{d:DesignInstance Type=vm:Bezier}"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
-    <UserControl.DataContext>
-        <vm:Bezier />
-    </UserControl.DataContext>
-    <Path Stroke="Black"
+    <UserControl.Resources>
+        <converters:ColorToSolidBrushColorConverter x:Key="ColorToSolidBrushColorConverter" />
+    </UserControl.Resources>
+    <Path Stroke="{Binding VisualProperties.BorderColor, Converter={StaticResource ColorToSolidBrushColorConverter}}"
           StrokeThickness="3">
         <Path.Data>
             <PathGeometry>

@@ -7,14 +7,16 @@ namespace RichCanvas.Gestures
     {
         private readonly ScaleTransform _scaleTransform;
         private readonly TranslateTransform _translateTransform;
+        private readonly RichItemsControl _context;
 
-        internal double MinScale { get; set; }
-        internal double MaxScale { get; set; }
+        internal double MinScale => _context.MinScale;
+        internal double MaxScale => _context.MaxScale;
 
-        internal Zoom(ScaleTransform scaleTransform, TranslateTransform translateTransform)
+        internal Zoom(ScaleTransform scaleTransform, TranslateTransform translateTransform, RichItemsControl context)
         {
             _scaleTransform = scaleTransform;
             _translateTransform = translateTransform;
+            _context = context;
         }
 
         internal void ZoomToPosition(Point position, int delta, double factor)

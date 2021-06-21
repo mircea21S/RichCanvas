@@ -32,7 +32,8 @@
 
             <TextBlock Style="{DynamicResource MaterialDesignTextBlock}"
                        Text="Fill Color" />
-            <md:ColorPicker Color="{Binding VisualProperties.FillColor, Mode=TwoWay}" />
+            <md:ColorPicker Color="{Binding VisualProperties.FillColor, Mode=TwoWay}"
+                            Name="fillColor" />
         </StackPanel>
 
         <StackPanel Grid.Row="1"
@@ -40,11 +41,13 @@
 
             <TextBox md:HintAssist.Hint="X"
                      md:HintAssist.IsFloating="True"
+                     Text="{Binding Left, Mode=TwoWay}"
                      MinHeight="30"
                      MinWidth="100" />
 
             <TextBox md:HintAssist.Hint="Y"
                      md:HintAssist.IsFloating="True"
+                     Text="{Binding Top, Mode=TwoWay}"
                      MinHeight="30"
                      MinWidth="100" />
 
@@ -61,8 +64,24 @@
 
             <TextBox MinHeight="30"
                      MinWidth="100"
+                     Text="{Binding Height, Mode=TwoWay}"
                      md:HintAssist.Hint="Height"
                      md:HintAssist.IsFloating="True" />
+
+        </StackPanel>
+
+        <StackPanel Grid.Row="3"
+                    Orientation="Horizontal">
+
+            <CheckBox MinHeight="30"
+                      MinWidth="100"
+                      Content="Is Selectable"
+                      IsChecked="{Binding IsSelectable, Mode=TwoWay}" />
+
+            <CheckBox MinHeight="30"
+                      MinWidth="100"
+                      Content="Is Draggable"
+                      IsChecked="{Binding IsDraggable, Mode=TwoWay}" />
 
         </StackPanel>
     </Grid>

@@ -1,4 +1,6 @@
 ﻿using RichCanvasDemo.Common;
+using RichCanvasDemo.CustomControls;
+using RichCanvasDemo.Services;
 using RichCanvasDemo.ViewModels;
 using RichCanvasDemo.ViewModels.Base;
 using System;
@@ -36,6 +38,13 @@ namespace RichCanvasDemo
         private string _minScale;
         private bool _showProperties;
         private Drawable _selectedItem;
+        private ICommand addImageCommand;
+        private string scale = "1";
+        private Point mousePosition;
+        private ICommand addTextCommand;
+
+        private readonly FileService _fileService;
+        private readonly DialogService _dialogService;
 
         public ICommand DrawEndedCommand => drawEndedCommand ??= new RelayCommand<RoutedEventArgs>(DrawEnded);
         public ObservableCollection<Drawable> Items { get; }
@@ -46,6 +55,8 @@ namespace RichCanvasDemo
         public ICommand ResizeCommand => resizeCommand ??= new RelayCommand(Resize);
         public ICommand DeleteCommand => deleteCommand ??= new RelayCommand(Delete);
         public ICommand DrawBezierCommand => drawBezierCommand ??= new RelayCommand(OnDrawBezier);
+        public ICommand AddTextCommand => addTextCommand ??= new RelayCommand(AddText);
+        public ICommand AddImageCommand => addImageCommand ??= new RelayCommand(AddImage);
 
         public bool EnableGrid
         {
@@ -95,11 +106,16 @@ namespace RichCanvasDemo
 
         public bool ShowProperties { get => _showProperties; set => SetProperty(ref _showProperties, value); }
 
+        public string Scale { get => scale; set => SetProperty(ref scale, value); }
+        public Point MousePosition { get => mousePosition; set => SetProperty(ref mousePosition, value); }
+
         public MainWindowViewModel()
         {
             Items = new ObservableCollection<Drawable>();
             SelectedItems = new ObservableCollection<Drawable>();
             SelectedItems.CollectionChanged += SelectedItemsChanged;
+            _fileService = new FileService();
+            _dialogService = new DialogService();
         }
 
         private void SelectedItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -191,5 +207,30 @@ namespace RichCanvasDemo
             }
         }
 
+        private void AddImage()
+        {
+            string selectedImagePath;
+            _fileService.OpenFileDialog(out selectedImagePath);
+            var image = new ImageVisual
+            {
+                ImageSource = selectedImagePath,
+                Height = 100,
+                Width = 200
+            };
+            Items.Add(image);
+        }
+
+        private void AddText()
+        {
+            var text = new TextVisual
+            {
+                Top = MousePosition.Y,
+                Left = MousePosition.X,
+                Width = 100,
+                Height = 50
+            };
+            _dialogService.OpenDialog<EditText>(text);
+            Items.Add(text);
+        }
     }
 }

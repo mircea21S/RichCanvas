@@ -472,12 +472,7 @@ namespace RichCanvas
             _parent = richItemsControl;
             _translateTransform = _parent.TranslateTransform;
             _scaleTransform = _parent.ScaleTransform;
-            _zoomGesture = new Zoom(_scaleTransform, _translateTransform);
-        }
-        internal void UpdateScaleBounds()
-        {
-            _zoomGesture.MinScale = _parent.MinScale;
-            _zoomGesture.MaxScale = _parent.MaxScale;
+            _zoomGesture = new Zoom(_scaleTransform, _translateTransform, _parent);
         }
 
         #endregion 

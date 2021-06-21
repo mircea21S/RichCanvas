@@ -11,37 +11,40 @@ namespace RichCanvas
         private const string ContentPresenterName = "PART_ContentPresenter";
 
         public static DependencyProperty IsSelectedProperty = DependencyProperty.Register("IsSelected", typeof(bool), typeof(RichItemContainer), new FrameworkPropertyMetadata(OnIsSelectedChanged));
-
         public bool IsSelected
         {
             get => (bool)GetValue(IsSelectedProperty);
             set => SetValue(IsSelectedProperty, value);
         }
-        public static DependencyProperty TopProperty = DependencyProperty.Register("Top", typeof(double), typeof(RichItemContainer));
+
+        public static DependencyProperty TopProperty = DependencyProperty.Register("Top", typeof(double), typeof(RichItemContainer), new FrameworkPropertyMetadata(OnPositionChanged));
         public double Top
         {
             get => (double)GetValue(TopProperty);
             set => SetValue(TopProperty, value);
         }
-        public static DependencyProperty LeftProperty = DependencyProperty.Register("Left", typeof(double), typeof(RichItemContainer));
+
+        public static DependencyProperty LeftProperty = DependencyProperty.Register("Left", typeof(double), typeof(RichItemContainer), new FrameworkPropertyMetadata(OnPositionChanged));
         public double Left
         {
             get => (double)GetValue(LeftProperty);
             set => SetValue(LeftProperty, value);
         }
+
         public static DependencyProperty IsSelectableProperty = DependencyProperty.Register("IsSelectable", typeof(bool), typeof(RichItemContainer), new FrameworkPropertyMetadata(true));
         public bool IsSelectable
         {
             get => (bool)GetValue(IsSelectableProperty);
             set => SetValue(IsSelectableProperty, value);
         }
-        public static DependencyProperty IsDraggableProperty = DependencyProperty.Register("IsDraggable", typeof(bool), typeof(RichItemContainer), new FrameworkPropertyMetadata(true));
 
+        public static DependencyProperty IsDraggableProperty = DependencyProperty.Register("IsDraggable", typeof(bool), typeof(RichItemContainer), new FrameworkPropertyMetadata(true));
         public bool IsDraggable
         {
             get => (bool)GetValue(IsDraggableProperty);
             set => SetValue(IsDraggableProperty, value);
         }
+
         static RichItemContainer()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RichItemContainer), new FrameworkPropertyMetadata(typeof(RichItemContainer)));
@@ -70,6 +73,13 @@ namespace RichCanvas
         internal bool IsValid()
         {
             return Height != 0 && Width != 0 && !double.IsNaN(Height) && !double.IsNaN(Width);
+        }
+
+        private static void OnPositionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemContainer)d).UpdatePosition();
+
+        private void UpdatePosition()
+        {
+            Host?.ItemsHost.InvalidateMeasure();
         }
 
         private static void OnIsSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

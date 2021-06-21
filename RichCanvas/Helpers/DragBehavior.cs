@@ -18,6 +18,8 @@ namespace RichCanvas.Helpers
 
         internal static DependencyProperty IsDraggingProperty = DependencyProperty.RegisterAttached("IsDragging", typeof(bool), typeof(RichItemContainer),
             new PropertyMetadata(OnIsDraggingChanged));
+        private static bool translateSubscribed;
+
         internal static void SetIsDragging(UIElement element, bool value)
         {
             element.SetValue(IsDraggingProperty, value);
@@ -52,6 +54,10 @@ namespace RichCanvas.Helpers
         private static void OnSelectedContainerClicked(object sender, MouseButtonEventArgs e)
         {
             RichItemContainer container = (RichItemContainer)sender;
+            var transformGroup = (TransformGroup)container.RenderTransform;
+            var translateTransform = (TranslateTransform)transformGroup.Children[1];
+            translateTransform.Changed += OnTranslateChanged;
+            translateSubscribed = true;
 
             if (!ItemsControl.HasSelections)
             {
@@ -100,7 +106,11 @@ namespace RichCanvas.Helpers
                 }
             }
 
-            translateTransform.Changed -= OnTranslateChanged;
+            if (translateSubscribed)
+            {
+                translateTransform.Changed -= OnTranslateChanged;
+                translateSubscribed = false;
+            }
             TranslateChanged = false;
 
             ItemsControl.Cursor = Cursors.Arrow;
@@ -115,7 +125,6 @@ namespace RichCanvas.Helpers
 
                 var transformGroup = (TransformGroup)container.RenderTransform;
                 var translateTransform = (TranslateTransform)transformGroup.Children[1];
-                translateTransform.Changed += OnTranslateChanged;
 
                 if (!ItemsControl.HasSelections)
                 {

@@ -476,14 +476,12 @@ namespace RichCanvas
         {
             var zoom = (RichItemsControl)d;
             zoom.CoerceValue(MaxScaleProperty);
-            zoom.ScrollContainer.UpdateScaleBounds();
         }
 
         private static void OnMaxScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var zoom = (RichItemsControl)d;
             zoom.CoerceValue(MinScaleProperty);
-            zoom.ScrollContainer.UpdateScaleBounds();
         }
 
         private static object CoerceMaxScale(DependencyObject d, object value)
@@ -537,6 +535,7 @@ namespace RichCanvas
 
         private void OnScaleChanged(object sender, EventArgs e)
         {
+            Scale = ScaleTransform.ScaleX;
             RoutedEventArgs newEventArgs = new RoutedEventArgs(ZoomingEvent, new Point(ScaleTransform.ScaleX, ScaleTransform.ScaleY));
             RaiseEvent(newEventArgs);
         }
@@ -597,7 +596,7 @@ namespace RichCanvas
             }
             else
             {
-                if(_autoPanTimer != null)
+                if (_autoPanTimer != null)
                 {
                     _autoPanTimer.Stop();
                 }

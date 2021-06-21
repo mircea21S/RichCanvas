@@ -10,7 +10,7 @@ namespace RichCanvasDemo.Converters
         {
             if (value != null)
             {
-                if(parameter != null && (string)parameter == "double")
+                if (parameter != null && (string)parameter == "double")
                 {
                     return double.Parse((string)value);
                 }
@@ -21,7 +21,7 @@ namespace RichCanvasDemo.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            return value.ToString();
         }
     }
 }
