@@ -36,21 +36,46 @@ namespace RichCanvas
 
         #region Internal Properties
 
-        internal double TopOffset => Math.Abs(TopLimit - HighestElement) * _scaleTransform.ScaleY;
+        /// <summary>
+        /// Positive Vertical offset of <see cref="ScrollOwner"/>
+        /// </summary>
+        protected double TopOffset => Math.Abs(TopLimit - HighestElement) * _scaleTransform.ScaleY;
 
-        internal double BottomOffset => (BottomLimit - LowestElement) * _scaleTransform.ScaleY;
+        /// <summary>
+        /// Negative Vertical offset of <see cref="ScrollOwner"/>
+        /// </summary>
+        protected double BottomOffset => (BottomLimit - LowestElement) * _scaleTransform.ScaleY;
 
-        internal double LeftOffset => Math.Abs(LeftLimit - MostLeftElement) * _scaleTransform.ScaleY;
+        /// <summary>
+        /// Positive Horizontal offset of <see cref="ScrollOwner"/>
+        /// </summary>
+        protected double LeftOffset => Math.Abs(LeftLimit - MostLeftElement) * _scaleTransform.ScaleY;
 
-        internal double RightOffset => (RightLimit - MostRightElement) * _scaleTransform.ScaleY;
+        /// <summary>
+        /// Negative Horizontal offset of <see cref="ScrollOwner"/>
+        /// </summary>
+        protected double RightOffset => (RightLimit - MostRightElement) * _scaleTransform.ScaleY;
 
-        internal double TopLimit => TranslatePoint(_viewportTopLeftInitial, _parent.ItemsHost).Y;
+        /// <summary>
+        /// Top limit of <see cref="ScrollOwner"/> viewport
+        /// </summary>
+        protected double TopLimit => TranslatePoint(_viewportTopLeftInitial, _parent.ItemsHost).Y;
 
-        internal double BottomLimit => TranslatePoint(_viewportBottomRightInitial, _parent.ItemsHost).Y;
+        /// <summary>
+        /// Bottom limit of <see cref="ScrollOwner"/> viewport
+        /// </summary>
+        protected double BottomLimit => TranslatePoint(_viewportBottomRightInitial, _parent.ItemsHost).Y;
 
-        internal double LeftLimit => TranslatePoint(_viewportTopLeftInitial, _parent.ItemsHost).X;
+        /// <summary> 
+        /// Left limit of <see cref="ScrollOwner"/> viewport
+        /// </summary>
+        protected double LeftLimit => TranslatePoint(_viewportTopLeftInitial, _parent.ItemsHost).X;
 
-        internal double RightLimit => TranslatePoint(_viewportBottomRightInitial, _parent.ItemsHost).X;
+
+        /// <summary>
+        /// Right limit of <see cref="ScrollOwner"/> viewport
+        /// </summary>
+        protected double RightLimit => TranslatePoint(_viewportBottomRightInitial, _parent.ItemsHost).X;
 
         internal bool TranslatedVertically { get; private set; }
 
@@ -60,25 +85,55 @@ namespace RichCanvas
 
         #region IScrollInfo
 
+        /// <summary>
+        /// <see cref="IScrollInfo"/> member
+        /// </summary>
         public bool CanHorizontallyScroll { get; set; }
 
+        /// <summary>
+        /// <see cref="IScrollInfo"/> member
+        /// </summary>
         public bool CanVerticallyScroll { get; set; }
 
+        /// <summary>
+        /// <see cref="IScrollInfo"/> member
+        /// </summary>
         public double ExtentHeight => _extent.Height;
 
+        /// <summary>
+        /// <see cref="IScrollInfo"/> member
+        /// </summary>
         public double ExtentWidth => _extent.Width;
 
+        /// <summary>
+        /// <see cref="IScrollInfo"/> member
+        /// </summary>
         public double HorizontalOffset => _offset.X;
 
+        /// <summary>
+        /// <see cref="IScrollInfo"/> member
+        /// </summary>
         public ScrollViewer ScrollOwner { get; set; }
 
+        /// <summary>
+        /// <see cref="IScrollInfo"/> member
+        /// </summary>
         public double VerticalOffset => _offset.Y;
 
+        /// <summary>
+        /// <see cref="IScrollInfo"/> member
+        /// </summary>
         public double ViewportHeight => _viewport.Height;
 
+        /// <summary>
+        /// <see cref="IScrollInfo"/> member
+        /// </summary>
         public double ViewportWidth => _viewport.Width;
 
 
+        /// <summary>
+        /// <see cref="IScrollInfo"/> method
+        /// </summary>
         public void LineDown()
         {
             if (!_parent.IsZooming && !_parent.DisableScroll)
@@ -88,6 +143,9 @@ namespace RichCanvas
             }
         }
 
+        /// <summary>
+        /// <see cref="IScrollInfo"/> method
+        /// </summary>
         public void LineLeft()
         {
             if (!_parent.IsZooming && !_parent.DisableScroll)
@@ -97,6 +155,9 @@ namespace RichCanvas
             }
         }
 
+        /// <summary>
+        /// <see cref="IScrollInfo"/> method
+        /// </summary>
         public void LineRight()
         {
             if (!_parent.IsZooming && !_parent.DisableScroll)
@@ -106,6 +167,9 @@ namespace RichCanvas
             }
         }
 
+        /// <summary>
+        /// <see cref="IScrollInfo"/> method
+        /// </summary>
         public void LineUp()
         {
             if (!_parent.IsZooming && !_parent.DisableScroll)
@@ -115,16 +179,33 @@ namespace RichCanvas
             }
         }
 
+        /// <summary>
+        /// <see cref="IScrollInfo"/> method used when BringIntoView() is called on <see cref="RichItemContainer"/>
+        /// </summary>
         public Rect MakeVisible(Visual visual, Rect rectangle)
         {
-            //not implemented
+            var viewportRect = new Rect(LeftLimit, TopLimit, ViewportWidth, ViewportHeight);
             if (visual is RichItemContainer container)
             {
-                return new Rect(container.Left, container.Top, container.Width, container.Height);
+                var containerRect = new Rect(container.Left, container.Top, container.Width, container.Height);
+                if (!viewportRect.Contains(containerRect))
+                {
+                    var viewportXCenter = (viewportRect.Left + viewportRect.Right) / 2;
+                    var viewportYCenter = (viewportRect.Top + viewportRect.Bottom) / 2;
+
+                    ScrollHorizontally((container.Left - viewportXCenter) + container.Width / 2);
+                    ScrollVertically((container.Top - viewportYCenter) + container.Height / 2);
+                    AdjustScrollHorizontally();
+                    AdjustScrollVertically();
+                }
+                return new Rect(ScrollOwner.RenderSize);
             }
             return new Rect(ScrollOwner.RenderSize);
         }
 
+        /// <summary>
+        /// <see cref="IScrollInfo"/> method
+        /// </summary>
         public void MouseWheelDown()
         {
             if (!_parent.IsZooming && !_parent.DisableScroll)
@@ -134,6 +215,9 @@ namespace RichCanvas
             }
         }
 
+        /// <summary>
+        /// <see cref="IScrollInfo"/> method
+        /// </summary>
         public void MouseWheelLeft()
         {
             if (!_parent.IsZooming && !_parent.DisableScroll)
@@ -143,6 +227,9 @@ namespace RichCanvas
             }
         }
 
+        /// <summary>
+        /// <see cref="IScrollInfo"/> method
+        /// </summary>
         public void MouseWheelRight()
         {
             if (!_parent.IsZooming && !_parent.DisableScroll)
@@ -152,6 +239,9 @@ namespace RichCanvas
             }
         }
 
+        /// <summary>
+        /// <see cref="IScrollInfo"/> method
+        /// </summary>
         public void MouseWheelUp()
         {
             if (!_parent.IsZooming && !_parent.DisableScroll)
@@ -161,6 +251,9 @@ namespace RichCanvas
             }
         }
 
+        /// <summary>
+        /// <see cref="IScrollInfo"/> method
+        /// </summary>
         public void PageDown()
         {
             if (!_parent.IsZooming && !_parent.DisableScroll)
@@ -170,6 +263,9 @@ namespace RichCanvas
             }
         }
 
+        /// <summary>
+        /// <see cref="IScrollInfo"/> method
+        /// </summary>
         public void PageLeft()
         {
             if (!_parent.IsZooming && !_parent.DisableScroll)
@@ -179,6 +275,9 @@ namespace RichCanvas
             }
         }
 
+        /// <summary>
+        /// <see cref="IScrollInfo"/> method
+        /// </summary>
         public void PageRight()
         {
             if (!_parent.IsZooming && !_parent.DisableScroll)
@@ -188,6 +287,9 @@ namespace RichCanvas
             }
         }
 
+        /// <summary>
+        /// <see cref="IScrollInfo"/> method
+        /// </summary>
         public void PageUp()
         {
             if (!_parent.IsZooming && !_parent.DisableScroll)
@@ -197,6 +299,9 @@ namespace RichCanvas
             }
         }
 
+        /// <summary>
+        /// <see cref="IScrollInfo"/> method
+        /// </summary>
         public void SetHorizontalOffset(double offset)
         {
             if (!_parent.DisableScroll)
@@ -238,6 +343,9 @@ namespace RichCanvas
             }
         }
 
+        /// <summary>
+        /// <see cref="IScrollInfo"/> method
+        /// </summary>
         public void SetVerticalOffset(double offset)
         {
             if (!_parent.DisableScroll)
@@ -388,7 +496,12 @@ namespace RichCanvas
         #endregion
 
         #region Internal Methods
-        internal void Zoom(Point position, int delta)
+        /// <summary>
+        /// Zooms at the specified position
+        /// </summary>
+        /// <param name="position">Mouse position to zoom at</param>
+        /// <param name="delta">Determines whether to zoom in or out by the sign</param>
+        public void Zoom(Point position, int delta)
         {
             _zoomGesture.ZoomToPosition(position, delta, _parent.ScaleFactor);
             TranslatedVertically = true;
@@ -421,7 +534,12 @@ namespace RichCanvas
             ScrollOwner.InvalidateScrollInfo();
         }
 
-        internal void PanVertically(double offset, bool reverseScroll = false)
+        /// <summary>
+        /// Scrolls and translates vertically the <see cref="ScrollOwner"/> viewport
+        /// </summary>
+        /// <param name="offset">Scroll factor which determines the speed</param>
+        /// <param name="reverseScroll">Reverse scrolling direction which is specifed by the sign of the offset</param>
+        public void PanVertically(double offset, bool reverseScroll = false)
         {
             TranslatedVertically = false;
             if (reverseScroll)
@@ -444,7 +562,12 @@ namespace RichCanvas
             ScrollOwner.InvalidateScrollInfo();
         }
 
-        internal void PanHorizontally(double offset, bool reverseScroll = false)
+        /// <summary>
+        /// Scrolls and translates horizontally the <see cref="ScrollOwner"/> viewport
+        /// </summary>
+        /// <param name="offset">Scroll factor which determines the speed</param>
+        /// <param name="reverseScroll">Reverse scrolling direction which is specifed by the sign of the offset</param>
+        public void PanHorizontally(double offset, bool reverseScroll = false)
         {
             TranslatedHorizontally = false;
             if (reverseScroll)

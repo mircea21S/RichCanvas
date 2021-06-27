@@ -12,6 +12,7 @@ namespace RichCanvasDemo.ViewModels.Base
         private double _width;
         private double _height;
         private VisualProperties _visualProperties;
+        private bool _shouldBringIntoView;
 
         public double Top
         {
@@ -64,7 +65,11 @@ namespace RichCanvasDemo.ViewModels.Base
             get => _isDraggable;
             set => SetProperty(ref _isDraggable, value);
         }
-
+        public bool ShouldBringIntoView
+        {
+            get => _shouldBringIntoView;
+            set => SetProperty(ref _shouldBringIntoView, value);
+        }
         public Drawable()
         {
             VisualProperties = new VisualProperties();

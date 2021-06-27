@@ -12,9 +12,11 @@
         xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:views="clr-namespace:RichCanvasDemo.CustomControls"
         mc:Ignorable="d"
+        x:Name="window"
         Title="MainWindow"
         Height="650"
-        Width="800">
+        Width="800"
+        WindowState="Maximized">
 
     <Window.DataContext>
         <local:MainWindowViewModel />
@@ -369,6 +371,8 @@
                             Value="{Binding IsSelectable}" />
                     <Setter Property="IsDraggable"
                             Value="{Binding IsDraggable}" />
+                    <Setter Property="ShouldBringIntoView"
+                            Value="{Binding ShouldBringIntoView}" />
                     <Setter Property="ContextMenu">
                         <Setter.Value>
                             <ContextMenu>

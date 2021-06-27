@@ -23,6 +23,7 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
         <StackPanel>
@@ -83,6 +84,13 @@
                       Content="Is Draggable"
                       IsChecked="{Binding IsDraggable, Mode=TwoWay}" />
 
+        </StackPanel>
+
+        <StackPanel Grid.Row="4">
+            <CheckBox MinHeight="30"
+                      MinWidth="100"
+                      Content="Bring into view"
+                      IsChecked="{Binding ShouldBringIntoView, Mode=TwoWay}" />
         </StackPanel>
     </Grid>
 </UserControl>

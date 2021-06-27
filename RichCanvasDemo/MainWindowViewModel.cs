@@ -232,5 +232,20 @@ namespace RichCanvasDemo
             _dialogService.OpenDialog<EditText>(text);
             Items.Add(text);
         }
+
+        private ICommand copyCommand;
+        public ICommand CopyCommand => copyCommand ??= new RelayCommand(Copy);
+
+        private void Copy()
+        {
+        }
+
+        private object shoudlBringIntoView;
+
+        public object ShoudlBringIntoView { get => shoudlBringIntoView; set => SetProperty(ref shoudlBringIntoView, value); }
+
+        private object shouldBringIntoView;
+
+        public object ShouldBringIntoView { get => shouldBringIntoView; set => SetProperty(ref shouldBringIntoView, value); }
     }
 }

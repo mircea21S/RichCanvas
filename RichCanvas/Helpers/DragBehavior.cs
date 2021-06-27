@@ -63,9 +63,7 @@ namespace RichCanvas.Helpers
             {
                 ItemsControl.ClearSelections();
             }
-            ItemsControl.AddSelection(container);
-
-            container.BringIntoView();
+            container.IsSelected = true;
 
             _initialPosition = new Point(e.GetPosition(ItemsControl.ItemsHost).X, e.GetPosition(ItemsControl.ItemsHost).Y);
             container.CaptureMouse();
@@ -102,7 +100,7 @@ namespace RichCanvas.Helpers
                 if (!TranslateChanged)
                 {
                     ItemsControl.ClearSelections();
-                    ItemsControl.AddSelection(container);
+                    container.IsSelected = true;
                 }
             }
 
