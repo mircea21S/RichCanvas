@@ -23,7 +23,6 @@
     </Window.DataContext>
 
     <Window.Resources>
-        <local:DebugConverter x:Key="DebugConverter" />
         <local:PointToStringConverter x:Key="PointToStringConverter" />
         <converters:StringToFloatConverter x:Key="StringToFloatConverter" />
         <GeometryDrawing x:Key="GridStyle"

@@ -44,15 +44,14 @@ namespace RichCanvas
 
         #region Properties API
 
-        protected static readonly DependencyPropertyKey MousePositionPropertyKey = DependencyProperty.RegisterReadOnly(nameof(MousePosition), typeof(Point), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(Point)));
-        public static DependencyProperty MousePositionProperty = MousePositionPropertyKey.DependencyProperty;
+        public static DependencyProperty MousePositionProperty = DependencyProperty.Register(nameof(MousePosition), typeof(Point), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(Point)));
         /// <summary>
-        /// Gets mouse position relative to <see cref="RichItemsControl.ItemsHost"/>.
+        /// Gets or sets mouse position relative to <see cref="RichItemsControl.ItemsHost"/>.
         /// </summary>
         public Point MousePosition
         {
             get => (Point)GetValue(MousePositionProperty);
-            internal set => SetValue(MousePositionPropertyKey, value);
+            set => SetValue(MousePositionProperty, value);
         }
 
         protected static readonly DependencyPropertyKey SelectionRectanglePropertyKey = DependencyProperty.RegisterReadOnly(nameof(SelectionRectangle), typeof(Rect), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(Rect)));
@@ -77,7 +76,7 @@ namespace RichCanvas
             internal set => SetValue(IsSelectingPropertyKey, value);
         }
 
-        protected static readonly DependencyPropertyKey AppliedTransformPropertyKey = DependencyProperty.RegisterReadOnly(nameof(MousePosition), typeof(TransformGroup), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(TransformGroup)));
+        protected static readonly DependencyPropertyKey AppliedTransformPropertyKey = DependencyProperty.RegisterReadOnly(nameof(AppliedTransform), typeof(TransformGroup), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(TransformGroup)));
         public static DependencyProperty AppliedTransformProperty = AppliedTransformPropertyKey.DependencyProperty;
         /// <summary>
         /// Gets the transform that is applied to all child controls.
@@ -348,7 +347,7 @@ namespace RichCanvas
         #endregion
 
         #region Internal Properties
-        protected bool HasSelections => _selectingGesture.HasSelections;
+        public bool HasSelections => _selectingGesture.HasSelections;
         internal RichCanvas ItemsHost => _mainPanel;
         internal PanningGrid ScrollContainer => _canvasContainer;
         internal TransformGroup SelectionRectangleTransform { get; private set; }
@@ -614,18 +613,18 @@ namespace RichCanvas
         /// Adds the container in <see cref="RichItemsControl.SelectedItems"/>.
         /// </summary>
         /// <param name="container">Container that is selected</param>
-        protected void AddSelection(RichItemContainer container) => _selectingGesture.AddSelection(container);
+        public void AddSelection(RichItemContainer container) => _selectingGesture.AddSelection(container);
 
         /// <summary>
         /// Clears the <see cref="RichItemsControl.SelectedItems"/> list.
         /// </summary>
-        protected void ClearSelections() => _selectingGesture.UnselectAll();
+        public void ClearSelections() => _selectingGesture.UnselectAll();
 
         /// <summary>
         /// Updates current <see cref="SelectedItems"/> positions.
         /// </summary>
         /// <param name="snap"></param>
-        protected void UpdateSelections(bool snap = false)
+        public void UpdateSelections(bool snap = false)
         {
             _selectingGesture.UpdateSelectionsPosition(snap);
             AdjustScroll();
