@@ -1,7 +1,5 @@
 # RichCanvas
 
-[![Build Status]
-
 Highly customizable and performant canvas WPF control library designed for MVVM.
 
 ## 📥 Installation
