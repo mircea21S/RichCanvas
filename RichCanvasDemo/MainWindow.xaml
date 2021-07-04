@@ -15,8 +15,8 @@
         x:Name="window"
         Title="MainWindow"
         Height="650"
-        Width="800"
-        WindowState="Maximized">
+        Width="800">
+    <!--WindowState="Maximized"-->
 
     <Window.DataContext>
         <local:MainWindowViewModel />

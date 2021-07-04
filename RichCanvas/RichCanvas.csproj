@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <Authors>Mircea Staicu</Authors>
+    <RepositoryUrl>https://github.com/mircea21S/RichCanvas</RepositoryUrl>
   </PropertyGroup>
 
 </Project>

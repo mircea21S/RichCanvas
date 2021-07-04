@@ -40,6 +40,7 @@ namespace RichCanvasDemo
         private Drawable _selectedItem;
         private ICommand addImageCommand;
         private string scale = "1";
+        private bool shouldBringIntoView;
         private Point mousePosition;
         private ICommand addTextCommand;
 
@@ -109,6 +110,7 @@ namespace RichCanvasDemo
         public string Scale { get => scale; set => SetProperty(ref scale, value); }
         public Point MousePosition { get => mousePosition; set => SetProperty(ref mousePosition, value); }
 
+        public bool ShouldBringIntoView { get => shouldBringIntoView; set => SetProperty(ref shouldBringIntoView, value); }
         public MainWindowViewModel()
         {
             Items = new ObservableCollection<Drawable>();
@@ -232,20 +234,6 @@ namespace RichCanvasDemo
             _dialogService.OpenDialog<EditText>(text);
             Items.Add(text);
         }
-
-        private ICommand copyCommand;
-        public ICommand CopyCommand => copyCommand ??= new RelayCommand(Copy);
-
-        private void Copy()
-        {
-        }
-
-        private object shoudlBringIntoView;
-
-        public object ShoudlBringIntoView { get => shoudlBringIntoView; set => SetProperty(ref shoudlBringIntoView, value); }
-
-        private object shouldBringIntoView;
-
-        public object ShouldBringIntoView { get => shouldBringIntoView; set => SetProperty(ref shouldBringIntoView, value); }
+        
     }
 }

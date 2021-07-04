@@ -733,7 +733,7 @@ namespace RichCanvas
 
                         CurrentDrawingItem.Height = Math.Abs(transformedPosition.Y - CurrentDrawingItem.Top);
                     }
-                    ScrollContainer.PanVertically(AutoPanSpeed, true);
+                    ScrollContainer.PanVertically(-AutoPanSpeed);
                 }
                 else if (mousePosition.Y >= ScrollContainer.ViewportHeight)
                 {
@@ -744,7 +744,7 @@ namespace RichCanvas
 
                         CurrentDrawingItem.Height = Math.Abs(transformedPosition.Y - CurrentDrawingItem.Top);
                     }
-                    ScrollContainer.PanVertically(-AutoPanSpeed, true);
+                    ScrollContainer.PanVertically(AutoPanSpeed);
                 }
 
                 if (mousePosition.X <= 0)
@@ -757,7 +757,7 @@ namespace RichCanvas
 
                         CurrentDrawingItem.Width = Math.Abs(transformedPosition.X - CurrentDrawingItem.Left);
                     }
-                    ScrollContainer.PanHorizontally(AutoPanSpeed, true);
+                    ScrollContainer.PanHorizontally(-AutoPanSpeed);
                 }
                 else if (mousePosition.X >= ScrollContainer.ViewportWidth)
                 {
@@ -768,7 +768,7 @@ namespace RichCanvas
 
                         CurrentDrawingItem.Width = Math.Abs(transformedPosition.X - CurrentDrawingItem.Left);
                     }
-                    ScrollContainer.PanHorizontally(-AutoPanSpeed, true);
+                    ScrollContainer.PanHorizontally(AutoPanSpeed);
                 }
 
                 if (_isDrawing)
