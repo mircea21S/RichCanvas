@@ -15,8 +15,8 @@
         x:Name="window"
         Title="MainWindow"
         Height="650"
+        WindowState="Maximized"
         Width="800">
-    <!--WindowState="Maximized"-->
 
     <Window.DataContext>
         <local:MainWindowViewModel />
@@ -376,7 +376,7 @@
                         <Setter.Value>
                             <ContextMenu>
                                 <MenuItem Header="Copy"
-                                          Command=""/>
+                                          Command="" />
                                 <MenuItem Header="Paste"
                                           IsEnabled="True" />
                             </ContextMenu>
