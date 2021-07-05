@@ -2,9 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFrameworks>net5-windows;netcoreapp3.1;net48;net472</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <Authors>Mircea Staicu</Authors>
     <RepositoryUrl>https://github.com/mircea21S/RichCanvas</RepositoryUrl>
+    <Company />
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Copyright>Mircea Staicu</Copyright>
+    <PackageProjectUrl>https://github.com/mircea21S/RichCanvas</PackageProjectUrl>
+    <PackageTags>wpf mvvm infinite-canvas canvas controls</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>Highly customizable and performant canvas WPF control library designed for MVVM.</Description>
   </PropertyGroup>
 
 </Project>

@@ -77,10 +77,6 @@ namespace RichCanvas
         /// </summary>
         protected double RightLimit => TranslatePoint(_viewportBottomRightInitial, _parent.ItemsHost).X;
 
-        internal bool TranslatedVertically { get; private set; }
-
-        internal bool TranslatedHorizontally { get; private set; }
-
         #endregion
 
         #region IScrollInfo
@@ -470,8 +466,6 @@ namespace RichCanvas
         public void Zoom(Point position, int delta)
         {
             _zoomGesture.ZoomToPosition(position, delta, _parent.ScaleFactor);
-            TranslatedVertically = true;
-            TranslatedHorizontally = true;
 
             if (TopLimit > HighestElement)
             {
@@ -607,13 +601,11 @@ namespace RichCanvas
         private void ScrollVertically(double offset)
         {
             _translateTransform.Y += -offset;
-            TranslatedVertically = true;
         }
 
         private void ScrollHorizontally(double offset)
         {
             _translateTransform.X += -offset;
-            TranslatedHorizontally = true;
         }
 
         private void UpdateExtentHeight()
