@@ -12,7 +12,7 @@
     <PackageProjectUrl>https://github.com/mircea21S/RichCanvas</PackageProjectUrl>
     <PackageTags>wpf mvvm infinite-canvas canvas controls</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>Highly customizable and performant canvas WPF control library designed for MVVM.</Description>
+    <Description>High performance and customizable infinite canvas designed for MVVM.</Description>
   </PropertyGroup>
 
 </Project>
