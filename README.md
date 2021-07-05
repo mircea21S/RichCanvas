@@ -1,6 +1,6 @@
 # RichCanvas
 
-Highly customizable and performant infinite canvas designed for MVVM.
+High performance and customizable infinite canvas designed for MVVM.
 
 ## 📥 Installation
 
