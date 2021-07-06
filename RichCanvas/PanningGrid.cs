@@ -187,6 +187,7 @@ namespace RichCanvas
                 var relativePoint = (Point)((Vector)containerLocation * _parent.Scale - viewportCenter);
                 _translateTransform.X = -relativePoint.X;
                 _translateTransform.Y = -relativePoint.Y;
+                container.ShouldBringIntoView = false;
                 return new Rect(ScrollOwner.RenderSize);
             }
             return new Rect(ScrollOwner.RenderSize);
@@ -558,7 +559,7 @@ namespace RichCanvas
             {
                 _offset.Y = TopOffset;
             }
-            else if (BottomLimit < LowestElement)
+            else if (BottomLimit < LowestElement && _offset.Y < 0)
             {
                 _offset.Y = BottomOffset;
             }
@@ -569,7 +570,7 @@ namespace RichCanvas
             {
                 _offset.X = LeftOffset;
             }
-            else if (RightLimit < MostRightElement)
+            else if (RightLimit < MostRightElement && _offset.X < 0)
             {
                 _offset.X = RightOffset;
             }

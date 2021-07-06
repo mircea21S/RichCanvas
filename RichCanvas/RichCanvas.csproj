@@ -13,6 +13,10 @@
     <PackageTags>wpf mvvm infinite-canvas canvas controls</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>High performance and customizable infinite canvas designed for MVVM.</Description>
+    <PackageReleaseNotes>Modified description</PackageReleaseNotes>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
 </Project>

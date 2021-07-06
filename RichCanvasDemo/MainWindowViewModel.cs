@@ -43,7 +43,9 @@ namespace RichCanvasDemo
         private bool shouldBringIntoView;
         private Point mousePosition;
         private ICommand addTextCommand;
-
+        private ICommand copyCommand;
+        private Drawable _copiedElement;
+        private ICommand pasteCommand;
         private readonly FileService _fileService;
         private readonly DialogService _dialogService;
 
@@ -58,6 +60,20 @@ namespace RichCanvasDemo
         public ICommand DrawBezierCommand => drawBezierCommand ??= new RelayCommand(OnDrawBezier);
         public ICommand AddTextCommand => addTextCommand ??= new RelayCommand(AddText);
         public ICommand AddImageCommand => addImageCommand ??= new RelayCommand(AddImage);
+        public ICommand CopyCommand => copyCommand ??= new RelayCommand<Drawable>(Copy);
+        public ICommand PasteCommand => pasteCommand ??= new RelayCommand(Paste);
+
+        private void Paste()
+        {
+            _copiedElement.Left = MousePosition.X;
+            _copiedElement.Top = MousePosition.Y;
+            Items.Add(_copiedElement);
+        }
+
+        private void Copy(Drawable element)
+        {
+            _copiedElement = element.Clone();
+        }
 
         public bool EnableGrid
         {
@@ -234,6 +250,6 @@ namespace RichCanvasDemo
             _dialogService.OpenDialog<EditText>(text);
             Items.Add(text);
         }
-        
+
     }
 }

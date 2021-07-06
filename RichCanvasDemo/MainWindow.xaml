@@ -285,6 +285,8 @@
                               Command="{Binding AddImageCommand}" />
                     <MenuItem Header="Add Text"
                               Command="{Binding AddTextCommand}" />
+                    <MenuItem Header="Paste"
+                              Command="{Binding PasteCommand}" />
                 </ContextMenu>
             </richCanvas:RichItemsControl.ContextMenu>
 
@@ -351,6 +353,9 @@
             <richCanvas:RichItemsControl.ItemContainerStyle>
                 <Style TargetType="richCanvas:RichItemContainer">
 
+                    <Setter Property="Tag"
+                            Value="{Binding DataContext, ElementName=window}" />
+
                     <Setter Property="helpers:AttachedAdorner.HasHoverAdorner"
                             Value="True" />
                     <!--Replace with property-->
@@ -371,14 +376,13 @@
                     <Setter Property="IsDraggable"
                             Value="{Binding IsDraggable}" />
                     <Setter Property="ShouldBringIntoView"
-                            Value="{Binding ShouldBringIntoView}" />
+                            Value="{Binding ShouldBringIntoView, Mode=TwoWay}" />
                     <Setter Property="ContextMenu">
                         <Setter.Value>
-                            <ContextMenu>
+                            <ContextMenu DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
                                 <MenuItem Header="Copy"
-                                          Command="" />
-                                <MenuItem Header="Paste"
-                                          IsEnabled="True" />
+                                          Command="{Binding CopyCommand}"
+                                          CommandParameter="{Binding SelectedItems[0]}"/>
                             </ContextMenu>
                         </Setter.Value>
                     </Setter>

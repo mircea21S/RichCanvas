@@ -77,5 +77,7 @@ namespace RichCanvasDemo.ViewModels.Base
 
         protected virtual void OnWidthUpdated() { }
         protected virtual void OnHeightUpdated() { }
+
+        public virtual Drawable Clone() => null;
     }
 }
