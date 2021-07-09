@@ -525,6 +525,10 @@ namespace RichCanvas
                 UpdateExtentHeight();
                 ScrollOwner.InvalidateScrollInfo();
             }
+            else if (_parent.IsPanning || !_parent.DisableAutoPanning)
+            {
+                ScrollVertically(offset);
+            }
         }
 
         /// <summary>
@@ -538,6 +542,10 @@ namespace RichCanvas
                 SetHorizontalOffset(offset);
                 UpdateExtentWidth();
                 ScrollOwner.InvalidateScrollInfo();
+            }
+            else if (_parent.IsPanning || !_parent.DisableAutoPanning)
+            {
+                ScrollHorizontally(offset);
             }
         }
 

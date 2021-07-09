@@ -328,9 +328,7 @@
                 <DataTemplate DataType="{x:Type vm:Rectangle}">
                     <Rectangle Stroke="{Binding VisualProperties.BorderColor, Converter={StaticResource ColorToSolidBrushColorConverter}}"
                                Fill="{Binding VisualProperties.FillColor, Converter={StaticResource ColorToSolidBrushColorConverter}}"
-                               StrokeThickness="3"
-                               Width="{Binding Width}"
-                               Height="{Binding Height}"></Rectangle>
+                               StrokeThickness="3"></Rectangle>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:Line}">
                     <Line  Stroke="{Binding VisualProperties.BorderColor, Converter={StaticResource ColorToSolidBrushColorConverter}}"
