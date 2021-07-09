@@ -29,7 +29,7 @@ A design system where you can draw different things like: images, text, lines, r
 
 It is a simple application just to show how you can interact with the library.
 
-![DEMO](https://i.imgur.com/7aaF6kp.gif)
+![DEMO](https://github.com/mircea21S/RichCanvas/blob/main/DemoAnimation.gif)
 
 ## License
 
