@@ -25,7 +25,7 @@ Install-Package RichCanvas
 
 Example of an app that uses RichCanvas:
 
-A design system where you can draw different things like: images, text, lines, rectangles, bezier with basic features.
+A design tool where you can draw different things like: images, text, lines, rectangles, bezier with basic features.
 
 It is a simple application just to show how you can interact with the library.
 
