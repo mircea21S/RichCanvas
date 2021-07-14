@@ -1,6 +1,7 @@
 ﻿using RichCanvas.Helpers;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace RichCanvas
@@ -10,7 +11,7 @@ namespace RichCanvas
     {
         private const string ContentPresenterName = "PART_ContentPresenter";
 
-        public static DependencyProperty IsSelectedProperty = DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(RichItemContainer), new FrameworkPropertyMetadata(OnIsSelectedChanged));
+        public static DependencyProperty IsSelectedProperty = Selector.IsSelectedProperty.AddOwner(typeof(RichItemContainer), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnIsSelectedChanged));
         /// <summary>
         /// Gets or sets a value that indicates whether this node is selected.
         /// Can only be set if <see cref="IsSelectable"/> is true.
@@ -73,14 +74,21 @@ namespace RichCanvas
             set => SetValue(ShouldBringIntoViewProperty, value);
         }
 
+        public static readonly RoutedEvent SelectedEvent = Selector.SelectedEvent.AddOwner(typeof(RichItemContainer));
+        public static readonly RoutedEvent UnselectedEvent = Selector.UnselectedEvent.AddOwner(typeof(RichItemContainer));
+
         static RichItemContainer()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RichItemContainer), new FrameworkPropertyMetadata(typeof(RichItemContainer)));
+
         }
 
+        private RichItemsControl _host;
+        /// <summary>
+        /// The <see cref="NodifyEditor"/> that owns this <see cref="ItemContainer"/>.
+        /// </summary>
+        public RichItemsControl Host => _host ??= ItemsControl.ItemsControlFromItemContainer(this) as RichItemsControl;
         internal bool IsDrawn { get; set; }
-
-        internal RichItemsControl Host { get; set; }
 
         protected override void OnMouseEnter(MouseEventArgs e)
         {
@@ -112,9 +120,27 @@ namespace RichCanvas
 
         private static void OnIsSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if ((bool)e.NewValue)
+            var elem = (RichItemContainer)d;
+            bool result = elem.IsSelectable && (bool)e.NewValue;
+            elem.OnSelectedChanged(result);
+            elem.IsSelected = result;
+        }
+
+        private void OnSelectedChanged(bool value)
+        {
+            // Raise event after the selection operation ended
+            if (!(Host?.IsSelecting ?? false))
             {
-                ((RichItemContainer)d).Host.AddSelection((RichItemContainer)d);
+                // Add to base SelectedItems
+                RaiseEvent(new RoutedEventArgs(value ? SelectedEvent : UnselectedEvent, this));
+                if (value)
+                {
+                    Host.AddSelection(this);
+                }
+                else
+                {
+                    Host.RemoveSelection(this);
+                }
             }
         }
 

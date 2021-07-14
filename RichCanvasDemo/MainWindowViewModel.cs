@@ -26,7 +26,7 @@ namespace RichCanvasDemo
         private RelayCommand drawBezierCommand;
         private ICommand drawEndedCommand;
         private bool _enableSnapping;
-        private bool _disableCache;
+        private bool _disableCache = true;
         private bool _disableZoom;
         private bool _disableScroll;
         private bool _disableAutoPanning;
@@ -35,7 +35,7 @@ namespace RichCanvasDemo
         private string _scrollFactor;
         private string _zoomFactor;
         private string _maxScale;
-        private string _minScale;
+        private string _minScale = "0.05";
         private bool _showProperties;
         private Drawable _selectedItem;
         private ICommand addImageCommand;
@@ -166,25 +166,39 @@ namespace RichCanvasDemo
             if (!string.IsNullOrEmpty(ElementsCount))
             {
                 int elementsCount = int.Parse(ElementsCount);
-                for (int i = 0; i < elementsCount; i++)
+                for (int i = 1; i < elementsCount; i++)
                 {
                     Random rnd = new Random();
-                    double left = rnd.Next(-1000, 1000);
-                    double top = rnd.Next(-1000, 1000);
-                    var item = new Line
+                    double left = rnd.Next(-5000, 5000);
+                    double top = rnd.Next(-5000, 5000);
+                    Drawable item = null;
+                    if (Items.Count == 0)
                     {
-                        Left = left,
-                        Top = top,
-                        Width = Math.Abs(left / 2 + 30),
-                        Height = Math.Abs(top / 2 + 30)
-                    };
-                    if (item.Width == 0)
-                    {
-                        item.Width = 10;
+                        Items.Add(new Rectangle
+                        {
+                            Height = 20,
+                            Width = 30
+                        });
                     }
-                    if (item.Height == 0)
+                    if (Items[i - 1] is Line)
                     {
-                        item.Height = 10;
+                        item = new Rectangle
+                        {
+                            Left = left,
+                            Top = top,
+                            Width = 100,
+                            Height = 100
+                        };
+                    }
+                    else if (Items[i - 1] is Rectangle)
+                    {
+                        item = new Line
+                        {
+                            Left = left,
+                            Top = top,
+                            Width = 100,
+                            Height = 100
+                        };
                     }
                     Items.Add(item);
                 }

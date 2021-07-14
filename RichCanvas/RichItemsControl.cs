@@ -17,7 +17,7 @@ namespace RichCanvas
     [TemplatePart(Name = DrawingPanelName, Type = typeof(Panel))]
     [TemplatePart(Name = SelectionRectangleName, Type = typeof(Rectangle))]
     [StyleTypedProperty(Property = nameof(SelectionRectangleStyle), StyleTargetType = typeof(Rectangle))]
-    public class RichItemsControl : ItemsControl
+    public class RichItemsControl : MultiSelector
     {
         #region Constants
 
@@ -275,7 +275,7 @@ namespace RichCanvas
         /// <summary>
         /// Gets or sets the items in the <see cref="RichItemsControl"/> that are selected.
         /// </summary>
-        public IList SelectedItems
+        public new IList SelectedItems
         {
             get => (IList)GetValue(SelectedItemsProperty);
             set => SetValue(SelectedItemsProperty, value);
@@ -347,7 +347,7 @@ namespace RichCanvas
         #endregion
 
         #region Internal Properties
-        public bool HasSelections => _selectingGesture.HasSelections;
+        public bool HasSelections => base.SelectedItems.Count > 1;
         internal RichCanvas ItemsHost => _mainPanel;
         internal PanningGrid ScrollContainer => _canvasContainer;
         internal TransformGroup SelectionRectangleTransform { get; private set; }
@@ -445,13 +445,13 @@ namespace RichCanvas
                                 if (container.IsValid())
                                 {
                                     container.IsDrawn = true;
+
                                     _currentDrawingIndexes.Remove(_currentDrawingIndexes[i]);
                                 }
                                 else
                                 {
                                     CaptureMouse();
                                     _isDrawing = true;
-                                    ClearSelections();
                                     _drawingGesture.OnMouseDown(container, position);
                                     _currentDrawingIndexes.Remove(_currentDrawingIndexes[i]);
                                     break;
@@ -490,12 +490,20 @@ namespace RichCanvas
             else if (IsSelecting)
             {
                 _selectingGesture.OnMouseMove(MousePosition);
+
                 var geom = GetSelectionRectangleCurrentGeometry();
+
+                UnselectAll();
+                SelectedItems.Clear();
                 _selectingGesture.UnselectAll();
+
+                BeginUpdateSelectedItems();
 
                 VisualTreeHelper.HitTest(_mainPanel, null,
                     new HitTestResultCallback(OnHitTestResultCallback),
                     new GeometryHitTestParameters(geom));
+
+                EndUpdateSelectedItems();
             }
         }
 
@@ -518,6 +526,20 @@ namespace RichCanvas
             else if (!DragBehavior.IsDragging && IsSelecting)
             {
                 IsSelecting = false;
+                IList selected = SelectedItems;
+
+                if (selected != null)
+                {
+                    IList added = base.SelectedItems;
+                    for (var i = 0; i < added.Count; i++)
+                    {
+                        // Ensure no duplicates are added
+                        if (!selected.Contains(added[i]))
+                        {
+                            selected.Add(((RichItemContainer)added[i]).DataContext);
+                        }
+                    }
+                }
             }
             if (IsPanning)
             {
@@ -609,22 +631,11 @@ namespace RichCanvas
         #endregion
 
         #region Internal Methods
-        /// <summary>
-        /// Adds the container in <see cref="RichItemsControl.SelectedItems"/>.
-        /// </summary>
-        /// <param name="container">Container that is selected</param>
-        public void AddSelection(RichItemContainer container) => _selectingGesture.AddSelection(container);
+        internal void AddSelection(RichItemContainer container) => _selectingGesture.AddSelection(container);
 
-        /// <summary>
-        /// Clears the <see cref="RichItemsControl.SelectedItems"/> list.
-        /// </summary>
-        public void ClearSelections() => _selectingGesture.UnselectAll();
+        internal void RemoveSelection(RichItemContainer container) => _selectingGesture.RemoveSelection(container);
 
-        /// <summary>
-        /// Updates current <see cref="SelectedItems"/> positions.
-        /// </summary>
-        /// <param name="snap"></param>
-        public void UpdateSelections(bool snap = false)
+        internal void UpdateSelections(bool snap = false)
         {
             _selectingGesture.UpdateSelectionsPosition(snap);
             AdjustScroll();
@@ -797,7 +808,11 @@ namespace RichCanvas
             if (geometryHitTestResult.IntersectionDetail != IntersectionDetail.Empty)
             {
                 var container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
-                container.IsSelected = true;
+                if (container.IsSelectable)
+                {
+                    base.SelectedItems.Add(container);
+                    AddSelection(container);
+                }
             }
             return HitTestResultBehavior.Continue;
         }

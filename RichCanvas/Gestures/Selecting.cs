@@ -9,10 +9,8 @@ namespace RichCanvas.Gestures
     internal class Selecting
     {
         private Point _selectionRectangleInitialPosition;
-        private readonly List<RichItemContainer> _selections = new List<RichItemContainer>();
         private readonly RichItemsControl _context;
-
-        internal bool HasSelections => _selections.Count > 1;
+        private readonly List<RichItemContainer> _selections = new List<RichItemContainer>();
 
         public Selecting(RichItemsControl context)
         {
@@ -75,32 +73,30 @@ namespace RichCanvas.Gestures
 
         internal void AddSelection(RichItemContainer container)
         {
-            if (container.IsSelectable)
+            if (!_selections.Contains(container))
             {
-                container.IsSelected = true;
-                if (!_selections.Contains(container))
-                {
-                    _selections.Add(container);
-
-                    if (_context.SelectedItems != null)
-                    {
-                        _context.SelectedItems.Add(container.DataContext);
-                    }
-                }
+                _selections.Add(container);
+            }
+            if (!_context.SelectedItems.Contains(container.DataContext))
+            {
+                _context.SelectedItems.Add(container.DataContext);
+            }
+        }
+        internal void RemoveSelection(RichItemContainer container)
+        {
+            if (_selections.Contains(container))
+            {
+                _selections.Remove(container);
+            }
+            if (_context.SelectedItems.Contains(container.DataContext))
+            {
+                _context.SelectedItems.Remove(container.DataContext);
             }
         }
 
         internal void UnselectAll()
         {
-            foreach (var selection in _selections)
-            {
-                selection.IsSelected = false;
-            }
             _selections.Clear();
-            if (_context.SelectedItems != null)
-            {
-                _context.SelectedItems.Clear();
-            }
         }
 
         internal void UpdateSelectionsPosition(bool snap = false)

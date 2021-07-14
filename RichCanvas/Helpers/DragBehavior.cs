@@ -12,13 +12,11 @@ namespace RichCanvas.Helpers
         private static Point _initialPosition;
 
         internal static RichItemsControl ItemsControl { get; set; }
-
         public static bool IsDragging { get; private set; }
-        public static bool TranslateChanged { get; private set; }
+
 
         internal static DependencyProperty IsDraggingProperty = DependencyProperty.RegisterAttached("IsDragging", typeof(bool), typeof(RichItemContainer),
             new PropertyMetadata(OnIsDraggingChanged));
-        private static bool translateSubscribed;
 
         internal static void SetIsDragging(UIElement element, bool value)
         {
@@ -54,15 +52,6 @@ namespace RichCanvas.Helpers
         private static void OnSelectedContainerClicked(object sender, MouseButtonEventArgs e)
         {
             RichItemContainer container = (RichItemContainer)sender;
-            var transformGroup = (TransformGroup)container.RenderTransform;
-            var translateTransform = (TranslateTransform)transformGroup.Children[1];
-            translateTransform.Changed += OnTranslateChanged;
-            translateSubscribed = true;
-
-            if (!ItemsControl.HasSelections)
-            {
-                ItemsControl.ClearSelections();
-            }
             container.IsSelected = true;
 
             _initialPosition = new Point(e.GetPosition(ItemsControl.ItemsHost).X, e.GetPosition(ItemsControl.ItemsHost).Y);
@@ -96,20 +85,7 @@ namespace RichCanvas.Helpers
             if (ItemsControl.HasSelections)
             {
                 ItemsControl.UpdateSelections(true);
-
-                if (!TranslateChanged)
-                {
-                    ItemsControl.ClearSelections();
-                    container.IsSelected = true;
-                }
             }
-
-            if (translateSubscribed)
-            {
-                translateTransform.Changed -= OnTranslateChanged;
-                translateSubscribed = false;
-            }
-            TranslateChanged = false;
 
             ItemsControl.Cursor = Cursors.Arrow;
         }
@@ -139,14 +115,6 @@ namespace RichCanvas.Helpers
 
                 ItemsControl.AdjustScroll();
                 _initialPosition = currentPosition;
-            }
-        }
-
-        private static void OnTranslateChanged(object sender, EventArgs e)
-        {
-            if (ItemsControl.HasSelections)
-            {
-                TranslateChanged = true;
             }
         }
     }

@@ -30,7 +30,6 @@ namespace RichCanvas
             foreach (UIElement child in InternalChildren)
             {
                 var container = (RichItemContainer)child;
-                container.Host = ItemsOwner;
                 container.Measure(constraint);
                 if (container.IsValid())
                 {

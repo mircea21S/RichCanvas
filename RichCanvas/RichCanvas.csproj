@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <TargetFrameworks>net5-windows;netcoreapp3.1;net48;net472</TargetFrameworks>
+    <LangVersion>8.0</LangVersion>
     <UseWPF>true</UseWPF>
     <Authors>Mircea Staicu</Authors>
     <RepositoryUrl>https://github.com/mircea21S/RichCanvas</RepositoryUrl>
@@ -12,11 +13,11 @@
     <PackageProjectUrl>https://github.com/mircea21S/RichCanvas</PackageProjectUrl>
     <PackageTags>wpf mvvm infinite-canvas canvas controls</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>High performance and customizable infinite canvas designed for MVVM.</Description>
-    <PackageReleaseNotes>Modified description</PackageReleaseNotes>
+    <Description>Infinite canvas with panning, zooming, scrolling and other customizable functions, designed for MVVM.</Description>
+    <PackageReleaseNotes>Fixed panning and auto-panning on scroll disable</PackageReleaseNotes>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
 </Project>
