@@ -109,7 +109,7 @@ namespace RichCanvas.Gestures
                 _selections[i].Top += translateTransform.Y;
                 _selections[i].Left += translateTransform.X;
 
-                if (_context.EnableGrid && _context.EnableSnapping && snap)
+                if (snap)
                 {
                     _selections[i].Left = Math.Round(_selections[i].Left / _context.GridSpacing) * _context.GridSpacing;
                     _selections[i].Top = Math.Round(_selections[i].Top / _context.GridSpacing) * _context.GridSpacing;
@@ -118,6 +118,7 @@ namespace RichCanvas.Gestures
                 translateTransform.X = 0;
                 translateTransform.Y = 0;
             }
+            _context.NeedMeasure = true;
             _context.ItemsHost.InvalidateMeasure();
         }
 

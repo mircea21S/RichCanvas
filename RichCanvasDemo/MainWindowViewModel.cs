@@ -149,7 +149,14 @@ namespace RichCanvasDemo
                     SelectedItem = null;
                 }
             }
-            ShowProperties = SelectedItem != null && SelectedItem.IsSelected;
+            else if (e.Action == NotifyCollectionChangedAction.Reset)
+            {
+                if (SelectedItems.Count == 0 || SelectedItems.Count > 1)
+                {
+                    SelectedItem = null;
+                }
+            }
+            ShowProperties = SelectedItem != null;
         }
 
         private void OnDrawBezier()

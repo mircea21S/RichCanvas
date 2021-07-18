@@ -344,6 +344,17 @@ namespace RichCanvas
             remove { RemoveHandler(ZoomingEvent, value); }
         }
 
+        public static DependencyProperty RealTimeSelectionEnabledProperty = DependencyProperty.Register(nameof(RealTimeSelectionEnabled), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
+        /// <summary>
+        /// Gets or sets whether real-time selection is enabled.
+        /// Default is false
+        /// </summary>
+        public bool RealTimeSelectionEnabled
+        {
+            get => (bool)GetValue(RealTimeSelectionEnabledProperty);
+            set => SetValue(RealTimeSelectionEnabledProperty, value);
+        }
+
         #endregion
 
         #region Internal Properties
@@ -384,6 +395,27 @@ namespace RichCanvas
             DragBehavior.ItemsControl = this;
             _selectingGesture = new Selecting(this);
             _drawingGesture = new Gestures.Drawing(this);
+        }
+
+        #endregion
+
+        #region Public API
+
+        public void Select()
+        {
+            var geom = GetSelectionRectangleCurrentGeometry();
+
+            UnselectAll();
+            SelectedItems.Clear();
+            _selectingGesture.UnselectAll();
+
+            BeginUpdateSelectedItems();
+
+            VisualTreeHelper.HitTest(_mainPanel, null,
+                new HitTestResultCallback(OnHitTestResultCallback),
+                new GeometryHitTestParameters(geom));
+
+            EndUpdateSelectedItems();
         }
 
         #endregion
@@ -491,19 +523,10 @@ namespace RichCanvas
             {
                 _selectingGesture.OnMouseMove(MousePosition);
 
-                var geom = GetSelectionRectangleCurrentGeometry();
-
-                UnselectAll();
-                SelectedItems.Clear();
-                _selectingGesture.UnselectAll();
-
-                BeginUpdateSelectedItems();
-
-                VisualTreeHelper.HitTest(_mainPanel, null,
-                    new HitTestResultCallback(OnHitTestResultCallback),
-                    new GeometryHitTestParameters(geom));
-
-                EndUpdateSelectedItems();
+                if (RealTimeSelectionEnabled)
+                {
+                    Select();
+                }
             }
         }
 
@@ -526,20 +549,27 @@ namespace RichCanvas
             else if (!DragBehavior.IsDragging && IsSelecting)
             {
                 IsSelecting = false;
-                IList selected = SelectedItems;
 
-                if (selected != null)
+                if (!RealTimeSelectionEnabled)
                 {
-                    IList added = base.SelectedItems;
-                    for (var i = 0; i < added.Count; i++)
+                    Select();
+
+                    IList selected = SelectedItems;
+
+                    if (selected != null)
                     {
-                        // Ensure no duplicates are added
-                        if (!selected.Contains(added[i]))
+                        IList added = base.SelectedItems;
+                        for (var i = 0; i < added.Count; i++)
                         {
-                            selected.Add(((RichItemContainer)added[i]).DataContext);
+                            // Ensure no duplicates are added
+                            if (!selected.Contains(added[i]))
+                            {
+                                selected.Add(added[i]);
+                            }
                         }
                     }
                 }
+
             }
             if (IsPanning)
             {
@@ -810,8 +840,8 @@ namespace RichCanvas
                 var container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
                 if (container.IsSelectable)
                 {
-                    base.SelectedItems.Add(container);
-                    AddSelection(container);
+                    base.SelectedItems.Add(container.DataContext);
+                    container.IsSelected = true;
                 }
             }
             return HitTestResultBehavior.Continue;

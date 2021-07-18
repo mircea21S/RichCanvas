@@ -79,12 +79,14 @@ namespace RichCanvas.Helpers
             translateTransform.X = 0;
             translateTransform.Y = 0;
 
-            ItemsControl.NeedMeasure = true;
-            ItemsControl.ItemsHost.InvalidateMeasure();
-
             if (ItemsControl.HasSelections)
             {
-                ItemsControl.UpdateSelections(true);
+                ItemsControl.UpdateSelections(ItemsControl.EnableSnapping);
+            }
+            else
+            {
+                ItemsControl.NeedMeasure = true;
+                ItemsControl.ItemsHost.InvalidateMeasure();
             }
 
             ItemsControl.Cursor = Cursors.Arrow;
@@ -113,7 +115,6 @@ namespace RichCanvas.Helpers
                 ItemsControl.NeedMeasure = true;
                 ItemsControl.UpdateSelections();
 
-                ItemsControl.AdjustScroll();
                 _initialPosition = currentPosition;
             }
         }

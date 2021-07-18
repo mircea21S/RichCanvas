@@ -1,4 +1,5 @@
 ﻿using RichCanvas.Helpers;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -13,7 +14,7 @@ namespace RichCanvas
 
         public static DependencyProperty IsSelectedProperty = Selector.IsSelectedProperty.AddOwner(typeof(RichItemContainer), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnIsSelectedChanged));
         /// <summary>
-        /// Gets or sets a value that indicates whether this node is selected.
+        /// Gets or sets a value that indicates whether this item is selected.
         /// Can only be set if <see cref="IsSelectable"/> is true.
         /// </summary>
         public bool IsSelected
@@ -129,7 +130,7 @@ namespace RichCanvas
         private void OnSelectedChanged(bool value)
         {
             // Raise event after the selection operation ended
-            if (!(Host?.IsSelecting ?? false))
+            if (!(Host?.IsSelecting ?? false) || (Host?.RealTimeSelectionEnabled ?? false))
             {
                 // Add to base SelectedItems
                 RaiseEvent(new RoutedEventArgs(value ? SelectedEvent : UnselectedEvent, this));
