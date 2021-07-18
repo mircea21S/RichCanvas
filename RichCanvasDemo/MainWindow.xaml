@@ -357,8 +357,8 @@
                     <Setter Property="helpers:AttachedAdorner.HasHoverAdorner"
                             Value="True" />
                     <!--Replace with property-->
-                    <!--<Setter Property="helpers:AttachedAdorner.ShowResizeAdorner"
-                            Value="{Binding IsSelected}" />-->
+                    <Setter Property="helpers:AttachedAdorner.ShowResizeAdorner"
+                            Value="{Binding IsSelected}" />
                     <Setter Property="Top"
                             Value="{Binding Top, Mode=TwoWay}" />
                     <Setter Property="Left"
