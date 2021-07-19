@@ -29,7 +29,7 @@ A design tool where you can draw different things like: images, text, lines, rec
 
 It is a simple application just to show how you can interact with the library.
 
-![DEMO](https://github.com/mircea21S/RichCanvas/blob/main/DemoAnimation.gif)
+![DEMO](https://github.com/mircea21S/RichCanvas/blob/main/assets/DemoAnimation.gif)
 
 ## License
 
