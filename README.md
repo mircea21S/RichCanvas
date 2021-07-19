@@ -3,7 +3,7 @@
 [![NuGet](https://img.shields.io/nuget/dt/RichCanvas?label=downloads&style=for-the-badge&logo=nuget)](https://www.nuget.org/packages/RichCanvas/)
 [![License](https://img.shields.io/github/license/mircea21S/RichCanvas?style=for-the-badge)](https://github.com/mircea21S/RichCanvas/blob/main/LICENSE)
 
-High performance and customizable infinite canvas designed for MVVM.
+WPF Control library defining a high performance and customizable infinite canvas designed for MVVM.
 
 ## 📥 Installation
 Use the nuget package manager to install RichCanvas.
