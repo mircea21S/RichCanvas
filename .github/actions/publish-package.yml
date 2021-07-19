@@ -1,0 +1,29 @@
+name: Publish package
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+jobs:
+  publish:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.0.x'
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name: Test
+      run: dotnet test --no-restore --verbosity normal
+    - name: Publish package
+      uses: brandedoutcast/publish-nuget@v2.5.5
+      with:
+        PACKAGE_NAME: RichCanvas
+        PROJECT_FILE_PATH: RichCanvas/RichCanvas.csproj
+        NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
+        TAG_COMMIT: false
