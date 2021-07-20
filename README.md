@@ -33,7 +33,7 @@ It is a simple application just to show how you can interact with the library.
 
 ## 📝 Documentation
 
-API Reference can be found [here]().
+API Reference can be found [here](https://github.com/mircea21S/RichCanvas/wiki/API).
 
 [Wiki](https://github.com/mircea21S/RichCanvas/wiki)
 
