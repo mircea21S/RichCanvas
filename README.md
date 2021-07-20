@@ -31,6 +31,12 @@ It is a simple application just to show how you can interact with the library.
 
 ![DEMO](https://github.com/mircea21S/RichCanvas/blob/main/assets/DemoAnimation.gif)
 
+## 📝 Documentation
+
+API Reference can be found [here]().
+
+[Wiki](https://github.com/mircea21S/RichCanvas/wiki)
+
 ## License
 
 MIT
