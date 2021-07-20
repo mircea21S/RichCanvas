@@ -5,6 +5,9 @@ using System.Windows.Controls;
 
 namespace RichCanvas
 {
+    /// <summary>
+    /// ItemsHost of <see cref="RichItemsControl"/>
+    /// </summary>
     public class RichCanvas : Panel
     {
         private bool _boundingBoxInitialized;

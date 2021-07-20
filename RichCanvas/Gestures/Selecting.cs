@@ -20,7 +20,7 @@ namespace RichCanvas.Gestures
 
         private void OnDragDeltaChanged(Point point)
         {
-            foreach (var item in _selections)
+            foreach (RichItemContainer item in _selections)
             {
                 var transformGroup = (TransformGroup)item.RenderTransform;
                 var translateTransform = (TranslateTransform)transformGroup.Children[1];

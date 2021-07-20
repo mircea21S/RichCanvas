@@ -8,7 +8,10 @@ using System.Windows.Media;
 
 namespace RichCanvas
 {
-    internal class PanningGrid : Grid, IScrollInfo
+    /// <summary>
+    /// Grid defining scrolling functionalty
+    /// </summary>
+    public class PanningGrid : Grid, IScrollInfo
     {
         #region Private Fields
 

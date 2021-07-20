@@ -7,8 +7,8 @@ namespace RichCanvas.Gestures
     internal class Drawing
     {
         private readonly RichItemsControl _context;
-        private RichItemContainer _currentItem;
-        internal RichItemContainer CurrentItem => _currentItem;
+
+        internal RichItemContainer CurrentItem { get; private set; }
 
         public Drawing(RichItemsControl context)
         {
@@ -18,19 +18,19 @@ namespace RichCanvas.Gestures
         {
             container.Top = position.Y;
             container.Left = position.X;
-            _currentItem = container;
+            CurrentItem = container;
         }
         internal void OnMouseMove(Point position)
         {
-            var transformGroup = (TransformGroup)_currentItem.RenderTransform;
+            var transformGroup = (TransformGroup)CurrentItem.RenderTransform;
             var scaleTransform = (ScaleTransform)transformGroup.Children[0];
 
-            double width = position.X - _currentItem.Left;
-            double height = position.Y - _currentItem.Top;
+            double width = position.X - CurrentItem.Left;
+            double height = position.Y - CurrentItem.Top;
             _context.NeedMeasure = false;
 
-            _currentItem.Width = Math.Abs(width);
-            _currentItem.Height = Math.Abs(height);
+            CurrentItem.Width = Math.Abs(width);
+            CurrentItem.Height = Math.Abs(height);
 
             if (width < 0 && scaleTransform.ScaleX == 1)
             {
@@ -54,72 +54,48 @@ namespace RichCanvas.Gestures
 
         internal RichItemContainer OnMouseUp()
         {
-            _currentItem.IsDrawn = true;
+            CurrentItem.IsDrawn = true;
 
             SetItemPosition();
 
-            return _currentItem;
+            return CurrentItem;
         }
 
         internal double GetCurrentTop()
         {
-            var scaleTransformItem = (ScaleTransform)((TransformGroup)_currentItem.RenderTransform).Children[0];
+            var scaleTransformItem = (ScaleTransform)((TransformGroup)CurrentItem.RenderTransform).Children[0];
 
-            if (scaleTransformItem.ScaleY > 0)
-            {
-                return _currentItem.Top;
-            }
-            else
-            {
-                return _currentItem.Top - _currentItem.Height;
-            }
+            return scaleTransformItem.ScaleY > 0 ? CurrentItem.Top : CurrentItem.Top - CurrentItem.Height;
         }
 
         internal double GetCurrentLeft()
         {
-            var scaleTransformItem = (ScaleTransform)((TransformGroup)_currentItem.RenderTransform).Children[0];
+            var scaleTransformItem = (ScaleTransform)((TransformGroup)CurrentItem.RenderTransform).Children[0];
 
-            if (scaleTransformItem.ScaleX > 0)
-            {
-                return _currentItem.Left;
-            }
-            else
-            {
-                return _currentItem.Left - _currentItem.Width;
-            }
+            return scaleTransformItem.ScaleX > 0 ? CurrentItem.Left : CurrentItem.Left - CurrentItem.Width;
         }
 
         internal double GetCurrentRight()
         {
-            var scaleTransformItem = (ScaleTransform)((TransformGroup)_currentItem.RenderTransform).Children[0];
+            var scaleTransformItem = (ScaleTransform)((TransformGroup)CurrentItem.RenderTransform).Children[0];
 
-            if (scaleTransformItem.ScaleX > 0)
-            {
-                return _currentItem.Width + _currentItem.Left;
-            }
-            else
-            {
-                return (_currentItem.Left - _currentItem.Width) + _currentItem.Width;
-            }
+            return scaleTransformItem.ScaleX > 0
+                ? CurrentItem.Width + CurrentItem.Left
+                : CurrentItem.Left - CurrentItem.Width + CurrentItem.Width;
         }
 
         internal double GetCurrentBottom()
         {
-            var scaleTransformItem = (ScaleTransform)((TransformGroup)_currentItem.RenderTransform).Children[0];
+            var scaleTransformItem = (ScaleTransform)((TransformGroup)CurrentItem.RenderTransform).Children[0];
 
-            if (scaleTransformItem.ScaleY > 0)
-            {
-                return _currentItem.Height + _currentItem.Top;
-            }
-            else
-            {
-                return (_currentItem.Top - _currentItem.Height) + _currentItem.Height;
-            }
+            return scaleTransformItem.ScaleY > 0
+                ? CurrentItem.Height + CurrentItem.Top
+                : CurrentItem.Top - CurrentItem.Height + CurrentItem.Height;
         }
 
         internal bool IsMeasureNeeded()
         {
-            var scaleTransformItem = (ScaleTransform)((TransformGroup)_currentItem.RenderTransform).Children[0];
+            var scaleTransformItem = (ScaleTransform)((TransformGroup)CurrentItem.RenderTransform).Children[0];
             if (scaleTransformItem.ScaleX < 0 || scaleTransformItem.ScaleY < 0)
             {
                 return false;
@@ -129,35 +105,35 @@ namespace RichCanvas.Gestures
 
         internal void Dispose()
         {
-            _currentItem = null;
+            CurrentItem = null;
         }
 
         private void SetItemPosition()
         {
-            var scaleTransformItem = (ScaleTransform)((TransformGroup)_currentItem.RenderTransform).Children[0];
-            var translateTransformItem = (TranslateTransform)((TransformGroup)_currentItem.RenderTransform).Children[1];
+            var scaleTransformItem = (ScaleTransform)((TransformGroup)CurrentItem.RenderTransform).Children[0];
+            var translateTransformItem = (TranslateTransform)((TransformGroup)CurrentItem.RenderTransform).Children[1];
             if (scaleTransformItem.ScaleX < 0 && scaleTransformItem.ScaleY > 0)
             {
-                _currentItem.Left -= _currentItem.Width;
-                translateTransformItem.X += _currentItem.Width;
+                CurrentItem.Left -= CurrentItem.Width;
+                translateTransformItem.X += CurrentItem.Width;
             }
             else if (scaleTransformItem.ScaleX < 0 && scaleTransformItem.ScaleY < 0)
             {
-                _currentItem.Left -= _currentItem.Width;
-                _currentItem.Top -= _currentItem.Height;
+                CurrentItem.Left -= CurrentItem.Width;
+                CurrentItem.Top -= CurrentItem.Height;
                 scaleTransformItem.ScaleX = 1;
                 scaleTransformItem.ScaleY = 1;
             }
             else if (scaleTransformItem.ScaleX > 0 && scaleTransformItem.ScaleY < 0)
             {
-                _currentItem.Top -= _currentItem.Height;
-                translateTransformItem.Y += _currentItem.Height;
+                CurrentItem.Top -= CurrentItem.Height;
+                translateTransformItem.Y += CurrentItem.Height;
             }
 
             if (_context.EnableGrid && _context.EnableSnapping)
             {
-                _currentItem.Left = Math.Round(_currentItem.Left / _context.GridSpacing) * _context.GridSpacing;
-                _currentItem.Top = Math.Round(_currentItem.Top / _context.GridSpacing) * _context.GridSpacing;
+                CurrentItem.Left = Math.Round(CurrentItem.Left / _context.GridSpacing) * _context.GridSpacing;
+                CurrentItem.Top = Math.Round(CurrentItem.Top / _context.GridSpacing) * _context.GridSpacing;
             }
         }
 

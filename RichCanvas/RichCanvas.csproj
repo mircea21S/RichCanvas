@@ -13,17 +13,22 @@
     <PackageProjectUrl>https://github.com/mircea21S/RichCanvas</PackageProjectUrl>
     <PackageTags>wpf mvvm infinite-canvas canvas controls</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>WPF Control library
-Infinite canvas with panning, zooming, scrolling and other customizable functions, designed for MVVM.</Description>
-    <PackageReleaseNotes>Official realease of RichCanvas
+    <Description>
+      WPF Control library
+      Infinite canvas with panning, zooming, scrolling and other customizable functions, designed for MVVM.
+    </Description>
+    <PackageReleaseNotes>
+      Official realease of RichCanvas
 
-Changed internal implementation of Selection action.
- -Improved performance on selection
- -New API changes in order to optimize selection
-  -RealTimeSelectionEnabled dependency property added</PackageReleaseNotes>
+      Changed internal implementation of Selection action.
+      -Improved performance on selection
+      -New API changes in order to optimize selection
+      -RealTimeSelectionEnabled dependency property added
+    </PackageReleaseNotes>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
     <Version>1.1.0</Version>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
 </Project>

@@ -14,6 +14,9 @@ using System.Collections.Generic;
 
 namespace RichCanvas
 {
+    /// <summary>
+    /// ItemsControl hosting <see cref="RichCanvas"/>
+    /// </summary>
     [TemplatePart(Name = DrawingPanelName, Type = typeof(Panel))]
     [TemplatePart(Name = SelectionRectangleName, Type = typeof(Rectangle))]
     [StyleTypedProperty(Property = nameof(SelectionRectangleStyle), StyleTargetType = typeof(Rectangle))]
@@ -358,6 +361,9 @@ namespace RichCanvas
         #endregion
 
         #region Internal Properties
+        /// <summary>
+        /// Gets whether at least one item is selected.
+        /// </summary>
         public bool HasSelections => base.SelectedItems.Count > 1;
         internal RichCanvas ItemsHost => _mainPanel;
         internal PanningGrid ScrollContainer => _canvasContainer;
@@ -401,6 +407,9 @@ namespace RichCanvas
 
         #region Public API
 
+        /// <summary>
+        /// Selects all elements inside <see cref="SelectionRectangle"/>
+        /// </summary>
         public void Select()
         {
             var geom = GetSelectionRectangleCurrentGeometry();
