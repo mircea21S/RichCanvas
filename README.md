@@ -20,6 +20,7 @@ Install-Package RichCanvas
 - **Zoom, Pan, Scroll** and other out of the box functionalities
 - **Select and Move** elements
 - Lots of **configurable** dependency properties
+- Ready to **draw**
 
 ## 💻 Demo
 
