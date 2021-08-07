@@ -22,29 +22,28 @@ namespace RichCanvas.Gestures
         {
             foreach (RichItemContainer item in _selections)
             {
-                var transformGroup = (TransformGroup)item.RenderTransform;
-                var translateTransform = (TranslateTransform)transformGroup.Children[1];
+                TranslateTransform translateTransform = item.TranslateTransform;
+                if (translateTransform != null)
+                {
+                    translateTransform.X += point.X;
+                    translateTransform.Y += point.Y;
+                }
 
-                translateTransform.X += point.X;
-                translateTransform.Y += point.Y;
             }
         }
 
         internal void Update(Point endLocation)
         {
-            var width = Math.Abs(endLocation.X - _selectionRectangleInitialPosition.X);
-            var height = Math.Abs(endLocation.Y - _selectionRectangleInitialPosition.Y);
+            double width = Math.Abs(endLocation.X - _selectionRectangleInitialPosition.X);
+            double height = Math.Abs(endLocation.Y - _selectionRectangleInitialPosition.Y);
             _context.SelectionRectangle = new Rect(_selectionRectangleInitialPosition.X, _selectionRectangleInitialPosition.Y, width, height);
         }
 
-        internal void OnMouseDown(Point position)
-        {
-            _selectionRectangleInitialPosition = position;
-        }
+        internal void OnMouseDown(Point position) => _selectionRectangleInitialPosition = position;
 
         internal void OnMouseMove(Point position)
         {
-            var transformGroup = _context.SelectionRectangleTransform;
+            TransformGroup transformGroup = _context.SelectionRectangleTransform;
             var scaleTransform = (ScaleTransform)transformGroup.Children[0];
 
             double width = position.X - _selectionRectangleInitialPosition.X;
@@ -64,10 +63,12 @@ namespace RichCanvas.Gestures
             {
                 scaleTransform.ScaleY = 1;
             }
+
             if (width > 0 && scaleTransform.ScaleX == -1)
             {
                 scaleTransform.ScaleX = 1;
             }
+
             _context.SelectionRectangle = new Rect(_selectionRectangleInitialPosition.X, _selectionRectangleInitialPosition.Y, Math.Abs(width), Math.Abs(height));
         }
 
@@ -77,11 +78,13 @@ namespace RichCanvas.Gestures
             {
                 _selections.Add(container);
             }
+
             if (!_context.SelectedItems.Contains(container.DataContext))
             {
                 _context.SelectedItems.Add(container.DataContext);
             }
         }
+
         internal void RemoveSelection(RichItemContainer container)
         {
             if (_selections.Contains(container))
@@ -94,30 +97,32 @@ namespace RichCanvas.Gestures
             }
         }
 
-        internal void UnselectAll()
-        {
-            _selections.Clear();
-        }
+        internal void UnselectAll() => _selections.Clear();
 
         internal void UpdateSelectionsPosition(bool snap = false)
         {
             for (int i = 0; i < _selections.Count; i++)
             {
-                var transformGroup = (TransformGroup)_selections[i].RenderTransform;
-                var translateTransform = (TranslateTransform)transformGroup.Children[1];
+                TranslateTransform translateTransform = _selections[i].TranslateTransform;
+                RichItemContainer container = _selections[i];
 
-                _selections[i].Top += translateTransform.Y;
-                _selections[i].Left += translateTransform.X;
+                if (translateTransform != null)
+                {
+                    container.Left += translateTransform.X;
+                    container.Top += translateTransform.Y;
+                    translateTransform.X = 0;
+                    translateTransform.Y = 0;
+                }
 
+                //TODO
                 if (snap)
                 {
                     _selections[i].Left = Math.Round(_selections[i].Left / _context.GridSpacing) * _context.GridSpacing;
                     _selections[i].Top = Math.Round(_selections[i].Top / _context.GridSpacing) * _context.GridSpacing;
                 }
 
-                translateTransform.X = 0;
-                translateTransform.Y = 0;
             }
+
             _context.NeedMeasure = true;
             _context.ItemsHost.InvalidateMeasure();
         }

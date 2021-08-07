@@ -45,7 +45,7 @@ namespace RichCanvasDemo
         private ICommand addTextCommand;
         private ICommand copyCommand;
         private Drawable _copiedElement;
-        private ICommand pasteCommand;
+        private RelayCommand pasteCommand;
         private readonly FileService _fileService;
         private readonly DialogService _dialogService;
 
@@ -61,19 +61,7 @@ namespace RichCanvasDemo
         public ICommand AddTextCommand => addTextCommand ??= new RelayCommand(AddText);
         public ICommand AddImageCommand => addImageCommand ??= new RelayCommand(AddImage);
         public ICommand CopyCommand => copyCommand ??= new RelayCommand<Drawable>(Copy);
-        public ICommand PasteCommand => pasteCommand ??= new RelayCommand(Paste);
-
-        private void Paste()
-        {
-            _copiedElement.Left = MousePosition.X;
-            _copiedElement.Top = MousePosition.Y;
-            Items.Add(_copiedElement);
-        }
-
-        private void Copy(Drawable element)
-        {
-            _copiedElement = element.Clone();
-        }
+        public RelayCommand PasteCommand => pasteCommand ??= new RelayCommand(Paste, () => _copiedElement != null);
 
         public bool EnableGrid
         {
@@ -124,6 +112,7 @@ namespace RichCanvasDemo
         public bool ShowProperties { get => _showProperties; set => SetProperty(ref _showProperties, value); }
 
         public string Scale { get => scale; set => SetProperty(ref scale, value); }
+
         public Point MousePosition { get => mousePosition; set => SetProperty(ref mousePosition, value); }
 
         public bool ShouldBringIntoView { get => shouldBringIntoView; set => SetProperty(ref shouldBringIntoView, value); }
@@ -134,6 +123,19 @@ namespace RichCanvasDemo
             SelectedItems.CollectionChanged += SelectedItemsChanged;
             _fileService = new FileService();
             _dialogService = new DialogService();
+        }
+
+        private void Paste()
+        {
+            _copiedElement.Left = MousePosition.X;
+            _copiedElement.Top = MousePosition.Y;
+            Items.Add(_copiedElement);
+        }
+
+        private void Copy(Drawable element)
+        {
+            _copiedElement = element.Clone();
+            PasteCommand.RaiseCanExecuteChanged();
         }
 
         private void SelectedItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -211,6 +213,7 @@ namespace RichCanvasDemo
                 }
             }
         }
+
         private void Delete()
         {
             Items.Remove(SelectedItem);
@@ -219,10 +222,6 @@ namespace RichCanvasDemo
         private void OnDrawCommand()
         {
             Items.Add(new Rectangle());
-        }
-        public void DrawConnectedLine(Point p)
-        {
-            Items.Add(new Line { Top = p.Y, Left = p.X });
         }
 
         private void DrawLine()
@@ -237,6 +236,7 @@ namespace RichCanvasDemo
 
         private void DrawEnded(RoutedEventArgs args)
         {
+            return;
             var element = (Drawable)args.OriginalSource;
             if (element is Bezier bezier)
             {
@@ -244,14 +244,34 @@ namespace RichCanvasDemo
                 bezier.Point2 = new Point(bezier.Width - 10, 0);
                 bezier.Point3 = new Point(bezier.Width, bezier.Height);
             }
+            if (element is Line line)
+            {
+                if (line.DirectionPoint.X < 1 && line.DirectionPoint.Y >= 1)
+                {
+                    Items.Add(new Line { Top = line.Top + line.Height, Left = line.Left - line.Width });
+                }
+                else if (line.DirectionPoint.X < 1 && line.DirectionPoint.Y < 1)
+                {
+                    Items.Add(new Line { Top = line.Top - line.Height, Left = line.Left - line.Width });
+                }
+                else if (line.DirectionPoint.X >= 1 && line.DirectionPoint.Y < 1)
+                {
+                    Items.Add(new Line { Top = line.Top - line.Height, Left = line.Left + line.Width });
+                }
+                else
+                {
+                    Items.Add(new Line { Top = line.Top + line.Height, Left = line.Left + line.Width });
+                }
+            }
         }
 
         private void AddImage()
         {
-            string selectedImagePath;
-            _fileService.OpenFileDialog(out selectedImagePath);
+            _fileService.OpenFileDialog(out string selectedImagePath);
             var image = new ImageVisual
             {
+                Top = MousePosition.Y,
+                Left = MousePosition.X,
                 ImageSource = selectedImagePath,
                 Height = 100,
                 Width = 200

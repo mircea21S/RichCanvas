@@ -37,21 +37,28 @@ namespace RichCanvasDemo.Common
     }
     public class RelayCommand : ICommand
     {
+        private readonly Func<bool> _canExecute;
         private readonly Action _execute;
 
         public event EventHandler CanExecuteChanged;
-        public RelayCommand(Action execute)
+        public RelayCommand(Action execute, Func<bool> canExecute = default)
         {
+            _canExecute = canExecute;
             _execute = execute;
         }
         public bool CanExecute(object parameter)
         {
-            return true;
+            return _canExecute?.Invoke() ?? true;
         }
 
         public void Execute(object parameter)
         {
             _execute?.Invoke();
+        }
+
+        public void RaiseCanExecuteChanged()
+        {
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

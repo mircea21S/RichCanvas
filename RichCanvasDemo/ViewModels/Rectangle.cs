@@ -6,18 +6,7 @@ namespace RichCanvasDemo.ViewModels
     {
         public override Drawable Clone()
         {
-            return new Rectangle
-            {
-                Height = this.Height,
-                IsDraggable = this.IsDraggable,
-                IsSelectable = this.IsSelectable,
-                VisualProperties = new VisualProperties
-                {
-                    BorderColor = this.VisualProperties.BorderColor,
-                    FillColor = this.VisualProperties.FillColor
-                },
-                Width = this.Width,
-            };
+            return Clone<Rectangle>();
         }
     }
 }

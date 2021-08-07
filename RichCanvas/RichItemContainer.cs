@@ -1,9 +1,11 @@
 ﻿using RichCanvas.Helpers;
 using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace RichCanvas
 {
@@ -11,6 +13,10 @@ namespace RichCanvas
     public class RichItemContainer : ContentControl
     {
         private const string ContentPresenterName = "PART_ContentPresenter";
+        private RichItemsControl _host;
+
+        internal ScaleTransform ScaleTransform => RenderTransform is TransformGroup group ? group.Children.OfType<ScaleTransform>().FirstOrDefault() : null;
+        internal TranslateTransform TranslateTransform => RenderTransform is TransformGroup group ? group.Children.OfType<TranslateTransform>().FirstOrDefault() : null;
 
         public static DependencyProperty IsSelectedProperty = Selector.IsSelectedProperty.AddOwner(typeof(RichItemContainer), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnIsSelectedChanged));
         /// <summary>
@@ -67,7 +73,7 @@ namespace RichCanvas
 
         public static DependencyProperty ShouldBringIntoViewProperty = DependencyProperty.Register(nameof(ShouldBringIntoView), typeof(bool), typeof(RichItemContainer), new FrameworkPropertyMetadata(false, OnBringIntoViewChanged));
         /// <summary>
-        /// Gets or sets whethere this <see cref="RichItemContainer"/> should be centered inside <see cref="RichItemsControl.ScrollContainer"/> viewport
+        /// Gets or sets whether this <see cref="RichItemContainer"/> should be centered inside <see cref="RichItemsControl.ScrollContainer"/> viewport
         /// </summary>
         public bool ShouldBringIntoView
         {
@@ -75,21 +81,45 @@ namespace RichCanvas
             set => SetValue(ShouldBringIntoViewProperty, value);
         }
 
+        public static DependencyProperty ScaleProperty = DependencyProperty.Register(nameof(Scale), typeof(Point), typeof(RichItemContainer), new FrameworkPropertyMetadata(default(Point), OnScaleChanged));
+        /// <summary>
+        /// Gets this <see cref="RichItemContainer"/> ScaleTransform in order to get direction.
+        /// </summary>
+        public Point Scale
+        {
+            get => (Point)GetValue(ScaleProperty);
+            set => SetValue(ScaleProperty, value);
+        }
+
+        public static DependencyProperty ApplyTransformProperty = DependencyProperty.RegisterAttached("ApplyTransform", typeof(Transform), typeof(RichItemContainer), new FrameworkPropertyMetadata(default(Transform), OnApplyTransformChanged));
+
+        public static void SetApplyTransform(UIElement element, Transform value) => element.SetValue(ApplyTransformProperty, value);
+
+        public static Transform GetApplyTransform(UIElement element) => (Transform)element.GetValue(ApplyTransformProperty);
+
         public static readonly RoutedEvent SelectedEvent = Selector.SelectedEvent.AddOwner(typeof(RichItemContainer));
         public static readonly RoutedEvent UnselectedEvent = Selector.UnselectedEvent.AddOwner(typeof(RichItemContainer));
 
         static RichItemContainer()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RichItemContainer), new FrameworkPropertyMetadata(typeof(RichItemContainer)));
-
         }
 
-        private RichItemsControl _host;
+        private void ScaleChanged(object sender, EventArgs e)
+        {
+            Scale = new Point(ScaleTransform.ScaleX, ScaleTransform.ScaleY);
+        }
+
         /// <summary>
         /// The <see cref="NodifyEditor"/> that owns this <see cref="ItemContainer"/>.
         /// </summary>
         public RichItemsControl Host => _host ??= ItemsControl.ItemsControlFromItemContainer(this) as RichItemsControl;
+
         internal bool IsDrawn { get; set; }
+
+        internal bool TopPropertySet { get; private set; }
+
+        internal bool LeftPropertySet { get; private set; }
 
         protected override void OnMouseEnter(MouseEventArgs e)
         {
@@ -111,13 +141,11 @@ namespace RichCanvas
         {
             return Height != 0 && Width != 0 && !double.IsNaN(Height) && !double.IsNaN(Width);
         }
+        private static void OnScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemContainer)d).OverrideScale((Point)e.NewValue);
 
-        private static void OnPositionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemContainer)d).UpdatePosition();
+        private static void OnPositionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemContainer)d).UpdatePosition(e.Property);
 
-        private void UpdatePosition()
-        {
-            Host?.ItemsHost.InvalidateMeasure();
-        }
+        private static void OnApplyTransformChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemContainer)VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(d))).ApplyTransform((Transform)e.NewValue);
 
         private static void OnIsSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -125,6 +153,27 @@ namespace RichCanvas
             bool result = elem.IsSelectable && (bool)e.NewValue;
             elem.OnSelectedChanged(result);
             elem.IsSelected = result;
+        }
+
+        private static void OnBringIntoViewChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if ((bool)e.NewValue)
+            {
+                ((RichItemContainer)d).BringIntoView();
+            }
+        }
+
+        private void UpdatePosition(DependencyProperty prop)
+        {
+            if (prop.Name is "Top")
+            {
+                TopPropertySet = true;
+            }
+            if (prop.Name is "Left")
+            {
+                LeftPropertySet = true;
+            }
+            Host?.ItemsHost.InvalidateMeasure();
         }
 
         private void OnSelectedChanged(bool value)
@@ -145,12 +194,15 @@ namespace RichCanvas
             }
         }
 
-        private static void OnBringIntoViewChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private void ApplyTransform(Transform apply)
         {
-            if ((bool)e.NewValue)
-            {
-                ((RichItemContainer)d).BringIntoView();
-            }
+            RenderTransform = apply.Clone();
+        }
+
+        private void OverrideScale(Point value)
+        {
+            ScaleTransform.ScaleY = value.Y;
+            ScaleTransform.ScaleX = value.X;
         }
     }
 }

@@ -1,4 +1,7 @@
 ﻿using RichCanvasDemo.Common;
+using System;
+using System.Text.Json;
+using System.Windows;
 
 namespace RichCanvasDemo.ViewModels.Base
 {
@@ -13,6 +16,7 @@ namespace RichCanvasDemo.ViewModels.Base
         private double _height;
         private VisualProperties _visualProperties;
         private bool _shouldBringIntoView;
+        private Point _directionPoint;
 
         public double Top
         {
@@ -70,14 +74,23 @@ namespace RichCanvasDemo.ViewModels.Base
             get => _shouldBringIntoView;
             set => SetProperty(ref _shouldBringIntoView, value);
         }
+
+        public Point DirectionPoint
+        {
+            get => _directionPoint;
+            set => SetProperty(ref _directionPoint, value);
+        }
         public Drawable()
         {
             VisualProperties = new VisualProperties();
         }
 
         protected virtual void OnWidthUpdated() { }
+
         protected virtual void OnHeightUpdated() { }
 
-        public virtual Drawable Clone() => null;
+        protected Drawable Clone<T>() where T : Drawable => JsonSerializer.Deserialize<T>(JsonSerializer.Serialize(this));
+
+        public virtual Drawable Clone() => throw new NotImplementedException();
     }
 }

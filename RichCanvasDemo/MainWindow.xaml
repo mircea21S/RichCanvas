@@ -328,7 +328,23 @@
                 <DataTemplate DataType="{x:Type vm:Rectangle}">
                     <Rectangle Stroke="{Binding VisualProperties.BorderColor, Converter={StaticResource ColorToSolidBrushColorConverter}}"
                                Fill="{Binding VisualProperties.FillColor, Converter={StaticResource ColorToSolidBrushColorConverter}}"
-                               StrokeThickness="3"></Rectangle>
+                               StrokeThickness="3"
+                               Width="{Binding Width}"
+                               Height="{Binding Height}"
+                               helpers:AttachedAdorner.ShowResizeAdorner="{Binding IsSelected}">
+                        <!--<Rectangle.Style>
+                            <Style>
+                                <Setter Property="richCanvas:RichItemContainer.ApplyTransform">
+                                    <Setter.Value>
+                                        <TransformGroup>
+                                            <TranslateTransform></TranslateTransform>
+                                            <RotateTransform Angle="30"></RotateTransform>
+                                        </TransformGroup>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Rectangle.Style>-->
+                    </Rectangle>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:Line}">
                     <Line  Stroke="{Binding VisualProperties.BorderColor, Converter={StaticResource ColorToSolidBrushColorConverter}}"
@@ -354,33 +370,43 @@
                     <Setter Property="Tag"
                             Value="{Binding DataContext, ElementName=window}" />
 
+                    <!--Replace with property-->
                     <Setter Property="helpers:AttachedAdorner.HasHoverAdorner"
                             Value="True" />
-                    <!--Replace with property-->
+
                     <Setter Property="helpers:AttachedAdorner.ShowResizeAdorner"
                             Value="{Binding IsSelected}" />
+
                     <Setter Property="Top"
                             Value="{Binding Top, Mode=TwoWay}" />
+
                     <Setter Property="Left"
                             Value="{Binding Left, Mode=TwoWay}" />
+
                     <Setter Property="IsSelected"
                             Value="{Binding IsSelected, Mode=TwoWay}" />
+
                     <Setter Property="Width"
                             Value="{Binding Width, Mode=TwoWay}" />
+
                     <Setter Property="Height"
                             Value="{Binding Height, Mode=TwoWay}" />
+
                     <Setter Property="IsSelectable"
                             Value="{Binding IsSelectable}" />
+
                     <Setter Property="IsDraggable"
                             Value="{Binding IsDraggable}" />
+
                     <Setter Property="ShouldBringIntoView"
                             Value="{Binding ShouldBringIntoView, Mode=TwoWay}" />
+
                     <Setter Property="ContextMenu">
                         <Setter.Value>
                             <ContextMenu DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
                                 <MenuItem Header="Copy"
                                           Command="{Binding CopyCommand}"
-                                          CommandParameter="{Binding SelectedItems[0]}"/>
+                                          CommandParameter="{Binding SelectedItems[0]}" />
                             </ContextMenu>
                         </Setter.Value>
                     </Setter>

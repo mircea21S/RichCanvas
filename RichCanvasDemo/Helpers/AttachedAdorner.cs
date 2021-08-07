@@ -65,6 +65,8 @@ namespace RichCanvasDemo.Helpers
                 }
                 adorner.Container.Content = element;
                 adorner.Container.ContentTemplate = (DataTemplate)element.FindResource("SelectedAdornerTemplate");
+                adorner.Container.RenderTransform = new ScaleTransform(1, 1);
+                adorner.Container.RenderTransform.Freeze();
                 layer.Add(adorner);
                 _resizeAdorner.Add(adorner);
             }

@@ -412,7 +412,7 @@ namespace RichCanvas
         /// </summary>
         public void Select()
         {
-            var geom = GetSelectionRectangleCurrentGeometry();
+            RectangleGeometry geom = GetSelectionRectangleCurrentGeometry();
 
             UnselectAll();
             SelectedItems.Clear();
@@ -458,11 +458,10 @@ namespace RichCanvas
 
         protected override DependencyObject GetContainerForItemOverride() => new RichItemContainer
         {
-            RenderTransform = new TransformGroup()
+            RenderTransform = new TransformGroup
             {
-                Children = new TransformCollection { new ScaleTransform(), new TranslateTransform() }
-            },
-            IsHitTestVisible = true
+                Children = new TransformCollection(new Transform[] { new ScaleTransform(), new TranslateTransform() })
+            }
         };
 
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -480,7 +479,7 @@ namespace RichCanvas
                     {
                         for (int i = 0; i < _currentDrawingIndexes.Count; i++)
                         {
-                            RichItemContainer container = (RichItemContainer)ItemContainerGenerator.ContainerFromIndex(_currentDrawingIndexes[i]);
+                            var container = (RichItemContainer)ItemContainerGenerator.ContainerFromIndex(_currentDrawingIndexes[i]);
                             if (container != null)
                             {
                                 if (container.IsValid())
@@ -546,9 +545,6 @@ namespace RichCanvas
                 _isDrawing = false;
                 NeedMeasure = true;
                 var drawnItem = _drawingGesture.OnMouseUp();
-
-                ItemsHost.InvalidateMeasure();
-                ItemsHost.InvalidateArrange();
 
                 RaiseDrawEndedEvent(drawnItem.DataContext);
                 _drawingGesture.Dispose();

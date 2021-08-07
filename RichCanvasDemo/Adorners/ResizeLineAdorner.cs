@@ -46,6 +46,7 @@ namespace RichCanvasDemo.Adorners
             var hitThumb = (Thumb)sender;
             var x = e.HorizontalChange;
             var y = e.VerticalChange;
+            Console.WriteLine(x);
             var container = (RichItemContainer)AdornedElement;
 
             double oldWidth = container.Width;
@@ -78,6 +79,20 @@ namespace RichCanvasDemo.Adorners
         protected override Visual GetVisualChild(int index) => _visualCollection[index];
 
         protected override int VisualChildrenCount => _visualCollection.Count;
+
+        public override GeneralTransform GetDesiredTransform(GeneralTransform transform)
+        {
+            var container = (RichItemContainer)AdornedElement;
+            var scale = (ScaleTransform)((TransformGroup)container.RenderTransform).Children[0];
+
+            ScaleTransform scaleTrans = new ScaleTransform(1 / scale.ScaleX, 1 / scale.ScaleY);
+
+            _topLeftThumb.RenderTransform = scaleTrans;
+
+            _topLeftThumb.RenderTransformOrigin = new Point(0.5, 0.5);
+
+            return base.GetDesiredTransform(transform);
+        }
 
         private Thumb CreateThumb()
         {

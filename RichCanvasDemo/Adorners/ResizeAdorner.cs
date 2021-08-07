@@ -1,10 +1,12 @@
 ﻿using RichCanvas;
+using RichCanvasDemo.ViewModels.Base;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace RichCanvasDemo.Adorners
 {
@@ -41,16 +43,17 @@ namespace RichCanvasDemo.Adorners
             var hitThumb = (Thumb)sender;
             var x = e.HorizontalChange;
             var y = e.VerticalChange;
-            var container = (RichItemContainer)AdornedElement;
+            var container = (FrameworkElement)AdornedElement;
+            var drawable = (Drawable)container.DataContext;
 
-            double oldWidth = container.Width;
-            double currentWidth = Math.Max(container.Width - x, hitThumb.DesiredSize.Width);
-            double oldLeft = container.Left;
-            container.Width = currentWidth;
-            container.Left = oldLeft - (currentWidth - oldWidth);
+            double oldWidth = drawable.Width;
+            double currentWidth = Math.Max(drawable.Width - x, hitThumb.DesiredSize.Width);
+            double oldLeft = drawable.Left;
+            drawable.Width = currentWidth;
+            drawable.Left = oldLeft - (currentWidth - oldWidth);
 
-            double currentHeight = Math.Max(container.Height + y, hitThumb.DesiredSize.Height);
-            container.Height = currentHeight;
+            double currentHeight = Math.Max(drawable.Height + y, hitThumb.DesiredSize.Height);
+            drawable.Height = currentHeight;
         }
 
         private void BottomRightThumbDrag(object sender, DragDeltaEventArgs e)
@@ -58,13 +61,14 @@ namespace RichCanvasDemo.Adorners
             var hitThumb = (Thumb)sender;
             var x = e.HorizontalChange;
             var y = e.VerticalChange;
-            var container = (RichItemContainer)AdornedElement;
+            var container = (FrameworkElement)AdornedElement;
+            var drawable = (Drawable)container.DataContext;
 
-            double currentHeight = Math.Max(container.Height + y, hitThumb.DesiredSize.Height);
-            container.Height = currentHeight;
+            double currentHeight = Math.Max(drawable.Height + y, hitThumb.DesiredSize.Height);
+            drawable.Height = currentHeight;
 
-            double currentWidth = Math.Max(container.Width + x, hitThumb.DesiredSize.Width);
-            container.Width = currentWidth;
+            double currentWidth = Math.Max(drawable.Width + x, hitThumb.DesiredSize.Width);
+            drawable.Width = currentWidth;
         }
 
         private void TopRightThumbDrag(object sender, DragDeltaEventArgs e)
@@ -72,16 +76,17 @@ namespace RichCanvasDemo.Adorners
             var hitThumb = (Thumb)sender;
             var x = e.HorizontalChange;
             var y = e.VerticalChange;
-            var container = (RichItemContainer)AdornedElement;
+            var container = (FrameworkElement)AdornedElement;
+            var drawable = (Drawable)container.DataContext;
 
-            double oldHeight = container.Height;
-            double currentHeight = Math.Max(container.Height - y, hitThumb.DesiredSize.Height);
-            double oldTop = container.Top;
-            container.Height = currentHeight;
-            container.Top = oldTop - (currentHeight - oldHeight);
+            double oldHeight = drawable.Height;
+            double currentHeight = Math.Max(drawable.Height - y, hitThumb.DesiredSize.Height);
+            double oldTop = drawable.Top;
+            drawable.Height = currentHeight;
+            drawable.Top = oldTop - (currentHeight - oldHeight);
 
-            double currentWidth = Math.Max(container.Width + x, hitThumb.DesiredSize.Width);
-            container.Width = currentWidth;
+            double currentWidth = Math.Max(drawable.Width + x, hitThumb.DesiredSize.Width);
+            drawable.Width = currentWidth;
         }
 
         private void TopLeftThumbDrag(object sender, DragDeltaEventArgs e)
@@ -89,29 +94,31 @@ namespace RichCanvasDemo.Adorners
             var hitThumb = (Thumb)sender;
             var x = e.HorizontalChange;
             var y = e.VerticalChange;
-            var container = (RichItemContainer)AdornedElement;
+            var container = (FrameworkElement)AdornedElement;
+            var drawable = (Drawable)container.DataContext;
 
-            double oldWidth = container.Width;
-            double currentWidth = Math.Max(container.Width - x, hitThumb.DesiredSize.Width);
-            double oldLeft = container.Left;
-            container.Width = currentWidth;
-            container.Left = oldLeft - (currentWidth - oldWidth);
+            double oldWidth = drawable.Width;
+            double currentWidth = Math.Max(drawable.Width - x, hitThumb.DesiredSize.Width);
+            double oldLeft = drawable.Left;
+            drawable.Width = currentWidth;
+            drawable.Left = oldLeft - (currentWidth - oldWidth);
 
-            double oldHeight = container.Height;
-            double currentHeight = Math.Max(container.Height - y, hitThumb.DesiredSize.Height);
-            double oldTop = container.Top;
-            container.Height = currentHeight;
-            container.Top = oldTop - (currentHeight - oldHeight);
+            double oldHeight = drawable.Height;
+            double currentHeight = Math.Max(drawable.Height - y, hitThumb.DesiredSize.Height);
+            double oldTop = drawable.Top;
+            drawable.Height = currentHeight;
+            drawable.Top = oldTop - (currentHeight - oldHeight);
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            var container = (RichItemContainer)AdornedElement;
+            var container = (FrameworkElement)AdornedElement;
+            var drawable = (Drawable)container.DataContext;
             _topLeftThumb.Arrange(new Rect(0, 0, 10, 10));
-            _topRightThumb.Arrange(new Rect(container.Width - 10, 0, 10, 10));
-            _bottomLeftThumb.Arrange(new Rect(0, container.Height - 10, 10, 10));
-            _bottomRightThumb.Arrange(new Rect(container.Width - 10, container.Height - 10, 10, 10));
-            Container.Arrange(new Rect(new Point(container.Width / 2 - 30, container.Height), new Size(60, 20)));
+            _topRightThumb.Arrange(new Rect(drawable.Width - 10, 0, 10, 10));
+            _bottomLeftThumb.Arrange(new Rect(0, drawable.Height - 10, 10, 10));
+            _bottomRightThumb.Arrange(new Rect(drawable.Width - 10, drawable.Height - 10, 10, 10));
+            Container.Arrange(new Rect(new Point(drawable.Width / 2 - 30, drawable.Height), new Size(60, 20)));
             return finalSize;
         }
         protected override Size MeasureOverride(Size constraint)
@@ -119,6 +126,30 @@ namespace RichCanvasDemo.Adorners
             Container.Measure(constraint);
             return Container.DesiredSize;
         }
+
+        //public override GeneralTransform GetDesiredTransform(GeneralTransform transform)
+        //{
+        //    var container = (RichItemContainer)AdornedElement;
+        //    var scale = (ScaleTransform)((TransformGroup)container.RenderTransform).Children[0];
+
+        //    ScaleTransform scaleTrans = new ScaleTransform(1 / scale.ScaleX, 1 / scale.ScaleY);
+
+        //    _topLeftThumb.RenderTransform = scaleTrans;
+
+        //    _topLeftThumb.RenderTransformOrigin = new Point(0.5, 0.5);
+
+        //    //MatrixTransform matrixTrans = transform as MatrixTransform;
+        //    //if (matrixTrans != null)
+        //    //{
+        //    //    Matrix matrix = matrixTrans.Matrix;
+        //    //    matrix.M11 = 1;
+        //    //    matrix.M22 = 1;
+        //    //    matrix.OffsetX -= container.Width;
+        //    //    return new MatrixTransform(matrix);
+        //    //}
+
+        //    return base.GetDesiredTransform(transform);
+        //}
 
         protected override Visual GetVisualChild(int index) => _visualCollection[index];
 

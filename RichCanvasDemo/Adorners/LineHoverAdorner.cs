@@ -19,7 +19,6 @@ namespace RichCanvasDemo.Adorners
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-
             var line = (System.Windows.Shapes.Line)AdornedElement;
             Container.Arrange(new Rect(new Point(line.X1, line.Y1), line.DesiredSize));
             return finalSize;

@@ -12,20 +12,15 @@ namespace RichCanvas.Helpers
         private static Point _initialPosition;
 
         internal static RichItemsControl ItemsControl { get; set; }
+
         public static bool IsDragging { get; private set; }
 
 
         internal static DependencyProperty IsDraggingProperty = DependencyProperty.RegisterAttached("IsDragging", typeof(bool), typeof(RichItemContainer),
             new PropertyMetadata(OnIsDraggingChanged));
 
-        internal static void SetIsDragging(UIElement element, bool value)
-        {
-            element.SetValue(IsDraggingProperty, value);
-        }
-        internal static bool GetIsDragging(UIElement element)
-        {
-            return (bool)element.GetValue(IsDraggingProperty);
-        }
+        internal static void SetIsDragging(UIElement element, bool value) => element.SetValue(IsDraggingProperty, value);
+        internal static bool GetIsDragging(UIElement element) => (bool)element.GetValue(IsDraggingProperty);
 
         private static void OnIsDraggingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -51,7 +46,7 @@ namespace RichCanvas.Helpers
 
         private static void OnSelectedContainerClicked(object sender, MouseButtonEventArgs e)
         {
-            RichItemContainer container = (RichItemContainer)sender;
+            var container = (RichItemContainer)sender;
             container.IsSelected = true;
 
             _initialPosition = new Point(e.GetPosition(ItemsControl.ItemsHost).X, e.GetPosition(ItemsControl.ItemsHost).Y);
@@ -61,14 +56,18 @@ namespace RichCanvas.Helpers
 
         private static void OnSelectedContainerReleased(object sender, MouseButtonEventArgs e)
         {
-            RichItemContainer container = (RichItemContainer)sender;
+            var container = (RichItemContainer)sender;
             container.ReleaseMouseCapture();
 
-            var transformGroup = (TransformGroup)container.RenderTransform;
-            var translateTransform = (TranslateTransform)transformGroup.Children[1];
+            TranslateTransform translateTransform = container.TranslateTransform;
 
-            container.Top += translateTransform.Y;
-            container.Left += translateTransform.X;
+            if (translateTransform != null)
+            {
+                container.Left += translateTransform.X;
+                container.Top += translateTransform.Y;
+                translateTransform.X = 0;
+                translateTransform.Y = 0;
+            }
 
             if (ItemsControl.EnableGrid && ItemsControl.EnableSnapping)
             {
@@ -76,8 +75,6 @@ namespace RichCanvas.Helpers
                 container.Top = Math.Round(container.Top / ItemsControl.GridSpacing) * ItemsControl.GridSpacing;
             }
 
-            translateTransform.X = 0;
-            translateTransform.Y = 0;
 
             if (ItemsControl.HasSelections)
             {
@@ -94,15 +91,14 @@ namespace RichCanvas.Helpers
 
         private static void OnSelectedContainerMove(object sender, MouseEventArgs e)
         {
-            RichItemContainer container = (RichItemContainer)sender;
+            var container = (RichItemContainer)sender;
             if (container.IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed)
             {
-                var currentPosition = e.GetPosition(ItemsControl.ItemsHost);
+                Point currentPosition = e.GetPosition(ItemsControl.ItemsHost);
 
-                var transformGroup = (TransformGroup)container.RenderTransform;
-                var translateTransform = (TranslateTransform)transformGroup.Children[1];
+                TranslateTransform translateTransform = container.TranslateTransform;
 
-                if (!ItemsControl.HasSelections)
+                if (!ItemsControl.HasSelections && translateTransform != null)
                 {
                     translateTransform.X += currentPosition.X - _initialPosition.X;
                     translateTransform.Y += currentPosition.Y - _initialPosition.Y;
