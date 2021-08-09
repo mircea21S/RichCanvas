@@ -105,13 +105,8 @@ namespace RichCanvas
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RichItemContainer), new FrameworkPropertyMetadata(typeof(RichItemContainer)));
         }
 
-        private void ScaleChanged(object sender, EventArgs e)
-        {
-            Scale = new Point(ScaleTransform.ScaleX, ScaleTransform.ScaleY);
-        }
-
         /// <summary>
-        /// The <see cref="NodifyEditor"/> that owns this <see cref="ItemContainer"/>.
+        /// The <see cref="RichItemsControl"/> that owns this <see cref="ItemContainer"/>.
         /// </summary>
         public RichItemsControl Host => _host ??= ItemsControl.ItemsControlFromItemContainer(this) as RichItemsControl;
 
@@ -201,8 +196,11 @@ namespace RichCanvas
 
         private void OverrideScale(Point value)
         {
-            ScaleTransform.ScaleY = value.Y;
-            ScaleTransform.ScaleX = value.X;
+            if (ScaleTransform != null)
+            {
+                ScaleTransform.ScaleX = value.X;
+                ScaleTransform.ScaleY = value.Y;
+            }
         }
     }
 }

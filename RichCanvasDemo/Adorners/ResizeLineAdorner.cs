@@ -1,111 +1,106 @@
 ﻿using RichCanvas;
-using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Media;
 
 namespace RichCanvasDemo.Adorners
 {
     public class ResizeLineAdorner : ResizeAdorner
     {
-        private readonly VisualCollection _visualCollection;
-        private readonly Thumb _topLeftThumb;
-        private readonly Thumb _bottomRightThumb;
-
         public ResizeLineAdorner(UIElement adornedElement) : base(adornedElement)
         {
-            Container = new ContentPresenter();
-            _visualCollection = new VisualCollection(AdornedElement)
+            AddTopLeftThumb();
+            AddBottomRightThumb();
+        }
+
+        protected override void BottomRightThumbDrag(object sender, DragDeltaEventArgs e)
+        {
+            var hitThumb = (Thumb)sender;
+            double x = e.HorizontalChange;
+            double y = e.VerticalChange;
+
+            if (ItemContainer.Scale.Y < 1 && ItemContainer.Scale.X < 1)
             {
-                Container
-            };
-            _topLeftThumb = CreateThumb();
-            _bottomRightThumb = CreateThumb();
-
-            _topLeftThumb.DragDelta += TopLeftThumbDrag;
-            _bottomRightThumb.DragDelta += BottomRightThumbDrag;
+                UpdateWidth(-x, hitThumb.DesiredSize.Width);
+                UpdateHeight(-y, hitThumb.DesiredSize.Height);
+            }
+            else if (ItemContainer.Scale.Y < 1)
+            {
+                UpdateWidth(-x, hitThumb.DesiredSize.Width);
+                UpdateHeight(y, hitThumb.DesiredSize.Height);
+                UpdateTop(y, hitThumb.DesiredSize.Height);
+            }
+            else if (ItemContainer.Scale.X < 1)
+            {
+                UpdateWidth(-x, hitThumb.DesiredSize.Width);
+                UpdateHeight(y, hitThumb.DesiredSize.Height);
+                UpdateTop(y, hitThumb.DesiredSize.Height);
+            }
+            else
+            {
+                UpdateHeight(-y, hitThumb.DesiredSize.Height);
+                UpdateWidth(-x, hitThumb.DesiredSize.Width);
+            }
         }
 
-        private void BottomRightThumbDrag(object sender, DragDeltaEventArgs e)
+        protected override void TopLeftThumbDrag(object sender, DragDeltaEventArgs e)
         {
             var hitThumb = (Thumb)sender;
-            var x = e.HorizontalChange;
-            var y = e.VerticalChange;
-            var container = (RichItemContainer)AdornedElement;
-
-            double currentHeight = Math.Max(container.Height + y, hitThumb.DesiredSize.Height);
-            container.Height = currentHeight;
-
-            double currentWidth = Math.Max(container.Width + x, hitThumb.DesiredSize.Width);
-            container.Width = currentWidth;
-        }
-
-        private void TopLeftThumbDrag(object sender, DragDeltaEventArgs e)
-        {
-            var hitThumb = (Thumb)sender;
-            var x = e.HorizontalChange;
-            var y = e.VerticalChange;
-            Console.WriteLine(x);
-            var container = (RichItemContainer)AdornedElement;
-
-            double oldWidth = container.Width;
-            double currentWidth = Math.Max(container.Width - x, hitThumb.DesiredSize.Width);
-            double oldLeft = container.Left;
-            container.Width = currentWidth;
-            container.Left = oldLeft - (currentWidth - oldWidth);
-
-            double oldHeight = container.Height;
-            double currentHeight = Math.Max(container.Height - y, hitThumb.DesiredSize.Height);
-            double oldTop = container.Top;
-            container.Height = currentHeight;
-            container.Top = oldTop - (currentHeight - oldHeight);
+            double x = e.HorizontalChange;
+            double y = e.VerticalChange;
+            if (ItemContainer.Scale.Y < 1 && ItemContainer.Scale.X < 1)
+            {
+                UpdateWidth(x, hitThumb.DesiredSize.Width);
+                UpdateHeight(y, hitThumb.DesiredSize.Width);
+                UpdateTop(y, hitThumb.DesiredSize.Width);
+                UpdateLeft(x, hitThumb.DesiredSize.Width);
+            }
+            else if (ItemContainer.Scale.Y < 1)
+            {
+                UpdateWidth(x, hitThumb.DesiredSize.Width);
+                UpdateLeft(x, hitThumb.DesiredSize.Width);
+                UpdateHeight(-y, hitThumb.DesiredSize.Height);
+            }
+            else if (ItemContainer.Scale.X < 1)
+            {
+                UpdateWidth(x, hitThumb.DesiredSize.Width);
+                UpdateLeft(x, hitThumb.DesiredSize.Width);
+                UpdateHeight(-y, hitThumb.DesiredSize.Height);
+            }
+            else
+            {
+                UpdateWidth(x, hitThumb.DesiredSize.Width);
+                UpdateHeight(y, hitThumb.DesiredSize.Width);
+                UpdateTop(y, hitThumb.DesiredSize.Width);
+                UpdateLeft(x, hitThumb.DesiredSize.Width);
+            }
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
             var container = (RichItemContainer)AdornedElement;
-            _topLeftThumb.Arrange(new Rect(0, 0, 10, 10));
-            _bottomRightThumb.Arrange(new Rect(container.Width - 10, container.Height - 10, 10, 10));
-            Container.Arrange(new Rect(new Point(container.Width / 2 - 30, container.Height), new Size(60, 20)));
+
+            var size = new Size(10, 10);
+            if (container.Scale.X < 1)
+            {
+                _bottomRightThumb.Arrange(new Rect(new Point(0, 0), size));
+                _topLeftThumb.Arrange(new Rect(new Point(container.Width - size.Width, container.Height - size.Height), size));
+            }
+            else
+            {
+                _topLeftThumb.Arrange(new Rect(new Point(0, 0), size));
+                _bottomRightThumb.Arrange(new Rect(new Point(container.Width - size.Width, container.Height - size.Height), size));
+            }
+            //Arrange by scale
+            if (container.Scale.Y < 1)
+            {
+                Container.Arrange(new Rect(new Point((container.Width / 2) - 30, -20), new Size(60, 20)));
+            }
+            else
+            {
+                Container.Arrange(new Rect(new Point((container.Width / 2) - 30, container.Height), new Size(60, 20)));
+            }
             return finalSize;
         }
-        protected override Size MeasureOverride(Size constraint)
-        {
-            Container.Measure(constraint);
-            return Container.DesiredSize;
-        }
 
-        protected override Visual GetVisualChild(int index) => _visualCollection[index];
-
-        protected override int VisualChildrenCount => _visualCollection.Count;
-
-        public override GeneralTransform GetDesiredTransform(GeneralTransform transform)
-        {
-            var container = (RichItemContainer)AdornedElement;
-            var scale = (ScaleTransform)((TransformGroup)container.RenderTransform).Children[0];
-
-            ScaleTransform scaleTrans = new ScaleTransform(1 / scale.ScaleX, 1 / scale.ScaleY);
-
-            _topLeftThumb.RenderTransform = scaleTrans;
-
-            _topLeftThumb.RenderTransformOrigin = new Point(0.5, 0.5);
-
-            return base.GetDesiredTransform(transform);
-        }
-
-        private Thumb CreateThumb()
-        {
-            var thumb = new Thumb
-            {
-                Background = Brushes.DodgerBlue,
-                Height = 10,
-                Width = 10,
-                BorderThickness = new Thickness(1, 1, 1, 1),
-                BorderBrush = Brushes.DodgerBlue
-            };
-            _visualCollection.Add(thumb);
-            return thumb;
-        }
     }
 }

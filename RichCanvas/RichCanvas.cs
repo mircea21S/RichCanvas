@@ -1,5 +1,4 @@
-﻿using RichCanvas.Helpers;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -21,7 +20,7 @@ namespace RichCanvas
 
         protected override Size MeasureOverride(Size constraint)
         {
-            if ((ItemsOwner.IsDrawing || ItemsOwner.IsSelecting || DragBehavior.IsDragging) && !ItemsOwner.NeedMeasure)
+            if ((ItemsOwner.IsDrawing || ItemsOwner.IsSelecting) && !ItemsOwner.NeedMeasure)
             {
                 return default;
             }

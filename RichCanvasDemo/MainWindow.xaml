@@ -304,7 +304,8 @@
                             Background="DodgerBlue">
                         <TextBlock Foreground="White"
                                    HorizontalAlignment="Center"
-                                   VerticalAlignment="Center">
+                                   VerticalAlignment="Center"
+                                   MaxWidth="60">
                             <TextBlock.Text>
                                 <MultiBinding StringFormat="{}{0} x {1}">
                                     <Binding Path="Width" />
@@ -330,13 +331,13 @@
                                Fill="{Binding VisualProperties.FillColor, Converter={StaticResource ColorToSolidBrushColorConverter}}"
                                StrokeThickness="3"
                                Width="{Binding Width}"
-                               Height="{Binding Height}"
-                               helpers:AttachedAdorner.ShowResizeAdorner="{Binding IsSelected}">
+                               Height="{Binding Height}">
                         <!--<Rectangle.Style>
                             <Style>
                                 <Setter Property="richCanvas:RichItemContainer.ApplyTransform">
                                     <Setter.Value>
                                         <TransformGroup>
+                                            <ScaleTransform></ScaleTransform>
                                             <TranslateTransform></TranslateTransform>
                                             <RotateTransform Angle="30"></RotateTransform>
                                         </TransformGroup>

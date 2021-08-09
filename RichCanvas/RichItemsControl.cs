@@ -410,7 +410,7 @@ namespace RichCanvas
         /// <summary>
         /// Selects all elements inside <see cref="SelectionRectangle"/>
         /// </summary>
-        public void Select()
+        public void SelectBySelectionRectangle()
         {
             RectangleGeometry geom = GetSelectionRectangleCurrentGeometry();
 
@@ -533,7 +533,7 @@ namespace RichCanvas
 
                 if (RealTimeSelectionEnabled)
                 {
-                    Select();
+                    SelectBySelectionRectangle();
                 }
             }
         }
@@ -557,7 +557,7 @@ namespace RichCanvas
 
                 if (!RealTimeSelectionEnabled)
                 {
-                    Select();
+                    SelectBySelectionRectangle();
 
                     IList selected = SelectedItems;
 
