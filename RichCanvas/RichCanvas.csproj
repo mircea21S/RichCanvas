@@ -11,24 +11,34 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Copyright>Mircea Staicu</Copyright>
     <PackageProjectUrl>https://github.com/mircea21S/RichCanvas</PackageProjectUrl>
-    <PackageTags>wpf mvvm infinite-canvas canvas controls</PackageTags>
+    <PackageTags>wpf mvvm infinite-canvas canvas controls net-core-3-1 net5</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>
-      WPF Control library
-      Infinite canvas with panning, zooming, scrolling and other customizable functions, designed for MVVM.
-    </Description>
-    <PackageReleaseNotes>
-      Official realease of RichCanvas
+    <Description>WPF Control library
+Infinite canvas with panning, zooming, scrolling and other customizable functions, designed for MVVM.
+</Description>
+    <PackageReleaseNotes>Bugs:
+- Top and Left binding not overwritten anymore.
+- Measure called when properties update(specific case when adorner used for resizing, dragging was detected)
 
-      Changed internal implementation of Selection action.
-      -Improved performance on selection
-      -New API changes in order to optimize selection
-      -RealTimeSelectionEnabled dependency property added
-    </PackageReleaseNotes>
+New features:
+- Scale DependencyProperty to get and set the current ScaleTransform of the container
+- ApplyTransform AttachedProperty to apply child transforms on container directly and to overwrite the default RenderTransform
+
+Documentation updated on https://github.com/mircea21S/RichCanvas/wiki please read it to check up on the new changes.
+</PackageReleaseNotes>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageIcon>logoRichCanvas.png</PackageIcon>
+    <PackageIconUrl />
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\..\..\Users\Mircea\OneDrive\Desktop\logoRichCanvas.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
