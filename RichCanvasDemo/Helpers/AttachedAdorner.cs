@@ -24,28 +24,29 @@ namespace RichCanvasDemo.Helpers
         public static readonly DependencyProperty HasHoverAdornerProperty = DependencyProperty.RegisterAttached("HasHoverAdorner", typeof(bool), typeof(AttachedAdorner),
             new FrameworkPropertyMetadata(false, OnHasHoverChanged));
         public static void SetHasHoverAdorner(UIElement element, bool value) => element.SetValue(HasHoverAdornerProperty, value);
-
-        internal static void OnScrolling()
-        {
-            _currentAdorner?.InvalidateArrange();
-            _currentLineAdorner?.InvalidateArrange();
-            foreach (var adorner in _resizeAdorner)
-            {
-                adorner.InvalidateArrange();
-            }
-        }
-
         public static bool GetHasHoverAdorner(UIElement element) => (bool)element.GetValue(HasHoverAdornerProperty);
+
 
         public static readonly DependencyProperty ShowResizeAdornerProperty = DependencyProperty.RegisterAttached("ShowResizeAdorner", typeof(bool), typeof(AttachedAdorner),
             new FrameworkPropertyMetadata(false, OnShowResizeAdornerChanged));
         public static void SetShowResizeAdorner(UIElement element, bool value) => element.SetValue(ShowResizeAdornerProperty, value);
         public static bool GetShowResizeAdorner(UIElement element) => (bool)element.GetValue(ShowResizeAdornerProperty);
 
+
         public static readonly DependencyProperty ShowResizeLineAdornerProperty = DependencyProperty.RegisterAttached("ShowResizeLineAdorner", typeof(bool), typeof(AttachedAdorner),
             new FrameworkPropertyMetadata(false, OnShowResizeAdornerChanged));
         public static void SetShowResizeLineAdorner(UIElement element, bool value) => element.SetValue(ShowResizeLineAdornerProperty, value);
         public static bool GetShowResizeLineAdorner(UIElement element) => (bool)element.GetValue(ShowResizeLineAdornerProperty);
+
+        internal static void OnScrolling()
+        {
+            _currentAdorner?.InvalidateArrange();
+            _currentLineAdorner?.InvalidateArrange();
+            foreach (ResizeAdorner adorner in _resizeAdorner)
+            {
+                adorner.InvalidateArrange();
+            }
+        }
 
         private static void OnShowResizeAdornerChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -129,7 +130,6 @@ namespace RichCanvasDemo.Helpers
             _currentLineAdorner = adorner;
         }
 
-
         private static void OnHasHoverChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var element = (RichItemContainer)d;
@@ -175,6 +175,8 @@ namespace RichCanvasDemo.Helpers
                 }
             }
         }
+
+
 
     }
 }

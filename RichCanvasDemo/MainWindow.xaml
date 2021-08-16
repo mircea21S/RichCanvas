@@ -17,6 +17,10 @@
         Height="650"
         WindowState="Maximized"
         Width="800">
+    <Window.InputBindings>
+        <KeyBinding Key="Esc"
+                    Command="{Binding CancelActionCommand}" />
+    </Window.InputBindings>
 
     <Window.DataContext>
         <local:MainWindowViewModel />
@@ -45,6 +49,7 @@
             <Setter Property="Margin"
                     Value="0,2,0,8" />
         </Style>
+
     </Window.Resources>
 
     <Grid>
@@ -279,6 +284,7 @@
                                      MaxScale="{Binding MaxScale, Converter={StaticResource StringToFloatConverter},ConverterParameter=double}"
                                      AutoPanSpeed="{Binding AutoPanSpeed, Converter={StaticResource StringToFloatConverter}}"
                                      AutoPanTickRate="{Binding AutoPanTickRate, Converter={StaticResource StringToFloatConverter}}">
+
             <richCanvas:RichItemsControl.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Add Image"
@@ -329,9 +335,7 @@
                 <DataTemplate DataType="{x:Type vm:Rectangle}">
                     <Rectangle Stroke="{Binding VisualProperties.BorderColor, Converter={StaticResource ColorToSolidBrushColorConverter}}"
                                Fill="{Binding VisualProperties.FillColor, Converter={StaticResource ColorToSolidBrushColorConverter}}"
-                               StrokeThickness="3"
-                               Width="{Binding Width}"
-                               Height="{Binding Height}">
+                               StrokeThickness="3">
                         <!--<Rectangle.Style>
                             <Style>
                                 <Setter Property="richCanvas:RichItemContainer.ApplyTransform">
@@ -368,6 +372,11 @@
             <richCanvas:RichItemsControl.ItemContainerStyle>
                 <Style TargetType="richCanvas:RichItemContainer">
 
+                    <Setter Property="helpers:EventToCommand.Event"
+                            Value="LeftChanged" />
+                    <Setter Property="helpers:EventToCommand.Command"
+                            Value="{Binding LeftChangedCommand}" />
+
                     <Setter Property="Tag"
                             Value="{Binding DataContext, ElementName=window}" />
 
@@ -401,6 +410,9 @@
 
                     <Setter Property="ShouldBringIntoView"
                             Value="{Binding ShouldBringIntoView, Mode=TwoWay}" />
+
+                    <Setter Property="Scale"
+                            Value="{Binding DirectionPoint, Mode=TwoWay}" />
 
                     <Setter Property="ContextMenu">
                         <Setter.Value>

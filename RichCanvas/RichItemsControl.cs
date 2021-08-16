@@ -666,9 +666,17 @@ namespace RichCanvas
         #endregion
 
         #region Internal Methods
-        internal void AddSelection(RichItemContainer container) => _selectingGesture.AddSelection(container);
+        internal void AddSelection(RichItemContainer container)
+        {
+            _selectingGesture.AddSelection(container);
+            base.SelectedItems.Add(container.DataContext);
+        }
 
-        internal void RemoveSelection(RichItemContainer container) => _selectingGesture.RemoveSelection(container);
+        internal void RemoveSelection(RichItemContainer container)
+        {
+            _selectingGesture.RemoveSelection(container);
+            base.SelectedItems.Remove(container.DataContext);
+        }
 
         internal void UpdateSelections(bool snap = false)
         {
@@ -845,7 +853,6 @@ namespace RichCanvas
                 var container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
                 if (container.IsSelectable)
                 {
-                    base.SelectedItems.Add(container.DataContext);
                     container.IsSelected = true;
                 }
             }

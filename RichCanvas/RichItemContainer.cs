@@ -100,6 +100,26 @@ namespace RichCanvas
         public static readonly RoutedEvent SelectedEvent = Selector.SelectedEvent.AddOwner(typeof(RichItemContainer));
         public static readonly RoutedEvent UnselectedEvent = Selector.UnselectedEvent.AddOwner(typeof(RichItemContainer));
 
+        public static readonly RoutedEvent TopChangedEvent = EventManager.RegisterRoutedEvent(nameof(TopChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(RichItemContainer));
+        /// <summary>
+        /// Occurs whenever <see cref="RichItemContainer.Top"/> changes.
+        /// </summary>
+        public event RoutedEventHandler TopChanged
+        {
+            add { AddHandler(TopChangedEvent, value); }
+            remove { RemoveHandler(TopChangedEvent, value); }
+        }
+
+        public static readonly RoutedEvent LeftChangedEvent = EventManager.RegisterRoutedEvent(nameof(LeftChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(RichItemContainer));
+        /// <summary>
+        /// Occurs whenever <see cref="RichItemContainer.Left"/> changes.
+        /// </summary>
+        public event RoutedEventHandler LeftChanged
+        {
+            add { AddHandler(LeftChangedEvent, value); }
+            remove { RemoveHandler(LeftChangedEvent, value); }
+        }
+
         static RichItemContainer()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RichItemContainer), new FrameworkPropertyMetadata(typeof(RichItemContainer)));
@@ -136,9 +156,10 @@ namespace RichCanvas
         {
             return Height != 0 && Width != 0 && !double.IsNaN(Height) && !double.IsNaN(Width);
         }
+
         private static void OnScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemContainer)d).OverrideScale((Point)e.NewValue);
 
-        private static void OnPositionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemContainer)d).UpdatePosition(e.Property);
+        private static void OnPositionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemContainer)d).UpdatePosition(e.Property, (double)e.OldValue - (double)e.NewValue);
 
         private static void OnApplyTransformChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemContainer)VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(d))).ApplyTransform((Transform)e.NewValue);
 
@@ -158,15 +179,17 @@ namespace RichCanvas
             }
         }
 
-        private void UpdatePosition(DependencyProperty prop)
+        private void UpdatePosition(DependencyProperty prop, double delta)
         {
             if (prop.Name is "Top")
             {
                 TopPropertySet = true;
+                RaiseEvent(new RoutedEventArgs(TopChangedEvent, delta));
             }
             if (prop.Name is "Left")
             {
                 LeftPropertySet = true;
+                RaiseEvent(new RoutedEventArgs(LeftChangedEvent, delta));
             }
             Host?.ItemsHost.InvalidateMeasure();
         }

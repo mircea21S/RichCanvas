@@ -2,6 +2,7 @@
 using System;
 using System.Text.Json;
 using System.Windows;
+using System.Windows.Input;
 
 namespace RichCanvasDemo.ViewModels.Base
 {
@@ -17,6 +18,7 @@ namespace RichCanvasDemo.ViewModels.Base
         private VisualProperties _visualProperties;
         private bool _shouldBringIntoView;
         private Point _directionPoint;
+        private RelayCommand<double> leftChangedCommand;
 
         public double Top
         {
@@ -31,8 +33,13 @@ namespace RichCanvasDemo.ViewModels.Base
         public bool IsSelected
         {
             get => _isSelected;
-            set => SetProperty(ref _isSelected, value);
+            set
+            {
+                SetProperty(ref _isSelected, value);
+                OnIsSelectedChanged(value);
+            }
         }
+
         public double Width
         {
             get => _width;
@@ -80,17 +87,26 @@ namespace RichCanvasDemo.ViewModels.Base
             get => _directionPoint;
             set => SetProperty(ref _directionPoint, value);
         }
+
+        public ICommand LeftChangedCommand => leftChangedCommand ??= new RelayCommand<double>(OnLeftChanged);
+
+
         public Drawable()
         {
             VisualProperties = new VisualProperties();
         }
+        protected virtual void OnLeftChanged(double delta) { }
 
         protected virtual void OnWidthUpdated() { }
 
         protected virtual void OnHeightUpdated() { }
 
+        protected virtual void OnIsSelectedChanged(bool value) { }
+
         protected Drawable Clone<T>() where T : Drawable => JsonSerializer.Deserialize<T>(JsonSerializer.Serialize(this));
 
         public virtual Drawable Clone() => throw new NotImplementedException();
+
+        public virtual void OnDrawingEnded(Action<object> callback = default) { }
     }
 }

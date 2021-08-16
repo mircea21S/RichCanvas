@@ -28,7 +28,6 @@ namespace RichCanvas.Gestures
                     translateTransform.X += point.X;
                     translateTransform.Y += point.Y;
                 }
-
             }
         }
 

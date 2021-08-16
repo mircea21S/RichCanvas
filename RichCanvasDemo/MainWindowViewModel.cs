@@ -3,6 +3,7 @@ using RichCanvasDemo.CustomControls;
 using RichCanvasDemo.Services;
 using RichCanvasDemo.ViewModels;
 using RichCanvasDemo.ViewModels.Base;
+using RichCanvasDemo.ViewModels.Connections;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -48,6 +49,7 @@ namespace RichCanvasDemo
         private RelayCommand pasteCommand;
         private readonly FileService _fileService;
         private readonly DialogService _dialogService;
+        private RelayCommand cancelActionCommand;
 
         public ICommand DrawEndedCommand => drawEndedCommand ??= new RelayCommand<RoutedEventArgs>(DrawEnded);
         public ObservableCollection<Drawable> Items { get; }
@@ -116,6 +118,11 @@ namespace RichCanvasDemo
         public Point MousePosition { get => mousePosition; set => SetProperty(ref mousePosition, value); }
 
         public bool ShouldBringIntoView { get => shouldBringIntoView; set => SetProperty(ref shouldBringIntoView, value); }
+
+        public ICommand CancelActionCommand => cancelActionCommand ??= new RelayCommand(CancelAction);
+
+        public bool DrawingEndedHandled { get; private set; }
+
         public MainWindowViewModel()
         {
             Items = new ObservableCollection<Drawable>();
@@ -123,6 +130,24 @@ namespace RichCanvasDemo
             SelectedItems.CollectionChanged += SelectedItemsChanged;
             _fileService = new FileService();
             _dialogService = new DialogService();
+            Items.CollectionChanged += ItemsChanged;
+        }
+
+        private void ItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                DrawingEndedHandled = false;
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                //TODO Multi select deletion
+                if (e.OldItems[0] == SelectedItem)
+                {
+                    SelectedItem = null;
+                    ShowProperties = false;
+                }
+            }
         }
 
         private void Paste()
@@ -236,32 +261,26 @@ namespace RichCanvasDemo
 
         private void DrawEnded(RoutedEventArgs args)
         {
-            return;
-            var element = (Drawable)args.OriginalSource;
-            if (element is Bezier bezier)
-            {
-                bezier.Point1 = new Point(bezier.Width - 20, 0);
-                bezier.Point2 = new Point(bezier.Width - 10, 0);
-                bezier.Point3 = new Point(bezier.Width, bezier.Height);
-            }
+            if (DrawingEndedHandled) { return; }
+
+            object element = args.OriginalSource;
             if (element is Line line)
             {
-                if (line.DirectionPoint.X < 1 && line.DirectionPoint.Y >= 1)
+                line.OnDrawingEnded((result) =>
                 {
-                    Items.Add(new Line { Top = line.Top + line.Height, Left = line.Left - line.Width });
-                }
-                else if (line.DirectionPoint.X < 1 && line.DirectionPoint.Y < 1)
-                {
-                    Items.Add(new Line { Top = line.Top - line.Height, Left = line.Left - line.Width });
-                }
-                else if (line.DirectionPoint.X >= 1 && line.DirectionPoint.Y < 1)
-                {
-                    Items.Add(new Line { Top = line.Top - line.Height, Left = line.Left + line.Width });
-                }
-                else
-                {
-                    Items.Add(new Line { Top = line.Top + line.Height, Left = line.Left + line.Width });
-                }
+                    var newLine = (Line)result;
+                    if (line.Parent == null)
+                    {
+                        newLine.Parent = line;
+                        line.Connections.Add(newLine);
+                    }
+                    else
+                    {
+                        newLine.Parent = line.Parent;
+                        ((IConnectable)line.Parent).Connections.Add(newLine);
+                    }
+                    Items.Add(newLine);
+                });
             }
         }
 
@@ -292,5 +311,10 @@ namespace RichCanvasDemo
             Items.Add(text);
         }
 
+
+        private void CancelAction()
+        {
+            DrawingEndedHandled = true;
+        }
     }
 }
