@@ -35,7 +35,7 @@ Documentation updated on https://github.com/mircea21S/RichCanvas/wiki please rea
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\..\Users\Mircea\OneDrive\Desktop\logoRichCanvas.png">
+    <None Include=".\logoRichCanvas.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>

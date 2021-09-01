@@ -376,6 +376,8 @@
                             Value="LeftChanged" />
                     <Setter Property="helpers:EventToCommand.Command"
                             Value="{Binding LeftChangedCommand}" />
+                    <Setter Property="helpers:EventToCommand.CanExecute"
+                            Value="{Binding IsSelected}" />
 
                     <Setter Property="Tag"
                             Value="{Binding DataContext, ElementName=window}" />

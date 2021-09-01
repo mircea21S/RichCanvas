@@ -10,6 +10,8 @@ namespace RichCanvasDemo.Helpers
     public class EventToCommand : Behavior<RichItemContainer>
     {
         private static RoutedEvent _registeredEvent;
+        private static ICommand _command;
+
         public static readonly DependencyProperty EventProperty = DependencyProperty.RegisterAttached("Event", typeof(RoutedEvent), typeof(EventToCommand),
            new FrameworkPropertyMetadata(null, OnEventChanged));
 
@@ -23,24 +25,48 @@ namespace RichCanvasDemo.Helpers
         public static void SetCommand(UIElement element, ICommand value) => element.SetValue(CommandProperty, value);
         public static ICommand GetCommand(UIElement element) => (ICommand)element.GetValue(CommandProperty);
 
-        private static void OnEventChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => _registeredEvent = (RoutedEvent)e.NewValue;
-        private static void OnCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        public static readonly DependencyProperty CanExecuteProperty = DependencyProperty.RegisterAttached("CanExecute", typeof(bool), typeof(EventToCommand),
+          new FrameworkPropertyMetadata(false, OnCanExecuteChanged));
+
+        public static void SetCanExecute(UIElement element, bool value) => element.SetValue(CanExecuteProperty, value);
+        public static bool GetCanExecute(UIElement element) => (bool)element.GetValue(CanExecuteProperty);
+
+        private static void OnCanExecuteChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var container = (RichItemContainer)d;
-            var context = (Drawable)container.DataContext;
-            if (context is IConnectable connection)
+            if ((bool)e.NewValue)
             {
-                if (connection.IsParent)
-                {
-                    container.AddHandler(_registeredEvent, new RoutedEventHandler((sender, x) =>
-                    {
-                        var delta = (double)x.OriginalSource;
-                        var command = (ICommand)e.NewValue;
-                        command.Execute(delta);
-                    }));
-                }
+                SubscribeToEvent((RichItemContainer)d, _command);
+            }
+            else
+            {
+                //((RichItemContainer)d).RemoveHandler(_registeredEvent, HandleEvent(_command));
+                ((RichItemContainer)d).LeftChanged -= Container_LeftChanged;
             }
         }
+        private static void SubscribeToEvent(RichItemContainer container, ICommand command)
+        {
+            container.LeftChanged += Container_LeftChanged;
+            var context = (Drawable)container.DataContext;
+            //container.AddHandler(_registeredEvent, HandleEvent(command));
+        }
+
+        private static void Container_LeftChanged(object sender, RoutedEventArgs e)
+        {
+            var delta = (double)e.OriginalSource;
+            _command.Execute(delta);
+        }
+
+        private static RoutedEventHandler HandleEvent(ICommand command)
+        {
+            return (sender, x) =>
+            {
+                var delta = (double)x.OriginalSource;
+                command.Execute(delta);
+            };
+        }
+
+        private static void OnEventChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => _registeredEvent = (RoutedEvent)e.NewValue;
+        private static void OnCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => _command = (ICommand)e.NewValue;
 
     }
 }

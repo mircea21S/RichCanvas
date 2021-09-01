@@ -123,6 +123,8 @@ namespace RichCanvasDemo
 
         public bool DrawingEndedHandled { get; private set; }
 
+        public bool IsDragging { get; set; }
+
         public MainWindowViewModel()
         {
             Items = new ObservableCollection<Drawable>();
@@ -269,16 +271,6 @@ namespace RichCanvasDemo
                 line.OnDrawingEnded((result) =>
                 {
                     var newLine = (Line)result;
-                    if (line.Parent == null)
-                    {
-                        newLine.Parent = line;
-                        line.Connections.Add(newLine);
-                    }
-                    else
-                    {
-                        newLine.Parent = line.Parent;
-                        ((IConnectable)line.Parent).Connections.Add(newLine);
-                    }
                     Items.Add(newLine);
                 });
             }

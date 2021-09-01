@@ -10,5 +10,7 @@ namespace RichCanvasDemo.ViewModels.Connections
         bool IsParent { get; }
 
         Drawable Parent { get; set; }
+
+        void Move(double offsetX, double offsetY);
     }
 }

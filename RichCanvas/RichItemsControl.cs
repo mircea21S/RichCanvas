@@ -315,6 +315,17 @@ namespace RichCanvas
             set => SetValue(DisableCacheProperty, value);
         }
 
+        protected static readonly DependencyPropertyKey IsDraggingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsDragging), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
+        public static readonly DependencyProperty IsDraggingProperty = IsDraggingPropertyKey.DependencyProperty;
+        /// <summary>
+        /// Gets whether the operation in progress is dragging.
+        /// </summary>
+        public bool IsDragging
+        {
+            get => (bool)GetValue(IsDraggingProperty);
+            internal set => SetValue(IsDraggingPropertyKey, value);
+        }
+
         public static DependencyProperty ZoomKeyProperty = DependencyProperty.Register(nameof(ZoomKey), typeof(Key), typeof(RichItemsControl), new FrameworkPropertyMetadata(Key.LeftCtrl));
         /// <summary>
         /// Gets or sets current key used to zoom.

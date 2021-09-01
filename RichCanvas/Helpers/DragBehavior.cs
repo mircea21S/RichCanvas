@@ -28,6 +28,7 @@ namespace RichCanvas.Helpers
             {
                 bool isDragging = (bool)e.NewValue;
                 IsDragging = isDragging;
+                ItemsControl.IsDragging = isDragging;
                 if (isDragging)
                 {
                     //can raise routed events on container(drag started e.g)

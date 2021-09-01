@@ -47,37 +47,66 @@ namespace RichCanvasDemo.ViewModels
         }
         protected override void OnLeftChanged(double delta)
         {
-            foreach (Drawable connection in Connections)
-            {
-                //if it's selected is already moving
-                if (!connection.IsSelected)
-                {
-                    connection.Left -= delta;
-                }
-            }
+            Move(delta);
         }
 
         public override void OnDrawingEnded(Action<object> callback = default)
         {
+            Line line;
             if (DirectionPoint.X < 1 && DirectionPoint.Y >= 1)
             {
-                var line = new Line { Top = Top + Height, Left = Left };
-                callback(line);
+                line = new Line { Top = Top + Height, Left = Left };
             }
             else if (DirectionPoint.X < 1 && DirectionPoint.Y < 1)
             {
-                var line = new Line { Top = Top, Left = Left };
-                callback(line);
+                line = new Line { Top = Top, Left = Left };
             }
             else if (DirectionPoint.X >= 1 && DirectionPoint.Y < 1)
             {
-                var line = new Line { Top = Top, Left = Left + Width };
-                callback(line);
+                line = new Line { Top = Top, Left = Left + Width };
             }
             else
             {
-                var line = new Line { Top = Top + Height, Left = Left + Width };
-                callback(line);
+                line = new Line { Top = Top + Height, Left = Left + Width };
+            }
+
+            if (Parent == null)
+            {
+                line.Parent = this;
+                Connections.Add(line);
+            }
+            else
+            {
+                line.Parent = Parent;
+                ((IConnectable)Parent).Connections.Add(line);
+            }
+
+            callback(line);
+        }
+
+        public void Move(double offsetX = 0, double offsetY = 0)
+        {
+            if (Parent != null)
+            {
+                foreach (Drawable connection in ((IConnectable)Parent).Connections)
+                {
+                    //if it's selected is already moving
+                    if (!connection.IsSelected)
+                    {
+                        connection.Left -= offsetX;
+                    }
+                }
+            }
+            else
+            {
+                foreach (Drawable connection in Connections)
+                {
+                    //if it's selected is already moving
+                    if (!connection.IsSelected)
+                    {
+                        connection.Left -= offsetX;
+                    }
+                }
             }
         }
     }
