@@ -720,6 +720,7 @@ namespace RichCanvas
 
         private void OnTranslateChanged(object sender, EventArgs e)
         {
+            TranslateOffset = new Point(TranslateTransform.X, TranslateTransform.Y);
             RaiseScrollingEvent(e);
         }
 

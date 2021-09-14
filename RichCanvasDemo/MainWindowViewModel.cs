@@ -39,6 +39,8 @@ namespace RichCanvasDemo
         private string _minScale = "0.05";
         private bool _showProperties;
         private Drawable _selectedItem;
+        private ViewPresetItem _selectedViewPreset;
+        private Point _translateOffset;
         private ICommand addImageCommand;
         private string scale = "1";
         private bool shouldBringIntoView;
@@ -50,10 +52,12 @@ namespace RichCanvasDemo
         private readonly FileService _fileService;
         private readonly DialogService _dialogService;
         private RelayCommand cancelActionCommand;
+        private RelayCommand addViewPresetCommand;
 
         public ICommand DrawEndedCommand => drawEndedCommand ??= new RelayCommand<RoutedEventArgs>(DrawEnded);
         public ObservableCollection<Drawable> Items { get; }
         public ObservableCollection<Drawable> SelectedItems { get; }
+        public ObservableCollection<ViewPresetItem> ViewPresetItems { get; }
         public ICommand DrawRectCommand => drawRectCommand ??= new RelayCommand(OnDrawCommand);
         public ICommand GenerateElements => generateElementsCommand ??= new RelayCommand(OnGenerateElements);
         public ICommand DrawLineCommand => drawLineCommand ??= new RelayCommand(DrawLine);
@@ -64,6 +68,7 @@ namespace RichCanvasDemo
         public ICommand AddImageCommand => addImageCommand ??= new RelayCommand(AddImage);
         public ICommand CopyCommand => copyCommand ??= new RelayCommand<Drawable>(Copy);
         public RelayCommand PasteCommand => pasteCommand ??= new RelayCommand(Paste, () => _copiedElement != null);
+        public ICommand AddViewPresetCommand => addViewPresetCommand ??= new RelayCommand(AddViewPreset);
 
         public bool EnableGrid
         {
@@ -125,10 +130,25 @@ namespace RichCanvasDemo
 
         public bool IsDragging { get; set; }
 
+        public Point TranslateOffset { get => _translateOffset; set => SetProperty(ref _translateOffset, value); }
+
+        public ViewPresetItem SelectedViewPreset
+        {
+            get => _selectedViewPreset;
+            set
+            {
+                SetProperty(ref _selectedViewPreset, value);
+
+                TranslateOffset = value.Offset;
+                Scale = value.Scale;
+            }
+        }
+
         public MainWindowViewModel()
         {
             Items = new ObservableCollection<Drawable>();
             SelectedItems = new ObservableCollection<Drawable>();
+            ViewPresetItems = new ObservableCollection<ViewPresetItem>();
             SelectedItems.CollectionChanged += SelectedItemsChanged;
             _fileService = new FileService();
             _dialogService = new DialogService();
@@ -307,6 +327,17 @@ namespace RichCanvasDemo
         private void CancelAction()
         {
             DrawingEndedHandled = true;
+        }
+
+        private void AddViewPreset()
+        {
+            ViewPresetItems.Add(
+                new ViewPresetItem
+                {
+                    Name = $"Sample name {this.ViewPresetItems.Count + 1}",
+                    Offset = TranslateOffset,
+                    Scale = Scale
+                });
         }
     }
 }
