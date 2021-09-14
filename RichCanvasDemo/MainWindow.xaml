@@ -14,7 +14,7 @@
         mc:Ignorable="d"
         x:Name="window"
         Title="MainWindow"
-        Height="650"
+        Height="800"
         WindowState="Maximized"
         Width="800">
     <Window.InputBindings>
@@ -68,6 +68,7 @@
         <!--INFORMATIONS PROPS API-->
         <Grid Grid.Row="1">
             <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
@@ -163,7 +164,7 @@
                          md:HintAssist.IsFloating="True" />
             </StackPanel>
 
-            <StackPanel Grid.Row="10">
+            <StackPanel Grid.Row="7">
                 <TextBox Text="{Binding ElementsCount, Mode=TwoWay}"
                          md:HintAssist.Hint="Number of elements"
                          md:HintAssist.IsFloating="True" />
@@ -173,57 +174,68 @@
                         HorizontalAlignment="Left"
                         Command="{Binding GenerateElements}" />
             </StackPanel>
+            <StackPanel Grid.Row="8">
+                <ComboBox
+                    ItemsSource="{Binding ViewPresetItems}"
+                    SelectedItem="{Binding SelectedViewPreset}"
+                    DisplayMemberPath="Name"
+                    md:HintAssist.Hint="View Preset"
+                    md:HintAssist.IsFloating="True">
+                </ComboBox>
+            </StackPanel>
         </Grid>
 
         <!--ACTIONS-->
         <Grid Grid.Column="2"
               Grid.Row="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-            <Button Content="Draw Line"
-                    Command="{Binding DrawLineCommand}"
-                    Width="120"
-                    Height="30"
-                    HorizontalAlignment="Right" />
+                <Button Content="Draw Line"
+                            Command="{Binding DrawLineCommand}"
+                            Width="120"
+                            Height="30"
+                            HorizontalAlignment="Right" />
 
-            <Button Content="Draw Rect"
-                    Command="{Binding DrawRectCommand}"
-                    Width="120"
-                    Height="30"
-                    HorizontalAlignment="Right"
-                    Grid.Row="1" />
+                <Button Content="Draw Rect"
+                            Command="{Binding DrawRectCommand}"
+                            Width="120"
+                            Height="30"
+                            HorizontalAlignment="Right"
+                            Grid.Row="1" />
 
-            <Button Content="Resize"
-                    Command="{Binding ResizeCommand}"
-                    MinWidth="120"
-                    Height="30"
-                    HorizontalAlignment="Right"
-                    Grid.Row="2" />
+                <Button Content="Resize"
+                            Command="{Binding ResizeCommand}"
+                            MinWidth="120"
+                            Height="30"
+                            HorizontalAlignment="Right"
+                            Grid.Row="2" />
 
-            <Button Content="Draw Bezier"
-                    Command="{Binding DrawBezierCommand}"
-                    Width="120"
-                    Height="30"
-                    HorizontalAlignment="Right"
-                    Grid.Row="3" />
+                <Button Content="Draw Bezier"
+                            Command="{Binding DrawBezierCommand}"
+                            Width="120"
+                            Height="30"
+                            HorizontalAlignment="Right"
+                            Grid.Row="3" />
 
-            <Button Content="Delete"
-                    Command="{Binding DeleteCommand}"
-                    Width="120"
-                    Height="30"
-                    HorizontalAlignment="Right"
-                    Grid.Row="4" />
-            <StackPanel Grid.Row="5"
+                <Button Content="Delete"
+                            Command="{Binding DeleteCommand}"
+                            Width="120"
+                            Height="30"
+                            HorizontalAlignment="Right"
+                            Grid.Row="4" />
+                <StackPanel Grid.Row="5"
                         Visibility="{Binding ShowProperties, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <views:PropertiesInfo DataContext="{Binding SelectedItem}" />
-            </StackPanel>
+                    <views:PropertiesInfo DataContext="{Binding SelectedItem}" />
+                </StackPanel>
+            </Grid>
         </Grid>
 
         <!--INFO FOOTER-->
@@ -234,23 +246,31 @@
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
                 <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
             <StackPanel Orientation="Horizontal"
                         Margin="2"
                         Grid.Column="1">
+                <TextBlock Text="Transform Offset: " />
+                <TextBlock Text="{Binding TranslateOffset, ElementName=source, Converter={StaticResource PointToStringConverter}}"
+                           HorizontalAlignment="Left"></TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        Margin="2"
+                        Grid.Column="2">
                 <TextBlock Text="Mouse Location: " />
                 <TextBlock Text="{Binding MousePosition, ElementName=source, Converter={StaticResource PointToStringConverter}}"
                            HorizontalAlignment="Left"></TextBlock>
             </StackPanel>
             <StackPanel Orientation="Horizontal"
-                        Grid.Column="2"
+                        Grid.Column="3"
                         Margin="2">
                 <TextBlock Text="Zoom: " />
                 <TextBlock Text="{Binding Scale, ElementName=source}"
                            HorizontalAlignment="Left"></TextBlock>
             </StackPanel>
             <StackPanel Orientation="Horizontal"
-                        Grid.Column="3"
+                        Grid.Column="4"
                         Margin="2">
                 <TextBlock Text="Bounding Box: " />
                 <TextBlock Text="{Binding ElementName=source, Path=ViewportRect.Location, StringFormat= '\{0\} (left, top)'}"></TextBlock>
@@ -283,7 +303,8 @@
                                      MinScale="{Binding MinScale, Converter={StaticResource StringToFloatConverter},ConverterParameter=double}"
                                      MaxScale="{Binding MaxScale, Converter={StaticResource StringToFloatConverter},ConverterParameter=double}"
                                      AutoPanSpeed="{Binding AutoPanSpeed, Converter={StaticResource StringToFloatConverter}}"
-                                     AutoPanTickRate="{Binding AutoPanTickRate, Converter={StaticResource StringToFloatConverter}}">
+                                     AutoPanTickRate="{Binding AutoPanTickRate, Converter={StaticResource StringToFloatConverter}}"
+                                     TranslateOffset="{Binding TranslateOffset, Mode=TwoWay}">
 
             <richCanvas:RichItemsControl.ContextMenu>
                 <ContextMenu>
@@ -293,6 +314,8 @@
                               Command="{Binding AddTextCommand}" />
                     <MenuItem Header="Paste"
                               Command="{Binding PasteCommand}" />
+                    <MenuItem Header="Add View Preset"
+                              Command="{Binding AddViewPresetCommand}" />
                 </ContextMenu>
             </richCanvas:RichItemsControl.ContextMenu>
 
