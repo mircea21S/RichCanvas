@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xaml.Behaviors;
 using RichCanvas;
-using RichCanvasDemo.ViewModels.Base;
-using RichCanvasDemo.ViewModels.Connections;
+using System.Collections.Generic;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
 
@@ -9,21 +9,22 @@ namespace RichCanvasDemo.Helpers
 {
     public class EventToCommand : Behavior<RichItemContainer>
     {
-        private static RoutedEvent _registeredEvent;
-        private static ICommand _command;
+        private static List<RoutedEventHandler> _eventHandlers = new List<RoutedEventHandler>();
+        private static readonly List<EventInfo> _events = new List<EventInfo>();
+        private static List<ICommand> _commands;
 
-        public static readonly DependencyProperty EventProperty = DependencyProperty.RegisterAttached("Event", typeof(RoutedEvent), typeof(EventToCommand),
+        public static readonly DependencyProperty EventProperty = DependencyProperty.RegisterAttached("Event", typeof(string), typeof(EventToCommand),
            new FrameworkPropertyMetadata(null, OnEventChanged));
 
-        public static void SetEvent(UIElement element, RoutedEvent value) => element.SetValue(EventProperty, value);
-        public static RoutedEvent GetEvent(UIElement element) => (RoutedEvent)element.GetValue(EventProperty);
+        public static void SetEvent(UIElement element, string value) => element.SetValue(EventProperty, value);
+        public static string GetEvent(UIElement element) => (string)element.GetValue(EventProperty);
 
 
-        public static readonly DependencyProperty CommandProperty = DependencyProperty.RegisterAttached("Command", typeof(ICommand), typeof(EventToCommand),
+        public static readonly DependencyProperty CommandProperty = DependencyProperty.RegisterAttached("Command", typeof(List<ICommand>), typeof(EventToCommand),
            new FrameworkPropertyMetadata(null, OnCommandChanged));
 
-        public static void SetCommand(UIElement element, ICommand value) => element.SetValue(CommandProperty, value);
-        public static ICommand GetCommand(UIElement element) => (ICommand)element.GetValue(CommandProperty);
+        public static void SetCommand(UIElement element, List<ICommand> value) => element.SetValue(CommandProperty, value);
+        public static List<ICommand> GetCommand(UIElement element) => (List<ICommand>)element.GetValue(CommandProperty);
 
         public static readonly DependencyProperty CanExecuteProperty = DependencyProperty.RegisterAttached("CanExecute", typeof(bool), typeof(EventToCommand),
           new FrameworkPropertyMetadata(false, OnCanExecuteChanged));
@@ -35,38 +36,51 @@ namespace RichCanvasDemo.Helpers
         {
             if ((bool)e.NewValue)
             {
-                SubscribeToEvent((RichItemContainer)d, _command);
+                _commands = GetCommand((RichItemContainer)d);
+                _eventHandlers.Clear();
+                foreach (ICommand command in _commands)
+                {
+                    _eventHandlers.Add((s, e) =>
+                    {
+                        command?.Execute(e.OriginalSource);
+                    });
+                }
+                for (int i = 0; i < _events.Count; i++)
+                {
+                    _events[i].AddEventHandler(d, _eventHandlers[i]);
+                }
+
             }
             else
             {
-                //((RichItemContainer)d).RemoveHandler(_registeredEvent, HandleEvent(_command));
-                ((RichItemContainer)d).LeftChanged -= Container_LeftChanged;
+                for (int i = 0; i < _events.Count; i++)
+                {
+                    _events[i].RemoveEventHandler(d, _eventHandlers[i]);
+                }
             }
         }
-        private static void SubscribeToEvent(RichItemContainer container, ICommand command)
-        {
-            container.LeftChanged += Container_LeftChanged;
-            var context = (Drawable)container.DataContext;
-            //container.AddHandler(_registeredEvent, HandleEvent(command));
-        }
 
-        private static void Container_LeftChanged(object sender, RoutedEventArgs e)
+        private static void OnEventChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var delta = (double)e.OriginalSource;
-            _command.Execute(delta);
-        }
-
-        private static RoutedEventHandler HandleEvent(ICommand command)
-        {
-            return (sender, x) =>
+            _events.Clear();
+            var container = (RichItemContainer)d;
+            foreach (string ev in ((string)e.NewValue).Split(","))
             {
-                var delta = (double)x.OriginalSource;
-                command.Execute(delta);
-            };
+                EventInfo x = container.GetType().GetEvent(ev.Trim());
+                _events.Add(x);
+            }
         }
-
-        private static void OnEventChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => _registeredEvent = (RoutedEvent)e.NewValue;
-        private static void OnCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => _command = (ICommand)e.NewValue;
+        private static void OnCommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            _commands = (List<ICommand>)e.NewValue;
+            foreach (ICommand command in _commands)
+            {
+                _eventHandlers.Add((s, e) =>
+                {
+                    command?.Execute(e.OriginalSource);
+                });
+            }
+        }
 
     }
 }

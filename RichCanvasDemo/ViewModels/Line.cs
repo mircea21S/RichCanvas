@@ -3,8 +3,6 @@ using RichCanvasDemo.ViewModels.Connections;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Linq;
 
 namespace RichCanvasDemo.ViewModels
 {
@@ -35,65 +33,56 @@ namespace RichCanvasDemo.ViewModels
         public Line()
         {
             _connections = new ObservableCollection<Drawable>();
-            _connections.CollectionChanged += ConnectionsChanged;
         }
 
-        private void ConnectionsChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                //connect before and after line
-            }
-        }
         protected override void OnLeftChanged(double delta)
         {
             Move(delta);
         }
+        protected override void OnTopChanged(double delta)
+        {
+            Move(0, delta);
+        }
 
         public override void OnDrawingEnded(Action<object> callback = default)
         {
-            Line line;
-            if (DirectionPoint.X < 1 && DirectionPoint.Y >= 1)
-            {
-                line = new Line { Top = Top + Height, Left = Left };
-            }
-            else if (DirectionPoint.X < 1 && DirectionPoint.Y < 1)
-            {
-                line = new Line { Top = Top, Left = Left };
-            }
-            else if (DirectionPoint.X >= 1 && DirectionPoint.Y < 1)
-            {
-                line = new Line { Top = Top, Left = Left + Width };
-            }
-            else
-            {
-                line = new Line { Top = Top + Height, Left = Left + Width };
-            }
-
+            Line createdLine = Scale.X < 1 && Scale.Y >= 1
+                ? new Line { Top = Top + Height, Left = Left }
+                : Scale.X < 1 && Scale.Y < 1
+                    ? new Line { Top = Top, Left = Left }
+                    : Scale.X >= 1 && Scale.Y < 1
+                                    ? new Line { Top = Top, Left = Left + Width }
+                                    : new Line { Top = Top + Height, Left = Left + Width };
             if (Parent == null)
             {
-                line.Parent = this;
-                Connections.Add(line);
+                createdLine.Parent = this;
+                Connections.Add(createdLine);
             }
             else
             {
-                line.Parent = Parent;
-                ((IConnectable)Parent).Connections.Add(line);
+                createdLine.Parent = Parent;
+                ((IConnectable)Parent).Connections.Add(createdLine);
             }
 
-            callback(line);
+            callback(createdLine);
         }
 
         public void Move(double offsetX = 0, double offsetY = 0)
         {
             if (Parent != null)
             {
+                if (!Parent.IsSelected)
+                {
+                    Parent.Left -= offsetX;
+                    Parent.Top -= offsetY;
+                }
                 foreach (Drawable connection in ((IConnectable)Parent).Connections)
                 {
                     //if it's selected is already moving
                     if (!connection.IsSelected)
                     {
                         connection.Left -= offsetX;
+                        connection.Top -= offsetY;
                     }
                 }
             }
@@ -105,6 +94,7 @@ namespace RichCanvasDemo.ViewModels
                     if (!connection.IsSelected)
                     {
                         connection.Left -= offsetX;
+                        connection.Top -= offsetY;
                     }
                 }
             }

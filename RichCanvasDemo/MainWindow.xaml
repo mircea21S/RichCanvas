@@ -29,6 +29,7 @@
     <Window.Resources>
         <local:PointToStringConverter x:Key="PointToStringConverter" />
         <converters:StringToFloatConverter x:Key="StringToFloatConverter" />
+        <converters:CommandToListConverter x:Key="CommandsToListConverter" />
         <GeometryDrawing x:Key="GridStyle"
                          Geometry="M0,0 L0,1 0.03,1 0.03,0.03 1,0.03 1,0 Z"
                          Brush="Green" />
@@ -175,12 +176,11 @@
                         Command="{Binding GenerateElements}" />
             </StackPanel>
             <StackPanel Grid.Row="8">
-                <ComboBox
-                    ItemsSource="{Binding ViewPresetItems}"
-                    SelectedItem="{Binding SelectedViewPreset}"
-                    DisplayMemberPath="Name"
-                    md:HintAssist.Hint="View Preset"
-                    md:HintAssist.IsFloating="True">
+                <ComboBox ItemsSource="{Binding ViewPresetItems}"
+                          SelectedItem="{Binding SelectedViewPreset}"
+                          DisplayMemberPath="Name"
+                          md:HintAssist.Hint="View Preset"
+                          md:HintAssist.IsFloating="True">
                 </ComboBox>
             </StackPanel>
         </Grid>
@@ -199,40 +199,40 @@
                 </Grid.RowDefinitions>
 
                 <Button Content="Draw Line"
-                            Command="{Binding DrawLineCommand}"
-                            Width="120"
-                            Height="30"
-                            HorizontalAlignment="Right" />
+                        Command="{Binding DrawLineCommand}"
+                        Width="120"
+                        Height="30"
+                        HorizontalAlignment="Right" />
 
                 <Button Content="Draw Rect"
-                            Command="{Binding DrawRectCommand}"
-                            Width="120"
-                            Height="30"
-                            HorizontalAlignment="Right"
-                            Grid.Row="1" />
+                        Command="{Binding DrawRectCommand}"
+                        Width="120"
+                        Height="30"
+                        HorizontalAlignment="Right"
+                        Grid.Row="1" />
 
                 <Button Content="Resize"
-                            Command="{Binding ResizeCommand}"
-                            MinWidth="120"
-                            Height="30"
-                            HorizontalAlignment="Right"
-                            Grid.Row="2" />
+                        Command="{Binding ResizeCommand}"
+                        MinWidth="120"
+                        Height="30"
+                        HorizontalAlignment="Right"
+                        Grid.Row="2" />
 
                 <Button Content="Draw Bezier"
-                            Command="{Binding DrawBezierCommand}"
-                            Width="120"
-                            Height="30"
-                            HorizontalAlignment="Right"
-                            Grid.Row="3" />
+                        Command="{Binding DrawBezierCommand}"
+                        Width="120"
+                        Height="30"
+                        HorizontalAlignment="Right"
+                        Grid.Row="3" />
 
                 <Button Content="Delete"
-                            Command="{Binding DeleteCommand}"
-                            Width="120"
-                            Height="30"
-                            HorizontalAlignment="Right"
-                            Grid.Row="4" />
+                        Command="{Binding DeleteCommand}"
+                        Width="120"
+                        Height="30"
+                        HorizontalAlignment="Right"
+                        Grid.Row="4" />
                 <StackPanel Grid.Row="5"
-                        Visibility="{Binding ShowProperties, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            Visibility="{Binding ShowProperties, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <views:PropertiesInfo DataContext="{Binding SelectedItem}" />
                 </StackPanel>
             </Grid>
@@ -396,11 +396,19 @@
                 <Style TargetType="richCanvas:RichItemContainer">
 
                     <Setter Property="helpers:EventToCommand.Event"
-                            Value="LeftChanged" />
-                    <Setter Property="helpers:EventToCommand.Command"
-                            Value="{Binding LeftChangedCommand}" />
+                            Value="LeftChanged, TopChanged" />
+                    <Setter Property="helpers:EventToCommand.Command">
+                        <Setter.Value>
+                            <MultiBinding Converter="{StaticResource CommandsToListConverter}">
+                                <Binding Path="LeftChangedCommand" />
+                                <Binding Path="TopChangedCommand" />
+                            </MultiBinding>
+                        </Setter.Value>
+                    </Setter>
+
                     <Setter Property="helpers:EventToCommand.CanExecute"
                             Value="{Binding IsSelected}" />
+
 
                     <Setter Property="Tag"
                             Value="{Binding DataContext, ElementName=window}" />
@@ -437,7 +445,7 @@
                             Value="{Binding ShouldBringIntoView, Mode=TwoWay}" />
 
                     <Setter Property="Scale"
-                            Value="{Binding DirectionPoint, Mode=TwoWay}" />
+                            Value="{Binding Scale, Mode=TwoWay}" />
 
                     <Setter Property="ContextMenu">
                         <Setter.Value>

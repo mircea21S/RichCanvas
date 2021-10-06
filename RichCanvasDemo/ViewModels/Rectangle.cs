@@ -1,12 +1,11 @@
 ﻿using RichCanvasDemo.ViewModels.Base;
+using System;
+using System.Text.Json;
 
 namespace RichCanvasDemo.ViewModels
 {
-    public class Rectangle : Drawable
+    public class Rectangle : Drawable, ICloneable
     {
-        public override Drawable Clone()
-        {
-            return Clone<Rectangle>();
-        }
+        public object Clone() => JsonSerializer.Deserialize<Rectangle>(JsonSerializer.Serialize(this));
     }
 }

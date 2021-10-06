@@ -3,7 +3,6 @@ using RichCanvasDemo.CustomControls;
 using RichCanvasDemo.Services;
 using RichCanvasDemo.ViewModels;
 using RichCanvasDemo.ViewModels.Base;
-using RichCanvasDemo.ViewModels.Connections;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -181,7 +180,10 @@ namespace RichCanvasDemo
 
         private void Copy(Drawable element)
         {
-            _copiedElement = element.Clone();
+            if (element is ICloneable cloneableElement)
+            {
+                _copiedElement = (Drawable)cloneableElement.Clone();
+            }
             PasteCommand.RaiseCanExecuteChanged();
         }
 
@@ -189,14 +191,7 @@ namespace RichCanvasDemo
         {
             if (e.Action == NotifyCollectionChangedAction.Add)
             {
-                if (SelectedItems.Count == 1)
-                {
-                    SelectedItem = SelectedItems[0];
-                }
-                else
-                {
-                    SelectedItem = null;
-                }
+                SelectedItem = SelectedItems.Count == 1 ? SelectedItems[0] : null;
             }
             else if (e.Action == NotifyCollectionChangedAction.Reset)
             {
@@ -224,7 +219,7 @@ namespace RichCanvasDemo
                 int elementsCount = int.Parse(ElementsCount);
                 for (int i = 1; i < elementsCount; i++)
                 {
-                    Random rnd = new Random();
+                    var rnd = new Random();
                     double left = rnd.Next(-5000, 5000);
                     double top = rnd.Next(-5000, 5000);
                     Drawable item = null;
@@ -261,25 +256,13 @@ namespace RichCanvasDemo
             }
         }
 
-        private void Delete()
-        {
-            Items.Remove(SelectedItem);
-        }
+        private void Delete() => Items.Remove(SelectedItem);
 
-        private void OnDrawCommand()
-        {
-            Items.Add(new Rectangle());
-        }
+        private void OnDrawCommand() => Items.Add(new Rectangle());
 
-        private void DrawLine()
-        {
-            Items.Add(new Line());
-        }
+        private void DrawLine() => Items.Add(new Line());
 
-        private void Resize()
-        {
-            SelectedItem.Height += 20;
-        }
+        private void Resize() => SelectedItem.Height += 20;
 
         private void DrawEnded(RoutedEventArgs args)
         {
