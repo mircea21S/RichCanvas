@@ -17,18 +17,13 @@
 Infinite canvas with panning, zooming, scrolling and other customizable functions, designed for MVVM.
 </Description>
     <PackageReleaseNotes>Bugs:
-- Top and Left binding not overwritten anymore.
-- Measure called when properties update(specific case when adorner used for resizing, dragging was detected)
-
+-When IsSelected is binded base selector SelectedItems list wasn't updated.
 New features:
-- Scale DependencyProperty to get and set the current ScaleTransform of the container
-- ApplyTransform AttachedProperty to apply child transforms on container directly and to overwrite the default RenderTransform
-
-Documentation updated on https://github.com/mircea21S/RichCanvas/wiki please read it to check up on the new changes.
+-Added TopChanged and LeftChanged RoutedEvents on RichItemContainer.
 </PackageReleaseNotes>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
-    <Version>1.2.0</Version>
+    <Version>1.3.0</Version>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageIcon>logoRichCanvas.png</PackageIcon>
     <PackageIconUrl />
