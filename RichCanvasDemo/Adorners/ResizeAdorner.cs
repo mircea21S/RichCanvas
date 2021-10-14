@@ -121,44 +121,43 @@ namespace RichCanvasDemo.Adorners
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            var container = (RichItemContainer)AdornedElement;
             //arrange thumbs according to Transforms
-            if (container.Scale.X < 1 && container.Scale.Y < 1)
+            if (ItemContainer.Scale.X < 1 && ItemContainer.Scale.Y < 1)
             {
-                _topLeftThumb.Arrange(new Rect(container.Width - 10, container.Height - 10, 10, 10));
+                _topLeftThumb.Arrange(new Rect(ItemContainer.Width - 10, ItemContainer.Height - 10, 10, 10));
                 _bottomRightThumb.Arrange(new Rect(0, 0, 10, 10));
-                _topRightThumb?.Arrange(new Rect(0, container.Height - 10, 10, 10));
-                _bottomLeftThumb?.Arrange(new Rect(container.Width - 10, 0, 10, 10));
+                _topRightThumb?.Arrange(new Rect(0, ItemContainer.Height - 10, 10, 10));
+                _bottomLeftThumb?.Arrange(new Rect(ItemContainer.Width - 10, 0, 10, 10));
             }
-            else if (container.Scale.X < 1)
+            else if (ItemContainer.Scale.X < 1)
             {
-                _bottomRightThumb.Arrange(new Rect(0, container.Height - 10, 10, 10));
+                _bottomRightThumb.Arrange(new Rect(0, ItemContainer.Height - 10, 10, 10));
                 _topRightThumb?.Arrange(new Rect(0, 0, 10, 10));
-                _topLeftThumb.Arrange(new Rect(container.Width - 10, 0, 10, 10));
-                _bottomLeftThumb?.Arrange(new Rect(container.Width - 10, container.Height - 10, 10, 10));
+                _topLeftThumb.Arrange(new Rect(ItemContainer.Width - 10, 0, 10, 10));
+                _bottomLeftThumb?.Arrange(new Rect(ItemContainer.Width - 10, ItemContainer.Height - 10, 10, 10));
             }
-            else if (container.Scale.Y < 1)
+            else if (ItemContainer.Scale.Y < 1)
             {
-                _topLeftThumb.Arrange(new Rect(0, container.Height - 10, 10, 10));
+                _topLeftThumb.Arrange(new Rect(0, ItemContainer.Height - 10, 10, 10));
                 _bottomLeftThumb?.Arrange(new Rect(0, 0, 10, 10));
-                _topRightThumb?.Arrange(new Rect(container.Width - 10, container.Height - 10, 10, 10));
-                _bottomRightThumb.Arrange(new Rect(container.Width - 10, 0, 10, 10));
+                _topRightThumb?.Arrange(new Rect(ItemContainer.Width - 10, ItemContainer.Height - 10, 10, 10));
+                _bottomRightThumb.Arrange(new Rect(ItemContainer.Width - 10, 0, 10, 10));
             }
             else
             {
                 _topLeftThumb.Arrange(new Rect(0, 0, 10, 10));
-                _topRightThumb?.Arrange(new Rect(container.Width - 10, 0, 10, 10));
-                _bottomLeftThumb?.Arrange(new Rect(0, container.Height - 10, 10, 10));
-                _bottomRightThumb.Arrange(new Rect(container.Width - 10, container.Height - 10, 10, 10));
+                _topRightThumb?.Arrange(new Rect(ItemContainer.Width - 10, 0, 10, 10));
+                _bottomLeftThumb?.Arrange(new Rect(0, ItemContainer.Height - 10, 10, 10));
+                _bottomRightThumb.Arrange(new Rect(ItemContainer.Width - 10, ItemContainer.Height - 10, 10, 10));
             }
             //Arrange by scale
-            if (container.Scale.Y < 1)
+            if (ItemContainer.Scale.Y < 1)
             {
-                Container.Arrange(new Rect(new Point((container.Width / 2) - 30, -20), new Size(60, 20)));
+                Container.Arrange(new Rect(new Point((ItemContainer.Width / 2) - 30, -20), new Size(60, 20)));
             }
             else
             {
-                Container.Arrange(new Rect(new Point((container.Width / 2) - 30, container.Height), new Size(60, 20)));
+                Container.Arrange(new Rect(new Point((ItemContainer.Width / 2) - 30, ItemContainer.Height), new Size(60, 20)));
             }
             return finalSize;
         }
@@ -170,17 +169,15 @@ namespace RichCanvasDemo.Adorners
 
         public override GeneralTransform GetDesiredTransform(GeneralTransform transform)
         {
-            var container = (RichItemContainer)AdornedElement;
-
             //invert scale on thumbs to get correct HorizontalChange and VerticalChange
             foreach (Thumb thumb in _visualCollection.OfType<Thumb>())
             {
                 thumb.RenderTransform
-                    = new ScaleTransform(1 / container.Scale.X / container.Host.Scale, 1 / container.Scale.Y / container.Host.Scale);
+                    = new ScaleTransform(1 / ItemContainer.Scale.X / ItemContainer.Host.Scale, 1 / ItemContainer.Scale.Y / ItemContainer.Host.Scale);
                 thumb.RenderTransformOrigin = new Point(0.5, 0.5);
             }
             //invert scale on ContentPresenter to display correctly
-            Container.RenderTransform = new ScaleTransform(1 / container.Scale.X / container.Host.Scale, 1 / container.Scale.Y / container.Host.Scale);
+            Container.RenderTransform = new ScaleTransform(1 / ItemContainer.Scale.X / ItemContainer.Host.Scale, 1 / ItemContainer.Scale.Y / ItemContainer.Host.Scale);
             Container.RenderTransformOrigin = new Point(0.5, 0.5);
 
             return base.GetDesiredTransform(transform);

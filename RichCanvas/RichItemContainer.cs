@@ -81,7 +81,7 @@ namespace RichCanvas
             set => SetValue(ShouldBringIntoViewProperty, value);
         }
 
-        public static DependencyProperty ScaleProperty = DependencyProperty.Register(nameof(Scale), typeof(Point), typeof(RichItemContainer), new FrameworkPropertyMetadata(default(Point), OnScaleChanged));
+        public static DependencyProperty ScaleProperty = DependencyProperty.Register(nameof(Scale), typeof(Point), typeof(RichItemContainer), new FrameworkPropertyMetadata(new Point(1, 1), OnScaleChanged));
         /// <summary>
         /// Gets this <see cref="RichItemContainer"/> ScaleTransform in order to get direction.
         /// </summary>

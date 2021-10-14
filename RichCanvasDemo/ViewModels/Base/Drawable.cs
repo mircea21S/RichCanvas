@@ -95,6 +95,7 @@ namespace RichCanvasDemo.ViewModels.Base
         public Drawable()
         {
             VisualProperties = new VisualProperties();
+            Scale = new Point(1, 1);
         }
         protected virtual void OnLeftChanged(double delta) { }
 

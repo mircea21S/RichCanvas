@@ -54,16 +54,8 @@ namespace RichCanvasDemo.Helpers
             var value = (bool)e.NewValue;
             if (value)
             {
-                AdornerLayer layer = AdornerLayer.GetAdornerLayer(element);
-                ResizeAdorner adorner;
-                if (element.DataContext is ViewModels.Line)
-                {
-                    adorner = new ResizeLineAdorner(element);
-                }
-                else
-                {
-                    adorner = new ResizeAdorner(element);
-                }
+                var layer = AdornerLayer.GetAdornerLayer(element);
+                ResizeAdorner adorner = element.DataContext is ViewModels.Line ? new ResizeLineAdorner(element) : new ResizeAdorner(element);
                 adorner.Container.Content = element;
                 adorner.Container.ContentTemplate = (DataTemplate)element.FindResource("SelectedAdornerTemplate");
                 layer.Add(adorner);
@@ -71,10 +63,10 @@ namespace RichCanvasDemo.Helpers
             }
             else
             {
-                AdornerLayer layer = AdornerLayer.GetAdornerLayer(element);
+                var layer = AdornerLayer.GetAdornerLayer(element);
                 if (layer != null)
                 {
-                    foreach (var adorner in _resizeAdorner)
+                    foreach (ResizeAdorner adorner in _resizeAdorner)
                     {
                         layer.Remove(adorner);
                     }
