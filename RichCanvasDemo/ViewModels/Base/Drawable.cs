@@ -19,17 +19,27 @@ namespace RichCanvasDemo.ViewModels.Base
         private Point _directionPoint;
         private RelayCommand<double> leftChangedCommand;
         private RelayCommand<double> topChangedCommand;
+        private double _angle = 0;
+        private bool _hasCustomBehavior;
+
+        public double Angle
+        {
+            get => _angle;
+            set => SetProperty(ref _angle, value);
+        }
 
         public double Top
         {
             get => _top;
             set => SetProperty(ref _top, value);
         }
+
         public double Left
         {
             get => _left;
             set => SetProperty(ref _left, value);
         }
+
         public bool IsSelected
         {
             get => _isSelected;
@@ -49,6 +59,7 @@ namespace RichCanvasDemo.ViewModels.Base
                 OnWidthUpdated();
             }
         }
+
         public double Height
         {
             get => _height;
@@ -76,6 +87,13 @@ namespace RichCanvasDemo.ViewModels.Base
             get => _isDraggable;
             set => SetProperty(ref _isDraggable, value);
         }
+
+        public bool HasCustomBehavior
+        {
+            get => _hasCustomBehavior;
+            set => SetProperty(ref _hasCustomBehavior, value);
+        }
+
         public bool ShouldBringIntoView
         {
             get => _shouldBringIntoView;
@@ -89,8 +107,8 @@ namespace RichCanvasDemo.ViewModels.Base
         }
 
         public ICommand LeftChangedCommand => leftChangedCommand ??= new RelayCommand<double>(OnLeftChanged);
-        public ICommand TopChangedCommand => topChangedCommand ??= new RelayCommand<double>(OnTopChanged);
 
+        public ICommand TopChangedCommand => topChangedCommand ??= new RelayCommand<double>(OnTopChanged);
 
         public Drawable()
         {

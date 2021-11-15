@@ -1,5 +1,4 @@
 ﻿using RichCanvas.Helpers;
-using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -71,6 +70,18 @@ namespace RichCanvas
             set => SetValue(IsDraggableProperty, value);
         }
 
+
+        public static DependencyProperty HasCustomBehaviorProperty = DependencyProperty.Register(nameof(HasCustomBehavior), typeof(bool), typeof(RichItemContainer), new FrameworkPropertyMetadata(false));
+        /// <summary>
+        /// Gets or sets whether this <see cref="RichItemContainer"/> can be dragged on <see cref="RichItemsControl.ItemsHost"/>
+        /// True by default
+        /// </summary>
+        public bool HasCustomBehavior
+        {
+            get => (bool)GetValue(HasCustomBehaviorProperty);
+            set => SetValue(HasCustomBehaviorProperty, value);
+        }
+
         public static DependencyProperty ShouldBringIntoViewProperty = DependencyProperty.Register(nameof(ShouldBringIntoView), typeof(bool), typeof(RichItemContainer), new FrameworkPropertyMetadata(false, OnBringIntoViewChanged));
         /// <summary>
         /// Gets or sets whether this <see cref="RichItemContainer"/> should be centered inside <see cref="RichItemsControl.ScrollContainer"/> viewport
@@ -130,6 +141,16 @@ namespace RichCanvas
         /// </summary>
         public RichItemsControl Host => _host ??= ItemsControl.ItemsControlFromItemContainer(this) as RichItemsControl;
 
+        /// <summary>
+        /// The Top position based on current <see cref="Scale"/>
+        /// </summary>
+        public double TransformedTop => ScaleTransform.ScaleY < 0 ? Top - Height : Top;
+
+        /// <summary>
+        /// The Left position based on current <see cref="Scale"/>
+        /// </summary>
+        public double TransformedLeft => ScaleTransform.ScaleX < 0 ? Left - Width : Left;
+
         internal bool IsDrawn { get; set; }
 
         internal bool TopPropertySet { get; private set; }
@@ -138,6 +159,7 @@ namespace RichCanvas
 
         protected override void OnMouseEnter(MouseEventArgs e)
         {
+            Host.HasCustomBehavior = HasCustomBehavior;
             if (IsDraggable)
             {
                 DragBehavior.SetIsDragging((RichItemContainer)e.OriginalSource, true);
@@ -146,6 +168,7 @@ namespace RichCanvas
 
         protected override void OnMouseLeave(MouseEventArgs e)
         {
+            Host.HasCustomBehavior = false;
             if (IsDraggable)
             {
                 DragBehavior.SetIsDragging((RichItemContainer)e.OriginalSource, false);
@@ -181,12 +204,12 @@ namespace RichCanvas
 
         private void UpdatePosition(DependencyProperty prop, double delta)
         {
-            if (prop.Name is "Top")
+            if (prop.Name is nameof(Top))
             {
                 TopPropertySet = true;
                 RaiseEvent(new RoutedEventArgs(TopChangedEvent, delta));
             }
-            if (prop.Name is "Left")
+            if (prop.Name is nameof(Left))
             {
                 LeftPropertySet = true;
                 RaiseEvent(new RoutedEventArgs(LeftChangedEvent, delta));

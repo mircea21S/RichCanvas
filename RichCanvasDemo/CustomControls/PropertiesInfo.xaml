@@ -86,11 +86,17 @@
 
         </StackPanel>
 
-        <StackPanel Grid.Row="4">
+        <StackPanel Grid.Row="4"
+                    Orientation="Horizontal">
             <CheckBox MinHeight="30"
                       MinWidth="100"
                       Content="Bring into view"
                       IsChecked="{Binding ShouldBringIntoView, Mode=TwoWay}" />
+            <TextBox MinHeight="30"
+                     MinWidth="100"
+                     md:HintAssist.Hint="Angle"
+                     md:HintAssist.IsFloating="True"
+                     Text="{Binding Angle, Mode=TwoWay}" />
         </StackPanel>
     </Grid>
 </UserControl>

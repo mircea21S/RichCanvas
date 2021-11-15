@@ -5,41 +5,17 @@ using System.Windows.Media;
 
 namespace RichCanvas.Helpers
 {
-    internal static class VisualHelper
+    /// <summary>
+    /// Helper wrapper on <see cref="VisualTreeHelper"/>
+    /// </summary>
+    public static class VisualHelper
     {
-        internal static bool HasAdornerThumbParent(DependencyObject reference)
-        {
-            if (!(reference is Thumb))
-            {
-                if (reference != null)
-                {
-                    var parent = VisualTreeHelper.GetParent(reference);
-                    if (parent is ScrollViewer)
-                    {
-                        return false;
-                    }
-                    return HasAdornerThumbParent(parent);
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return true;
-            }
-        }
-        internal static RichItemContainer GetNeedLineBoundingBoxContainer(DependencyObject d)
-        {
-            var parent = VisualTreeHelper.GetParent(d);
-            while (!(parent is RichItemContainer))
-            {
-                parent = VisualTreeHelper.GetParent(parent);
-            }
-            return (RichItemContainer)parent;
-        }
-        internal static RichItemContainer GetParentContainer(DependencyObject d)
+        /// <summary>
+        /// Gets <see cref="RichItemContainer"/> parent of <paramref name="d"/>
+        /// </summary>
+        /// <param name="d"></param>
+        /// <returns></returns>
+        public static RichItemContainer GetParentContainer(DependencyObject d)
         {
             if (d is RichItemContainer container)
             {
@@ -52,7 +28,13 @@ namespace RichCanvas.Helpers
             }
             return (RichItemContainer)parent;
         }
-        internal static bool HasScrollBarParent(DependencyObject reference)
+
+        /// <summary>
+        /// Checks whether <paramref name="reference"/> has <see cref="ScrollBar"/> parent
+        /// </summary>
+        /// <param name="reference"></param>
+        /// <returns></returns>
+        public static bool HasScrollBarParent(DependencyObject reference)
         {
             if (!(reference is ScrollBar))
             {

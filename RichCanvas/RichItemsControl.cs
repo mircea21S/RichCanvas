@@ -388,7 +388,7 @@ namespace RichCanvas
         internal bool IsDrawing => _isDrawing;
         internal bool NeedMeasure { get; set; }
         internal RichItemContainer CurrentDrawingItem => _drawingGesture.CurrentItem;
-
+        internal bool HasCustomBehavior { get; set; }
         #endregion
 
         #region Constructors
@@ -436,6 +436,30 @@ namespace RichCanvas
                 new GeometryHitTestParameters(geom));
 
             EndUpdateSelectedItems();
+        }
+
+        /// <summary>
+        /// Returns the elements that intersect with <paramref name="area"/>
+        /// </summary>
+        /// <param name="area"></param>
+        /// <returns></returns>
+        public List<object> GetElementsInArea(Rect area)
+        {
+            var intersectedElements = new List<object>();
+            var rectangleGeometry = new RectangleGeometry(area);
+            VisualTreeHelper.HitTest(_mainPanel, null,
+                new HitTestResultCallback((HitTestResult result) =>
+                {
+                    var geometryHitTestResult = (GeometryHitTestResult)result;
+                    if (geometryHitTestResult.IntersectionDetail != IntersectionDetail.Empty)
+                    {
+                        var container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
+                        intersectedElements.Add(container.DataContext);
+                    }
+                    return HitTestResultBehavior.Continue;
+                }),
+                new GeometryHitTestParameters(rectangleGeometry));
+            return intersectedElements;
         }
 
         #endregion
@@ -511,7 +535,7 @@ namespace RichCanvas
                         }
                     }
 
-                    if (!_isDrawing && !DragBehavior.IsDragging && !IsPanning)
+                    if (!_isDrawing && !DragBehavior.IsDragging && !IsPanning && !HasCustomBehavior)
                     {
                         IsSelecting = true;
                         _selectingGesture.OnMouseDown(position);

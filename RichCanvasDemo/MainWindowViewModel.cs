@@ -52,6 +52,7 @@ namespace RichCanvasDemo
         private readonly DialogService _dialogService;
         private RelayCommand cancelActionCommand;
         private RelayCommand addViewPresetCommand;
+        private RelayCommand drawGroupCommand;
 
         public ICommand DrawEndedCommand => drawEndedCommand ??= new RelayCommand<RoutedEventArgs>(DrawEnded);
         public ObservableCollection<Drawable> Items { get; }
@@ -63,6 +64,9 @@ namespace RichCanvasDemo
         public ICommand ResizeCommand => resizeCommand ??= new RelayCommand(Resize);
         public ICommand DeleteCommand => deleteCommand ??= new RelayCommand(Delete);
         public ICommand DrawBezierCommand => drawBezierCommand ??= new RelayCommand(OnDrawBezier);
+        public ICommand DrawGroupCommand => drawGroupCommand ??= new RelayCommand(OnDrawGroup);
+
+
         public ICommand AddTextCommand => addTextCommand ??= new RelayCommand(AddText);
         public ICommand AddImageCommand => addImageCommand ??= new RelayCommand(AddImage);
         public ICommand CopyCommand => copyCommand ??= new RelayCommand<Drawable>(Copy);
@@ -202,6 +206,8 @@ namespace RichCanvasDemo
             }
             ShowProperties = SelectedItem != null;
         }
+
+        private void OnDrawGroup() => Items.Add(new Group());
 
         private void OnDrawBezier()
         {

@@ -11,6 +11,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:views="clr-namespace:RichCanvasDemo.CustomControls"
+        xmlns:behaviors="clr-namespace:RichCanvasDemo.Helpers.Behaviors"
         mc:Ignorable="d"
         x:Name="window"
         Title="MainWindow"
@@ -195,6 +196,7 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
@@ -225,13 +227,20 @@
                         HorizontalAlignment="Right"
                         Grid.Row="3" />
 
+                <Button Content="Draw Group"
+                        Command="{Binding DrawGroupCommand}"
+                        Width="120"
+                        Height="30"
+                        HorizontalAlignment="Right"
+                        Grid.Row="4" />
+
                 <Button Content="Delete"
                         Command="{Binding DeleteCommand}"
                         Width="120"
                         Height="30"
                         HorizontalAlignment="Right"
-                        Grid.Row="4" />
-                <StackPanel Grid.Row="5"
+                        Grid.Row="5" />
+                <StackPanel Grid.Row="6"
                             Visibility="{Binding ShowProperties, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <views:PropertiesInfo DataContext="{Binding SelectedItem}" />
                 </StackPanel>
@@ -304,7 +313,8 @@
                                      MaxScale="{Binding MaxScale, Converter={StaticResource StringToFloatConverter},ConverterParameter=double}"
                                      AutoPanSpeed="{Binding AutoPanSpeed, Converter={StaticResource StringToFloatConverter}}"
                                      AutoPanTickRate="{Binding AutoPanTickRate, Converter={StaticResource StringToFloatConverter}}"
-                                     TranslateOffset="{Binding TranslateOffset, Mode=TwoWay}">
+                                     TranslateOffset="{Binding TranslateOffset, Mode=TwoWay}"
+                                     RealTimeSelectionEnabled="True">
 
             <richCanvas:RichItemsControl.ContextMenu>
                 <ContextMenu>
@@ -359,21 +369,22 @@
                     <Rectangle Stroke="{Binding VisualProperties.BorderColor, Converter={StaticResource ColorToSolidBrushColorConverter}}"
                                Fill="{Binding VisualProperties.FillColor, Converter={StaticResource ColorToSolidBrushColorConverter}}"
                                StrokeThickness="3">
-                        <!--<Rectangle.Style>
+                        <Rectangle.Style>
                             <Style>
                                 <Setter Property="richCanvas:RichItemContainer.ApplyTransform">
                                     <Setter.Value>
                                         <TransformGroup>
                                             <ScaleTransform></ScaleTransform>
                                             <TranslateTransform></TranslateTransform>
-                                            <RotateTransform Angle="30"></RotateTransform>
+                                            <RotateTransform Angle="{Binding Angle}"></RotateTransform>
                                         </TransformGroup>
                                     </Setter.Value>
                                 </Setter>
                             </Style>
-                        </Rectangle.Style>-->
+                        </Rectangle.Style>
                     </Rectangle>
                 </DataTemplate>
+
                 <DataTemplate DataType="{x:Type vm:Line}">
                     <Line  Stroke="{Binding VisualProperties.BorderColor, Converter={StaticResource ColorToSolidBrushColorConverter}}"
                            StrokeThickness="3"
@@ -382,14 +393,26 @@
                            helpers:AttachedAdorner.HasLineHoverAdorner="True">
                     </Line>
                 </DataTemplate>
+
                 <DataTemplate DataType="{x:Type vm:ImageVisual}">
                     <Image Source="{Binding ImageSource}" />
                 </DataTemplate>
+
                 <DataTemplate DataType="{x:Type vm:TextVisual}">
                     <TextBlock Text="{Binding Text}"
                                TextAlignment="Center"
                                VerticalAlignment="Center" />
                 </DataTemplate>
+
+                <DataTemplate DataType="{x:Type vm:Group}">
+                    <Rectangle Stroke="Black"
+                               StrokeThickness="2">
+                        <i:Interaction.Behaviors>
+                            <behaviors:GroupBehavior />
+                        </i:Interaction.Behaviors>
+                    </Rectangle>
+                </DataTemplate>
+
             </richCanvas:RichItemsControl.Resources>
 
             <richCanvas:RichItemsControl.ItemContainerStyle>
@@ -441,6 +464,9 @@
                     <Setter Property="IsDraggable"
                             Value="{Binding IsDraggable}" />
 
+                    <Setter Property="HasCustomBehavior"
+                            Value="{Binding HasCustomBehavior}" />
+
                     <Setter Property="ShouldBringIntoView"
                             Value="{Binding ShouldBringIntoView, Mode=TwoWay}" />
 
@@ -451,8 +477,7 @@
                         <Setter.Value>
                             <ContextMenu DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
                                 <MenuItem Header="Copy"
-                                          Command="{Binding CopyCommand}"
-                                          CommandParameter="{Binding SelectedItems[0]}" />
+                                          Command="{Binding CopyCommand}" />
                             </ContextMenu>
                         </Setter.Value>
                     </Setter>

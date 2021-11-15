@@ -110,8 +110,9 @@ namespace RichCanvasDemo.Adorners
         protected virtual void TopLeftThumbDrag(object sender, DragDeltaEventArgs e)
         {
             var hitThumb = (Thumb)sender;
-            double x = e.HorizontalChange;
-            double y = e.VerticalChange;
+            var p = new Point(e.HorizontalChange, e.VerticalChange);
+            double x = p.X;
+            double y = p.Y;
 
             UpdateWidth(x, hitThumb.DesiredSize.Width);
             UpdateLeft(x, hitThumb.DesiredSize.Width);
@@ -169,15 +170,16 @@ namespace RichCanvasDemo.Adorners
 
         public override GeneralTransform GetDesiredTransform(GeneralTransform transform)
         {
-            //invert scale on thumbs to get correct HorizontalChange and VerticalChange
+            // invert scale to get correct HorizontalChange and VerticalChange
+            var invertedScale = new ScaleTransform(1 / ItemContainer.Scale.X / ItemContainer.Host.Scale, 1 / ItemContainer.Scale.Y / ItemContainer.Host.Scale);
+
             foreach (Thumb thumb in _visualCollection.OfType<Thumb>())
             {
-                thumb.RenderTransform
-                    = new ScaleTransform(1 / ItemContainer.Scale.X / ItemContainer.Host.Scale, 1 / ItemContainer.Scale.Y / ItemContainer.Host.Scale);
+                thumb.RenderTransform = invertedScale;
                 thumb.RenderTransformOrigin = new Point(0.5, 0.5);
             }
-            //invert scale on ContentPresenter to display correctly
-            Container.RenderTransform = new ScaleTransform(1 / ItemContainer.Scale.X / ItemContainer.Host.Scale, 1 / ItemContainer.Scale.Y / ItemContainer.Host.Scale);
+            // invert scale on ContentPresenter to display correctly
+            Container.RenderTransform = invertedScale;
             Container.RenderTransformOrigin = new Point(0.5, 0.5);
 
             return base.GetDesiredTransform(transform);
@@ -200,5 +202,6 @@ namespace RichCanvasDemo.Adorners
             _visualCollection.Add(thumb);
             return thumb;
         }
+
     }
 }
