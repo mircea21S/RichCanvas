@@ -45,5 +45,5 @@ MIT
 ## ❤ Contributing
 
 Feel free to help with documentation, bug reports, pull requests or new/missing features ideas.
-You can add me on discord https://discordapp.com/users/389443576054022155
+You can find me on discord https://discordapp.com/users/389443576054022155 or in the mail on the profile.
 
