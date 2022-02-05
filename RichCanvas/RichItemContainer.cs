@@ -8,6 +8,9 @@ using System.Windows.Media;
 
 namespace RichCanvas
 {
+    /// <summary>
+    /// <see cref="RichItemsControl"/> items container.
+    /// </summary>
     [TemplatePart(Name = ContentPresenterName, Type = typeof(ContentPresenter))]
     public class RichItemContainer : ContentControl
     {
@@ -73,7 +76,8 @@ namespace RichCanvas
 
         public static DependencyProperty HasCustomBehaviorProperty = DependencyProperty.Register(nameof(HasCustomBehavior), typeof(bool), typeof(RichItemContainer), new FrameworkPropertyMetadata(false));
         /// <summary>
-        /// Gets or sets whether this <see cref="RichItemContainer"/> can be dragged on <see cref="RichItemsControl.ItemsHost"/>
+        /// Gets or sets whether this <see cref="RichItemContainer"/> has custom behavior handled out of dragging
+        /// This tells <see cref="RichItemsControl"/> to stop handling mouse interaction when manipulating this <see cref="RichItemContainer"/>
         /// True by default
         /// </summary>
         public bool HasCustomBehavior
@@ -94,7 +98,7 @@ namespace RichCanvas
 
         public static DependencyProperty ScaleProperty = DependencyProperty.Register(nameof(Scale), typeof(Point), typeof(RichItemContainer), new FrameworkPropertyMetadata(new Point(1, 1), OnScaleChanged));
         /// <summary>
-        /// Gets this <see cref="RichItemContainer"/> ScaleTransform in order to get direction.
+        /// Gets or sets this <see cref="RichItemContainer"/> ScaleTransform in order to get direction.
         /// </summary>
         public Point Scale
         {
@@ -102,6 +106,20 @@ namespace RichCanvas
             set => SetValue(ScaleProperty, value);
         }
 
+        protected static readonly DependencyPropertyKey BoundingBoxPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BoundingBox), typeof(Rect), typeof(RichItemContainer), new FrameworkPropertyMetadata(Rect.Empty));
+        public static DependencyProperty BoundingBoxProperty = BoundingBoxPropertyKey.DependencyProperty;
+        /// <summary>
+        /// Gets this <see cref="RichItemContainer"/> TransformBounds.
+        /// </summary>
+        public Rect BoundingBox
+        {
+            get => (Rect)GetValue(BoundingBoxProperty);
+            internal set => SetValue(BoundingBoxPropertyKey, value);
+        }
+
+        /// <summary>
+        /// Apply transforms on <see cref="RichItemContainer"/>
+        /// </summary>
         public static DependencyProperty ApplyTransformProperty = DependencyProperty.RegisterAttached("ApplyTransform", typeof(Transform), typeof(RichItemContainer), new FrameworkPropertyMetadata(default(Transform), OnApplyTransformChanged));
 
         public static void SetApplyTransform(UIElement element, Transform value) => element.SetValue(ApplyTransformProperty, value);
@@ -137,7 +155,7 @@ namespace RichCanvas
         }
 
         /// <summary>
-        /// The <see cref="RichItemsControl"/> that owns this <see cref="ItemContainer"/>.
+        /// The <see cref="RichItemsControl"/> that owns this <see cref="RichItemContainer"/>.
         /// </summary>
         public RichItemsControl Host => _host ??= ItemsControl.ItemsControlFromItemContainer(this) as RichItemsControl;
 
@@ -157,6 +175,17 @@ namespace RichCanvas
 
         internal bool LeftPropertySet { get; private set; }
 
+        /// <summary>
+        /// Calculates <see cref="RichItemContainer"/> bounding box based on applied transforms.
+        /// </summary>
+        public void CalculateBoundingBox()
+        {
+            var transform = TransformToVisual(Host.ItemsHost);
+            var bounds = transform.TransformBounds(new Rect(0, 0, Width, Height));
+            BoundingBox = bounds;
+        }
+
+        /// <inheritdoc/>
         protected override void OnMouseEnter(MouseEventArgs e)
         {
             Host.HasCustomBehavior = HasCustomBehavior;
@@ -166,8 +195,10 @@ namespace RichCanvas
             }
         }
 
+        /// <inheritdoc/>
         protected override void OnMouseLeave(MouseEventArgs e)
         {
+            // ignore custom behavior as mouse is not on this container
             Host.HasCustomBehavior = false;
             if (IsDraggable)
             {
@@ -184,7 +215,7 @@ namespace RichCanvas
 
         private static void OnPositionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemContainer)d).UpdatePosition(e.Property, (double)e.OldValue - (double)e.NewValue);
 
-        private static void OnApplyTransformChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemContainer)VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(d))).ApplyTransform((Transform)e.NewValue);
+        private static void OnApplyTransformChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => (VisualHelper.GetParentContainer(d)).ApplyTransform((Transform)e.NewValue);
 
         private static void OnIsSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -238,6 +269,11 @@ namespace RichCanvas
         private void ApplyTransform(Transform apply)
         {
             RenderTransform = apply.Clone();
+            if (IsValid())
+            {
+                // Invalidate arrange to calculate correct BoundingBox
+                Host.ItemsHost.InvalidateArrange();
+            }
         }
 
         private void OverrideScale(Point value)
@@ -248,5 +284,6 @@ namespace RichCanvas
                 ScaleTransform.ScaleY = value.Y;
             }
         }
+
     }
 }

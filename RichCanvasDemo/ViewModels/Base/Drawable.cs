@@ -25,7 +25,11 @@ namespace RichCanvasDemo.ViewModels.Base
         public double Angle
         {
             get => _angle;
-            set => SetProperty(ref _angle, value);
+            set
+            {
+                SetProperty(ref _angle, value);
+                OnRotationChanged();
+            }
         }
 
         public double Top
@@ -122,6 +126,8 @@ namespace RichCanvasDemo.ViewModels.Base
         protected virtual void OnWidthUpdated() { }
 
         protected virtual void OnHeightUpdated() { }
+
+        protected virtual void OnRotationChanged() { }
 
         protected virtual void OnIsSelectedChanged(bool value) { }
 

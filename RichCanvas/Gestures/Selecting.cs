@@ -113,16 +113,13 @@ namespace RichCanvas.Gestures
                     translateTransform.Y = 0;
                 }
 
-                //TODO
                 if (snap)
                 {
                     _selections[i].Left = Math.Round(_selections[i].Left / _context.GridSpacing) * _context.GridSpacing;
                     _selections[i].Top = Math.Round(_selections[i].Top / _context.GridSpacing) * _context.GridSpacing;
                 }
-
             }
 
-            _context.NeedMeasure = true;
             _context.ItemsHost.InvalidateMeasure();
         }
 

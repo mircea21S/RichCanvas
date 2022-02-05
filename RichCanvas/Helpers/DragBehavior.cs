@@ -15,7 +15,6 @@ namespace RichCanvas.Helpers
 
         public static bool IsDragging { get; private set; }
 
-
         internal static DependencyProperty IsDraggingProperty = DependencyProperty.RegisterAttached("IsDragging", typeof(bool), typeof(RichItemContainer),
             new PropertyMetadata(OnIsDraggingChanged));
 
@@ -81,12 +80,6 @@ namespace RichCanvas.Helpers
             {
                 ItemsControl.UpdateSelections(ItemsControl.EnableSnapping);
             }
-            else
-            {
-                ItemsControl.NeedMeasure = true;
-                ItemsControl.ItemsHost.InvalidateMeasure();
-            }
-
             ItemsControl.Cursor = Cursors.Arrow;
         }
 
@@ -109,8 +102,13 @@ namespace RichCanvas.Helpers
                     DragDelta?.Invoke(new Point(currentPosition.X - _initialPosition.X, currentPosition.Y - _initialPosition.Y));
                 }
 
-                ItemsControl.NeedMeasure = true;
                 ItemsControl.UpdateSelections();
+
+                var offset = currentPosition - _initialPosition;
+                if (offset.X != 0 || offset.Y != 0)
+                {
+                    ItemsControl.ScrollContainer.SetCurrentScroll();
+                }
 
                 _initialPosition = currentPosition;
             }
