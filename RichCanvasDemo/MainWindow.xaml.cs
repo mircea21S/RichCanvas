@@ -17,5 +17,6 @@ namespace RichCanvasDemo
         {
             AttachedAdorner.OnScrolling();
         }
+
     }
 }

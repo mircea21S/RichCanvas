@@ -17,7 +17,8 @@
         Title="MainWindow"
         Height="800"
         WindowState="Maximized"
-        Width="800">
+        Width="800"
+        KeyboardNavigation.DirectionalNavigation="Once">
     <Window.InputBindings>
         <KeyBinding Key="Esc"
                     Command="{Binding CancelActionCommand}" />
@@ -374,9 +375,9 @@
                                 <Setter Property="richCanvas:RichItemContainer.ApplyTransform">
                                     <Setter.Value>
                                         <TransformGroup>
-                                            <ScaleTransform></ScaleTransform>
-                                            <TranslateTransform></TranslateTransform>
-                                            <RotateTransform Angle="{Binding Angle}"></RotateTransform>
+                                            <ScaleTransform />
+                                            <TranslateTransform />
+                                            <RotateTransform Angle="{Binding Angle}" />
                                         </TransformGroup>
                                     </Setter.Value>
                                 </Setter>
@@ -395,7 +396,8 @@
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type vm:ImageVisual}">
-                    <Image Source="{Binding ImageSource}" />
+                    <Image Source="{Binding ImageSource}"
+                           Stretch="Fill" />
                 </DataTemplate>
 
                 <DataTemplate DataType="{x:Type vm:TextVisual}">
@@ -406,7 +408,10 @@
 
                 <DataTemplate DataType="{x:Type vm:Group}">
                     <Rectangle Stroke="Black"
-                               StrokeThickness="2">
+                               StrokeThickness="2"
+                               Fill="Transparent"
+                               StrokeDashArray="2"
+                               IsHitTestVisible="{Binding IsSelectable}">
                         <i:Interaction.Behaviors>
                             <behaviors:GroupBehavior />
                         </i:Interaction.Behaviors>
@@ -416,6 +421,7 @@
             </richCanvas:RichItemsControl.Resources>
 
             <richCanvas:RichItemsControl.ItemContainerStyle>
+
                 <Style TargetType="richCanvas:RichItemContainer">
 
                     <Setter Property="helpers:EventToCommand.Event"
@@ -432,13 +438,11 @@
                     <Setter Property="helpers:EventToCommand.CanExecute"
                             Value="{Binding IsSelected}" />
 
-
                     <Setter Property="Tag"
                             Value="{Binding DataContext, ElementName=window}" />
 
-                    <!--Replace with property-->
                     <Setter Property="helpers:AttachedAdorner.HasHoverAdorner"
-                            Value="True" />
+                            Value="{Binding IsSelectable}" />
 
                     <Setter Property="helpers:AttachedAdorner.ShowResizeAdorner"
                             Value="{Binding IsSelected}" />

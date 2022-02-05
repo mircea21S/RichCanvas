@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -156,6 +157,21 @@ namespace RichCanvasDemo
             _fileService = new FileService();
             _dialogService = new DialogService();
             Items.CollectionChanged += ItemsChanged;
+            MessengerService.Instance.Register(MessageChannel.RectangleRotated, OnRectangleSentMessage);
+        }
+
+        private void OnRectangleSentMessage(object message)
+        {
+            var group = (Group)message;
+            if (!Items.Contains(group))
+            {
+                Items.Add(group);
+            }
+            else
+            {
+                Items.Remove(group);
+                Items.Add(group);
+            }
         }
 
         private void ItemsChanged(object sender, NotifyCollectionChangedEventArgs e)

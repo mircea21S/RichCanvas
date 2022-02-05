@@ -32,7 +32,6 @@ namespace RichCanvas.Gestures
 
             double width = position.X - CurrentItem.Left;
             double height = position.Y - CurrentItem.Top;
-            _context.NeedMeasure = false;
 
             CurrentItem.Width = width == 0 ? 1 : Math.Abs(width);
             CurrentItem.Height = height == 0 ? 1 : Math.Abs(height);
@@ -58,7 +57,6 @@ namespace RichCanvas.Gestures
                     scaleTransform.ScaleX = 1;
                 }
             }
-
         }
 
         internal RichItemContainer OnMouseUp()
@@ -71,20 +69,6 @@ namespace RichCanvas.Gestures
 
             return CurrentItem;
         }
-
-        internal double GetCurrentTop() => CurrentItem.ScaleTransform?.ScaleY > 0 ? CurrentItem.Top : CurrentItem.Top - CurrentItem.Height;
-
-        internal double GetCurrentLeft() => CurrentItem.ScaleTransform?.ScaleX > 0 ? CurrentItem.Left : CurrentItem.Left - CurrentItem.Width;
-
-        internal double GetCurrentRight() => CurrentItem.ScaleTransform?.ScaleX > 0
-                ? CurrentItem.Width + CurrentItem.Left
-                : CurrentItem.Left - CurrentItem.Width + CurrentItem.Width;
-
-        internal double GetCurrentBottom() => CurrentItem.ScaleTransform?.ScaleY > 0
-                ? CurrentItem.Height + CurrentItem.Top
-                : CurrentItem.Top - CurrentItem.Height + CurrentItem.Height;
-
-        internal bool IsMeasureNeeded() => CurrentItem.ScaleTransform?.ScaleX >= 0 && CurrentItem.ScaleTransform?.ScaleY >= 0;
 
         internal void Dispose() => CurrentItem = null;
 

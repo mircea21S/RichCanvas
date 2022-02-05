@@ -379,14 +379,9 @@ namespace RichCanvas
         internal RichCanvas ItemsHost => _mainPanel;
         internal PanningGrid ScrollContainer => _canvasContainer;
         internal TransformGroup SelectionRectangleTransform { get; private set; }
-        internal double TopLimit { get; set; }
-        internal double RightLimit { get; set; }
-        internal double BottomLimit { get; set; }
-        internal double LeftLimit { get; set; }
         internal bool IsPanning => Keyboard.IsKeyDown(PanningKey);
         internal bool IsZooming => Keyboard.IsKeyDown(ZoomKey);
         internal bool IsDrawing => _isDrawing;
-        internal bool NeedMeasure { get; set; }
         internal RichItemContainer CurrentDrawingItem => _drawingGesture.CurrentItem;
         internal bool HasCustomBehavior { get; set; }
         #endregion
@@ -466,6 +461,7 @@ namespace RichCanvas
 
         #region Override Methods
 
+        /// <inheritdoc/>
         public override void OnApplyTemplate()
         {
             var selectionRectangle = (Rectangle)GetTemplateChild(SelectionRectangleName);
@@ -489,8 +485,10 @@ namespace RichCanvas
             ScaleTransform.Changed += OnScaleChanged;
         }
 
+        /// <inheritdoc/>
         protected override bool IsItemItsOwnContainerOverride(object item) => item is RichItemContainer;
 
+        /// <inheritdoc/>
         protected override DependencyObject GetContainerForItemOverride() => new RichItemContainer
         {
             RenderTransform = new TransformGroup
@@ -499,6 +497,7 @@ namespace RichCanvas
             }
         };
 
+        /// <inheritdoc/>
         protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             if (IsPanning)
@@ -545,22 +544,14 @@ namespace RichCanvas
             }
         }
 
+        /// <inheritdoc/>
         protected override void OnPreviewMouseMove(MouseEventArgs e)
         {
             MousePosition = new Point(e.GetPosition(_mainPanel).X, e.GetPosition(_mainPanel).Y);
 
             if (_isDrawing)
             {
-                NeedMeasure = _drawingGesture.IsMeasureNeeded();
                 _drawingGesture.OnMouseMove(MousePosition);
-                if (DisableAutoPanning)
-                {
-                    TopLimit = Math.Min(ItemsHost.TopLimit, _drawingGesture.GetCurrentTop());
-                    BottomLimit = Math.Max(ItemsHost.BottomLimit, _drawingGesture.GetCurrentBottom());
-                    RightLimit = Math.Max(ItemsHost.RightLimit, _drawingGesture.GetCurrentRight());
-                    LeftLimit = Math.Min(ItemsHost.LeftLimit, _drawingGesture.GetCurrentLeft());
-                    AdjustScroll();
-                }
             }
             else if (IsSelecting)
             {
@@ -573,12 +564,12 @@ namespace RichCanvas
             }
         }
 
+        /// <inheritdoc/>
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
             if (_isDrawing)
             {
                 _isDrawing = false;
-                NeedMeasure = true;
                 var drawnItem = _drawingGesture.OnMouseUp();
 
                 RaiseDrawEndedEvent(drawnItem.DataContext);
@@ -622,6 +613,7 @@ namespace RichCanvas
             Focus();
         }
 
+        /// <inheritdoc/>
         protected override void OnItemsChanged(NotifyCollectionChangedEventArgs e)
         {
             if (e.NewStartingIndex != -1 && e.Action == NotifyCollectionChangedAction.Add)
@@ -701,6 +693,7 @@ namespace RichCanvas
         #endregion
 
         #region Internal Methods
+
         internal void AddSelection(RichItemContainer container)
         {
             _selectingGesture.AddSelection(container);
@@ -716,13 +709,6 @@ namespace RichCanvas
         internal void UpdateSelections(bool snap = false)
         {
             _selectingGesture.UpdateSelectionsPosition(snap);
-            AdjustScroll();
-        }
-
-        internal void AdjustScroll()
-        {
-            ScrollContainer.AdjustScrollVertically();
-            ScrollContainer.AdjustScrollHorizontally();
         }
 
         internal void RaiseScrollingEvent(object context)
@@ -747,7 +733,6 @@ namespace RichCanvas
             TranslateOffset = new Point(TranslateTransform.X, TranslateTransform.Y);
             RaiseScrollingEvent(e);
         }
-
 
         private void SetCachingMode(bool disable)
         {
@@ -810,17 +795,13 @@ namespace RichCanvas
         {
             if (IsMouseOver && Mouse.LeftButton == MouseButtonState.Pressed && Mouse.Captured != null && !IsMouseCapturedByScrollBar() && !IsPanning)
             {
-                NeedMeasure = false;
                 var mousePosition = Mouse.GetPosition(ScrollContainer);
                 var transformedPosition = Mouse.GetPosition(ItemsHost);
+
                 if (mousePosition.Y <= 0)
                 {
                     if (_isDrawing)
                     {
-                        TopLimit = Math.Min(ItemsHost.TopLimit, _drawingGesture.GetCurrentTop());
-                        // top is not set yet so after drawing the bottom limit will become the intial top
-                        BottomLimit = Math.Max(ItemsHost.BottomLimit, CurrentDrawingItem.Top);
-
                         CurrentDrawingItem.Height = Math.Abs(transformedPosition.Y - CurrentDrawingItem.Top);
                     }
                     ScrollContainer.PanVertically(-AutoPanSpeed);
@@ -829,9 +810,6 @@ namespace RichCanvas
                 {
                     if (_isDrawing)
                     {
-                        BottomLimit = Math.Max(ItemsHost.BottomLimit, _drawingGesture.GetCurrentBottom());
-                        TopLimit = Math.Min(ItemsHost.TopLimit, _drawingGesture.GetCurrentTop());
-
                         CurrentDrawingItem.Height = Math.Abs(transformedPosition.Y - CurrentDrawingItem.Top);
                     }
                     ScrollContainer.PanVertically(AutoPanSpeed);
@@ -841,10 +819,6 @@ namespace RichCanvas
                 {
                     if (_isDrawing)
                     {
-                        LeftLimit = Math.Min(ItemsHost.LeftLimit, _drawingGesture.GetCurrentLeft());
-                        // left is not set yet so after drawing the right limit will become the intial left
-                        RightLimit = Math.Max(ItemsHost.RightLimit, CurrentDrawingItem.Left);
-
                         CurrentDrawingItem.Width = Math.Abs(transformedPosition.X - CurrentDrawingItem.Left);
                     }
                     ScrollContainer.PanHorizontally(-AutoPanSpeed);
@@ -853,31 +827,15 @@ namespace RichCanvas
                 {
                     if (_isDrawing)
                     {
-                        LeftLimit = Math.Min(ItemsHost.LeftLimit, _drawingGesture.GetCurrentLeft());
-                        RightLimit = Math.Max(ItemsHost.RightLimit, _drawingGesture.GetCurrentRight());
-
                         CurrentDrawingItem.Width = Math.Abs(transformedPosition.X - CurrentDrawingItem.Left);
                     }
                     ScrollContainer.PanHorizontally(AutoPanSpeed);
                 }
 
-                if (_isDrawing)
-                {
-                    if (Items.Count > 1)
-                    {
-                        TopLimit = Math.Min(ItemsHost.TopLimit, _drawingGesture.GetCurrentTop());
-                        BottomLimit = Math.Max(ItemsHost.BottomLimit, _drawingGesture.GetCurrentBottom());
-                        RightLimit = Math.Max(ItemsHost.RightLimit, _drawingGesture.GetCurrentRight());
-                        LeftLimit = Math.Min(ItemsHost.LeftLimit, _drawingGesture.GetCurrentLeft());
-                        AdjustScroll();
-                    }
-                }
                 if (IsSelecting)
                 {
                     _selectingGesture.Update(transformedPosition);
                 }
-                // overwrites the true from panning (virtualization disabled on autopanning = selecting + drawing)
-                NeedMeasure = false;
             }
         }
 
@@ -895,7 +853,7 @@ namespace RichCanvas
             return HitTestResultBehavior.Continue;
         }
 
-        private bool IsMouseCapturedByScrollBar()
+        private static bool IsMouseCapturedByScrollBar()
         {
             return Mouse.Captured.GetType() == typeof(Thumb) || Mouse.Captured.GetType() == typeof(RepeatButton);
         }

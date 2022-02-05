@@ -91,6 +91,7 @@ namespace RichCanvasDemo.Helpers
             }
         }
 
+        #region Line Handlers
         private static void OnMouseLeaveLine(object sender, MouseEventArgs e)
         {
             var element = (Line)sender;
@@ -121,6 +122,7 @@ namespace RichCanvasDemo.Helpers
             layer.Add(adorner);
             _currentLineAdorner = adorner;
         }
+        #endregion
 
         private static void OnHasHoverChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
