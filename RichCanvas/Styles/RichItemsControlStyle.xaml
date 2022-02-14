@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:RichCanvas"
                     xmlns:converters="clr-namespace:RichCanvas.Converters">
-    
+
     <Style x:Key="SelectionRectangleStyle"
            TargetType="Rectangle">
         <Setter Property="Stroke"
@@ -16,7 +16,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <GeometryDrawing x:Key="GridStyle"
                      Geometry="M0,0 L0,1 0.03,1 0.03,0.03 1,0.03 1,0 Z"
                      Brush="Red" />
@@ -59,9 +59,10 @@
 
                                 <Canvas RenderTransform="{Binding AppliedTransform, RelativeSource={RelativeSource TemplatedParent}}"
                                         x:Name="containerDrawing">
-                                    
+
                                     <local:RichCanvas x:Name="PART_Panel"
                                                       IsItemsHost="True" />
+                                    
                                     <Rectangle x:Name="PART_SelectionRectangle"
                                                Visibility="{TemplateBinding IsSelecting, Converter={StaticResource BoolToVisConverter}}"
                                                Canvas.Top="{Binding SelectionRectangle.Y, RelativeSource={RelativeSource TemplatedParent}}"
@@ -69,7 +70,7 @@
                                                Width="{Binding SelectionRectangle.Width, RelativeSource={RelativeSource TemplatedParent}}"
                                                Height="{Binding SelectionRectangle.Height, RelativeSource={RelativeSource TemplatedParent}}"
                                                Style="{TemplateBinding SelectionRectangleStyle}" />
-                                    
+
                                 </Canvas>
 
                             </local:PanningGrid>

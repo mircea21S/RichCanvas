@@ -21,8 +21,9 @@ namespace RichCanvas.Helpers
             {
                 return container;
             }
+
             var parent = VisualTreeHelper.GetParent(d);
-            while (!(parent is RichItemContainer))
+            while (!(parent is RichItemContainer) && parent != null)
             {
                 parent = VisualTreeHelper.GetParent(parent);
             }

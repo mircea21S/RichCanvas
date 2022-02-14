@@ -369,6 +369,28 @@ namespace RichCanvas
             set => SetValue(RealTimeSelectionEnabledProperty, value);
         }
 
+        public static DependencyProperty ExtentSizeProperty = DependencyProperty.Register(nameof(ExtentSize), typeof(Size), typeof(RichItemsControl), new FrameworkPropertyMetadata(Size.Empty));
+        /// <summary>
+        /// Gets or sets scroll Extent maximum size. This size is added to the Viewport size.
+        /// Default is <see cref="Size.Empty"/>
+        /// </summary>
+        public Size ExtentSize
+        {
+            get => (Size)GetValue(ExtentSizeProperty);
+            set => SetValue(ExtentSizeProperty, value);
+        }
+
+        public static DependencyProperty EnableNegativeScrollingProperty = DependencyProperty.Register(nameof(EnableNegativeScrolling), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true));
+        /// <summary>
+        /// Gets or sets whether <see cref="RichCanvas"/> has negative scrolling and panning.
+        /// Default is true.
+        /// </summary>
+        public bool EnableNegativeScrolling
+        {
+            get => (bool)GetValue(EnableNegativeScrollingProperty);
+            set => SetValue(EnableNegativeScrollingProperty, value);
+        }
+
         #endregion
 
         #region Internal Properties
@@ -842,10 +864,10 @@ namespace RichCanvas
         private HitTestResultBehavior OnHitTestResultCallback(HitTestResult result)
         {
             var geometryHitTestResult = (GeometryHitTestResult)result;
-            if (geometryHitTestResult.IntersectionDetail != IntersectionDetail.Empty)
+            if (geometryHitTestResult.VisualHit.DependencyObjectType.SystemType != typeof(RichItemContainer) && geometryHitTestResult.IntersectionDetail != IntersectionDetail.Empty)
             {
                 var container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
-                if (container.IsSelectable)
+                if (container != null && container.IsSelectable)
                 {
                     container.IsSelected = true;
                 }

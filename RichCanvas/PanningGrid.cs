@@ -27,6 +27,7 @@ namespace RichCanvas
         private RichItemsControl _parent;
         private Point _viewportBottomRightInitial;
         private Point _viewportTopLeftInitial;
+        private double _cachedTranslateTransformY = 0;
 
         private double HighestElement => _parent.ItemsHost.TopLimit;
 
@@ -80,6 +81,10 @@ namespace RichCanvas
         /// Right limit of <see cref="ScrollOwner"/> viewport
         /// </summary>
         protected double RightLimit => TranslatePoint(_viewportBottomRightInitial, _parent.ItemsHost).X;
+
+        protected double ExtentHeightLimit => !double.IsInfinity(_parent.ExtentSize.Height) ? (_parent.ExtentSize.Height + ViewportHeight) * _scaleTransform.ScaleY : _parent.ExtentSize.Height;
+
+        protected double ExtentWidthLimit => !double.IsInfinity(_parent.ExtentSize.Width) ? (_parent.ExtentSize.Width + ViewportWidth) * _scaleTransform.ScaleX : _parent.ExtentSize.Width;
 
         #endregion
 
@@ -431,8 +436,8 @@ namespace RichCanvas
         {
             if (!_parent.DisableScroll)
             {
-                SetVerticalOffset(offset);
                 ScrollVertically(offset);
+                SetVerticalOffset(offset);
                 ScrollOwner.InvalidateScrollInfo();
             }
             else if (_parent.IsPanning || !_parent.DisableAutoPanning)
@@ -449,8 +454,8 @@ namespace RichCanvas
         {
             if (!_parent.DisableScroll)
             {
-                SetHorizontalOffset(offset);
                 ScrollHorizontally(offset);
+                SetHorizontalOffset(offset);
                 ScrollOwner.InvalidateScrollInfo();
             }
             else if (_parent.IsPanning || !_parent.DisableAutoPanning)
@@ -513,7 +518,7 @@ namespace RichCanvas
 
         private void CoerceVerticalOffset()
         {
-            if (_negativeOffset.Y > 0)
+            if (_negativeOffset.Y > 0 || !_parent.EnableNegativeScrolling)
             {
                 _negativeOffset.Y = 0;
             }
@@ -532,11 +537,21 @@ namespace RichCanvas
             {
                 _offset.Y = 0;
             }
+
+            if (!double.IsInfinity(ExtentHeightLimit) && _offset.Y > _parent.ExtentSize.Height)
+            {
+                _offset.Y = _parent.ExtentSize.Height;
+            }
+
+            if (!double.IsInfinity(ExtentHeightLimit) && _negativeOffset.Y < -_parent.ExtentSize.Height)
+            {
+                _negativeOffset.Y = -_parent.ExtentSize.Height;
+            }
         }
 
         private void CoerceHorizontalOffset()
         {
-            if (_negativeOffset.X > 0)
+            if (_negativeOffset.X > 0 || !_parent.EnableNegativeScrolling)
             {
                 _negativeOffset.X = 0;
             }
@@ -556,6 +571,15 @@ namespace RichCanvas
                 _offset.X = 0;
             }
 
+            if (!double.IsInfinity(ExtentWidthLimit) && _offset.X > _parent.ExtentSize.Width)
+            {
+                _offset.X = _parent.ExtentSize.Width;
+            }
+
+            if (!double.IsInfinity(ExtentWidthLimit) && _negativeOffset.X < -_parent.ExtentSize.Width)
+            {
+                _negativeOffset.X = -_parent.ExtentSize.Width;
+            }
         }
 
         private void CoerceExtentHeight()
@@ -563,6 +587,11 @@ namespace RichCanvas
             if (_offset.Y == 0 && _negativeOffset.Y == 0)
             {
                 _extent.Height = ViewportHeight;
+            }
+
+            if (!double.IsInfinity(ExtentHeightLimit) && _extent.Height >= ExtentHeightLimit)
+            {
+                _extent.Height = ExtentHeightLimit;
             }
         }
 
@@ -572,15 +601,40 @@ namespace RichCanvas
             {
                 _extent.Width = ViewportWidth;
             }
+
+            if (!double.IsInfinity(ExtentWidthLimit) && _extent.Width > ExtentWidthLimit)
+            {
+                _extent.Width = ExtentWidthLimit;
+            }
         }
 
         private void ScrollVertically(double offset)
         {
+            if (!_parent.EnableNegativeScrolling && _translateTransform.Y + (-offset) > 0)
+            {
+                return;
+            }
+
+            if (!double.IsInfinity(ExtentHeightLimit) && (_offset.Y + offset) >= _parent.ExtentSize.Height)
+            {
+                return;
+            }
+
             _translateTransform.Y += -offset;
         }
 
         private void ScrollHorizontally(double offset)
         {
+            if (!_parent.EnableNegativeScrolling && _translateTransform.X + (-offset) > 0)
+            {
+                return;
+            }
+
+            if (!double.IsInfinity(ExtentWidthLimit) && (_offset.X + offset) >= _parent.ExtentSize.Width)
+            {
+                return;
+            }
+
             _translateTransform.X += -offset;
         }
 
