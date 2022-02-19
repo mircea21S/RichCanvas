@@ -27,7 +27,6 @@ namespace RichCanvas
         private RichItemsControl _parent;
         private Point _viewportBottomRightInitial;
         private Point _viewportTopLeftInitial;
-        private double _cachedTranslateTransformY = 0;
 
         private double HighestElement => _parent.ItemsHost.TopLimit;
 
@@ -40,6 +39,8 @@ namespace RichCanvas
         #endregion
 
         #region Internal Properties
+        internal bool NegativeVerticalScrollDisabled => !_parent.EnableNegativeScrolling && LowestElement > BottomLimit;
+        internal bool NegativeHorizontalScrollDisabled => !_parent.EnableNegativeScrolling && MostRightElement > RightLimit;
 
         /// <summary>
         /// Positive Vertical offset of <see cref="ScrollOwner"/>
@@ -75,7 +76,6 @@ namespace RichCanvas
         /// Left limit of <see cref="ScrollOwner"/> viewport
         /// </summary>
         protected double LeftLimit => TranslatePoint(_viewportTopLeftInitial, _parent.ItemsHost).X;
-
 
         /// <summary>
         /// Right limit of <see cref="ScrollOwner"/> viewport
@@ -518,7 +518,7 @@ namespace RichCanvas
 
         private void CoerceVerticalOffset()
         {
-            if (_negativeOffset.Y > 0 || !_parent.EnableNegativeScrolling)
+            if (!_parent.EnableNegativeScrolling || _negativeOffset.Y > 0)
             {
                 _negativeOffset.Y = 0;
             }
@@ -610,7 +610,7 @@ namespace RichCanvas
 
         private void ScrollVertically(double offset)
         {
-            if (!_parent.EnableNegativeScrolling && _translateTransform.Y + (-offset) > 0)
+            if (NegativeVerticalScrollDisabled && offset < 0)
             {
                 return;
             }
@@ -625,7 +625,7 @@ namespace RichCanvas
 
         private void ScrollHorizontally(double offset)
         {
-            if (!_parent.EnableNegativeScrolling && _translateTransform.X + (-offset) > 0)
+            if (NegativeHorizontalScrollDisabled && offset < 0)
             {
                 return;
             }

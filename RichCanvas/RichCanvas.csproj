@@ -1,39 +1,44 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <TargetFrameworks>net5-windows;netcoreapp3.1;net48;net472</TargetFrameworks>
-    <LangVersion>8.0</LangVersion>
-    <UseWPF>true</UseWPF>
-    <Authors>Mircea Staicu</Authors>
-    <RepositoryUrl>https://github.com/mircea21S/RichCanvas</RepositoryUrl>
-    <Company />
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Copyright>Mircea Staicu</Copyright>
-    <PackageProjectUrl>https://github.com/mircea21S/RichCanvas</PackageProjectUrl>
-    <PackageTags>wpf mvvm infinite-canvas canvas controls net-core-3-1 net5</PackageTags>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Description>WPF Control library
-Infinite canvas with panning, zooming, scrolling and other customizable functions, designed for MVVM.
-</Description>
-    <PackageReleaseNotes>Bugs:
--When IsSelected is binded base selector SelectedItems list wasn't updated.
-New features:
--Added TopChanged and LeftChanged RoutedEvents on RichItemContainer.
-</PackageReleaseNotes>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
-    <Version>1.3.0</Version>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageIcon>logoRichCanvas.png</PackageIcon>
-    <PackageIconUrl />
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<TargetFrameworks>net5-windows;netcoreapp3.1;net48;net472</TargetFrameworks>
+		<LangVersion>8.0</LangVersion>
+		<UseWPF>true</UseWPF>
+		<Authors>Mircea Staicu</Authors>
+		<RepositoryUrl>https://github.com/mircea21S/RichCanvas</RepositoryUrl>
+		<Company />
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Copyright>Mircea Staicu</Copyright>
+		<PackageProjectUrl>https://github.com/mircea21S/RichCanvas</PackageProjectUrl>
+		<PackageTags>wpf mvvm infinite-canvas canvas controls net-core-3-1 net5</PackageTags>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<Description>
+			WPF Control library
+			Infinite canvas with panning, zooming, scrolling and other customizable functions, designed for MVVM.
+		</Description>
+		<PackageReleaseNotes>
+			v2.0:
+				Improvements:
+					- Scrolling refactored: works correctly regarding elements applied transformations.
+				New features:
+					- BoundingBox Property on RichItemContainer, returns the bounding box of any element with respect to their applied transformations.
+					- ExtentSize Property on RichItemsControl, can limit the extent of scrolling.
+					- EnableNegativeScrolling Property on RichItemsControl, can stop scrolling with negative offset.
+		</PackageReleaseNotes>
+		<AssemblyVersion>1.0.0.0</AssemblyVersion>
+		<FileVersion>1.0.0.0</FileVersion>
+		<Version>2.0.0</Version>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<PackageIcon>logoRichCanvas.png</PackageIcon>
+		<PackageIconUrl />
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Include=".\logoRichCanvas.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include=".\logoRichCanvas.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 
 </Project>

@@ -115,8 +115,8 @@ namespace RichCanvas.Gestures
 
                 if (snap)
                 {
-                    _selections[i].Left = Math.Round(_selections[i].Left / _context.GridSpacing) * _context.GridSpacing;
-                    _selections[i].Top = Math.Round(_selections[i].Top / _context.GridSpacing) * _context.GridSpacing;
+                    container.Left = Math.Round(container.Left / _context.GridSpacing) * _context.GridSpacing;
+                    container.Top = Math.Round(container.Top / _context.GridSpacing) * _context.GridSpacing;
                 }
             }
 

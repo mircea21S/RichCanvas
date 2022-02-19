@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RichCanvas.Helpers;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -9,19 +10,18 @@ namespace RichCanvas
     /// </summary>
     public class RichCanvas : Panel
     {
-        private bool _boundingBoxInitialized;
-
         internal double TopLimit { get; private set; } = double.PositiveInfinity;
         internal double BottomLimit { get; private set; } = double.NegativeInfinity;
         internal double LeftLimit { get; private set; } = double.PositiveInfinity;
         internal double RightLimit { get; private set; } = double.NegativeInfinity;
-
         internal RichItemsControl ItemsOwner { get; set; }
+        internal RichItemContainer BottomElement { get; private set; }
+        internal RichItemContainer RightElement { get; private set; }
 
         /// <inheritdoc/>
         protected override Size MeasureOverride(Size constraint)
         {
-            if (ItemsOwner.IsDrawing || ItemsOwner.IsSelecting)
+            if (ItemsOwner.IsDrawing || ItemsOwner.IsSelecting || DragBehavior.IsDragging)
             {
                 return default;
             }
@@ -52,7 +52,14 @@ namespace RichCanvas
                     {
                         container.CalculateBoundingBox();
 
-                        _boundingBoxInitialized = true;
+                        if (container.BoundingBox.Bottom > maxY)
+                        {
+                            BottomElement = container;
+                        }
+                        if (container.BoundingBox.Right > maxX)
+                        {
+                            RightElement = container;
+                        }
                         minX = Math.Min(minX, container.BoundingBox.Left);
                         minY = Math.Min(minY, container.BoundingBox.Top);
                         maxX = Math.Max(maxX, container.BoundingBox.Right);
@@ -61,15 +68,13 @@ namespace RichCanvas
                 }
             }
 
-            if (_boundingBoxInitialized)
-            {
-                TopLimit = minY;
-                LeftLimit = minX;
-                BottomLimit = maxY;
-                RightLimit = maxX;
-                ItemsOwner.ViewportRect = new Rect(LeftLimit, TopLimit, 0, 0);
-                ItemsOwner.ScrollContainer.SetCurrentScroll();
-            }
+            TopLimit = minY;
+            LeftLimit = minX;
+            BottomLimit = maxY;
+            RightLimit = maxX;
+            ItemsOwner.ViewportRect = new Rect(LeftLimit, TopLimit, 0, 0);
+            ItemsOwner.ScrollContainer.SetCurrentScroll();
+
             return arrangeSize;
         }
     }

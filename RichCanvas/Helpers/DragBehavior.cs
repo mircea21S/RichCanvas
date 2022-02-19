@@ -90,6 +90,15 @@ namespace RichCanvas.Helpers
             {
                 Point currentPosition = e.GetPosition(ItemsControl.ItemsHost);
 
+                var offset = currentPosition - _initialPosition;
+
+                if ((ItemsControl.ScrollContainer.NegativeVerticalScrollDisabled && offset.Y > 0 && ItemsControl.ItemsHost.BottomElement.IsSelected) ||
+                    (ItemsControl.ScrollContainer.NegativeHorizontalScrollDisabled && offset.X > 0 && ItemsControl.ItemsHost.RightElement.IsSelected))
+                {
+                    _initialPosition = currentPosition;
+                    return;
+                }
+
                 TranslateTransform translateTransform = container.TranslateTransform;
 
                 if (!ItemsControl.HasSelections && translateTransform != null)
@@ -104,12 +113,10 @@ namespace RichCanvas.Helpers
 
                 ItemsControl.UpdateSelections();
 
-                var offset = currentPosition - _initialPosition;
                 if (offset.X != 0 || offset.Y != 0)
                 {
                     ItemsControl.ScrollContainer.SetCurrentScroll();
                 }
-
                 _initialPosition = currentPosition;
             }
         }
