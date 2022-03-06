@@ -640,7 +640,11 @@ namespace RichCanvas
         {
             if (e.NewStartingIndex != -1 && e.Action == NotifyCollectionChangedAction.Add)
             {
-                _currentDrawingIndexes.Add(e.NewStartingIndex);
+                var container = (RichItemContainer)ItemContainerGenerator.ContainerFromIndex(e.NewStartingIndex);
+                if (!container.IsValid())
+                {
+                    _currentDrawingIndexes.Add(e.NewStartingIndex);
+                }
             }
         }
 

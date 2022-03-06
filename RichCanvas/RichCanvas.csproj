@@ -18,8 +18,13 @@
 			Infinite canvas with panning, zooming, scrolling and other customizable functions, designed for MVVM.
 		</Description>
 		<PackageReleaseNotes>
+			v2.1.0:
+				Bugs:
+					- ExtentSize dragging elements fix
+					- EnableNegativeScrolling dragging fix
 			v2.0:
 				Improvements:
+					- Code cleaning and refactoring
 					- Scrolling refactored: works correctly regarding elements applied transformations.
 				New features:
 					- BoundingBox Property on RichItemContainer, returns the bounding box of any element with respect to their applied transformations.
@@ -28,17 +33,9 @@
 		</PackageReleaseNotes>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<FileVersion>1.0.0.0</FileVersion>
-		<Version>2.0.0</Version>
+		<Version>2.1.0</Version>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<PackageIcon>logoRichCanvas.png</PackageIcon>
 		<PackageIconUrl />
 	</PropertyGroup>
-
-	<ItemGroup>
-		<None Include=".\logoRichCanvas.png">
-			<Pack>True</Pack>
-			<PackagePath></PackagePath>
-		</None>
-	</ItemGroup>
 
 </Project>
