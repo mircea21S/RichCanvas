@@ -9,6 +9,12 @@ using System.Windows.Media;
 namespace RichCanvas
 {
     /// <summary>
+    /// Delegate used to notify when an <see cref="RichItemContainer"/> is dragged.
+    /// </summary>
+    /// <param name="newLocation">The new location.</param>
+    public delegate void PreviewLocationChanged(Point newLocation);
+
+    /// <summary>
     /// <see cref="RichItemsControl"/> items container.
     /// </summary>
     [TemplatePart(Name = ContentPresenterName, Type = typeof(ContentPresenter))]
@@ -127,7 +133,25 @@ namespace RichCanvas
         public static Transform GetApplyTransform(UIElement element) => (Transform)element.GetValue(ApplyTransformProperty);
 
         public static readonly RoutedEvent SelectedEvent = Selector.SelectedEvent.AddOwner(typeof(RichItemContainer));
+
+        /// <summary>
+        /// Occurs when this <see cref="ItemContainer"/> is selected.
+        /// </summary>
+        public event RoutedEventHandler Selected
+        {
+            add => AddHandler(SelectedEvent, value);
+            remove => RemoveHandler(SelectedEvent, value);
+        }
+
         public static readonly RoutedEvent UnselectedEvent = Selector.UnselectedEvent.AddOwner(typeof(RichItemContainer));
+        /// <summary>
+        /// Occurs when this <see cref="ItemContainer"/> is unselected.
+        /// </summary>
+        public event RoutedEventHandler Unselected
+        {
+            add => AddHandler(UnselectedEvent, value);
+            remove => RemoveHandler(UnselectedEvent, value);
+        }
 
         public static readonly RoutedEvent TopChangedEvent = EventManager.RegisterRoutedEvent(nameof(TopChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(RichItemContainer));
         /// <summary>
@@ -147,6 +171,36 @@ namespace RichCanvas
         {
             add { AddHandler(LeftChangedEvent, value); }
             remove { RemoveHandler(LeftChangedEvent, value); }
+        }
+
+        public static readonly RoutedEvent DragStartedEvent = EventManager.RegisterRoutedEvent(nameof(DragStarted), RoutingStrategy.Bubble, typeof(DragStartedEventHandler), typeof(RichItemContainer));
+        /// <summary>
+        /// Occurs when this <see cref="RichItemContainer"/> is the instigator of a drag operation.
+        /// </summary>
+        public event DragStartedEventHandler DragStarted
+        {
+            add => AddHandler(DragStartedEvent, value);
+            remove => RemoveHandler(DragStartedEvent, value);
+        }
+
+        public static readonly RoutedEvent DragDeltaEvent = EventManager.RegisterRoutedEvent(nameof(DragDelta), RoutingStrategy.Bubble, typeof(DragDeltaEventHandler), typeof(RichItemContainer));
+        /// <summary>
+        /// Occurs when this <see cref="RichItemContainer"/> is being dragged.
+        /// </summary>
+        public event DragDeltaEventHandler DragDelta
+        {
+            add => AddHandler(DragDeltaEvent, value);
+            remove => RemoveHandler(DragDeltaEvent, value);
+        }
+
+        public static readonly RoutedEvent DragCompletedEvent = EventManager.RegisterRoutedEvent(nameof(DragCompleted), RoutingStrategy.Bubble, typeof(DragCompletedEventHandler), typeof(RichItemContainer));
+        /// <summary>
+        /// Occurs when this <see cref="RichItemContainer"/> completed the drag operation.
+        /// </summary>
+        public event DragCompletedEventHandler DragCompleted
+        {
+            add => AddHandler(DragCompletedEvent, value);
+            remove => RemoveHandler(DragCompletedEvent, value);
         }
 
         static RichItemContainer()
@@ -181,6 +235,12 @@ namespace RichCanvas
         public void CalculateBoundingBox()
         {
             var transform = TransformToVisual(Host.ItemsHost);
+            if (double.IsNaN(Width) || double.IsNaN(Height))
+            {
+                var actualBounds = transform.TransformBounds(new Rect(0, 0, ActualWidth, ActualHeight));
+                BoundingBox = actualBounds;
+                return;
+            }
             var bounds = transform.TransformBounds(new Rect(0, 0, Width, Height));
             BoundingBox = bounds;
         }
@@ -202,18 +262,62 @@ namespace RichCanvas
             Host.HasCustomBehavior = false;
             if (IsDraggable)
             {
+                var position = e.GetPosition(Host.ItemsHost);
                 DragBehavior.SetIsDragging((RichItemContainer)e.OriginalSource, false);
+                RaiseEvent(new DragCompletedEventArgs(position.X, position.Y, true)
+                {
+                    RoutedEvent = DragCompletedEvent
+                });
             }
+        }
+
+        /// <summary>
+        /// Occurs when the <see cref="RichItemContainer"/> is being dragged.
+        /// </summary>
+        public event PreviewLocationChanged PreviewLocationChanged;
+
+        /// <summary>
+        /// Raises the <see cref="PreviewLocationChanged"/> event.
+        /// </summary>
+        /// <param name="location">The new location.</param>
+        protected internal void OnPreviewLocationChanged(Point location)
+        {
+            PreviewLocationChanged?.Invoke(location);
         }
 
         internal bool IsValid()
         {
-            return Height != 0 && Width != 0 && !double.IsNaN(Height) && !double.IsNaN(Width);
+            return (Height != 0 || ActualHeight != 0) && (Width != 0 || ActualWidth != 0)
+                && (!double.IsNaN(Height) || !double.IsNaN(ActualHeight)) && (!double.IsNaN(Width) || !double.IsNaN(ActualWidth));
+        }
+
+        internal void RaiseDragStartedEvent(Point position)
+        {
+            RaiseEvent(new DragStartedEventArgs(position.X, position.Y)
+            {
+                RoutedEvent = DragStartedEvent
+            });
+
+        }
+        internal void RaiseDragDeltaEvent(Point position)
+        {
+            RaiseEvent(new DragDeltaEventArgs(position.X, position.Y)
+            {
+                RoutedEvent = DragDeltaEvent
+            });
+        }
+
+        internal void RaiseDragCompletedEvent(Point position)
+        {
+            RaiseEvent(new DragCompletedEventArgs(position.X, position.Y, false)
+            {
+                RoutedEvent = DragCompletedEvent
+            });
         }
 
         private static void OnScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemContainer)d).OverrideScale((Point)e.NewValue);
 
-        private static void OnPositionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemContainer)d).UpdatePosition(e.Property, (double)e.OldValue - (double)e.NewValue);
+        private static void OnPositionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemContainer)d).UpdatePosition(e.Property);
 
         private static void OnApplyTransformChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => (VisualHelper.GetParentContainer(d)).ApplyTransform((Transform)e.NewValue);
 
@@ -233,36 +337,28 @@ namespace RichCanvas
             }
         }
 
-        private void UpdatePosition(DependencyProperty prop, double delta)
+        private void UpdatePosition(DependencyProperty prop)
         {
             if (prop.Name is nameof(Top))
             {
                 TopPropertySet = true;
-                RaiseEvent(new RoutedEventArgs(TopChangedEvent, delta));
+                RaiseEvent(new RoutedEventArgs(TopChangedEvent, Top));
             }
             if (prop.Name is nameof(Left))
             {
                 LeftPropertySet = true;
-                RaiseEvent(new RoutedEventArgs(LeftChangedEvent, delta));
+                RaiseEvent(new RoutedEventArgs(LeftChangedEvent, Left));
             }
-            Host?.ItemsHost.InvalidateMeasure();
+            Host?.ItemsHost.InvalidateArrange();
         }
 
         private void OnSelectedChanged(bool value)
         {
             // Raise event after the selection operation ended
-            if (!(Host?.IsSelecting ?? false) || (Host?.RealTimeSelectionEnabled ?? false))
+            if ((!Host?.IsSelecting ?? false) || (Host?.RealTimeSelectionEnabled ?? false))
             {
                 // Add to base SelectedItems
                 RaiseEvent(new RoutedEventArgs(value ? SelectedEvent : UnselectedEvent, this));
-                if (value)
-                {
-                    Host.AddSelection(this);
-                }
-                else
-                {
-                    Host.RemoveSelection(this);
-                }
             }
         }
 

@@ -1,5 +1,4 @@
-﻿using RichCanvas.Helpers;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -10,10 +9,10 @@ namespace RichCanvas
     /// </summary>
     public class RichCanvas : Panel
     {
-        internal double TopLimit { get; private set; } = double.PositiveInfinity;
-        internal double BottomLimit { get; private set; } = double.NegativeInfinity;
-        internal double LeftLimit { get; private set; } = double.PositiveInfinity;
-        internal double RightLimit { get; private set; } = double.NegativeInfinity;
+        internal double TopLimit { get; set; } = double.PositiveInfinity;
+        internal double BottomLimit { get; set; } = double.NegativeInfinity;
+        internal double LeftLimit { get; set; } = double.PositiveInfinity;
+        internal double RightLimit { get; set; } = double.NegativeInfinity;
         internal RichItemsControl ItemsOwner { get; set; }
         internal RichItemContainer BottomElement { get; private set; }
         internal RichItemContainer RightElement { get; private set; }
@@ -21,7 +20,7 @@ namespace RichCanvas
         /// <inheritdoc/>
         protected override Size MeasureOverride(Size constraint)
         {
-            if (ItemsOwner.IsDrawing || ItemsOwner.IsSelecting || DragBehavior.IsDragging)
+            if (ItemsOwner.IsDrawing || ItemsOwner.IsSelecting || ItemsOwner.IsDragging)
             {
                 return default;
             }

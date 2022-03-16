@@ -394,11 +394,6 @@ namespace RichCanvas
         {
             if (ScrollOwner != null)
             {
-                if (!DragBehavior.IsDragging && !_parent.IsPanning && !_parent.IsZooming && !_parent.DisableScroll)
-                {
-                    SetCurrentScroll();
-                }
-
                 if (_viewport != arrangeSize)
                 {
                     _viewportTopLeftInitial = new Point(0, 0);
@@ -407,6 +402,12 @@ namespace RichCanvas
                     _extent.Width = _viewport.Width + _offset.X + Math.Abs(_negativeOffset.X);
                     _extent.Height = _viewport.Height + _offset.Y + Math.Abs(_negativeOffset.Y);
                 }
+
+                if (!_parent.IsDragging && !_parent.IsPanning && !_parent.IsZooming && !_parent.DisableScroll)
+                {
+                    SetCurrentScroll();
+                }
+
                 ScrollOwner.InvalidateScrollInfo();
             }
             return base.ArrangeOverride(arrangeSize);
