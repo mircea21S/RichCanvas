@@ -35,12 +35,12 @@ namespace RichCanvas
         internal readonly ScaleTransform ScaleTransform = new ScaleTransform();
         internal readonly TranslateTransform TranslateTransform = new TranslateTransform();
 
-        private RichCanvas _mainPanel;
-        private PanningGrid _canvasContainer;
+        private RichCanvas? _mainPanel;
+        private PanningGrid? _canvasContainer;
         private bool _isDrawing;
         private readonly Gestures.Drawing _drawingGesture;
         private readonly Selecting _selectingGesture;
-        private DispatcherTimer _autoPanTimer;
+        private DispatcherTimer? _autoPanTimer;
         private readonly List<int> _currentDrawingIndexes = new List<int>();
 
         #endregion
@@ -400,9 +400,9 @@ namespace RichCanvas
         /// Gets whether at least one item is selected.
         /// </summary>
         public bool HasSelections => base.SelectedItems.Count > 1;
-        internal RichCanvas ItemsHost => _mainPanel;
-        internal PanningGrid ScrollContainer => _canvasContainer;
-        internal TransformGroup SelectionRectangleTransform { get; private set; }
+        internal RichCanvas? ItemsHost => _mainPanel;
+        internal PanningGrid? ScrollContainer => _canvasContainer;
+        internal TransformGroup? SelectionRectangleTransform { get; private set; }
         internal bool IsPanning => Keyboard.IsKeyDown(PanningKey);
         internal bool IsZooming => Keyboard.IsKeyDown(ZoomKey);
         internal bool IsDrawing => _isDrawing;
@@ -553,7 +553,7 @@ namespace RichCanvas
                 RaiseDrawEndedEvent(drawnItem.DataContext);
                 _drawingGesture.Dispose();
 
-                ItemsHost.InvalidateMeasure();
+                ItemsHost?.InvalidateMeasure();
             }
             else if (!IsDragging && IsSelecting)
             {
@@ -786,7 +786,7 @@ namespace RichCanvas
                     break;
 
                 case NotifyCollectionChangedAction.Add:
-                    IList newItems = e.NewItems;
+                    IList? newItems = e.NewItems;
                     if (newItems != null)
                     {
                         IList selectedItems = base.SelectedItems;
@@ -798,7 +798,7 @@ namespace RichCanvas
                     break;
 
                 case NotifyCollectionChangedAction.Remove:
-                    IList oldItems = e.OldItems;
+                    IList? oldItems = e.OldItems;
                     if (oldItems != null)
                     {
                         IList selectedItems = base.SelectedItems;
@@ -828,10 +828,14 @@ namespace RichCanvas
 
         private RectangleGeometry GetSelectionRectangleCurrentGeometry()
         {
-            var scaleTransform = (ScaleTransform)SelectionRectangleTransform.Children[0];
-            var currentSelectionTop = scaleTransform.ScaleY < 0 ? SelectionRectangle.Top - SelectionRectangle.Height : SelectionRectangle.Top;
-            var currentSelectionLeft = scaleTransform.ScaleX < 0 ? SelectionRectangle.Left - SelectionRectangle.Width : SelectionRectangle.Left;
-            return new RectangleGeometry(new Rect(currentSelectionLeft, currentSelectionTop, SelectionRectangle.Width, SelectionRectangle.Height));
+            var scaleTransform = (ScaleTransform?)SelectionRectangleTransform?.Children[0];
+            if (scaleTransform != null)
+            {
+                var currentSelectionTop = scaleTransform.ScaleY < 0 ? SelectionRectangle.Top - SelectionRectangle.Height : SelectionRectangle.Top;
+                var currentSelectionLeft = scaleTransform.ScaleX < 0 ? SelectionRectangle.Left - SelectionRectangle.Width : SelectionRectangle.Left;
+                return new RectangleGeometry(new Rect(currentSelectionLeft, currentSelectionTop, SelectionRectangle.Width, SelectionRectangle.Height));
+            }
+            return new RectangleGeometry(Rect.Empty);
         }
 
         #endregion
@@ -916,7 +920,7 @@ namespace RichCanvas
 
         private void HandleAutoPanning(object sender, EventArgs e)
         {
-            if (IsMouseOver && Mouse.LeftButton == MouseButtonState.Pressed && Mouse.Captured != null && !IsMouseCapturedByScrollBar() && !IsPanning)
+            if (IsMouseOver && Mouse.LeftButton == MouseButtonState.Pressed && Mouse.Captured != null && !IsMouseCapturedByScrollBar() && !IsPanning && ScrollContainer != null)
             {
                 var mousePosition = Mouse.GetPosition(ScrollContainer);
                 var transformedPosition = Mouse.GetPosition(ItemsHost);

@@ -21,10 +21,10 @@ namespace RichCanvas
     public class RichItemContainer : ContentControl
     {
         private const string ContentPresenterName = "PART_ContentPresenter";
-        private RichItemsControl _host;
+        private RichItemsControl? _host;
 
-        internal ScaleTransform ScaleTransform => RenderTransform is TransformGroup group ? group.Children.OfType<ScaleTransform>().FirstOrDefault() : null;
-        internal TranslateTransform TranslateTransform => RenderTransform is TransformGroup group ? group.Children.OfType<TranslateTransform>().FirstOrDefault() : null;
+        internal ScaleTransform? ScaleTransform => RenderTransform is TransformGroup group ? group.Children.OfType<ScaleTransform>().FirstOrDefault() : null;
+        internal TranslateTransform? TranslateTransform => RenderTransform is TransformGroup group ? group.Children.OfType<TranslateTransform>().FirstOrDefault() : null;
 
         public static DependencyProperty IsSelectedProperty = Selector.IsSelectedProperty.AddOwner(typeof(RichItemContainer), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnIsSelectedChanged));
         /// <summary>
@@ -211,17 +211,17 @@ namespace RichCanvas
         /// <summary>
         /// The <see cref="RichItemsControl"/> that owns this <see cref="RichItemContainer"/>.
         /// </summary>
-        public RichItemsControl Host => _host ??= ItemsControl.ItemsControlFromItemContainer(this) as RichItemsControl;
+        public RichItemsControl? Host => _host ??= ItemsControl.ItemsControlFromItemContainer(this) as RichItemsControl;
 
         /// <summary>
         /// The Top position based on current <see cref="Scale"/>
         /// </summary>
-        public double TransformedTop => ScaleTransform.ScaleY < 0 ? Top - Height : Top;
+        public double TransformedTop => ScaleTransform != null ? (ScaleTransform.ScaleY < 0 ? Top - Height : Top) : 0;
 
         /// <summary>
         /// The Left position based on current <see cref="Scale"/>
         /// </summary>
-        public double TransformedLeft => ScaleTransform.ScaleX < 0 ? Left - Width : Left;
+        public double TransformedLeft => ScaleTransform != null ? (ScaleTransform.ScaleX < 0 ? Left - Width : Left) : 0;
 
         internal bool IsDrawn { get; set; }
 
@@ -234,7 +234,7 @@ namespace RichCanvas
         /// </summary>
         public void CalculateBoundingBox()
         {
-            var transform = TransformToVisual(Host.ItemsHost);
+            var transform = TransformToVisual(Host?.ItemsHost);
             if (double.IsNaN(Width) || double.IsNaN(Height))
             {
                 var actualBounds = transform.TransformBounds(new Rect(0, 0, ActualWidth, ActualHeight));
@@ -248,7 +248,11 @@ namespace RichCanvas
         /// <inheritdoc/>
         protected override void OnMouseEnter(MouseEventArgs e)
         {
-            Host.HasCustomBehavior = HasCustomBehavior;
+            if (Host != null)
+            {
+                Host.HasCustomBehavior = HasCustomBehavior;
+            }
+
             if (IsDraggable)
             {
                 DragBehavior.SetIsDragging((RichItemContainer)e.OriginalSource, true);
@@ -259,10 +263,14 @@ namespace RichCanvas
         protected override void OnMouseLeave(MouseEventArgs e)
         {
             // ignore custom behavior as mouse is not on this container
-            Host.HasCustomBehavior = false;
+            if (Host != null)
+            {
+                Host.HasCustomBehavior = false;
+            }
+
             if (IsDraggable)
             {
-                var position = e.GetPosition(Host.ItemsHost);
+                var position = e.GetPosition(Host?.ItemsHost);
                 DragBehavior.SetIsDragging((RichItemContainer)e.OriginalSource, false);
                 RaiseEvent(new DragCompletedEventArgs(position.X, position.Y, true)
                 {
@@ -274,7 +282,7 @@ namespace RichCanvas
         /// <summary>
         /// Occurs when the <see cref="RichItemContainer"/> is being dragged.
         /// </summary>
-        public event PreviewLocationChanged PreviewLocationChanged;
+        public event PreviewLocationChanged? PreviewLocationChanged;
 
         /// <summary>
         /// Raises the <see cref="PreviewLocationChanged"/> event.
@@ -349,7 +357,7 @@ namespace RichCanvas
                 LeftPropertySet = true;
                 RaiseEvent(new RoutedEventArgs(LeftChangedEvent, Left));
             }
-            Host?.ItemsHost.InvalidateArrange();
+            Host?.ItemsHost?.InvalidateArrange();
         }
 
         private void OnSelectedChanged(bool value)
@@ -368,7 +376,7 @@ namespace RichCanvas
             if (IsValid())
             {
                 // Invalidate arrange to calculate correct BoundingBox
-                Host.ItemsHost.InvalidateArrange();
+                Host?.ItemsHost?.InvalidateArrange();
             }
         }
 

@@ -32,8 +32,13 @@ namespace RichCanvas.Gestures
                     RichItemContainer container = _selectedContainers[i];
                     var translateTransform = container.TranslateTransform;
 
-                    container.Left += translateTransform.X;
-                    container.Top += translateTransform.Y;
+                    if (translateTransform != null)
+                    {
+                        container.Left += translateTransform.X;
+                        container.Top += translateTransform.Y;
+                        translateTransform.X = 0;
+                        translateTransform.Y = 0;
+                    }
 
                     // Correct the final position
                     if (_context.EnableSnapping)
@@ -42,8 +47,6 @@ namespace RichCanvas.Gestures
                         container.Top = Math.Round(container.Top / _context.GridSpacing) * _context.GridSpacing;
                     }
 
-                    translateTransform.X = 0;
-                    translateTransform.Y = 0;
                 }
 
                 _selectedContainers.Clear();
@@ -102,13 +105,13 @@ namespace RichCanvas.Gestures
                         translateTransform.X += e.HorizontalChange;
                         translateTransform.Y += e.VerticalChange;
                         container.CalculateBoundingBox();
+                        container.OnPreviewLocationChanged(new Point(container.Left + translateTransform.X, container.Top + translateTransform.Y));
                     }
                     minX = Math.Min(minX, container.BoundingBox.Left);
                     minY = Math.Min(minY, container.BoundingBox.Top);
                     maxX = Math.Max(maxX, container.BoundingBox.Right);
                     maxY = Math.Max(maxY, container.BoundingBox.Bottom);
 
-                    container.OnPreviewLocationChanged(new Point(container.Left + translateTransform.X, container.Top + translateTransform.Y));
                 }
                 _context.ItemsHost.TopLimit = minY;
                 _context.ItemsHost.LeftLimit = minX;
@@ -130,30 +133,33 @@ namespace RichCanvas.Gestures
 
         internal void OnMouseMove(Point position)
         {
-            TransformGroup transformGroup = _context.SelectionRectangleTransform;
-            var scaleTransform = (ScaleTransform)transformGroup.Children[0];
+            TransformGroup? transformGroup = _context.SelectionRectangleTransform;
+            var scaleTransform = (ScaleTransform?)transformGroup?.Children[0];
 
             double width = position.X - _selectionRectangleInitialPosition.X;
             double height = position.Y - _selectionRectangleInitialPosition.Y;
 
-            if (width < 0 && scaleTransform.ScaleX == 1)
+            if (scaleTransform != null)
             {
-                scaleTransform.ScaleX = -1;
-            }
+                if (width < 0 && scaleTransform.ScaleX == 1)
+                {
+                    scaleTransform.ScaleX = -1;
+                }
 
-            if (height < 0 && scaleTransform.ScaleY == 1)
-            {
-                scaleTransform.ScaleY = -1;
-            }
+                if (height < 0 && scaleTransform.ScaleY == 1)
+                {
+                    scaleTransform.ScaleY = -1;
+                }
 
-            if (height > 0 && scaleTransform.ScaleY == -1)
-            {
-                scaleTransform.ScaleY = 1;
-            }
+                if (height > 0 && scaleTransform.ScaleY == -1)
+                {
+                    scaleTransform.ScaleY = 1;
+                }
 
-            if (width > 0 && scaleTransform.ScaleX == -1)
-            {
-                scaleTransform.ScaleX = 1;
+                if (width > 0 && scaleTransform.ScaleX == -1)
+                {
+                    scaleTransform.ScaleX = 1;
+                }
             }
 
             _context.SelectionRectangle = new Rect(_selectionRectangleInitialPosition.X, _selectionRectangleInitialPosition.Y, Math.Abs(width), Math.Abs(height));

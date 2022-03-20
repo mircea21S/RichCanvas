@@ -6,7 +6,7 @@ namespace RichCanvas.Helpers
     internal static class DragBehavior
     {
         private static Point _initialPosition;
-        internal static RichItemsControl ItemsControl { get; set; }
+        internal static RichItemsControl? ItemsControl { get; set; }
 
         internal static DependencyProperty IsDraggingProperty = DependencyProperty.RegisterAttached("IsDragging", typeof(bool), typeof(RichItemContainer),
             new PropertyMetadata(OnIsDraggingChanged));
@@ -19,12 +19,21 @@ namespace RichCanvas.Helpers
             if (d is RichItemContainer container)
             {
                 bool isDragging = (bool)e.NewValue;
-                ItemsControl.IsDragging = isDragging;
-                if (isDragging)
+                if (ItemsControl != null)
                 {
-                    container.MouseDown += OnSelectedContainerClicked;
-                    container.MouseMove += OnSelectedContainerMove;
-                    container.MouseUp += OnSelectedContainerReleased;
+                    ItemsControl.IsDragging = isDragging;
+                    if (isDragging)
+                    {
+                        container.MouseDown += OnSelectedContainerClicked;
+                        container.MouseMove += OnSelectedContainerMove;
+                        container.MouseUp += OnSelectedContainerReleased;
+                    }
+                    else
+                    {
+                        container.MouseDown -= OnSelectedContainerClicked;
+                        container.MouseMove -= OnSelectedContainerMove;
+                        container.MouseUp -= OnSelectedContainerReleased;
+                    }
                 }
                 else
                 {
@@ -37,8 +46,8 @@ namespace RichCanvas.Helpers
 
         private static void OnSelectedContainerClicked(object sender, MouseButtonEventArgs e)
         {
-            var container = (RichItemContainer)sender;
             _initialPosition = new Point(e.GetPosition(ItemsControl.ItemsHost).X, e.GetPosition(ItemsControl.ItemsHost).Y);
+            var container = (RichItemContainer)sender;
 
             container.IsSelected = true;
             container.RaiseDragStartedEvent(_initialPosition);

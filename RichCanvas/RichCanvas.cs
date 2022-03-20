@@ -13,14 +13,14 @@ namespace RichCanvas
         internal double BottomLimit { get; set; } = double.NegativeInfinity;
         internal double LeftLimit { get; set; } = double.PositiveInfinity;
         internal double RightLimit { get; set; } = double.NegativeInfinity;
-        internal RichItemsControl ItemsOwner { get; set; }
-        internal RichItemContainer BottomElement { get; private set; }
-        internal RichItemContainer RightElement { get; private set; }
+        internal RichItemsControl? ItemsOwner { get; set; }
+        internal RichItemContainer? BottomElement { get; private set; }
+        internal RichItemContainer? RightElement { get; private set; }
 
         /// <inheritdoc/>
         protected override Size MeasureOverride(Size constraint)
         {
-            if (ItemsOwner.IsDrawing || ItemsOwner.IsSelecting || ItemsOwner.IsDragging)
+            if (ItemsOwner != null && (ItemsOwner.IsDrawing || ItemsOwner.IsSelecting || ItemsOwner.IsDragging))
             {
                 return default;
             }
@@ -71,8 +71,11 @@ namespace RichCanvas
             LeftLimit = minX;
             BottomLimit = maxY;
             RightLimit = maxX;
-            ItemsOwner.ViewportRect = new Rect(LeftLimit, TopLimit, 0, 0);
-            ItemsOwner.ScrollContainer.SetCurrentScroll();
+
+            if (ItemsOwner != null)
+            {
+                ItemsOwner.ScrollContainer.SetCurrentScroll();
+            }
 
             return arrangeSize;
         }
