@@ -81,8 +81,8 @@ namespace RichCanvas.Gestures
                     }
                 }
 
-                _context.ItemsHost.InvalidateArrange();
-                _context.ScrollContainer.SetCurrentScroll();
+                _context.ItemsHost?.InvalidateArrange();
+                _context.ScrollContainer?.SetCurrentScroll();
                 e.Handled = true;
             }
         }
@@ -98,7 +98,7 @@ namespace RichCanvas.Gestures
                 for (int i = 0; i < _selectedContainers.Count; i++)
                 {
                     RichItemContainer container = _selectedContainers[i];
-                    TranslateTransform translateTransform = container.TranslateTransform;
+                    TranslateTransform? translateTransform = container.TranslateTransform;
 
                     if (translateTransform != null)
                     {
@@ -107,18 +107,36 @@ namespace RichCanvas.Gestures
                         container.CalculateBoundingBox();
                         container.OnPreviewLocationChanged(new Point(container.Left + translateTransform.X, container.Top + translateTransform.Y));
                     }
-                    minX = Math.Min(minX, container.BoundingBox.Left);
-                    minY = Math.Min(minY, container.BoundingBox.Top);
-                    maxX = Math.Max(maxX, container.BoundingBox.Right);
-                    maxY = Math.Max(maxY, container.BoundingBox.Bottom);
 
+                    if (container == _context.ItemsHost?.BottomElement)
+                    {
+                        maxY = Math.Max(maxY, container.BoundingBox.Bottom);
+                        _context.ItemsHost.BottomElement = container;
+                    }
+
+                    if (container == _context.ItemsHost?.RightElement)
+                    {
+                        maxX = Math.Max(maxX, container.BoundingBox.Right);
+                        _context.ItemsHost.RightElement = container;
+                    }
+
+                    if (container == _context.ItemsHost?.TopElement)
+                    {
+                        minY = Math.Min(minY, container.BoundingBox.Top);
+                        _context.ItemsHost.TopElement = container;
+                    }
+
+                    if (container == _context.ItemsHost?.LeftElement)
+                    {
+                        minX = Math.Min(minX, container.BoundingBox.Left);
+                        _context.ItemsHost.LeftElement = container;
+                    }
                 }
-                _context.ItemsHost.TopLimit = minY;
-                _context.ItemsHost.LeftLimit = minX;
-                _context.ItemsHost.BottomLimit = maxY;
-                _context.ItemsHost.RightLimit = maxX;
 
-                _context.ScrollContainer.SetCurrentScroll();
+                if (_context.ItemsHost != null)
+                {
+                    _context.ScrollContainer?.SetCurrentScroll();
+                }
             }
         }
 
