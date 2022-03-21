@@ -1,19 +1,12 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace RichCanvas.Helpers
 {
     internal static class DragBehavior
     {
-        internal delegate void DragDeltaEventHandler(Point point);
-        internal static event DragDeltaEventHandler DragDelta;
         private static Point _initialPosition;
-
-        internal static RichItemsControl ItemsControl { get; set; }
-
-        public static bool IsDragging { get; private set; }
+        internal static RichItemsControl? ItemsControl { get; set; }
 
         internal static DependencyProperty IsDraggingProperty = DependencyProperty.RegisterAttached("IsDragging", typeof(bool), typeof(RichItemContainer),
             new PropertyMetadata(OnIsDraggingChanged));
@@ -26,14 +19,21 @@ namespace RichCanvas.Helpers
             if (d is RichItemContainer container)
             {
                 bool isDragging = (bool)e.NewValue;
-                IsDragging = isDragging;
-                ItemsControl.IsDragging = isDragging;
-                if (isDragging)
+                if (ItemsControl != null)
                 {
-                    //can raise routed events on container(drag started e.g)
-                    container.MouseDown += OnSelectedContainerClicked;
-                    container.MouseMove += OnSelectedContainerMove;
-                    container.MouseUp += OnSelectedContainerReleased;
+                    ItemsControl.IsDragging = isDragging;
+                    if (isDragging)
+                    {
+                        container.MouseDown += OnSelectedContainerClicked;
+                        container.MouseMove += OnSelectedContainerMove;
+                        container.MouseUp += OnSelectedContainerReleased;
+                    }
+                    else
+                    {
+                        container.MouseDown -= OnSelectedContainerClicked;
+                        container.MouseMove -= OnSelectedContainerMove;
+                        container.MouseUp -= OnSelectedContainerReleased;
+                    }
                 }
                 else
                 {
@@ -46,41 +46,26 @@ namespace RichCanvas.Helpers
 
         private static void OnSelectedContainerClicked(object sender, MouseButtonEventArgs e)
         {
-            var container = (RichItemContainer)sender;
-            container.IsSelected = true;
-
             _initialPosition = new Point(e.GetPosition(ItemsControl.ItemsHost).X, e.GetPosition(ItemsControl.ItemsHost).Y);
+            var container = (RichItemContainer)sender;
+
+            container.IsSelected = true;
+            container.RaiseDragStartedEvent(_initialPosition);
             container.CaptureMouse();
+
             ItemsControl.Cursor = Cursors.Hand;
         }
 
         private static void OnSelectedContainerReleased(object sender, MouseButtonEventArgs e)
         {
             var container = (RichItemContainer)sender;
-            container.ReleaseMouseCapture();
 
-            TranslateTransform translateTransform = container.TranslateTransform;
+            container.RaiseDragCompletedEvent(e.GetPosition(ItemsControl.ItemsHost));
 
-            if (translateTransform != null)
+            if (container.IsMouseCaptured)
             {
-                container.Left += translateTransform.X;
-                container.Top += translateTransform.Y;
-                translateTransform.X = 0;
-                translateTransform.Y = 0;
+                container.ReleaseMouseCapture();
             }
-
-            if (ItemsControl.EnableGrid && ItemsControl.EnableSnapping)
-            {
-                container.Left = Math.Round(container.Left / ItemsControl.GridSpacing) * ItemsControl.GridSpacing;
-                container.Top = Math.Round(container.Top / ItemsControl.GridSpacing) * ItemsControl.GridSpacing;
-            }
-
-
-            if (ItemsControl.HasSelections)
-            {
-                ItemsControl.UpdateSelections(ItemsControl.EnableSnapping);
-            }
-            ItemsControl.Cursor = Cursors.Arrow;
         }
 
         private static void OnSelectedContainerMove(object sender, MouseEventArgs e)
@@ -99,24 +84,11 @@ namespace RichCanvas.Helpers
                     return;
                 }
 
-                TranslateTransform translateTransform = container.TranslateTransform;
-
-                if (!ItemsControl.HasSelections && translateTransform != null)
-                {
-                    translateTransform.X += currentPosition.X - _initialPosition.X;
-                    translateTransform.Y += currentPosition.Y - _initialPosition.Y;
-                }
-                else
-                {
-                    DragDelta?.Invoke(new Point(currentPosition.X - _initialPosition.X, currentPosition.Y - _initialPosition.Y));
-                }
-
-                ItemsControl.UpdateSelections();
-
                 if (offset.X != 0 || offset.Y != 0)
                 {
-                    ItemsControl.ScrollContainer.SetCurrentScroll();
+                    container.RaiseDragDeltaEvent(new Point(offset.X, offset.Y));
                 }
+
                 _initialPosition = currentPosition;
             }
         }

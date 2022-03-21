@@ -35,12 +35,12 @@ namespace RichCanvas
         internal readonly ScaleTransform ScaleTransform = new ScaleTransform();
         internal readonly TranslateTransform TranslateTransform = new TranslateTransform();
 
-        private RichCanvas _mainPanel;
-        private PanningGrid _canvasContainer;
+        private RichCanvas? _mainPanel;
+        private PanningGrid? _canvasContainer;
         private bool _isDrawing;
         private readonly Gestures.Drawing _drawingGesture;
         private readonly Selecting _selectingGesture;
-        private DispatcherTimer _autoPanTimer;
+        private DispatcherTimer? _autoPanTimer;
         private readonly List<int> _currentDrawingIndexes = new List<int>();
 
         #endregion
@@ -274,7 +274,8 @@ namespace RichCanvas
             set => SetValue(ScaleProperty, value);
         }
 
-        public static DependencyProperty SelectedItemsProperty = DependencyProperty.Register(nameof(SelectedItems), typeof(IList), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(IList)));
+        public static DependencyProperty SelectedItemsProperty = DependencyProperty.Register(nameof(SelectedItems), typeof(IList), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(IList), OnSelectedItemsSourceChanged));
+
         /// <summary>
         /// Gets or sets the items in the <see cref="RichItemsControl"/> that are selected.
         /// </summary>
@@ -394,18 +395,21 @@ namespace RichCanvas
         #endregion
 
         #region Internal Properties
+
         /// <summary>
         /// Gets whether at least one item is selected.
         /// </summary>
         public bool HasSelections => base.SelectedItems.Count > 1;
-        internal RichCanvas ItemsHost => _mainPanel;
-        internal PanningGrid ScrollContainer => _canvasContainer;
-        internal TransformGroup SelectionRectangleTransform { get; private set; }
+        internal RichCanvas? ItemsHost => _mainPanel;
+        internal PanningGrid? ScrollContainer => _canvasContainer;
+        internal TransformGroup? SelectionRectangleTransform { get; private set; }
         internal bool IsPanning => Keyboard.IsKeyDown(PanningKey);
         internal bool IsZooming => Keyboard.IsKeyDown(ZoomKey);
         internal bool IsDrawing => _isDrawing;
         internal RichItemContainer CurrentDrawingItem => _drawingGesture.CurrentItem;
         internal bool HasCustomBehavior { get; set; }
+        internal IList BaseSelectedItems => base.SelectedItems;
+
         #endregion
 
         #region Constructors
@@ -429,54 +433,6 @@ namespace RichCanvas
             DragBehavior.ItemsControl = this;
             _selectingGesture = new Selecting(this);
             _drawingGesture = new Gestures.Drawing(this);
-        }
-
-        #endregion
-
-        #region Public API
-
-        /// <summary>
-        /// Selects all elements inside <see cref="SelectionRectangle"/>
-        /// </summary>
-        public void SelectBySelectionRectangle()
-        {
-            RectangleGeometry geom = GetSelectionRectangleCurrentGeometry();
-
-            UnselectAll();
-            SelectedItems.Clear();
-            _selectingGesture.UnselectAll();
-
-            BeginUpdateSelectedItems();
-
-            VisualTreeHelper.HitTest(_mainPanel, null,
-                new HitTestResultCallback(OnHitTestResultCallback),
-                new GeometryHitTestParameters(geom));
-
-            EndUpdateSelectedItems();
-        }
-
-        /// <summary>
-        /// Returns the elements that intersect with <paramref name="area"/>
-        /// </summary>
-        /// <param name="area"></param>
-        /// <returns></returns>
-        public List<object> GetElementsInArea(Rect area)
-        {
-            var intersectedElements = new List<object>();
-            var rectangleGeometry = new RectangleGeometry(area);
-            VisualTreeHelper.HitTest(_mainPanel, null,
-                new HitTestResultCallback((HitTestResult result) =>
-                {
-                    var geometryHitTestResult = (GeometryHitTestResult)result;
-                    if (geometryHitTestResult.IntersectionDetail != IntersectionDetail.Empty)
-                    {
-                        var container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
-                        intersectedElements.Add(container.DataContext);
-                    }
-                    return HitTestResultBehavior.Continue;
-                }),
-                new GeometryHitTestParameters(rectangleGeometry));
-            return intersectedElements;
         }
 
         #endregion
@@ -556,7 +512,7 @@ namespace RichCanvas
                         }
                     }
 
-                    if (!_isDrawing && !DragBehavior.IsDragging && !IsPanning && !HasCustomBehavior)
+                    if (!_isDrawing && !IsDragging && !IsPanning && !HasCustomBehavior)
                     {
                         IsSelecting = true;
                         _selectingGesture.OnMouseDown(position);
@@ -597,9 +553,9 @@ namespace RichCanvas
                 RaiseDrawEndedEvent(drawnItem.DataContext);
                 _drawingGesture.Dispose();
 
-                ItemsHost.InvalidateMeasure();
+                ItemsHost?.InvalidateMeasure();
             }
-            else if (!DragBehavior.IsDragging && IsSelecting)
+            else if (!IsDragging && IsSelecting)
             {
                 IsSelecting = false;
 
@@ -718,29 +674,168 @@ namespace RichCanvas
 
         #endregion
 
-        #region Internal Methods
+        #region Selection
 
-        internal void AddSelection(RichItemContainer container)
+        /// <summary>
+        /// Selects all elements inside <see cref="SelectionRectangle"/>
+        /// </summary>
+        public void SelectBySelectionRectangle()
         {
-            _selectingGesture.AddSelection(container);
-            base.SelectedItems.Add(container.DataContext);
+            RectangleGeometry geom = GetSelectionRectangleCurrentGeometry();
+
+            SelectedItems?.Clear();
+
+            BeginUpdateSelectedItems();
+
+            VisualTreeHelper.HitTest(_mainPanel, null,
+                new HitTestResultCallback(OnHitTestResultCallback),
+                new GeometryHitTestParameters(geom));
+
+            EndUpdateSelectedItems();
         }
 
-        internal void RemoveSelection(RichItemContainer container)
+        /// <summary>
+        /// Returns the elements that intersect with <paramref name="area"/>
+        /// </summary>
+        /// <param name="area"></param>
+        /// <returns></returns>
+        public List<object> GetElementsInArea(Rect area)
         {
-            _selectingGesture.RemoveSelection(container);
-            base.SelectedItems.Remove(container.DataContext);
+            var intersectedElements = new List<object>();
+            var rectangleGeometry = new RectangleGeometry(area);
+            VisualTreeHelper.HitTest(_mainPanel, null,
+                new HitTestResultCallback((HitTestResult result) =>
+                {
+                    var geometryHitTestResult = (GeometryHitTestResult)result;
+                    if (geometryHitTestResult.IntersectionDetail != IntersectionDetail.Empty)
+                    {
+                        var container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
+                        intersectedElements.Add(container.DataContext);
+                    }
+                    return HitTestResultBehavior.Continue;
+                }),
+                new GeometryHitTestParameters(rectangleGeometry));
+            return intersectedElements;
         }
 
-        internal void UpdateSelections(bool snap = false)
+        /// <inheritdoc/>
+        protected override void OnSelectionChanged(SelectionChangedEventArgs e)
         {
-            _selectingGesture.UpdateSelectionsPosition(snap);
+            base.OnSelectionChanged(e);
+
+            if (!IsSelecting)
+            {
+                IList selected = SelectedItems;
+
+                if (selected != null)
+                {
+                    IList added = e.AddedItems;
+                    for (var i = 0; i < added.Count; i++)
+                    {
+                        // Ensure no duplicates are added
+                        if (!selected.Contains(added[i]))
+                        {
+                            selected.Add(added[i]);
+                        }
+                    }
+
+                    IList removed = e.RemovedItems;
+                    for (var i = 0; i < removed.Count; i++)
+                    {
+                        selected.Remove(removed[i]);
+                    }
+                }
+            }
         }
 
-        internal void RaiseScrollingEvent(object context)
+        private static void OnSelectedItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+            => ((RichItemsControl)d).OnSelectedItemsSourceChanged((IList)e.OldValue, (IList)e.NewValue);
+
+        private void OnSelectedItemsSourceChanged(IList oldValue, IList newValue)
         {
-            RoutedEventArgs newEventArgs = new RoutedEventArgs(ScrollingEvent, context);
-            RaiseEvent(newEventArgs);
+            if (oldValue is INotifyCollectionChanged oc)
+            {
+                oc.CollectionChanged -= OnSelectedItemsChanged;
+            }
+
+            if (newValue is INotifyCollectionChanged nc)
+            {
+                nc.CollectionChanged += OnSelectedItemsChanged;
+            }
+
+            IList selectedItems = base.SelectedItems;
+
+            BeginUpdateSelectedItems();
+            selectedItems.Clear();
+            if (newValue != null)
+            {
+                for (var i = 0; i < newValue.Count; i++)
+                {
+                    selectedItems.Add(newValue[i]);
+                }
+            }
+            EndUpdateSelectedItems();
+        }
+
+        private void OnSelectedItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Reset:
+                    base.SelectedItems.Clear();
+                    break;
+
+                case NotifyCollectionChangedAction.Add:
+                    IList? newItems = e.NewItems;
+                    if (newItems != null)
+                    {
+                        IList selectedItems = base.SelectedItems;
+                        for (var i = 0; i < newItems.Count; i++)
+                        {
+                            selectedItems.Add(newItems[i]);
+                        }
+                    }
+                    break;
+
+                case NotifyCollectionChangedAction.Remove:
+                    IList? oldItems = e.OldItems;
+                    if (oldItems != null)
+                    {
+                        IList selectedItems = base.SelectedItems;
+                        for (var i = 0; i < oldItems.Count; i++)
+                        {
+                            selectedItems.Remove(oldItems[i]);
+                        }
+                    }
+                    break;
+            }
+        }
+
+        private HitTestResultBehavior OnHitTestResultCallback(HitTestResult result)
+        {
+            var geometryHitTestResult = (GeometryHitTestResult)result;
+            if (geometryHitTestResult.VisualHit.DependencyObjectType.SystemType != typeof(RichItemContainer) && geometryHitTestResult.IntersectionDetail != IntersectionDetail.Empty)
+            {
+                var container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
+                if (container != null && container.IsSelectable)
+                {
+                    SelectedItems?.Add(container.DataContext);
+                    container.IsSelected = true;
+                }
+            }
+            return HitTestResultBehavior.Continue;
+        }
+
+        private RectangleGeometry GetSelectionRectangleCurrentGeometry()
+        {
+            var scaleTransform = (ScaleTransform?)SelectionRectangleTransform?.Children[0];
+            if (scaleTransform != null)
+            {
+                var currentSelectionTop = scaleTransform.ScaleY < 0 ? SelectionRectangle.Top - SelectionRectangle.Height : SelectionRectangle.Top;
+                var currentSelectionLeft = scaleTransform.ScaleX < 0 ? SelectionRectangle.Left - SelectionRectangle.Width : SelectionRectangle.Left;
+                return new RectangleGeometry(new Rect(currentSelectionLeft, currentSelectionTop, SelectionRectangle.Width, SelectionRectangle.Height));
+            }
+            return new RectangleGeometry(Rect.Empty);
         }
 
         #endregion
@@ -758,6 +853,12 @@ namespace RichCanvas
         {
             TranslateOffset = new Point(TranslateTransform.X, TranslateTransform.Y);
             RaiseScrollingEvent(e);
+        }
+
+        private void RaiseScrollingEvent(object context)
+        {
+            RoutedEventArgs newEventArgs = new RoutedEventArgs(ScrollingEvent, context);
+            RaiseEvent(newEventArgs);
         }
 
         private void SetCachingMode(bool disable)
@@ -819,7 +920,7 @@ namespace RichCanvas
 
         private void HandleAutoPanning(object sender, EventArgs e)
         {
-            if (IsMouseOver && Mouse.LeftButton == MouseButtonState.Pressed && Mouse.Captured != null && !IsMouseCapturedByScrollBar() && !IsPanning)
+            if (IsMouseOver && Mouse.LeftButton == MouseButtonState.Pressed && Mouse.Captured != null && !IsMouseCapturedByScrollBar() && !IsPanning && ScrollContainer != null)
             {
                 var mousePosition = Mouse.GetPosition(ScrollContainer);
                 var transformedPosition = Mouse.GetPosition(ItemsHost);
@@ -865,31 +966,9 @@ namespace RichCanvas
             }
         }
 
-        private HitTestResultBehavior OnHitTestResultCallback(HitTestResult result)
-        {
-            var geometryHitTestResult = (GeometryHitTestResult)result;
-            if (geometryHitTestResult.VisualHit.DependencyObjectType.SystemType != typeof(RichItemContainer) && geometryHitTestResult.IntersectionDetail != IntersectionDetail.Empty)
-            {
-                var container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
-                if (container != null && container.IsSelectable)
-                {
-                    container.IsSelected = true;
-                }
-            }
-            return HitTestResultBehavior.Continue;
-        }
-
         private static bool IsMouseCapturedByScrollBar()
         {
             return Mouse.Captured.GetType() == typeof(Thumb) || Mouse.Captured.GetType() == typeof(RepeatButton);
-        }
-
-        private RectangleGeometry GetSelectionRectangleCurrentGeometry()
-        {
-            var scaleTransform = (ScaleTransform)SelectionRectangleTransform.Children[0];
-            var currentSelectionTop = scaleTransform.ScaleY < 0 ? SelectionRectangle.Top - SelectionRectangle.Height : SelectionRectangle.Top;
-            var currentSelectionLeft = scaleTransform.ScaleX < 0 ? SelectionRectangle.Left - SelectionRectangle.Width : SelectionRectangle.Left;
-            return new RectangleGeometry(new Rect(currentSelectionLeft, currentSelectionTop, SelectionRectangle.Width, SelectionRectangle.Height));
         }
 
         private void UpdateTimerInterval()

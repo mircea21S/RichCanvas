@@ -375,9 +375,9 @@
                                 <Setter Property="richCanvas:RichItemContainer.ApplyTransform">
                                     <Setter.Value>
                                         <TransformGroup>
+                                            <RotateTransform Angle="{Binding Angle}" />
                                             <ScaleTransform />
                                             <TranslateTransform />
-                                            <RotateTransform Angle="{Binding Angle}" />
                                         </TransformGroup>
                                     </Setter.Value>
                                 </Setter>

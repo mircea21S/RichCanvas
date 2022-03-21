@@ -19,23 +19,24 @@ namespace RichCanvas.Gestures
             _context = context;
         }
 
-        internal void ZoomToPosition(Point position, int delta, double factor)
+        internal void ZoomToPosition(Point position, int delta, double? factor)
         {
             var previousScaleX = _scaleTransform.ScaleX;
             var previousScaleY = _scaleTransform.ScaleY;
             var originX = (position.X - _translateTransform.X) / _scaleTransform.ScaleX;
             var originY = (position.Y - _translateTransform.Y) / _scaleTransform.ScaleY;
 
-            if (delta > 0)
+            if (delta > 0 && factor.HasValue)
             {
-                _scaleTransform.ScaleY *= factor;
-                _scaleTransform.ScaleX *= factor;
+                _scaleTransform.ScaleY *= factor.Value;
+                _scaleTransform.ScaleX *= factor.Value;
             }
-            else
+            else if (factor.HasValue)
             {
-                _scaleTransform.ScaleY /= factor;
-                _scaleTransform.ScaleX /= factor;
+                _scaleTransform.ScaleY /= factor.Value;
+                _scaleTransform.ScaleX /= factor.Value;
             }
+
             if (_scaleTransform.ScaleX <= MinScale)
             {
                 _scaleTransform.ScaleX = MinScale;
