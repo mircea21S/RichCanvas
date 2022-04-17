@@ -80,6 +80,7 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
 
             <StackPanel>
@@ -185,6 +186,11 @@
                           md:HintAssist.IsFloating="True">
                 </ComboBox>
             </StackPanel>
+            <!--<StackPanel Grid.Row="9">
+                <TextBox Text="{Binding TranslateOffset, Mode=TwoWay}"
+                         md:HintAssist.Hint="Translate Offset"
+                         md:HintAssist.IsFloating="True" />
+            </StackPanel>-->
         </Grid>
 
         <!--ACTIONS-->
@@ -315,7 +321,10 @@
                                      AutoPanSpeed="{Binding AutoPanSpeed, Converter={StaticResource StringToFloatConverter}}"
                                      AutoPanTickRate="{Binding AutoPanTickRate, Converter={StaticResource StringToFloatConverter}}"
                                      TranslateOffset="{Binding TranslateOffset, Mode=TwoWay}"
-                                     RealTimeSelectionEnabled="True">
+                                     RealTimeSelectionEnabled="True"
+                                     RealTimeDraggingEnabled="True"
+                                     ExtentSize="10,10"
+                                     EnableNegativeScrolling="False">
 
             <richCanvas:RichItemsControl.ContextMenu>
                 <ContextMenu>

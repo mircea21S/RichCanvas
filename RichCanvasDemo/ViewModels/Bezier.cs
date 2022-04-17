@@ -1,5 +1,4 @@
 ﻿using RichCanvasDemo.ViewModels.Base;
-using System;
 using System.Collections.Generic;
 using System.Windows;
 
@@ -47,7 +46,6 @@ namespace RichCanvasDemo.ViewModels
 
         public void SetPoints()
         {
-            Console.WriteLine("sdsd");
             Point1 = new Point(Width - 20, 0);
             Point2 = new Point(Width - 10, 0);
             Point3 = new Point(Width, Height);

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Input;
 
 namespace RichCanvas.Helpers
@@ -77,11 +78,57 @@ namespace RichCanvas.Helpers
 
                 var offset = currentPosition - _initialPosition;
 
-                if ((ItemsControl.ScrollContainer.NegativeVerticalScrollDisabled && offset.Y > 0 && ItemsControl.ItemsHost.BottomElement.IsSelected) ||
-                    (ItemsControl.ScrollContainer.NegativeHorizontalScrollDisabled && offset.X > 0 && ItemsControl.ItemsHost.RightElement.IsSelected))
+                if (!ItemsControl.EnableNegativeScrolling)
                 {
-                    _initialPosition = currentPosition;
-                    return;
+                    if (offset.Y > 0 && ItemsControl.ItemsHost.BottomElement.IsSelected && ItemsControl.ScrollContainer.NegativeVerticallOffset < 0 && ItemsControl.ScrollContainer.NegativeVerticallOffset - offset.Y <= 0)
+                    {
+                        _initialPosition = currentPosition;
+                        return;
+                    }
+
+                    if (offset.X > 0 && ItemsControl.ItemsHost.RightElement.IsSelected && ItemsControl.ScrollContainer.NegativeHorizontalOffset < 0 && ItemsControl.ScrollContainer.NegativeHorizontalOffset - offset.X <= 0)
+                    {
+                        _initialPosition = currentPosition;
+                        return;
+                    }
+                }
+
+                if (!ItemsControl.ExtentSize.IsEmpty)
+                {
+                    if (offset.Y < 0 && ItemsControl.ItemsHost.TopElement.IsSelected && ItemsControl.ScrollContainer.VerticalOffset + (-offset.Y) >= ItemsControl.ExtentSize.Height)
+                    {
+                        _initialPosition = currentPosition;
+                        return;
+                    }
+
+                    if (ItemsControl.ExtentSize.Height == 0)
+                    {
+                        if (offset.Y > 0 && ItemsControl.ItemsHost.BottomElement.IsSelected && ItemsControl.ScrollContainer.NegativeVerticallOffset < 0 && ItemsControl.ScrollContainer.NegativeVerticallOffset - offset.Y <= 0)
+                        {
+                            _initialPosition = currentPosition;
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        if (offset.Y > 0 && ItemsControl.ItemsHost.BottomElement.IsSelected && ItemsControl.ScrollContainer.NegativeVerticallOffset - offset.Y <= -ItemsControl.ExtentSize.Height)
+                        {
+                            _initialPosition = currentPosition;
+                            return;
+                        }
+                    }
+
+                    if (offset.X < 0 && ItemsControl.ItemsHost.LeftElement.IsSelected && ItemsControl.ScrollContainer.HorizontalOffset + (-offset.X) >= ItemsControl.ExtentSize.Width)
+                    {
+                        _initialPosition = currentPosition;
+                        return;
+                    }
+
+                    if (offset.X > 0 && ItemsControl.ItemsHost.RightElement.IsSelected && ItemsControl.ScrollContainer.NegativeHorizontalOffset - offset.X <= -ItemsControl.ExtentSize.Width)
+                    {
+                        _initialPosition = currentPosition;
+                        return;
+                    }
                 }
 
                 if (offset.X != 0 || offset.Y != 0)

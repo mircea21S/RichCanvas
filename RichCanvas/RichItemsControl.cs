@@ -264,6 +264,8 @@ namespace RichCanvas
         }
 
         public static DependencyProperty ScaleProperty = DependencyProperty.Register(nameof(Scale), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(1d, OnScaleChanged, ConstarainScaleToRange));
+        private bool _fromEvent;
+
         /// <summary>
         /// Gets or sets the current <see cref="RichItemsControl.ScaleTransform"/> value.
         /// Default is 1.
@@ -370,7 +372,18 @@ namespace RichCanvas
             set => SetValue(RealTimeSelectionEnabledProperty, value);
         }
 
-        public static DependencyProperty ExtentSizeProperty = DependencyProperty.Register(nameof(ExtentSize), typeof(Size), typeof(RichItemsControl), new FrameworkPropertyMetadata(Size.Empty));
+        public static DependencyProperty RealTimeDraggingEnabledProperty = DependencyProperty.Register(nameof(RealTimeDraggingEnabled), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
+        /// <summary>
+        /// Gets or sets whether real-time selection is enabled.
+        /// Default is false
+        /// </summary>
+        public bool RealTimeDraggingEnabled
+        {
+            get => (bool)GetValue(RealTimeDraggingEnabledProperty);
+            set => SetValue(RealTimeDraggingEnabledProperty, value);
+        }
+
+        public static DependencyProperty ExtentSizeProperty = DependencyProperty.Register(nameof(ExtentSize), typeof(Size), typeof(RichItemsControl), new FrameworkPropertyMetadata(Size.Empty, OnExtentSizeChanged));
         /// <summary>
         /// Gets or sets scroll Extent maximum size. This size is added to the Viewport size.
         /// Default is <see cref="Size.Empty"/>
@@ -381,7 +394,7 @@ namespace RichCanvas
             set => SetValue(ExtentSizeProperty, value);
         }
 
-        public static DependencyProperty EnableNegativeScrollingProperty = DependencyProperty.Register(nameof(EnableNegativeScrolling), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true));
+        public static DependencyProperty EnableNegativeScrollingProperty = DependencyProperty.Register(nameof(EnableNegativeScrolling), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true, OnUpdateNegativeScroll));
         /// <summary>
         /// Gets or sets whether <see cref="RichCanvas"/> has negative scrolling and panning.
         /// Default is true.
@@ -607,6 +620,9 @@ namespace RichCanvas
         #endregion
 
         #region Properties Callbacks
+        private static void OnUpdateNegativeScroll(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d)?.ScrollContainer?.UpdateTranslateEvent();
+
+        private static void OnExtentSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d)?.ScrollContainer?.UpdateTranslateEvent();
 
         private static void OnDisableCacheChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).SetCachingMode((bool)e.NewValue);
 
@@ -844,15 +860,19 @@ namespace RichCanvas
 
         private void OnScaleChanged(object sender, EventArgs e)
         {
+            _fromEvent = true;
             Scale = ScaleTransform.ScaleX;
             RoutedEventArgs newEventArgs = new RoutedEventArgs(ZoomingEvent, new Point(ScaleTransform.ScaleX, ScaleTransform.ScaleY));
             RaiseEvent(newEventArgs);
+            _fromEvent = false;
         }
 
         private void OnTranslateChanged(object sender, EventArgs e)
         {
+            _fromEvent = true;
             TranslateOffset = new Point(TranslateTransform.X, TranslateTransform.Y);
             RaiseScrollingEvent(e);
+            _fromEvent = false;
         }
 
         private void RaiseScrollingEvent(object context)
@@ -883,15 +903,23 @@ namespace RichCanvas
 
         private void OverrideTranslate(Point newValue)
         {
-            TranslateTransform.X = newValue.X;
-            TranslateTransform.Y = newValue.Y;
+            if (!_fromEvent)
+            {
+                TranslateTransform.X = newValue.X;
+                TranslateTransform.Y = newValue.Y;
+                ScrollContainer?.SetCurrentScroll();
+            }
         }
 
         private void OverrideScale(double newValue)
         {
-            CoerceValue(ScaleProperty);
-            ScaleTransform.ScaleX = newValue;
-            ScaleTransform.ScaleY = newValue;
+            if (!_fromEvent)
+            {
+                ScaleTransform.ScaleX = newValue;
+                ScaleTransform.ScaleY = newValue;
+                CoerceValue(ScaleProperty);
+                ScrollContainer?.SetCurrentScroll();
+            }
         }
 
         private void OnDisableAutoPanningChanged(bool shouldDisable)
@@ -931,6 +959,7 @@ namespace RichCanvas
                     {
                         CurrentDrawingItem.Height = Math.Abs(transformedPosition.Y - CurrentDrawingItem.Top);
                     }
+
                     ScrollContainer.PanVertically(-AutoPanSpeed);
                 }
                 else if (mousePosition.Y >= ScrollContainer.ViewportHeight)
