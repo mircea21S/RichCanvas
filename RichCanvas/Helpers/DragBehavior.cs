@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 
 namespace RichCanvas.Helpers
@@ -75,68 +74,56 @@ namespace RichCanvas.Helpers
             if (container.IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed)
             {
                 Point currentPosition = e.GetPosition(ItemsControl.ItemsHost);
-
                 var offset = currentPosition - _initialPosition;
-
-                if (!ItemsControl.EnableNegativeScrolling)
-                {
-                    if (offset.Y > 0 && ItemsControl.ItemsHost.BottomElement.IsSelected && ItemsControl.ScrollContainer.NegativeVerticallOffset < 0 && ItemsControl.ScrollContainer.NegativeVerticallOffset - offset.Y <= 0)
-                    {
-                        _initialPosition = currentPosition;
-                        return;
-                    }
-
-                    if (offset.X > 0 && ItemsControl.ItemsHost.RightElement.IsSelected && ItemsControl.ScrollContainer.NegativeHorizontalOffset < 0 && ItemsControl.ScrollContainer.NegativeHorizontalOffset - offset.X <= 0)
-                    {
-                        _initialPosition = currentPosition;
-                        return;
-                    }
-                }
-
-                if (!ItemsControl.ExtentSize.IsEmpty)
-                {
-                    if (offset.Y < 0 && ItemsControl.ItemsHost.TopElement.IsSelected && ItemsControl.ScrollContainer.VerticalOffset + (-offset.Y) >= ItemsControl.ExtentSize.Height)
-                    {
-                        _initialPosition = currentPosition;
-                        return;
-                    }
-
-                    if (ItemsControl.ExtentSize.Height == 0)
-                    {
-                        if (offset.Y > 0 && ItemsControl.ItemsHost.BottomElement.IsSelected && ItemsControl.ScrollContainer.NegativeVerticallOffset < 0 && ItemsControl.ScrollContainer.NegativeVerticallOffset - offset.Y <= 0)
-                        {
-                            _initialPosition = currentPosition;
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        if (offset.Y > 0 && ItemsControl.ItemsHost.BottomElement.IsSelected && ItemsControl.ScrollContainer.NegativeVerticallOffset - offset.Y <= -ItemsControl.ExtentSize.Height)
-                        {
-                            _initialPosition = currentPosition;
-                            return;
-                        }
-                    }
-
-                    if (offset.X < 0 && ItemsControl.ItemsHost.LeftElement.IsSelected && ItemsControl.ScrollContainer.HorizontalOffset + (-offset.X) >= ItemsControl.ExtentSize.Width)
-                    {
-                        _initialPosition = currentPosition;
-                        return;
-                    }
-
-                    if (offset.X > 0 && ItemsControl.ItemsHost.RightElement.IsSelected && ItemsControl.ScrollContainer.NegativeHorizontalOffset - offset.X <= -ItemsControl.ExtentSize.Width)
-                    {
-                        _initialPosition = currentPosition;
-                        return;
-                    }
-                }
 
                 if (offset.X != 0 || offset.Y != 0)
                 {
-                    container.RaiseDragDeltaEvent(new Point(offset.X, offset.Y));
-                }
+                    if (!ItemsControl.EnableNegativeScrolling)
+                    {
+                        if (offset.Y > 0 && ItemsControl.ItemsHost.BottomElement.IsSelected && ItemsControl.ScrollContainer.BottomLimit < ItemsControl.ItemsHost.BottomElement.BoundingBox.Bottom + offset.Y)
+                        {
+                            _initialPosition = currentPosition;
+                            return;
+                        }
 
-                _initialPosition = currentPosition;
+                        if (offset.X > 0 && ItemsControl.ItemsHost.RightElement.IsSelected && ItemsControl.ScrollContainer.RightLimit < ItemsControl.ItemsHost.RightElement.BoundingBox.Right + offset.X)
+                        {
+                            _initialPosition = currentPosition;
+                            return;
+                        }
+                    }
+
+                    if (!ItemsControl.ExtentSize.IsEmpty)
+                    {
+                        if (offset.Y < 0 && ItemsControl.ItemsHost.TopElement.IsSelected
+                            && ItemsControl.ItemsHost.TopElement.BoundingBox.Top + offset.Y < ItemsControl.ScrollContainer.TopLimit - ItemsControl.ExtentSize.Height)
+                        {
+                            _initialPosition = currentPosition;
+                            return;
+                        }
+                        if (offset.Y > 0 && ItemsControl.ItemsHost.BottomElement.IsSelected
+                            && ItemsControl.ItemsHost.BottomElement.BoundingBox.Bottom + offset.Y > ItemsControl.ScrollContainer.BottomLimit + ItemsControl.ExtentSize.Height)
+                        {
+                            _initialPosition = currentPosition;
+                            return;
+                        }
+                        if (offset.X < 0 && ItemsControl.ItemsHost.LeftElement.IsSelected
+                            && ItemsControl.ItemsHost.LeftElement.BoundingBox.Left + offset.X < ItemsControl.ScrollContainer.LeftLimit - ItemsControl.ExtentSize.Width)
+                        {
+                            _initialPosition = currentPosition;
+                            return;
+                        }
+                        if (offset.X > 0 && ItemsControl.ItemsHost.RightElement.IsSelected
+                            && ItemsControl.ItemsHost.RightElement.BoundingBox.Right + offset.X > ItemsControl.ScrollContainer.RightLimit + ItemsControl.ExtentSize.Width)
+                        {
+                            _initialPosition = currentPosition;
+                            return;
+                        }
+                    }
+
+                    container.RaiseDragDeltaEvent(new Point(offset.X, offset.Y));
+                    _initialPosition = currentPosition;
+                }
             }
         }
     }

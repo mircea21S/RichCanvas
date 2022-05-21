@@ -322,9 +322,7 @@
                                      AutoPanTickRate="{Binding AutoPanTickRate, Converter={StaticResource StringToFloatConverter}}"
                                      TranslateOffset="{Binding TranslateOffset, Mode=TwoWay}"
                                      RealTimeSelectionEnabled="True"
-                                     RealTimeDraggingEnabled="True"
-                                     ExtentSize="10,10"
-                                     EnableNegativeScrolling="False">
+                                     RealTimeDraggingEnabled="True">
 
             <richCanvas:RichItemsControl.ContextMenu>
                 <ContextMenu>

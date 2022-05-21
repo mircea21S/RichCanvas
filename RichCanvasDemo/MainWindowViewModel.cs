@@ -280,7 +280,10 @@ namespace RichCanvasDemo
 
         private void Delete() => Items.Remove(SelectedItem);
 
-        private void OnDrawCommand() => Items.Add(new Rectangle());
+        private void OnDrawCommand()
+        {
+            Items.Add(new Rectangle());
+        }
 
         private void DrawLine() => Items.Add(new Line());
 

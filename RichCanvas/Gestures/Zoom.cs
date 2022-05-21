@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
 
 namespace RichCanvas.Gestures
@@ -27,7 +26,7 @@ namespace RichCanvas.Gestures
             var originX = (position.X - _translateTransform.X) / _scaleTransform.ScaleX;
             var originY = (position.Y - _translateTransform.Y) / _scaleTransform.ScaleY;
 
-            if (delta > 0 && factor.HasValue && _context.ScrollContainer.CanZoom)
+            if (delta > 0 && factor.HasValue)
             {
                 var zoom = _scaleTransform.ScaleX * factor.Value;
                 _scaleTransform.ScaleX = zoom;

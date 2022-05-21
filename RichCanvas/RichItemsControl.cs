@@ -383,9 +383,9 @@ namespace RichCanvas
             set => SetValue(RealTimeDraggingEnabledProperty, value);
         }
 
-        public static DependencyProperty ExtentSizeProperty = DependencyProperty.Register(nameof(ExtentSize), typeof(Size), typeof(RichItemsControl), new FrameworkPropertyMetadata(Size.Empty, OnExtentSizeChanged));
+        public static DependencyProperty ExtentSizeProperty = DependencyProperty.Register(nameof(ExtentSize), typeof(Size), typeof(RichItemsControl), new FrameworkPropertyMetadata(Size.Empty));
         /// <summary>
-        /// Gets or sets scroll Extent maximum size. This size is added to the Viewport size.
+        /// Gets or sets scroll Extent maximum size. Controls maximum offset of scroll.
         /// Default is <see cref="Size.Empty"/>
         /// </summary>
         public Size ExtentSize
@@ -394,7 +394,7 @@ namespace RichCanvas
             set => SetValue(ExtentSizeProperty, value);
         }
 
-        public static DependencyProperty EnableNegativeScrollingProperty = DependencyProperty.Register(nameof(EnableNegativeScrolling), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true, OnUpdateNegativeScroll));
+        public static DependencyProperty EnableNegativeScrollingProperty = DependencyProperty.Register(nameof(EnableNegativeScrolling), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true));
         /// <summary>
         /// Gets or sets whether <see cref="RichCanvas"/> has negative scrolling and panning.
         /// Default is true.
@@ -413,8 +413,8 @@ namespace RichCanvas
         /// Gets whether at least one item is selected.
         /// </summary>
         public bool HasSelections => base.SelectedItems.Count > 1;
+        public PanningGrid? ScrollContainer => _canvasContainer;
         internal RichCanvas? ItemsHost => _mainPanel;
-        internal PanningGrid? ScrollContainer => _canvasContainer;
         internal TransformGroup? SelectionRectangleTransform { get; private set; }
         internal bool IsPanning => Keyboard.IsKeyDown(PanningKey);
         internal bool IsZooming => Keyboard.IsKeyDown(ZoomKey);
@@ -620,10 +620,6 @@ namespace RichCanvas
         #endregion
 
         #region Properties Callbacks
-        private static void OnUpdateNegativeScroll(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d)?.ScrollContainer?.UpdateTranslateEvent();
-
-        private static void OnExtentSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d)?.ScrollContainer?.UpdateTranslateEvent();
-
         private static void OnDisableCacheChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).SetCachingMode((bool)e.NewValue);
 
         private static void OnOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).OverrideTranslate((Point)e.NewValue);
