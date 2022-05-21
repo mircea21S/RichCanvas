@@ -3,17 +3,7 @@
 [![NuGet](https://img.shields.io/nuget/dt/RichCanvas?label=downloads&style=for-the-badge&logo=nuget)](https://www.nuget.org/packages/RichCanvas/)
 [![License](https://img.shields.io/github/license/mircea21S/RichCanvas?style=for-the-badge)](https://github.com/mircea21S/RichCanvas/blob/main/LICENSE)
 
-WPF Control library defining a high performance and customizable infinite canvas designed for MVVM.
-
-## v2.0 release:
-
->Improvements:
->- Scrolling refactored: works correctly regarding elements applied transformations.
->
->New features:
->- BoundingBox Property on RichItemContainer, returns the bounding box of any element with respect to their applied transformations.
->- ExtentSize Property on RichItemsControl, can limit the extent of scrolling.
->- EnableNegativeScrolling Property on RichItemsControl, can stop scrolling with negative offset.
+WPF Control library - Infinite canvas with panning, zooming, scrolling and other customizable functions, designed for MVVM.
 
 ## 📥 Installation
 Use the nuget package manager to install RichCanvas.
