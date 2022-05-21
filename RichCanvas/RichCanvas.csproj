@@ -19,22 +19,23 @@
 			Infinite canvas with panning, zooming, scrolling and other customizable functions, designed for MVVM.
 		</Description>
 		<PackageReleaseNotes>
-			v2.1.0:
-				Bugs:
-					- ExtentSize dragging elements fix
-					- EnableNegativeScrolling dragging fix
-			v2.0:
-				Improvements:
-					- Code cleaning and refactoring
-					- Scrolling refactored: works correctly regarding elements applied transformations.
+			v2.2.0:
 				New features:
-					- BoundingBox Property on RichItemContainer, returns the bounding box of any element with respect to their applied transformations.
-					- ExtentSize Property on RichItemsControl, can limit the extent of scrolling.
-					- EnableNegativeScrolling Property on RichItemsControl, can stop scrolling with negative offset.
+					-Redefined ExtenSize and EnableNegativeScrolling functionality
+					-Added RealTimeDragging property
+					-Added Select, Unselect events on container
+					-Added Drag events on container
+				Bugs:
+					-Fix scrolling bug on resize on window
+					-Fix SelectedItems null exception when not initalized
+					-Fix on Scale and TranslateOffset not updating the scroll
+					-Fix on zoom - keep scale the same
+				Improvements:
+					-Drag performance improvement not calling Arrange
 		</PackageReleaseNotes>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<FileVersion>1.0.0.0</FileVersion>
-		<Version>2.1.0</Version>
+		<Version>2.2.0</Version>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<PackageIconUrl />
 	</PropertyGroup>
