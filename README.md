@@ -5,16 +5,6 @@
 
 WPF Control library - Infinite canvas with panning, zooming, scrolling and other customizable functions, designed for MVVM.
 
-## v2.0 release:
-
->Improvements:
->- Scrolling refactored: works correctly regarding elements applied transformations.
->
->New features:
->- BoundingBox Property on RichItemContainer, returns the bounding box of any element with respect to their applied transformations.
->- ExtentSize Property on RichItemsControl, can limit the extent of scrolling.
->- EnableNegativeScrolling Property on RichItemsControl, can stop scrolling with negative offset.
-
 ## 📥 Installation
 Use the nuget package manager to install RichCanvas.
 
