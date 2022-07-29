@@ -49,8 +49,16 @@ namespace RichCanvas.Helpers
             _initialPosition = new Point(e.GetPosition(ItemsControl.ItemsHost).X, e.GetPosition(ItemsControl.ItemsHost).Y);
             var container = (RichItemContainer)sender;
 
+            if (!ItemsControl.CanSelectMultipleItems)
+            {
+                ItemsControl.UpdateSelectedItem(container);
+            }
             container.IsSelected = true;
-            container.RaiseDragStartedEvent(_initialPosition);
+
+            if (ItemsControl.CanSelectMultipleItems || (container.IsSelected && !ItemsControl.CanSelectMultipleItems))
+            {
+                container.RaiseDragStartedEvent(_initialPosition);
+            }
             container.CaptureMouse();
 
             ItemsControl.Cursor = Cursors.Hand;
@@ -60,7 +68,10 @@ namespace RichCanvas.Helpers
         {
             var container = (RichItemContainer)sender;
 
-            container.RaiseDragCompletedEvent(e.GetPosition(ItemsControl.ItemsHost));
+            if ((container.IsSelected && !ItemsControl.CanSelectMultipleItems) || ItemsControl.CanSelectMultipleItems)
+            {
+                container.RaiseDragCompletedEvent(e.GetPosition(ItemsControl.ItemsHost));
+            }
 
             if (container.IsMouseCaptured)
             {
@@ -71,7 +82,7 @@ namespace RichCanvas.Helpers
         private static void OnSelectedContainerMove(object sender, MouseEventArgs e)
         {
             var container = (RichItemContainer)sender;
-            if (container.IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed)
+            if (container.IsMouseCaptured && e.LeftButton == MouseButtonState.Pressed && ((container.IsSelected && !ItemsControl.CanSelectMultipleItems) || ItemsControl.CanSelectMultipleItems))
             {
                 Point currentPosition = e.GetPosition(ItemsControl.ItemsHost);
                 var offset = currentPosition - _initialPosition;

@@ -54,6 +54,7 @@ namespace RichCanvasDemo
         private RelayCommand cancelActionCommand;
         private RelayCommand addViewPresetCommand;
         private RelayCommand drawGroupCommand;
+        private bool _canSelectMultipleItems;
 
         public ICommand DrawEndedCommand => drawEndedCommand ??= new RelayCommand<RoutedEventArgs>(DrawEnded);
         public ObservableCollection<Drawable> Items { get; }
@@ -118,7 +119,15 @@ namespace RichCanvasDemo
 
         public string MinScale { get => _minScale; set => SetProperty(ref _minScale, value); }
 
-        public Drawable SelectedItem { get => _selectedItem; set => SetProperty(ref _selectedItem, value); }
+        public Drawable SelectedItem
+        {
+            get => _selectedItem;
+            set
+            {
+                SetProperty(ref _selectedItem, value);
+                ShowProperties = value != null;
+            }
+        }
 
         public bool ShowProperties { get => _showProperties; set => SetProperty(ref _showProperties, value); }
 
@@ -147,6 +156,9 @@ namespace RichCanvasDemo
                 Scale = value.Scale;
             }
         }
+
+        public bool CanSelectMultipleItems { get => _canSelectMultipleItems; set => SetProperty(ref _canSelectMultipleItems, value); }
+
 
         public MainWindowViewModel()
         {
@@ -209,18 +221,20 @@ namespace RichCanvasDemo
 
         private void SelectedItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (e.Action == NotifyCollectionChangedAction.Add)
+            if (CanSelectMultipleItems)
             {
-                SelectedItem = SelectedItems.Count == 1 ? SelectedItems[0] : null;
-            }
-            else if (e.Action == NotifyCollectionChangedAction.Reset)
-            {
-                if (SelectedItems.Count == 0 || SelectedItems.Count > 1)
+                if (e.Action == NotifyCollectionChangedAction.Add)
                 {
-                    SelectedItem = null;
+                    SelectedItem = SelectedItems.Count == 1 ? SelectedItems[0] : null;
+                }
+                else if (e.Action == NotifyCollectionChangedAction.Reset)
+                {
+                    if (SelectedItems.Count == 0 || SelectedItems.Count > 1)
+                    {
+                        SelectedItem = null;
+                    }
                 }
             }
-            ShowProperties = SelectedItem != null;
         }
 
         private void OnDrawGroup() => Items.Add(new Group());

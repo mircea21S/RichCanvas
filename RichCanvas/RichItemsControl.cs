@@ -42,6 +42,9 @@ namespace RichCanvas
         private readonly Selecting _selectingGesture;
         private DispatcherTimer? _autoPanTimer;
         private readonly List<int> _currentDrawingIndexes = new List<int>();
+        private bool _fromEvent;
+        private RichItemContainer _selectedContainer;
+        private List<RichItemContainer> _selectedContainers = new List<RichItemContainer>();
 
         #endregion
 
@@ -58,6 +61,7 @@ namespace RichCanvas
         }
 
         protected static readonly DependencyPropertyKey SelectionRectanglePropertyKey = DependencyProperty.RegisterReadOnly(nameof(SelectionRectangle), typeof(Rect), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(Rect)));
+
         public static readonly DependencyProperty SelectionRectangleProperty = SelectionRectanglePropertyKey.DependencyProperty;
         /// <summary>
         /// Gets the selection area as <see cref="Rect"/>.
@@ -264,8 +268,6 @@ namespace RichCanvas
         }
 
         public static DependencyProperty ScaleProperty = DependencyProperty.Register(nameof(Scale), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(1d, OnScaleChanged, ConstarainScaleToRange));
-        private bool _fromEvent;
-
         /// <summary>
         /// Gets or sets the current <see cref="RichItemsControl.ScaleTransform"/> value.
         /// Default is 1.
@@ -277,7 +279,6 @@ namespace RichCanvas
         }
 
         public static DependencyProperty SelectedItemsProperty = DependencyProperty.Register(nameof(SelectedItems), typeof(IList), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(IList), OnSelectedItemsSourceChanged));
-
         /// <summary>
         /// Gets or sets the items in the <see cref="RichItemsControl"/> that are selected.
         /// </summary>
@@ -310,7 +311,7 @@ namespace RichCanvas
         public static DependencyProperty DisableCacheProperty = DependencyProperty.Register(nameof(DisableCache), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true, OnDisableCacheChanged));
         /// <summary>
         /// Gets or sets whether caching is disabled.
-        /// Default is true
+        /// Default is <see cref="true"/>.
         /// </summary>
         public bool DisableCache
         {
@@ -332,7 +333,7 @@ namespace RichCanvas
         public static DependencyProperty ZoomKeyProperty = DependencyProperty.Register(nameof(ZoomKey), typeof(Key), typeof(RichItemsControl), new FrameworkPropertyMetadata(Key.LeftCtrl));
         /// <summary>
         /// Gets or sets current key used to zoom.
-        /// Default is LeftCtrl
+        /// Default is <see cref="Key.LeftCtrl"/>.
         /// </summary>
         public Key ZoomKey
         {
@@ -343,7 +344,7 @@ namespace RichCanvas
         public static DependencyProperty PanningKeyProperty = DependencyProperty.Register(nameof(PanningKey), typeof(Key), typeof(RichItemsControl), new FrameworkPropertyMetadata(Key.Space));
         /// <summary>
         /// Gets or sets current key used for panning.
-        /// Default is Space
+        /// Default is <see cref="Key.Space"/>.
         /// </summary>
         public Key PanningKey
         {
@@ -364,7 +365,7 @@ namespace RichCanvas
         public static DependencyProperty RealTimeSelectionEnabledProperty = DependencyProperty.Register(nameof(RealTimeSelectionEnabled), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
         /// <summary>
         /// Gets or sets whether real-time selection is enabled.
-        /// Default is false
+        /// Default is <see cref="false"/>.
         /// </summary>
         public bool RealTimeSelectionEnabled
         {
@@ -375,7 +376,7 @@ namespace RichCanvas
         public static DependencyProperty RealTimeDraggingEnabledProperty = DependencyProperty.Register(nameof(RealTimeDraggingEnabled), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
         /// <summary>
         /// Gets or sets whether real-time selection is enabled.
-        /// Default is false
+        /// Default is <see cref="false"/>.
         /// </summary>
         public bool RealTimeDraggingEnabled
         {
@@ -386,7 +387,7 @@ namespace RichCanvas
         public static DependencyProperty ExtentSizeProperty = DependencyProperty.Register(nameof(ExtentSize), typeof(Size), typeof(RichItemsControl), new FrameworkPropertyMetadata(Size.Empty));
         /// <summary>
         /// Gets or sets scroll Extent maximum size. Controls maximum offset of scroll.
-        /// Default is <see cref="Size.Empty"/>
+        /// Default is <see cref="Size.Empty"/>.
         /// </summary>
         public Size ExtentSize
         {
@@ -397,12 +398,24 @@ namespace RichCanvas
         public static DependencyProperty EnableNegativeScrollingProperty = DependencyProperty.Register(nameof(EnableNegativeScrolling), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true));
         /// <summary>
         /// Gets or sets whether <see cref="RichCanvas"/> has negative scrolling and panning.
-        /// Default is true.
+        /// Default is <see cref="true"/>.
         /// </summary>
         public bool EnableNegativeScrolling
         {
             get => (bool)GetValue(EnableNegativeScrollingProperty);
             set => SetValue(EnableNegativeScrollingProperty, value);
+        }
+
+        public static DependencyProperty CanSelectMultipleItemsProperty = DependencyProperty.Register(nameof(CanSelectMultipleItems), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true, OnCanSelectMultipleItemsChanged));
+
+        /// <summary>
+        /// Gets or sets whether you can select multiple elements or not.
+        /// Default is <see cref="true"/>.
+        /// </summary>
+        public new bool CanSelectMultipleItems
+        {
+            get => (bool)GetValue(CanSelectMultipleItemsProperty);
+            set => SetValue(CanSelectMultipleItemsProperty, value);
         }
 
         #endregion
@@ -548,7 +561,7 @@ namespace RichCanvas
             {
                 _selectingGesture.OnMouseMove(MousePosition);
 
-                if (RealTimeSelectionEnabled)
+                if (RealTimeSelectionEnabled || !CanSelectMultipleItems)
                 {
                     SelectBySelectionRectangle();
                 }
@@ -572,7 +585,7 @@ namespace RichCanvas
             {
                 IsSelecting = false;
 
-                if (!RealTimeSelectionEnabled)
+                if (!RealTimeSelectionEnabled && CanSelectMultipleItems)
                 {
                     SelectBySelectionRectangle();
 
@@ -589,6 +602,17 @@ namespace RichCanvas
                                 selected.Add(added[i]);
                             }
                         }
+                    }
+                }
+                else if (!RealTimeSelectionEnabled && !CanSelectMultipleItems)
+                {
+                    if (_selectedContainer != null)
+                    {
+                        SelectedItem = _selectedContainer.DataContext;
+                    }
+                    else
+                    {
+                        SelectedItem = null;
                     }
                 }
 
@@ -684,6 +708,10 @@ namespace RichCanvas
         private static object CoerceScaleFactor(DependencyObject d, object value)
             => (double)value == 0 ? 1.1d : value;
 
+        private static void OnCanSelectMultipleItemsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).CanSelectMultipleItemsUpdated((bool)e.NewValue);
+
+        private void CanSelectMultipleItemsUpdated(bool value) => base.CanSelectMultipleItems = value;
+
         #endregion
 
         #region Selection
@@ -695,15 +723,46 @@ namespace RichCanvas
         {
             RectangleGeometry geom = GetSelectionRectangleCurrentGeometry();
 
-            SelectedItems?.Clear();
+            if (SelectedItems.Count > 0 && CanSelectMultipleItems)
+            {
+                SelectedItems?.Clear();
+            }
 
-            BeginUpdateSelectedItems();
+            if (CanSelectMultipleItems)
+            {
+                BeginUpdateSelectedItems();
+            }
 
             VisualTreeHelper.HitTest(_mainPanel, null,
                 new HitTestResultCallback(OnHitTestResultCallback),
                 new GeometryHitTestParameters(geom));
 
-            EndUpdateSelectedItems();
+            if (CanSelectMultipleItems)
+            {
+                EndUpdateSelectedItems();
+            }
+
+            if (!CanSelectMultipleItems && RealTimeSelectionEnabled)
+            {
+                if (!SelectedItems.Contains(SelectedItem) && SelectedItem != null)
+                {
+                    SelectedItem = null;
+                    if (_selectedContainer != null)
+                    {
+                        _selectedContainer.IsSelected = false;
+                        _selectedContainer = null;
+                    }
+                }
+                SelectedItems.Clear();
+            }
+            else if (!CanSelectMultipleItems && !RealTimeSelectionEnabled)
+            {
+                if (!_selectedContainers.Contains(_selectedContainer) && _selectedContainer != null)
+                {
+                    _selectedContainer = null;
+                }
+                _selectedContainers.Clear();
+            }
         }
 
         /// <summary>
@@ -735,13 +794,14 @@ namespace RichCanvas
         {
             base.OnSelectionChanged(e);
 
-            if (!IsSelecting)
+            if (!IsSelecting && CanSelectMultipleItems)
             {
                 IList selected = SelectedItems;
 
                 if (selected != null)
                 {
                     IList added = e.AddedItems;
+                    IList removed = e.RemovedItems;
                     for (var i = 0; i < added.Count; i++)
                     {
                         // Ensure no duplicates are added
@@ -751,10 +811,20 @@ namespace RichCanvas
                         }
                     }
 
-                    IList removed = e.RemovedItems;
                     for (var i = 0; i < removed.Count; i++)
                     {
                         selected.Remove(removed[i]);
+                    }
+                }
+            }
+            else if (!IsSelecting && !CanSelectMultipleItems)
+            {
+                var added = e.AddedItems;
+                if (added.Count == 1)
+                {
+                    if (_selectedContainer != null && added[0] != _selectedContainer.DataContext)
+                    {
+                        _selectedContainer.IsSelected = false;
                     }
                 }
             }
@@ -775,18 +845,21 @@ namespace RichCanvas
                 nc.CollectionChanged += OnSelectedItemsChanged;
             }
 
-            IList selectedItems = base.SelectedItems;
-
-            BeginUpdateSelectedItems();
-            selectedItems.Clear();
-            if (newValue != null)
+            if (CanSelectMultipleItems)
             {
-                for (var i = 0; i < newValue.Count; i++)
+                IList selectedItems = base.SelectedItems;
+
+                BeginUpdateSelectedItems();
+                selectedItems.Clear();
+                if (newValue != null)
                 {
-                    selectedItems.Add(newValue[i]);
+                    for (var i = 0; i < newValue.Count; i++)
+                    {
+                        selectedItems.Add(newValue[i]);
+                    }
                 }
+                EndUpdateSelectedItems();
             }
-            EndUpdateSelectedItems();
         }
 
         private void OnSelectedItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -794,29 +867,38 @@ namespace RichCanvas
             switch (e.Action)
             {
                 case NotifyCollectionChangedAction.Reset:
-                    base.SelectedItems.Clear();
+                    if (CanSelectMultipleItems)
+                    {
+                        base.SelectedItems.Clear();
+                    }
                     break;
 
                 case NotifyCollectionChangedAction.Add:
-                    IList? newItems = e.NewItems;
-                    if (newItems != null)
+                    if (CanSelectMultipleItems)
                     {
-                        IList selectedItems = base.SelectedItems;
-                        for (var i = 0; i < newItems.Count; i++)
+                        IList? newItems = e.NewItems;
+                        if (newItems != null)
                         {
-                            selectedItems.Add(newItems[i]);
+                            IList selectedItems = base.SelectedItems;
+                            for (var i = 0; i < newItems.Count; i++)
+                            {
+                                selectedItems.Add(newItems[i]);
+                            }
                         }
                     }
                     break;
 
                 case NotifyCollectionChangedAction.Remove:
-                    IList? oldItems = e.OldItems;
-                    if (oldItems != null)
+                    if (CanSelectMultipleItems)
                     {
-                        IList selectedItems = base.SelectedItems;
-                        for (var i = 0; i < oldItems.Count; i++)
+                        IList? oldItems = e.OldItems;
+                        if (oldItems != null)
                         {
-                            selectedItems.Remove(oldItems[i]);
+                            IList selectedItems = base.SelectedItems;
+                            for (var i = 0; i < oldItems.Count; i++)
+                            {
+                                selectedItems.Remove(oldItems[i]);
+                            }
                         }
                     }
                     break;
@@ -831,8 +913,31 @@ namespace RichCanvas
                 var container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
                 if (container != null && container.IsSelectable)
                 {
-                    SelectedItems?.Add(container.DataContext);
-                    container.IsSelected = true;
+                    if (CanSelectMultipleItems)
+                    {
+                        SelectedItems?.Add(container.DataContext);
+                        container.IsSelected = true;
+                    }
+                    else
+                    {
+                        if (SelectedItem == null && RealTimeSelectionEnabled)
+                        {
+                            container.IsSelected = true;
+                            _selectedContainer = container;
+                        }
+                        if (RealTimeSelectionEnabled)
+                        {
+                            SelectedItems?.Add(container.DataContext);
+                        }
+                        else
+                        {
+                            if (_selectedContainer == null)
+                            {
+                                _selectedContainer = container;
+                            }
+                            _selectedContainers.Add(container);
+                        }
+                    }
                 }
             }
             return HitTestResultBehavior.Continue;
@@ -848,6 +953,15 @@ namespace RichCanvas
                 return new RectangleGeometry(new Rect(currentSelectionLeft, currentSelectionTop, SelectionRectangle.Width, SelectionRectangle.Height));
             }
             return new RectangleGeometry(Rect.Empty);
+        }
+
+        internal void UpdateSelectedItem(RichItemContainer container)
+        {
+            if (_selectedContainer != null)
+            {
+                _selectedContainer.IsSelected = false;
+            }
+            _selectedContainer = container;
         }
 
         #endregion
