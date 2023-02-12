@@ -43,8 +43,7 @@ namespace RichCanvas
         private DispatcherTimer? _autoPanTimer;
         private readonly List<int> _currentDrawingIndexes = new List<int>();
         private bool _fromEvent;
-        private RichItemContainer _selectedContainer;
-        private List<RichItemContainer> _selectedContainers = new List<RichItemContainer>();
+        private RichItemContainer? _selectedContainer;
 
         #endregion
 
@@ -723,9 +722,14 @@ namespace RichCanvas
         {
             RectangleGeometry geom = GetSelectionRectangleCurrentGeometry();
 
-            if (SelectedItems.Count > 0 && CanSelectMultipleItems)
+            if (SelectedItems?.Count > 0 && CanSelectMultipleItems)
             {
                 SelectedItems?.Clear();
+            }
+
+            if (SelectedItems is null && base.SelectedItems.Count > 0 && CanSelectMultipleItems)
+            {
+                UnselectAll();
             }
 
             if (CanSelectMultipleItems)
@@ -744,7 +748,7 @@ namespace RichCanvas
 
             if (!CanSelectMultipleItems && RealTimeSelectionEnabled)
             {
-                if (!SelectedItems.Contains(SelectedItem) && SelectedItem != null)
+                if (SelectedItems != null && !SelectedItems.Contains(SelectedItem) && SelectedItem != null)
                 {
                     SelectedItem = null;
                     if (_selectedContainer != null)
@@ -753,15 +757,14 @@ namespace RichCanvas
                         _selectedContainer = null;
                     }
                 }
-                SelectedItems.Clear();
+                SelectedItems?.Clear();
             }
             else if (!CanSelectMultipleItems && !RealTimeSelectionEnabled)
             {
-                if (!_selectedContainers.Contains(_selectedContainer) && _selectedContainer != null)
+                if (_selectedContainer != null)
                 {
                     _selectedContainer = null;
                 }
-                _selectedContainers.Clear();
             }
         }
 
@@ -935,7 +938,6 @@ namespace RichCanvas
                             {
                                 _selectedContainer = container;
                             }
-                            _selectedContainers.Add(container);
                         }
                     }
                 }
