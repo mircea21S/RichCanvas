@@ -417,6 +417,17 @@ namespace RichCanvas
             set => SetValue(CanSelectMultipleItemsProperty, value);
         }
 
+        public static DependencyProperty SelectionEnabledProperty = DependencyProperty.Register(nameof(SelectionEnabled), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true));
+        /// <summary>
+        /// Gets or sets whether <see cref="RichCanvas"/> has selection enabled.
+        /// Default is <see cref="true"/>.
+        /// </summary>
+        public bool SelectionEnabled
+        {
+            get => (bool)GetValue(SelectionEnabledProperty);
+            set => SetValue(SelectionEnabledProperty, value);
+        }
+
         #endregion
 
         #region Internal Properties
@@ -537,11 +548,16 @@ namespace RichCanvas
                         }
                     }
 
-                    if (!_isDrawing && !IsDragging && !IsPanning && !HasCustomBehavior)
+                    if (SelectionEnabled && !_isDrawing && !IsDragging && !HasCustomBehavior)
                     {
                         IsSelecting = true;
                         _selectingGesture.OnMouseDown(position);
                         CaptureMouse();
+                    }
+
+                    if (!SelectionEnabled && (base.SelectedItems.Count > 0 || SelectedItem != null))
+                    {
+                        UnselectAll();
                     }
                 }
             }
