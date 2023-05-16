@@ -15,19 +15,23 @@
 		<PackageTags>wpf mvvm infinite-canvas canvas controls panning zooming infinite-scrolling selection net-core-3-1 net5</PackageTags>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Description>
-			WPF Control library
-			Infinite canvas with panning, zooming, scrolling and other customizable functions, designed for MVVM.
+			WPF Control library - Infinite canvas with panning, zooming, scrolling and other customizable functions, designed for MVVM.
 		</Description>
 		<PackageReleaseNotes>
-			v2.4.0:
+			v2.4.1:
 				Bugfixes:
-					-Fixed null reference exception when SelectedItems not binded
+					-Fixed panning error due to not capturing the mouse
+					-Update UI when changing DisableScroll value
+					-Disabled scroll on zoom when DisableScroll is set to true
+				Improvements:
+					-Added comments for all properties on RichItemsControl
 				New features:
-					-Added disable selection functionality through new dependency property SelectionEnabled
+					-Added VerticalScrollBarVisibility DependencyProperty to update vertical scrollbar visibility
+					-Added HorizontalScrollBarVisibility DependencyProperty to update horizontal scrollbar visibility
 		</PackageReleaseNotes>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<FileVersion>1.0.0.0</FileVersion>
-		<Version>2.4.0</Version>
+		<Version>2.4.1</Version>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<PackageIconUrl />
 	</PropertyGroup>
