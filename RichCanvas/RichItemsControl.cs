@@ -48,7 +48,18 @@ namespace RichCanvas
         #endregion
 
         #region Properties API
+        /// <summary>
+        /// Gets whether at least one item is selected.
+        /// </summary>
+        public bool HasSelections => base.SelectedItems.Count > 1;
+        /// <summary>
+        /// <see cref="Grid"/> control wrapping the scrolling logic.
+        /// </summary>
+        public PanningGrid? ScrollContainer => _canvasContainer;
 
+        /// <summary>
+        /// Gets or sets mouse position relative to <see cref="RichItemsControl.ItemsHost"/>.
+        /// </summary>
         public static DependencyProperty MousePositionProperty = DependencyProperty.Register(nameof(MousePosition), typeof(Point), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(Point)));
         /// <summary>
         /// Gets or sets mouse position relative to <see cref="RichItemsControl.ItemsHost"/>.
@@ -59,8 +70,13 @@ namespace RichCanvas
             set => SetValue(MousePositionProperty, value);
         }
 
+        /// <summary>
+        /// Get only key of <see cref="SelectionRectangleProperty"/>.
+        /// </summary>
         protected static readonly DependencyPropertyKey SelectionRectanglePropertyKey = DependencyProperty.RegisterReadOnly(nameof(SelectionRectangle), typeof(Rect), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(Rect)));
-
+        /// <summary>
+        /// Gets the selection area as <see cref="Rect"/>.
+        /// </summary>
         public static readonly DependencyProperty SelectionRectangleProperty = SelectionRectanglePropertyKey.DependencyProperty;
         /// <summary>
         /// Gets the selection area as <see cref="Rect"/>.
@@ -71,7 +87,13 @@ namespace RichCanvas
             internal set => SetValue(SelectionRectanglePropertyKey, value);
         }
 
+        /// <summary>
+        /// Get only key of <see cref="IsSelectingProperty"/>
+        /// </summary>
         protected static readonly DependencyPropertyKey IsSelectingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsSelecting), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
+        /// <summary>
+        /// Gets whether the operation in progress is selection.
+        /// </summary>
         public static readonly DependencyProperty IsSelectingProperty = IsSelectingPropertyKey.DependencyProperty;
         /// <summary>
         /// Gets whether the operation in progress is selection.
@@ -82,7 +104,13 @@ namespace RichCanvas
             internal set => SetValue(IsSelectingPropertyKey, value);
         }
 
+        /// <summary>
+        /// Get only key of <see cref="AppliedTransformProperty"/>.
+        /// </summary>
         protected static readonly DependencyPropertyKey AppliedTransformPropertyKey = DependencyProperty.RegisterReadOnly(nameof(AppliedTransform), typeof(TransformGroup), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(TransformGroup)));
+        /// <summary>
+        /// Gets the transform that is applied to all child controls.
+        /// </summary>
         public static DependencyProperty AppliedTransformProperty = AppliedTransformPropertyKey.DependencyProperty;
         /// <summary>
         /// Gets the transform that is applied to all child controls.
@@ -93,6 +121,10 @@ namespace RichCanvas
             internal set => SetValue(AppliedTransformPropertyKey, value);
         }
 
+        /// <summary>
+        /// Gets or sets whether Auto-Panning is disabled.
+        /// Default is enabled.
+        /// </summary>
         public static DependencyProperty DisableAutoPanningProperty = DependencyProperty.Register(nameof(DisableAutoPanning), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true, OnDisableAutoPanningChanged));
         /// <summary>
         /// Gets or sets whether Auto-Panning is disabled.
@@ -104,6 +136,10 @@ namespace RichCanvas
             set => SetValue(DisableAutoPanningProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets <see cref="DispatcherTimer"/> interval value.
+        /// Default is 1.
+        /// </summary>
         public static DependencyProperty AutoPanTickRateProperty = DependencyProperty.Register(nameof(AutoPanTickRate), typeof(float), typeof(RichItemsControl), new FrameworkPropertyMetadata(1f, OnAutoPanTickRateChanged));
         /// <summary>
         /// Gets or sets <see cref="DispatcherTimer"/> interval value.
@@ -115,6 +151,10 @@ namespace RichCanvas
             set => SetValue(AutoPanTickRateProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the <see cref="RichItemsControl.ItemsHost"/> translate speed.
+        /// Default is 1.
+        /// </summary>
         public static DependencyProperty AutoPanSpeedProperty = DependencyProperty.Register(nameof(AutoPanSpeed), typeof(float), typeof(RichItemsControl), new FrameworkPropertyMetadata(1f));
         /// <summary>
         /// Gets or sets the <see cref="RichItemsControl.ItemsHost"/> translate speed.
@@ -126,6 +166,10 @@ namespace RichCanvas
             set => SetValue(AutoPanSpeedProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets whether Grid Drawing is enabled on <see cref="RichItemsControl.ItemsHost"/> background.
+        /// Default is disabled.
+        /// </summary>
         public static DependencyProperty EnableGridProperty = DependencyProperty.Register(nameof(EnableGrid), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
         /// <summary>
         /// Gets or sets whether Grid Drawing is enabled on <see cref="RichItemsControl.ItemsHost"/> background.
@@ -137,6 +181,10 @@ namespace RichCanvas
             set => SetValue(EnableGridProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets grid drawing viewport size.
+        /// Default is 10.
+        /// </summary>
         public static DependencyProperty GridSpacingProperty = DependencyProperty.Register(nameof(GridSpacing), typeof(float), typeof(RichItemsControl), new FrameworkPropertyMetadata(10f));
         /// <summary>
         /// Gets or sets grid drawing viewport size.
@@ -149,6 +197,9 @@ namespace RichCanvas
         }
 
         internal static readonly DependencyPropertyKey ViewportRectPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewportRect), typeof(Rect), typeof(RichItemsControl), new FrameworkPropertyMetadata(Rect.Empty));
+        /// <summary>
+        /// Gets current viewport rectangle.
+        /// </summary>
         public static readonly DependencyProperty ViewportRectProperty = ViewportRectPropertyKey.DependencyProperty;
         /// <summary>
         /// Gets current viewport rectangle.
@@ -159,6 +210,9 @@ namespace RichCanvas
             internal set => SetValue(ViewportRectPropertyKey, value);
         }
 
+        /// <summary>
+        /// Gets or sets current <see cref="RichItemsControl.TranslateTransform"/>.
+        /// </summary>
         public static DependencyProperty TranslateOffsetProperty = DependencyProperty.Register(nameof(TranslateOffset), typeof(Point), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(Point), OnOffsetChanged));
         /// <summary>
         /// Gets or sets current <see cref="RichItemsControl.TranslateTransform"/>.
@@ -169,6 +223,10 @@ namespace RichCanvas
             set => SetValue(TranslateOffsetProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets whether grid snap correction on <see cref="RichItemContainer"/> is applied.
+        /// Default is disabled.
+        /// </summary>
         public static DependencyProperty EnableSnappingProperty = DependencyProperty.Register(nameof(EnableSnapping), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
         /// <summary>
         /// Gets or sets whether grid snap correction on <see cref="RichItemContainer"/> is applied.
@@ -180,6 +238,9 @@ namespace RichCanvas
             set => SetValue(EnableSnappingProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the background grid style.
+        /// </summary>
         public static DependencyProperty GridStyleProperty = DependencyProperty.Register(nameof(GridStyle), typeof(System.Windows.Media.Drawing), typeof(RichItemsControl));
         /// <summary>
         /// Gets or sets the background grid style.
@@ -190,6 +251,9 @@ namespace RichCanvas
             set => SetValue(GridStyleProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets selection <see cref="Rectangle"/> style.
+        /// </summary>
         public static DependencyProperty SelectionRectangleStyleProperty = DependencyProperty.Register(nameof(SelectionRectangleStyle), typeof(Style), typeof(RichItemsControl));
         /// <summary>
         /// Gets or sets selection <see cref="Rectangle"/> style.
@@ -200,6 +264,10 @@ namespace RichCanvas
             set => SetValue(SelectionRectangleStyleProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the scrolling factor applied when scrolling.
+        /// Default is 10.
+        /// </summary>
         public static DependencyProperty ScrollFactorProperty = DependencyProperty.Register(nameof(ScrollFactor), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(10d, null, CoerceScrollFactor));
         /// <summary>
         /// Gets or sets the scrolling factor applied when scrolling.
@@ -211,6 +279,10 @@ namespace RichCanvas
             set => SetValue(ScrollFactorProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the factor used to change <see cref="RichItemsControl.ScaleTransform"/> on zoom.
+        /// Default is 1.1d.
+        /// </summary>
         public static DependencyProperty ScaleFactorProperty = DependencyProperty.Register(nameof(ScaleFactor), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(1.1d, null, CoerceScaleFactor));
         /// <summary>
         /// Gets or sets the factor used to change <see cref="RichItemsControl.ScaleTransform"/> on zoom.
@@ -222,10 +294,14 @@ namespace RichCanvas
             set => SetValue(ScaleFactorProperty, value);
         }
 
-        public static DependencyProperty DisableScrollProperty = DependencyProperty.Register(nameof(DisableScroll), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
         /// <summary>
         /// Gets or sets whether scrolling operation is disabled.
-        /// Default is enabled.
+        /// Default is enabled.f
+        /// </summary>
+        public static DependencyProperty DisableScrollProperty = DependencyProperty.Register(nameof(DisableScroll), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false, OnDisableScrollChanged));
+        /// <summary>
+        /// Gets or sets whether scrolling operation is disabled.
+        /// Default is enabled.f
         /// </summary>
         public bool DisableScroll
         {
@@ -233,6 +309,10 @@ namespace RichCanvas
             set => SetValue(DisableScrollProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets whether zooming operation is disabled.
+        /// Default is enabled.
+        /// </summary>
         public static DependencyProperty DisableZoomProperty = DependencyProperty.Register(nameof(DisableZoom), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
         /// <summary>
         /// Gets or sets whether zooming operation is disabled.
@@ -244,6 +324,10 @@ namespace RichCanvas
             set => SetValue(DisableZoomProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets maximum scale for <see cref="RichItemsControl.ScaleTransform"/>.
+        /// Default is 2.
+        /// </summary>
         public static DependencyProperty MaxScaleProperty = DependencyProperty.Register(nameof(MaxScale), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(2d, OnMaxScaleChanged, CoerceMaxScale));
         /// <summary>
         /// Gets or sets maximum scale for <see cref="RichItemsControl.ScaleTransform"/>.
@@ -255,6 +339,10 @@ namespace RichCanvas
             set => SetValue(MaxScaleProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets minimum scale for <see cref="RichItemsControl.ScaleTransform"/>.
+        /// Default is 0.1d.
+        /// </summary>
         public static DependencyProperty MinScaleProperty = DependencyProperty.Register(nameof(MinScale), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(0.1d, OnMinimumScaleChanged, CoerceMinimumScale));
         /// <summary>
         /// Gets or sets minimum scale for <see cref="RichItemsControl.ScaleTransform"/>.
@@ -266,6 +354,10 @@ namespace RichCanvas
             set => SetValue(MinScaleProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the current <see cref="RichItemsControl.ScaleTransform"/> value.
+        /// Default is 1.
+        /// </summary>
         public static DependencyProperty ScaleProperty = DependencyProperty.Register(nameof(Scale), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(1d, OnScaleChanged, ConstarainScaleToRange));
         /// <summary>
         /// Gets or sets the current <see cref="RichItemsControl.ScaleTransform"/> value.
@@ -277,6 +369,9 @@ namespace RichCanvas
             set => SetValue(ScaleProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the items in the <see cref="RichItemsControl"/> that are selected.
+        /// </summary>
         public static DependencyProperty SelectedItemsProperty = DependencyProperty.Register(nameof(SelectedItems), typeof(IList), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(IList), OnSelectedItemsSourceChanged));
         /// <summary>
         /// Gets or sets the items in the <see cref="RichItemsControl"/> that are selected.
@@ -287,6 +382,9 @@ namespace RichCanvas
             set => SetValue(SelectedItemsProperty, value);
         }
 
+        /// <summary>
+        /// Occurs whenever <see cref="RichItemsControl.OnMouseLeftButtonUp(MouseButtonEventArgs)"/> is triggered and the drawing operation finished.
+        /// </summary>
         public static readonly RoutedEvent DrawingEndedEvent = EventManager.RegisterRoutedEvent(nameof(DrawingEnded), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(RichItemsControl));
         /// <summary>
         /// Occurs whenever <see cref="RichItemsControl.OnMouseLeftButtonUp(MouseButtonEventArgs)"/> is triggered and the drawing operation finished.
@@ -297,6 +395,9 @@ namespace RichCanvas
             remove { RemoveHandler(DrawingEndedEvent, value); }
         }
 
+        /// <summary>
+        /// Occurs whenever <see cref="RichItemsControl.TranslateTransform"/> changes.
+        /// </summary>
         public static readonly RoutedEvent ScrollingEvent = EventManager.RegisterRoutedEvent(nameof(Scrolling), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(RichItemsControl));
         /// <summary>
         /// Occurs whenever <see cref="RichItemsControl.TranslateTransform"/> changes.
@@ -307,10 +408,14 @@ namespace RichCanvas
             remove { RemoveHandler(ScrollingEvent, value); }
         }
 
+        /// <summary>
+        /// Gets or sets whether caching is disabled.
+        /// Default is <see langword="true"/>.
+        /// </summary>
         public static DependencyProperty DisableCacheProperty = DependencyProperty.Register(nameof(DisableCache), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true, OnDisableCacheChanged));
         /// <summary>
         /// Gets or sets whether caching is disabled.
-        /// Default is <see cref="true"/>.
+        /// Default is <see langword="true"/>.
         /// </summary>
         public bool DisableCache
         {
@@ -318,7 +423,13 @@ namespace RichCanvas
             set => SetValue(DisableCacheProperty, value);
         }
 
+        /// <summary>
+        /// Get only key of <see cref="IsDraggingProperty"/>
+        /// </summary>
         protected static readonly DependencyPropertyKey IsDraggingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsDragging), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
+        /// <summary>
+        /// Gets whether the operation in progress is dragging.
+        /// </summary>
         public static readonly DependencyProperty IsDraggingProperty = IsDraggingPropertyKey.DependencyProperty;
         /// <summary>
         /// Gets whether the operation in progress is dragging.
@@ -329,6 +440,10 @@ namespace RichCanvas
             internal set => SetValue(IsDraggingPropertyKey, value);
         }
 
+        /// <summary>
+        /// Gets or sets current key used to zoom.
+        /// Default is <see cref="Key.LeftCtrl"/>.
+        /// </summary>
         public static DependencyProperty ZoomKeyProperty = DependencyProperty.Register(nameof(ZoomKey), typeof(Key), typeof(RichItemsControl), new FrameworkPropertyMetadata(Key.LeftCtrl));
         /// <summary>
         /// Gets or sets current key used to zoom.
@@ -340,6 +455,10 @@ namespace RichCanvas
             set => SetValue(ZoomKeyProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets current key used for panning.
+        /// Default is <see cref="Key.Space"/>.
+        /// </summary>
         public static DependencyProperty PanningKeyProperty = DependencyProperty.Register(nameof(PanningKey), typeof(Key), typeof(RichItemsControl), new FrameworkPropertyMetadata(Key.Space));
         /// <summary>
         /// Gets or sets current key used for panning.
@@ -351,6 +470,9 @@ namespace RichCanvas
             set => SetValue(PanningKeyProperty, value);
         }
 
+        /// <summary>
+        /// Occurs whenever <see cref="RichItemsControl.ScaleTransform"/> changes.
+        /// </summary>
         public static readonly RoutedEvent ZoomingEvent = EventManager.RegisterRoutedEvent(nameof(Zooming), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(RichItemsControl));
         /// <summary>
         /// Occurs whenever <see cref="RichItemsControl.ScaleTransform"/> changes.
@@ -361,10 +483,14 @@ namespace RichCanvas
             remove { RemoveHandler(ZoomingEvent, value); }
         }
 
+        /// <summary>
+        /// Gets or sets whether real-time selection is enabled.
+        /// Default is <see langword="false"/>.
+        /// </summary>
         public static DependencyProperty RealTimeSelectionEnabledProperty = DependencyProperty.Register(nameof(RealTimeSelectionEnabled), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
         /// <summary>
         /// Gets or sets whether real-time selection is enabled.
-        /// Default is <see cref="false"/>.
+        /// Default is <see langword="false"/>.
         /// </summary>
         public bool RealTimeSelectionEnabled
         {
@@ -372,10 +498,14 @@ namespace RichCanvas
             set => SetValue(RealTimeSelectionEnabledProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets whether real-time selection is enabled.
+        /// Default is <see langword="false"/>.
+        /// </summary>
         public static DependencyProperty RealTimeDraggingEnabledProperty = DependencyProperty.Register(nameof(RealTimeDraggingEnabled), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
         /// <summary>
         /// Gets or sets whether real-time selection is enabled.
-        /// Default is <see cref="false"/>.
+        /// Default is <see langword="false"/>.
         /// </summary>
         public bool RealTimeDraggingEnabled
         {
@@ -383,6 +513,10 @@ namespace RichCanvas
             set => SetValue(RealTimeDraggingEnabledProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets scroll Extent maximum size. Controls maximum offset of scroll.
+        /// Default is <see cref="Size.Empty"/>.
+        /// </summary>
         public static DependencyProperty ExtentSizeProperty = DependencyProperty.Register(nameof(ExtentSize), typeof(Size), typeof(RichItemsControl), new FrameworkPropertyMetadata(Size.Empty));
         /// <summary>
         /// Gets or sets scroll Extent maximum size. Controls maximum offset of scroll.
@@ -394,10 +528,14 @@ namespace RichCanvas
             set => SetValue(ExtentSizeProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets whether <see cref="RichCanvas"/> has negative scrolling and panning.
+        /// Default is <see langword="true"/>.
+        /// </summary>
         public static DependencyProperty EnableNegativeScrollingProperty = DependencyProperty.Register(nameof(EnableNegativeScrolling), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true));
         /// <summary>
         /// Gets or sets whether <see cref="RichCanvas"/> has negative scrolling and panning.
-        /// Default is <see cref="true"/>.
+        /// Default is <see langword="true"/>.
         /// </summary>
         public bool EnableNegativeScrolling
         {
@@ -405,11 +543,15 @@ namespace RichCanvas
             set => SetValue(EnableNegativeScrollingProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets whether you can select multiple elements or not.
+        /// Default is <see langword="true"/>.
+        /// </summary>
         public static DependencyProperty CanSelectMultipleItemsProperty = DependencyProperty.Register(nameof(CanSelectMultipleItems), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true, OnCanSelectMultipleItemsChanged));
 
         /// <summary>
         /// Gets or sets whether you can select multiple elements or not.
-        /// Default is <see cref="true"/>.
+        /// Default is <see langword="true"/>.
         /// </summary>
         public new bool CanSelectMultipleItems
         {
@@ -417,10 +559,14 @@ namespace RichCanvas
             set => SetValue(CanSelectMultipleItemsProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets whether <see cref="RichCanvas"/> has selection enabled.
+        /// Default is <see langword="true"/>.
+        /// </summary>
         public static DependencyProperty SelectionEnabledProperty = DependencyProperty.Register(nameof(SelectionEnabled), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true));
         /// <summary>
         /// Gets or sets whether <see cref="RichCanvas"/> has selection enabled.
-        /// Default is <see cref="true"/>.
+        /// Default is <see langword="true"/>.
         /// </summary>
         public bool SelectionEnabled
         {
@@ -428,15 +574,39 @@ namespace RichCanvas
             set => SetValue(SelectionEnabledProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets whether <see cref="PanningGrid.ScrollOwner"/> vertical scrollbar visibility.
+        /// Default is <see cref="ScrollBarVisibility.Visible"/>.
+        /// </summary>
+        public static DependencyProperty VerticalScrollBarVisibilityProperty = DependencyProperty.Register(nameof(VerticalScrollBarVisibility), typeof(ScrollBarVisibility), typeof(RichItemsControl), new FrameworkPropertyMetadata(ScrollBarVisibility.Visible, OnVerticalScrollBarVisiblityChanged));
+        /// <summary>
+        /// Gets or sets whether <see cref="PanningGrid.ScrollOwner"/> vertical scrollbar visibility.
+        /// Default is <see cref="ScrollBarVisibility.Visible"/>.
+        /// </summary>
+        public ScrollBarVisibility VerticalScrollBarVisibility
+        {
+            get => (ScrollBarVisibility)GetValue(VerticalScrollBarVisibilityProperty);
+            set => SetValue(VerticalScrollBarVisibilityProperty, value);
+        }
+
+        /// <summary>
+        /// Gets or sets whether <see cref="PanningGrid.ScrollOwner"/> horizontal scrollbar visibility.
+        /// Default is <see cref="ScrollBarVisibility.Visible"/>.
+        /// </summary>
+        public static DependencyProperty HorizontalScrollBarVisibilityProperty = DependencyProperty.Register(nameof(HorizontalScrollBarVisibility), typeof(ScrollBarVisibility), typeof(RichItemsControl), new FrameworkPropertyMetadata(ScrollBarVisibility.Visible, OnHorizontalScrollBarVisiblityChanged));
+        /// <summary>
+        /// Gets or sets whether <see cref="PanningGrid.ScrollOwner"/> horizontal scrollbar visibility.
+        /// Default is <see cref="ScrollBarVisibility.Visible"/>.
+        /// </summary>
+        public ScrollBarVisibility HorizontalScrollBarVisibility
+        {
+            get => (ScrollBarVisibility)GetValue(HorizontalScrollBarVisibilityProperty);
+            set => SetValue(HorizontalScrollBarVisibilityProperty, value);
+        }
+
         #endregion
 
         #region Internal Properties
-
-        /// <summary>
-        /// Gets whether at least one item is selected.
-        /// </summary>
-        public bool HasSelections => base.SelectedItems.Count > 1;
-        public PanningGrid? ScrollContainer => _canvasContainer;
         internal RichCanvas? ItemsHost => _mainPanel;
         internal TransformGroup? SelectionRectangleTransform { get; private set; }
         internal bool IsPanning => Keyboard.IsKeyDown(PanningKey);
@@ -445,6 +615,7 @@ namespace RichCanvas
         internal RichItemContainer CurrentDrawingItem => _drawingGesture.CurrentItem;
         internal bool HasCustomBehavior { get; set; }
         internal IList BaseSelectedItems => base.SelectedItems;
+        internal bool InitializedScrollBarVisiblity { get; private set; }
 
         #endregion
 
@@ -493,7 +664,7 @@ namespace RichCanvas
             SetCachingMode(DisableCache);
 
             _canvasContainer = (PanningGrid)GetTemplateChild(CanvasContainerName);
-            _canvasContainer.Initalize(this);
+            _canvasContainer.Initialize(this);
 
             TranslateTransform.Changed += OnTranslateChanged;
             ScaleTransform.Changed += OnScaleChanged;
@@ -663,6 +834,23 @@ namespace RichCanvas
 
         private static void OnOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).OverrideTranslate((Point)e.NewValue);
 
+        private static void OnDisableScrollChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).OnDisableScrollChanged((bool)e.NewValue);
+
+        private void OnDisableScrollChanged(bool disabled)
+        {
+            if (!disabled)
+            {
+                ScrollContainer?.SetCurrentScroll();
+            }
+            if (ScrollContainer != null && ScrollContainer.ScrollOwner != null)
+            {
+                var scrollBarVisibllity = disabled ? ScrollBarVisibility.Hidden : ScrollBarVisibility.Auto;
+                ScrollContainer.ScrollOwner.HorizontalScrollBarVisibility = scrollBarVisibllity;
+                ScrollContainer.ScrollOwner.VerticalScrollBarVisibility = scrollBarVisibllity;
+                ScrollContainer.ScrollOwner.InvalidateScrollInfo();
+            }
+        }
+
         private static object ConstarainScaleToRange(DependencyObject d, object value)
         {
             var itemsControl = (RichItemsControl)d;
@@ -725,7 +913,9 @@ namespace RichCanvas
 
         private static void OnCanSelectMultipleItemsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).CanSelectMultipleItemsUpdated((bool)e.NewValue);
 
-        private void CanSelectMultipleItemsUpdated(bool value) => base.CanSelectMultipleItems = value;
+        private static void OnVerticalScrollBarVisiblityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).OnScrollBarVisiblityChanged((ScrollBarVisibility)e.NewValue, true);
+
+        private static void OnHorizontalScrollBarVisiblityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).OnScrollBarVisiblityChanged((ScrollBarVisibility)e.NewValue);
 
         #endregion
 
@@ -881,7 +1071,7 @@ namespace RichCanvas
             }
         }
 
-        private void OnSelectedItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnSelectedItemsChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
@@ -986,7 +1176,9 @@ namespace RichCanvas
 
         #region Handlers And Private Methods
 
-        private void OnScaleChanged(object sender, EventArgs e)
+        private void CanSelectMultipleItemsUpdated(bool value) => base.CanSelectMultipleItems = value;
+
+        private void OnScaleChanged(object? sender, EventArgs e)
         {
             _fromEvent = true;
             Scale = ScaleTransform.ScaleX;
@@ -995,7 +1187,7 @@ namespace RichCanvas
             _fromEvent = false;
         }
 
-        private void OnTranslateChanged(object sender, EventArgs e)
+        private void OnTranslateChanged(object? sender, EventArgs e)
         {
             _fromEvent = true;
             TranslateOffset = new Point(TranslateTransform.X, TranslateTransform.Y);
@@ -1074,7 +1266,7 @@ namespace RichCanvas
             }
         }
 
-        private void HandleAutoPanning(object sender, EventArgs e)
+        private void HandleAutoPanning(object? sender, EventArgs e)
         {
             if (IsMouseOver && Mouse.LeftButton == MouseButtonState.Pressed && Mouse.Captured != null && !IsMouseCapturedByScrollBar() && !IsPanning && ScrollContainer != null)
             {
@@ -1141,7 +1333,27 @@ namespace RichCanvas
             RaiseEvent(newEventArgs);
         }
 
-        #endregion
+        internal void OnScrollBarVisiblityChanged(ScrollBarVisibility scrollBarVisibility, bool isVertical = false, bool initalized = false)
+        {
+            if (initalized)
+            {
+                InitializedScrollBarVisiblity = true;
+            }
 
+            if (ScrollContainer != null && ScrollContainer.ScrollOwner != null)
+            {
+                if (isVertical)
+                {
+                    ScrollContainer.ScrollOwner.VerticalScrollBarVisibility = scrollBarVisibility;
+                }
+                else
+                {
+                    ScrollContainer.ScrollOwner.HorizontalScrollBarVisibility = scrollBarVisibility;
+                }
+                ScrollContainer.ScrollOwner.InvalidateScrollInfo();
+            }
+        }
+
+        #endregion
     }
 }

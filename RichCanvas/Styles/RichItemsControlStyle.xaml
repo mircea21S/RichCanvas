@@ -26,7 +26,6 @@
             <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
             <converters:BoolToGeometryConverter x:Key="BoolToBackground" />
             <converters:UIntToRectConverter x:Key="UIntToRect" />
-
         </Style.Resources>
 
         <Setter Property="SelectionRectangleStyle"

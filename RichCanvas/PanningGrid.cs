@@ -66,22 +66,22 @@ namespace RichCanvas
         /// <summary>
         /// Top limit of <see cref="ScrollOwner"/> viewport
         /// </summary>
-        protected internal double TopLimit => TranslatePoint(_viewportTopLeftInitial, _parent?.ItemsHost).Y;
+        public double TopLimit => TranslatePoint(_viewportTopLeftInitial, _parent?.ItemsHost).Y;
 
         /// <summary>
         /// Bottom limit of <see cref="ScrollOwner"/> viewport
         /// </summary>
-        protected internal double BottomLimit => TranslatePoint(_viewportBottomRightInitial, _parent?.ItemsHost).Y;
+        public double BottomLimit => TranslatePoint(_viewportBottomRightInitial, _parent?.ItemsHost).Y;
 
         /// <summary> 
         /// Left limit of <see cref="ScrollOwner"/> viewport
         /// </summary>
-        protected internal double LeftLimit => TranslatePoint(_viewportTopLeftInitial, _parent?.ItemsHost).X;
+        public double LeftLimit => TranslatePoint(_viewportTopLeftInitial, _parent?.ItemsHost).X;
 
         /// <summary>
         /// Right limit of <see cref="ScrollOwner"/> viewport
         /// </summary>
-        protected internal double RightLimit => TranslatePoint(_viewportBottomRightInitial, _parent?.ItemsHost).X;
+        public double RightLimit => TranslatePoint(_viewportBottomRightInitial, _parent?.ItemsHost).X;
 
         #endregion
 
@@ -329,7 +329,7 @@ namespace RichCanvas
         #region Override Methods
 
         /// <inheritdoc/>
-        protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             if (Keyboard.IsKeyDown(Key.Space) && _parent != null && _parent.IsPanning)
             {
@@ -339,9 +339,10 @@ namespace RichCanvas
         }
 
         /// <inheritdoc/>
-        protected override void OnPreviewMouseMove(MouseEventArgs e)
+        protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (Mouse.LeftButton == MouseButtonState.Pressed && _parent != null && _parent.IsPanning)
+            if (Mouse.LeftButton == MouseButtonState.Pressed && _parent != null && _parent.IsPanning
+                && IsMouseCaptured)
             {
                 var currentPosition = e.GetPosition(this);
                 var deltaHeight = currentPosition.Y - _panInitialPosition.Y;
@@ -385,6 +386,15 @@ namespace RichCanvas
         {
             if (ScrollOwner != null)
             {
+                // If ScrollBar visibility is set initally/on startup ScrollOwner is not initialized
+                // so I explictily set them once when ScrollOwner is not null
+                var isScrollBarVisibilityInitalized = _parent?.InitializedScrollBarVisiblity ?? true;
+                if (!isScrollBarVisibilityInitalized)
+                {
+                    _parent?.OnScrollBarVisiblityChanged(_parent.VerticalScrollBarVisibility, true, true);
+                    _parent?.OnScrollBarVisiblityChanged(_parent.HorizontalScrollBarVisibility, false, true);
+                }
+
                 if (_viewport != arrangeSize)
                 {
                     _viewport = arrangeSize;
@@ -445,7 +455,10 @@ namespace RichCanvas
                 _zoomGesture?.ZoomToPosition(position, -delta, _parent?.ScaleFactor);
             }
 
-            SetCurrentScroll();
+            if (!_parent.DisableScroll)
+            {
+                SetCurrentScroll();
+            }
         }
 
         /// <summary>
@@ -544,7 +557,7 @@ namespace RichCanvas
             }
         }
 
-        internal void Initalize(RichItemsControl richItemsControl)
+        internal void Initialize(RichItemsControl richItemsControl)
         {
             _parent = richItemsControl;
             _translateTransform = _parent.TranslateTransform;
@@ -717,6 +730,5 @@ namespace RichCanvas
         }
 
         #endregion
-
     }
 }

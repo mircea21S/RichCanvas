@@ -81,8 +81,20 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
 
+            <StackPanel>
+                <CheckBox Content="Enable Grid"
+                          IsChecked="{Binding EnableGrid, Mode=TwoWay}"
+                          HorizontalAlignment="Left" />
+
+                <TextBox Text="{Binding GridSpacing, Mode=TwoWay}"
+                         Width="100"
+                         HorizontalAlignment="Left"
+                         md:HintAssist.Hint="Grid spacing value"
+                         md:HintAssist.IsFloating="True" />
+            </StackPanel>
             <StackPanel>
                 <CheckBox Content="Enable Grid"
                           IsChecked="{Binding EnableGrid, Mode=TwoWay}"
@@ -123,6 +135,16 @@
                 <CheckBox Content="Disable AutoPanning"
                           IsChecked="{Binding DisableAutoPanning, Mode=TwoWay}"
                           HorizontalAlignment="Left" />
+
+                <ComboBox SelectedItem="{Binding VerticalScrollBarVisibility, Mode=TwoWay}"
+                          HorizontalAlignment="Left"
+                          md:HintAssist.Hint="Visibility"
+                          md:HintAssist.IsFloating="True">
+                    <ScrollBarVisibility>Hidden</ScrollBarVisibility>
+                    <ScrollBarVisibility>Visible</ScrollBarVisibility>
+                    <ScrollBarVisibility>Disabled</ScrollBarVisibility>
+                    <ScrollBarVisibility>Auto</ScrollBarVisibility>
+                </ComboBox>
 
                 <TextBox Text="{Binding AutoPanSpeed, Mode=TwoWay}"
                          Width="100"
@@ -323,7 +345,8 @@
                                      TranslateOffset="{Binding TranslateOffset, Mode=TwoWay}"
                                      SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                                      RealTimeDraggingEnabled="True"
-                                     RealTimeSelectionEnabled="True">
+                                     RealTimeSelectionEnabled="True"
+                                     HorizontalScrollBarVisibility="{Binding VerticalScrollBarVisibility}">
 
             <richCanvas:RichItemsControl.ContextMenu>
                 <ContextMenu>
