@@ -362,7 +362,7 @@ namespace RichCanvasDemo
                 });
         }
 
-        private System.Windows.Controls.ScrollBarVisibility verticalScrollBarVisibility;
+        private System.Windows.Controls.ScrollBarVisibility verticalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Visible;
 
         public System.Windows.Controls.ScrollBarVisibility VerticalScrollBarVisibility { get => verticalScrollBarVisibility; set => SetProperty(ref verticalScrollBarVisibility, value); }
     }

@@ -24,7 +24,10 @@ namespace RichCanvas.Gestures
 
         private void OnItemsDragCompleted(object sender, DragCompletedEventArgs e)
         {
-            _context.Cursor = Cursors.Arrow;
+            if (!_context.IsPanning)
+            {
+                _context.Cursor = Cursors.Arrow;
+            }
             if (_selectedContainers.Count > 0)
             {
                 for (var i = 0; i < _selectedContainers.Count; i++)

@@ -329,7 +329,7 @@ namespace RichCanvas
         #region Override Methods
 
         /// <inheritdoc/>
-        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             if (Keyboard.IsKeyDown(Key.Space) && _parent != null && _parent.IsPanning)
             {
@@ -339,25 +339,13 @@ namespace RichCanvas
         }
 
         /// <inheritdoc/>
-        protected override void OnMouseMove(MouseEventArgs e)
+        protected override void OnPreviewMouseMove(MouseEventArgs e)
         {
             if (Mouse.LeftButton == MouseButtonState.Pressed && _parent != null && _parent.IsPanning
                 && IsMouseCaptured)
             {
                 var currentPosition = e.GetPosition(this);
-                var deltaHeight = currentPosition.Y - _panInitialPosition.Y;
-                var deltaWidth = currentPosition.X - _panInitialPosition.X;
-
-                if (deltaWidth != 0)
-                {
-                    PanHorizontally(-deltaWidth);
-                }
-
-                if (deltaHeight != 0)
-                {
-                    PanVertically(-deltaHeight);
-                }
-                ScrollOwner?.InvalidateScrollInfo();
+                Pan(_panInitialPosition, currentPosition);
                 _panInitialPosition = currentPosition;
             }
         }
@@ -416,6 +404,28 @@ namespace RichCanvas
         #endregion
 
         #region Public Methods
+
+        /// <summary>
+        /// Panning of the canvas using the difference between the specified points.
+        /// </summary>
+        /// <param name="initialPosition">Calculated initial mouse position. For example, on click.</param>
+        /// <param name="currentMousePosition">Current calculated mouse position.</param>
+        public void Pan(Point initialPosition, Point currentMousePosition)
+        {
+            var deltaHeight = currentMousePosition.Y - initialPosition.Y;
+            var deltaWidth = currentMousePosition.X - initialPosition.X;
+
+            if (deltaWidth != 0)
+            {
+                PanHorizontally(-deltaWidth);
+            }
+
+            if (deltaHeight != 0)
+            {
+                PanVertically(-deltaHeight);
+            }
+            ScrollOwner?.InvalidateScrollInfo();
+        }
 
         /// <summary>
         /// Zooms at the specified position

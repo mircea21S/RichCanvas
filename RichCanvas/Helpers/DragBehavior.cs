@@ -61,7 +61,10 @@ namespace RichCanvas.Helpers
             }
             container.CaptureMouse();
 
-            ItemsControl.Cursor = Cursors.Hand;
+            if (!ItemsControl.IsPanning)
+            {
+                ItemsControl.Cursor = Cursors.Hand;
+            }
         }
 
         private static void OnSelectedContainerReleased(object sender, MouseButtonEventArgs e)

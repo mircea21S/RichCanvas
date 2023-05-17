@@ -346,7 +346,7 @@
                                      SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                                      RealTimeDraggingEnabled="True"
                                      RealTimeSelectionEnabled="True"
-                                     HorizontalScrollBarVisibility="{Binding VerticalScrollBarVisibility}">
+                                     VerticalScrollBarVisibility="{Binding VerticalScrollBarVisibility}">
 
             <richCanvas:RichItemsControl.ContextMenu>
                 <ContextMenu>
