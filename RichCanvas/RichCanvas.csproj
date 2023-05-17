@@ -18,20 +18,14 @@
 			WPF Control library - Infinite canvas with panning, zooming, scrolling and other customizable functions, designed for MVVM.
 		</Description>
 		<PackageReleaseNotes>
-			v2.4.1:
+			v2.4.2:
 				Bugfixes:
-					-Fixed panning error due to not capturing the mouse
-					-Update UI when changing DisableScroll value
-					-Disabled scroll on zoom when DisableScroll is set to true
-				Improvements:
-					-Added comments for all properties on RichItemsControl
-				New features:
-					-Added VerticalScrollBarVisibility DependencyProperty to update vertical scrollbar visibility
-					-Added HorizontalScrollBarVisibility DependencyProperty to update horizontal scrollbar visibility
+					-Fixed panning priority over click on objects, now it behaves correct (switched back to Preview events)
+					-Fixed cursor type while panning and mouse is over an object
 		</PackageReleaseNotes>
 		<AssemblyVersion>1.0.0.0</AssemblyVersion>
 		<FileVersion>1.0.0.0</FileVersion>
-		<Version>2.4.1</Version>
+		<Version>2.4.2</Version>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<PackageIconUrl />
 	</PropertyGroup>
