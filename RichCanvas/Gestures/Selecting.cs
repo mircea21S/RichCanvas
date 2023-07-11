@@ -17,9 +17,9 @@ namespace RichCanvas.Gestures
         public Selecting(RichItemsControl context)
         {
             _context = context;
-            _context.AddHandler(RichItemContainer.DragStartedEvent, new DragStartedEventHandler(OnItemsDragStarted));
-            _context.AddHandler(RichItemContainer.DragCompletedEvent, new DragCompletedEventHandler(OnItemsDragCompleted));
-            _context.AddHandler(RichItemContainer.DragDeltaEvent, new DragDeltaEventHandler(OnItemsDragDelta));
+            //_context.AddHandler(RichItemContainer.DragStartedEvent, new DragStartedEventHandler(OnItemsDragStarted));
+            //_context.AddHandler(RichItemContainer.DragCompletedEvent, new DragCompletedEventHandler(OnItemsDragCompleted));
+            //_context.AddHandler(RichItemContainer.DragDeltaEvent, new DragDeltaEventHandler(OnItemsDragDelta));
         }
 
         private void OnItemsDragCompleted(object sender, DragCompletedEventArgs e)
@@ -119,6 +119,7 @@ namespace RichCanvas.Gestures
                         }
                     }
 
+                    // TODO: check this one ????
                     if (!_context.RealTimeDraggingEnabled)
                     {
                         if (container == _context.ItemsHost?.BottomElement)
@@ -159,42 +160,5 @@ namespace RichCanvas.Gestures
             double height = Math.Abs(endLocation.Y - _selectionRectangleInitialPosition.Y);
             _context.SelectionRectangle = new Rect(_selectionRectangleInitialPosition.X, _selectionRectangleInitialPosition.Y, width, height);
         }
-
-        internal void OnMouseDown(Point position) => _selectionRectangleInitialPosition = position;
-
-        internal void OnMouseMove(Point position)
-        {
-            TransformGroup? transformGroup = _context.SelectionRectangleTransform;
-            var scaleTransform = (ScaleTransform?)transformGroup?.Children[0];
-
-            double width = position.X - _selectionRectangleInitialPosition.X;
-            double height = position.Y - _selectionRectangleInitialPosition.Y;
-
-            if (scaleTransform != null)
-            {
-                if (width < 0 && scaleTransform.ScaleX == 1)
-                {
-                    scaleTransform.ScaleX = -1;
-                }
-
-                if (height < 0 && scaleTransform.ScaleY == 1)
-                {
-                    scaleTransform.ScaleY = -1;
-                }
-
-                if (height > 0 && scaleTransform.ScaleY == -1)
-                {
-                    scaleTransform.ScaleY = 1;
-                }
-
-                if (width > 0 && scaleTransform.ScaleX == -1)
-                {
-                    scaleTransform.ScaleX = 1;
-                }
-            }
-
-            _context.SelectionRectangle = new Rect(_selectionRectangleInitialPosition.X, _selectionRectangleInitialPosition.Y, Math.Abs(width), Math.Abs(height));
-        }
-
     }
 }

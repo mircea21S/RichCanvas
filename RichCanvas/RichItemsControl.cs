@@ -1,5 +1,4 @@
 ﻿using RichCanvas.Helpers;
-using RichCanvas.Gestures;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,6 +10,9 @@ using System.Windows.Controls.Primitives;
 using System.Collections.Specialized;
 using System.Collections;
 using System.Collections.Generic;
+using RichCanvas.States;
+using RichCanvas.States.Dragging;
+using RichCanvas.States.SelectionStates;
 
 namespace RichCanvas
 {
@@ -34,16 +36,10 @@ namespace RichCanvas
 
         internal readonly ScaleTransform ScaleTransform = new ScaleTransform();
         internal readonly TranslateTransform TranslateTransform = new TranslateTransform();
-
         private RichCanvas? _mainPanel;
         private PanningGrid? _canvasContainer;
-        private bool _isDrawing;
-        private readonly Gestures.Drawing _drawingGesture;
-        private readonly Selecting _selectingGesture;
         private DispatcherTimer? _autoPanTimer;
-        private readonly List<int> _currentDrawingIndexes = new List<int>();
         private bool _fromEvent;
-        private RichItemContainer? _selectedContainer;
 
         #endregion
 
@@ -608,14 +604,14 @@ namespace RichCanvas
 
         #region Internal Properties
         internal RichCanvas? ItemsHost => _mainPanel;
-        internal TransformGroup? SelectionRectangleTransform { get; private set; }
         internal bool IsPanning => Keyboard.IsKeyDown(PanningKey);
         internal bool IsZooming => Keyboard.IsKeyDown(ZoomKey);
-        internal bool IsDrawing => _isDrawing;
-        internal RichItemContainer CurrentDrawingItem => _drawingGesture.CurrentItem;
-        internal bool HasCustomBehavior { get; set; }
-        internal IList BaseSelectedItems => base.SelectedItems;
         internal bool InitializedScrollBarVisiblity { get; private set; }
+        internal IList BaseSelectedItems => base.SelectedItems;
+        internal List<int> CurrentDrawingIndexes { get; } = new List<int>();
+        public CanvasState CurrentState { get; private set; }
+        public RichItemContainer? SelectedContainer { get; private set; }
+
 
         #endregion
 
@@ -630,6 +626,10 @@ namespace RichCanvas
         /// </summary>
         public RichItemsControl()
         {
+            AddHandler(RichItemContainer.DragStartedEvent, new DragStartedEventHandler(OnItemsDragStarted));
+            AddHandler(RichItemContainer.DragDeltaEvent, new DragDeltaEventHandler(OnItemsDragDelta));
+            AddHandler(RichItemContainer.DragCompletedEvent, new DragCompletedEventHandler(OnItemsDragCompleted));
+
             AppliedTransform = new TransformGroup()
             {
                 Children = new TransformCollection
@@ -637,9 +637,7 @@ namespace RichCanvas
                     ScaleTransform, TranslateTransform
                 }
             };
-            DragBehavior.ItemsControl = this;
-            _selectingGesture = new Selecting(this);
-            _drawingGesture = new Gestures.Drawing(this);
+            CurrentState = new DefaultCanvasState(this);
         }
 
         #endregion
@@ -649,16 +647,6 @@ namespace RichCanvas
         /// <inheritdoc/>
         public override void OnApplyTemplate()
         {
-            var selectionRectangle = (Rectangle)GetTemplateChild(SelectionRectangleName);
-            selectionRectangle.RenderTransform = new TransformGroup
-            {
-                Children = new TransformCollection
-                {
-                    new ScaleTransform()
-                }
-            };
-            SelectionRectangleTransform = (TransformGroup)selectionRectangle.RenderTransform;
-
             _mainPanel = (RichCanvas)GetTemplateChild(DrawingPanelName);
             _mainPanel.ItemsOwner = this;
             SetCachingMode(DisableCache);
@@ -682,134 +670,75 @@ namespace RichCanvas
             }
         };
 
-        /// <inheritdoc/>
-        protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
+        //protected override void OnGotMouseCapture(MouseEventArgs e)
+        //{
+        //    if (e.Source == this && e.HasAnyButtonPressed())
+        //    {
+        //        CurrentState?.Enter(e);
+        //    }
+        //}
+
+        //protected override void OnLostMouseCapture(MouseEventArgs e)
+        //{
+        //    if (e.Source == this && e.HasAllButtonsReleased())
+        //    {
+        //        CurrentState?.Exit();
+        //    }
+        //}
+
+        protected override void OnPreviewMouseDown(MouseButtonEventArgs e)
         {
-            if (IsPanning)
-            {
-                Cursor = Cursors.Hand;
-            }
-            else
-            {
-                Point position = e.GetPosition(ItemsHost);
-                if (!VisualHelper.HasScrollBarParent((DependencyObject)e.OriginalSource))
-                {
-                    if (_currentDrawingIndexes.Count > 0)
-                    {
-                        for (int i = 0; i < _currentDrawingIndexes.Count; i++)
-                        {
-                            var container = (RichItemContainer)ItemContainerGenerator.ContainerFromIndex(_currentDrawingIndexes[i]);
-                            if (container != null)
-                            {
-                                if (container.IsValid())
-                                {
-                                    container.IsDrawn = true;
-
-                                    _currentDrawingIndexes.Remove(_currentDrawingIndexes[i]);
-                                }
-                                else
-                                {
-                                    CaptureMouse();
-                                    _isDrawing = true;
-                                    _drawingGesture.OnMouseDown(container, position);
-                                    _currentDrawingIndexes.Remove(_currentDrawingIndexes[i]);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-
-                    if (SelectionEnabled && !_isDrawing && !IsDragging && !HasCustomBehavior)
-                    {
-                        IsSelecting = true;
-                        _selectingGesture.OnMouseDown(position);
-                        CaptureMouse();
-                    }
-
-                    if (!SelectionEnabled && (base.SelectedItems.Count > 0 || SelectedItem != null))
-                    {
-                        UnselectAll();
-                    }
-                }
-            }
+            CurrentState.Enter(e);
         }
 
         /// <inheritdoc/>
-        protected override void OnPreviewMouseMove(MouseEventArgs e)
+        protected override void OnMouseDown(MouseButtonEventArgs e)
         {
-            MousePosition = new Point(e.GetPosition(_mainPanel).X, e.GetPosition(_mainPanel).Y);
-
-            if (_isDrawing)
+            if (Mouse.Captured == null || IsMouseCaptured)
             {
-                _drawingGesture.OnMouseMove(MousePosition);
+                CaptureMouse();
             }
-            else if (IsSelecting)
-            {
-                _selectingGesture.OnMouseMove(MousePosition);
+            Focus();
 
-                if (RealTimeSelectionEnabled || !CanSelectMultipleItems)
-                {
-                    SelectBySelectionRectangle();
-                }
-            }
+            CurrentState?.HandleMouseDown(e);
+
+            //if (IsPanning)
+            //{
+            //    Cursor = Cursors.Hand;
+            //}
+            //else
+            //{
+            //    
+
+            //        
+            //    }
+            //}
         }
 
         /// <inheritdoc/>
-        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+        protected override void OnMouseMove(MouseEventArgs e)
         {
-            if (_isDrawing)
-            {
-                _isDrawing = false;
-                var drawnItem = _drawingGesture.OnMouseUp();
-
-                RaiseDrawEndedEvent(drawnItem.DataContext);
-                _drawingGesture.Dispose();
-
-                ItemsHost?.InvalidateMeasure();
-            }
-            else if (!IsDragging && IsSelecting)
-            {
-                IsSelecting = false;
-
-                if (!RealTimeSelectionEnabled && CanSelectMultipleItems)
-                {
-                    SelectBySelectionRectangle();
-
-                    IList selected = SelectedItems;
-
-                    if (selected != null)
-                    {
-                        IList added = base.SelectedItems;
-                        for (var i = 0; i < added.Count; i++)
-                        {
-                            // Ensure no duplicates are added
-                            if (!selected.Contains(added[i]))
-                            {
-                                selected.Add(added[i]);
-                            }
-                        }
-                    }
-                }
-                else if (!RealTimeSelectionEnabled && !CanSelectMultipleItems)
-                {
-                    if (_selectedContainer != null)
-                    {
-                        SelectedItem = _selectedContainer.DataContext;
-                    }
-                    else
-                    {
-                        SelectedItem = null;
-                    }
-                }
-
-            }
-            if (IsPanning)
-            {
-                Cursor = Cursors.Arrow;
-            }
+            MousePosition = e.GetPosition(_mainPanel);
             if (IsMouseCaptured)
             {
-                ReleaseMouseCapture();
+                CurrentState?.HandleMouseMove(e);
+            }
+        }
+
+        /// <inheritdoc/>
+        protected override void OnMouseUp(MouseButtonEventArgs e)
+        {
+            //if (IsPanning)
+            //{
+            //    Cursor = Cursors.Arrow;
+            //}
+            if (IsMouseCaptured)
+            {
+                CurrentState?.HandleMouseUp(e);
+                if (e.HasAllButtonsReleased())
+                {
+                    ReleaseMouseCapture();
+                }
             }
             Focus();
         }
@@ -822,14 +751,31 @@ namespace RichCanvas
                 var container = (RichItemContainer)ItemContainerGenerator.ContainerFromIndex(e.NewStartingIndex);
                 if (!container.IsValid())
                 {
-                    _currentDrawingIndexes.Add(e.NewStartingIndex);
+                    CurrentDrawingIndexes.Add(e.NewStartingIndex);
+                }
+                else
+                {
+                    container.IsDrawn = true;
                 }
             }
         }
 
         #endregion
 
+        #region Public
+
+        public void SetCurrentState(CanvasState state)
+        {
+            var previousState = CurrentState;
+            previousState.Exit();
+            CurrentState = state;
+            state.Enter();
+        }
+
+        #endregion
+
         #region Properties Callbacks
+
         private static void OnDisableCacheChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).SetCachingMode((bool)e.NewValue);
 
         private static void OnOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).OverrideTranslate((Point)e.NewValue);
@@ -921,58 +867,9 @@ namespace RichCanvas
 
         #region Selection
 
-        /// <summary>
-        /// Selects all elements inside <see cref="SelectionRectangle"/>
-        /// </summary>
-        public void SelectBySelectionRectangle()
-        {
-            RectangleGeometry geom = GetSelectionRectangleCurrentGeometry();
+        internal void BeginSelectionTransaction() => BeginUpdateSelectedItems();
 
-            if (SelectedItems?.Count > 0 && CanSelectMultipleItems)
-            {
-                SelectedItems?.Clear();
-            }
-
-            if (SelectedItems is null && base.SelectedItems.Count > 0 && CanSelectMultipleItems)
-            {
-                UnselectAll();
-            }
-
-            if (CanSelectMultipleItems)
-            {
-                BeginUpdateSelectedItems();
-            }
-
-            VisualTreeHelper.HitTest(_mainPanel, null,
-                new HitTestResultCallback(OnHitTestResultCallback),
-                new GeometryHitTestParameters(geom));
-
-            if (CanSelectMultipleItems)
-            {
-                EndUpdateSelectedItems();
-            }
-
-            if (!CanSelectMultipleItems && RealTimeSelectionEnabled)
-            {
-                if (SelectedItems != null && !SelectedItems.Contains(SelectedItem) && SelectedItem != null)
-                {
-                    SelectedItem = null;
-                    if (_selectedContainer != null)
-                    {
-                        _selectedContainer.IsSelected = false;
-                        _selectedContainer = null;
-                    }
-                }
-                SelectedItems?.Clear();
-            }
-            else if (!CanSelectMultipleItems && !RealTimeSelectionEnabled)
-            {
-                if (_selectedContainer != null)
-                {
-                    _selectedContainer = null;
-                }
-            }
-        }
+        internal void EndSelectionTransaction() => EndUpdateSelectedItems();
 
         /// <summary>
         /// Returns the elements that intersect with <paramref name="area"/>
@@ -1031,9 +928,9 @@ namespace RichCanvas
                 var added = e.AddedItems;
                 if (added.Count == 1)
                 {
-                    if (_selectedContainer != null && added[0] != _selectedContainer.DataContext)
+                    if (SelectedContainer != null && added[0] != SelectedContainer.DataContext)
                     {
-                        _selectedContainer.IsSelected = false;
+                        SelectedContainer.IsSelected = false;
                     }
                 }
             }
@@ -1114,69 +1011,48 @@ namespace RichCanvas
             }
         }
 
-        private HitTestResultBehavior OnHitTestResultCallback(HitTestResult result)
-        {
-            var geometryHitTestResult = (GeometryHitTestResult)result;
-            if (geometryHitTestResult.VisualHit.DependencyObjectType.SystemType != typeof(RichItemContainer) && geometryHitTestResult.IntersectionDetail != IntersectionDetail.Empty)
-            {
-                var container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
-                if (container != null && container.IsSelectable)
-                {
-                    if (CanSelectMultipleItems)
-                    {
-                        SelectedItems?.Add(container.DataContext);
-                        container.IsSelected = true;
-                    }
-                    else
-                    {
-                        if (SelectedItem == null && RealTimeSelectionEnabled)
-                        {
-                            container.IsSelected = true;
-                            _selectedContainer = container;
-                        }
-                        if (RealTimeSelectionEnabled)
-                        {
-                            SelectedItems?.Add(container.DataContext);
-                        }
-                        else
-                        {
-                            if (_selectedContainer == null)
-                            {
-                                _selectedContainer = container;
-                            }
-                        }
-                    }
-                }
-            }
-            return HitTestResultBehavior.Continue;
-        }
-
-        private RectangleGeometry GetSelectionRectangleCurrentGeometry()
-        {
-            var scaleTransform = (ScaleTransform?)SelectionRectangleTransform?.Children[0];
-            if (scaleTransform != null)
-            {
-                var currentSelectionTop = scaleTransform.ScaleY < 0 ? SelectionRectangle.Top - SelectionRectangle.Height : SelectionRectangle.Top;
-                var currentSelectionLeft = scaleTransform.ScaleX < 0 ? SelectionRectangle.Left - SelectionRectangle.Width : SelectionRectangle.Left;
-                return new RectangleGeometry(new Rect(currentSelectionLeft, currentSelectionTop, SelectionRectangle.Width, SelectionRectangle.Height));
-            }
-            return new RectangleGeometry(Rect.Empty);
-        }
-
         internal void UpdateSelectedItem(RichItemContainer container)
         {
-            if (_selectedContainer != null)
+            if (SelectedContainer != null)
             {
-                _selectedContainer.IsSelected = false;
+                SelectedContainer.IsSelected = false;
             }
-            _selectedContainer = container;
+            SelectedContainer = container;
         }
 
         #endregion
 
         #region Handlers And Private Methods
 
-        private void CanSelectMultipleItemsUpdated(bool value) => base.CanSelectMultipleItems = value;
+        private void OnItemsDragCompleted(object sender, DragCompletedEventArgs e)
+        {
+            SelectionHelper.GetDraggingStrategy()?.OnItemsDragCompleted(sender, e);
+        }
+
+        private void OnItemsDragDelta(object sender, DragDeltaEventArgs e)
+        {
+            SelectionHelper.GetDraggingStrategy()?.OnItemsDragDelta(sender, e);
+        }
+
+        private void OnItemsDragStarted(object sender, DragStartedEventArgs e)
+        {
+            SelectionHelper.GetDraggingStrategy().OnItemsDragStarted(sender, e);
+        }
+
+        private void CanSelectMultipleItemsUpdated(bool value)
+        {
+            base.CanSelectMultipleItems = value;
+            if (value)
+            {
+                SelectionHelper.SetSelectionStrategy(new MultipleSelectionStrategy(this));
+                SelectionHelper.SetDraggingStrategy(new MultipleDraggingStrategy(this));
+            }
+            else
+            {
+                SelectionHelper.SetSelectionStrategy(new SingleSelectionStrategy(this));
+                SelectionHelper.SetDraggingStrategy(new SingleDraggingStrategy(this));
+            }
+        }
 
         private void OnScaleChanged(object? sender, EventArgs e)
         {
@@ -1275,43 +1151,43 @@ namespace RichCanvas
 
                 if (mousePosition.Y <= 0)
                 {
-                    if (_isDrawing)
-                    {
-                        CurrentDrawingItem.Height = Math.Abs(transformedPosition.Y - CurrentDrawingItem.Top);
-                    }
+                    //if (_isDrawing)
+                    //{
+                    //    CurrentDrawingItem.Height = Math.Abs(transformedPosition.Y - CurrentDrawingItem.Top);
+                    //}
 
                     ScrollContainer.PanVertically(-AutoPanSpeed);
                 }
                 else if (mousePosition.Y >= ScrollContainer.ViewportHeight)
                 {
-                    if (_isDrawing)
-                    {
-                        CurrentDrawingItem.Height = Math.Abs(transformedPosition.Y - CurrentDrawingItem.Top);
-                    }
+                    //if (_isDrawing)
+                    //{
+                    //    CurrentDrawingItem.Height = Math.Abs(transformedPosition.Y - CurrentDrawingItem.Top);
+                    //}
                     ScrollContainer.PanVertically(AutoPanSpeed);
                 }
 
                 if (mousePosition.X <= 0)
                 {
-                    if (_isDrawing)
-                    {
-                        CurrentDrawingItem.Width = Math.Abs(transformedPosition.X - CurrentDrawingItem.Left);
-                    }
+                    //if (_isDrawing)
+                    //{
+                    //    CurrentDrawingItem.Width = Math.Abs(transformedPosition.X - CurrentDrawingItem.Left);
+                    //}
                     ScrollContainer.PanHorizontally(-AutoPanSpeed);
                 }
                 else if (mousePosition.X >= ScrollContainer.ViewportWidth)
                 {
-                    if (_isDrawing)
-                    {
-                        CurrentDrawingItem.Width = Math.Abs(transformedPosition.X - CurrentDrawingItem.Left);
-                    }
+                    //if (_isDrawing)
+                    //{
+                    //    CurrentDrawingItem.Width = Math.Abs(transformedPosition.X - CurrentDrawingItem.Left);
+                    //}
                     ScrollContainer.PanHorizontally(AutoPanSpeed);
                 }
 
-                if (IsSelecting)
-                {
-                    _selectingGesture.Update(transformedPosition);
-                }
+                //if (IsSelecting)
+                //{
+                //    _selectingGesture.Update(transformedPosition);
+                //}
             }
         }
 
@@ -1327,7 +1203,7 @@ namespace RichCanvas
                 _autoPanTimer.Interval = TimeSpan.FromMilliseconds(AutoPanTickRate);
             }
         }
-        private void RaiseDrawEndedEvent(object context)
+        internal void RaiseDrawEndedEvent(object context)
         {
             RoutedEventArgs newEventArgs = new RoutedEventArgs(DrawingEndedEvent, context);
             RaiseEvent(newEventArgs);
