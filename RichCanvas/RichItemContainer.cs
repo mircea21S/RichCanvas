@@ -1,4 +1,5 @@
 ﻿using RichCanvas.Helpers;
+using RichCanvas.States;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -208,6 +209,7 @@ namespace RichCanvas
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RichItemContainer), new FrameworkPropertyMetadata(typeof(RichItemContainer)));
         }
 
+        public ContainerState CurrentState { get; set; }
         /// <summary>
         /// The <see cref="RichItemsControl"/> that owns this <see cref="RichItemContainer"/>.
         /// </summary>
@@ -229,6 +231,11 @@ namespace RichCanvas
 
         internal bool LeftPropertySet { get; private set; }
 
+        public RichItemContainer()
+        {
+            CurrentState = new DefaultContainerState(this);
+        }
+
         /// <summary>
         /// Calculates <see cref="RichItemContainer"/> bounding box based on applied transforms.
         /// </summary>
@@ -245,39 +252,81 @@ namespace RichCanvas
             BoundingBox = bounds;
         }
 
-        /// <inheritdoc/>
-        protected override void OnMouseEnter(MouseEventArgs e)
+        protected override void OnMouseDown(MouseButtonEventArgs e)
         {
-            if (Host != null)
+            Focus();
+            if (Mouse.Captured == null || IsMouseCaptured)
             {
-                Host.HasCustomBehavior = HasCustomBehavior;
+                CaptureMouse();
             }
+            CurrentState.HandleMouseDown(e);
+        }
 
-            if (IsDraggable)
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            CurrentState.HandleMouseMove(e);
+        }
+
+        protected override void OnMouseUp(MouseButtonEventArgs e)
+        {
+            CurrentState.HandleMouseUp(e);
+
+            // Release the mouse capture if all the mouse buttons are released
+            if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
             {
-                DragBehavior.SetIsDragging((RichItemContainer)e.OriginalSource, true);
+                ReleaseMouseCapture();
             }
         }
 
-        /// <inheritdoc/>
-        protected override void OnMouseLeave(MouseEventArgs e)
+        protected override void OnGotMouseCapture(MouseEventArgs e)
         {
-            // ignore custom behavior as mouse is not on this container
-            if (Host != null)
+            if (e.Source == this && e.HasAnyButtonPressed())
             {
-                Host.HasCustomBehavior = false;
-            }
-
-            if (IsDraggable)
-            {
-                var position = e.GetPosition(Host?.ItemsHost);
-                DragBehavior.SetIsDragging((RichItemContainer)e.OriginalSource, false);
-                RaiseEvent(new DragCompletedEventArgs(position.X, position.Y, true)
-                {
-                    RoutedEvent = DragCompletedEvent
-                });
+                CurrentState.Enter();
             }
         }
+
+        protected override void OnLostMouseCapture(MouseEventArgs e)
+        {
+            if (e.Source == this && e.HasAllButtonsReleased())
+            {
+                CurrentState.Exit();
+            }
+        }
+
+        ///// <inheritdoc/>
+        //protected override void OnMouseEnter(MouseEventArgs e)
+        //{
+        //    if (Host != null)
+        //    {
+        //        Host.HasCustomBehavior = HasCustomBehavior;
+        //    }
+
+        //    if (IsDraggable)
+        //    {
+        //        DragBehavior.SetIsDragging((RichItemContainer)e.OriginalSource, true);
+        //    }
+        //}
+
+        ///// <inheritdoc/>
+        //protected override void OnMouseLeave(MouseEventArgs e)
+        //{
+        //    // ignore custom behavior as mouse is not on this container
+        //    if (Host != null)
+        //    {
+        //        Host.HasCustomBehavior = false;
+        //    }
+
+        //    if (IsDraggable)
+        //    {
+        //        var position = e.GetPosition(Host?.ItemsHost);
+        //        DragBehavior.SetIsDragging((RichItemContainer)e.OriginalSource, false);
+        //        RaiseEvent(new DragCompletedEventArgs(position.X, position.Y, true)
+        //        {
+        //            RoutedEvent = DragCompletedEvent
+        //        });
+        //    }
+        //}
 
         /// <summary>
         /// Occurs when the <see cref="RichItemContainer"/> is being dragged.
@@ -388,6 +437,5 @@ namespace RichCanvas
                 ScaleTransform.ScaleY = value.Y;
             }
         }
-
     }
 }

@@ -329,7 +329,7 @@ namespace RichCanvas
         #region Override Methods
 
         /// <inheritdoc/>
-        protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
+        protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             if (Keyboard.IsKeyDown(Key.Space) && _parent != null && _parent.IsPanning)
             {
@@ -339,7 +339,7 @@ namespace RichCanvas
         }
 
         /// <inheritdoc/>
-        protected override void OnPreviewMouseMove(MouseEventArgs e)
+        protected override void OnMouseMove(MouseEventArgs e)
         {
             if (Mouse.LeftButton == MouseButtonState.Pressed && _parent != null && _parent.IsPanning
                 && IsMouseCaptured)

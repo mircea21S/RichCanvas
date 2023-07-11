@@ -52,7 +52,8 @@
 
                         <ScrollViewer CanContentScroll="True"
                                       HorizontalScrollBarVisibility="Auto"
-                                      VerticalScrollBarVisibility="Auto">
+                                      VerticalScrollBarVisibility="Auto"
+                                      Focusable="False">
                             <local:PanningGrid x:Name="CanvasContainer"
                                                Background="{Binding EnableGrid, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToBackground}, ConverterParameter={StaticResource GridBrush}}">
 
@@ -61,7 +62,7 @@
 
                                     <local:RichCanvas x:Name="PART_Panel"
                                                       IsItemsHost="True" />
-                                    
+
                                     <Rectangle x:Name="PART_SelectionRectangle"
                                                Visibility="{TemplateBinding IsSelecting, Converter={StaticResource BoolToVisConverter}}"
                                                Canvas.Top="{Binding SelectionRectangle.Y, RelativeSource={RelativeSource TemplatedParent}}"
