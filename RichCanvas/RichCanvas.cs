@@ -18,7 +18,7 @@ namespace RichCanvas
         /// <inheritdoc/>
         protected override Size MeasureOverride(Size constraint)
         {
-            if (ItemsOwner != null && (ItemsOwner.IsDrawing || ItemsOwner.IsSelecting || ItemsOwner.IsDragging))
+            if (ItemsOwner != null && (ItemsOwner.IsSelecting || ItemsOwner.IsDragging))
             {
                 return default;
             }
