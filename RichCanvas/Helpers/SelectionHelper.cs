@@ -12,15 +12,14 @@ namespace RichCanvas.Helpers
 
         internal static void SetSelectionStrategy(SelectionStrategy selectionStrategy) => _selectionStrategy = selectionStrategy;
 
-        internal static SelectionStrategy GetSelectionStrategy() => _selectionStrategy;
+        internal static SelectionStrategy? GetSelectionStrategy() => _selectionStrategy;
 
         internal static void SetDraggingStrategy(DraggingStrategy draggingStrategy) => _draggingStrategy = draggingStrategy;
 
-        internal static DraggingStrategy GetDraggingStrategy() => _draggingStrategy;
+        internal static DraggingStrategy? GetDraggingStrategy() => _draggingStrategy;
 
         internal static RectangleGeometry ToRectangleGeometry(this Rect selectionRectangle)
         {
-
             //var scaleTransform = (ScaleTransform?)transformGroup?.Children[0];
             //if (scaleTransform != null)
             //{

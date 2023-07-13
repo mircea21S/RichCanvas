@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using RichCanvas.States;
 using RichCanvas.States.Dragging;
 using RichCanvas.States.SelectionStates;
+using RichCanvas.Gestures;
 
 namespace RichCanvas
 {
@@ -609,7 +610,7 @@ namespace RichCanvas
         internal bool InitializedScrollBarVisiblity { get; private set; }
         internal IList BaseSelectedItems => base.SelectedItems;
         internal List<int> CurrentDrawingIndexes { get; } = new List<int>();
-        public CanvasState CurrentState { get; private set; }
+        public CanvasState? CurrentState { get; private set; }
         public RichItemContainer? SelectedContainer { get; private set; }
 
 
@@ -637,7 +638,12 @@ namespace RichCanvas
                     ScaleTransform, TranslateTransform
                 }
             };
-            CurrentState = new DefaultCanvasState(this);
+
+            // call this to set Dragging and Selecting strategies
+            CanSelectMultipleItemsUpdated(CanSelectMultipleItems);
+
+            StateManager.RegisterCanvasState<DrawingState>(e => RichCanvasGestures.Drawing.Matches(e.Source, e) && this.CurrentDrawingIndexes.Count > 0);
+            StateManager.RegisterCanvasState<SelectingState>(e => RichCanvasGestures.Select.Matches(e.Source, e) && this.SelectionEnabled);
         }
 
         #endregion
@@ -670,25 +676,10 @@ namespace RichCanvas
             }
         };
 
-        //protected override void OnGotMouseCapture(MouseEventArgs e)
-        //{
-        //    if (e.Source == this && e.HasAnyButtonPressed())
-        //    {
-        //        CurrentState?.Enter(e);
-        //    }
-        //}
-
-        //protected override void OnLostMouseCapture(MouseEventArgs e)
-        //{
-        //    if (e.Source == this && e.HasAllButtonsReleased())
-        //    {
-        //        CurrentState?.Exit();
-        //    }
-        //}
-
         protected override void OnPreviewMouseDown(MouseButtonEventArgs e)
         {
-            CurrentState.Enter(e);
+            CurrentState = StateManager.GetMatchingCanvasState(e, this);
+            CurrentState?.Enter();
         }
 
         /// <inheritdoc/>
@@ -697,11 +688,8 @@ namespace RichCanvas
             if (Mouse.Captured == null || IsMouseCaptured)
             {
                 CaptureMouse();
+                CurrentState?.HandleMouseDown(e);
             }
-            Focus();
-
-            CurrentState?.HandleMouseDown(e);
-
             //if (IsPanning)
             //{
             //    Cursor = Cursors.Hand;
@@ -743,6 +731,9 @@ namespace RichCanvas
             Focus();
         }
 
+        protected override void OnLostMouseCapture(MouseEventArgs e)
+            => CurrentState = null;
+
         /// <inheritdoc/>
         protected override void OnItemsChanged(NotifyCollectionChangedEventArgs e)
         {
@@ -758,18 +749,6 @@ namespace RichCanvas
                     container.IsDrawn = true;
                 }
             }
-        }
-
-        #endregion
-
-        #region Public
-
-        public void SetCurrentState(CanvasState state)
-        {
-            var previousState = CurrentState;
-            previousState.Exit();
-            CurrentState = state;
-            state.Enter();
         }
 
         #endregion

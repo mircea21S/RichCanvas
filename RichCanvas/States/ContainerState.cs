@@ -10,7 +10,6 @@ namespace RichCanvas.States
             Container = container;
         }
         public virtual void Enter() { }
-        public virtual void Exit() { }
         public virtual void HandleMouseDown(MouseButtonEventArgs e) { }
         public virtual void HandleMouseMove(MouseEventArgs e) { }
         public virtual void HandleMouseUp(MouseButtonEventArgs e) { }
