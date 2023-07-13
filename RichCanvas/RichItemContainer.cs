@@ -1,5 +1,7 @@
-﻿using RichCanvas.Helpers;
+﻿using RichCanvas.Gestures;
+using RichCanvas.Helpers;
 using RichCanvas.States;
+using RichCanvas.States.Dragging;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -209,7 +211,7 @@ namespace RichCanvas
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RichItemContainer), new FrameworkPropertyMetadata(typeof(RichItemContainer)));
         }
 
-        public ContainerState CurrentState { get; set; }
+        public ContainerState CurrentState { get; private set; }
         /// <summary>
         /// The <see cref="RichItemsControl"/> that owns this <see cref="RichItemContainer"/>.
         /// </summary>
@@ -233,7 +235,7 @@ namespace RichCanvas
 
         public RichItemContainer()
         {
-            CurrentState = new DefaultContainerState(this);
+            StateManager.RegisterContainerState<DraggingContainerState>(e => RichCanvasGestures.Drag.Matches(e.Source, e) && IsDraggable);
         }
 
         /// <summary>
@@ -252,45 +254,39 @@ namespace RichCanvas
             BoundingBox = bounds;
         }
 
+        protected override void OnPreviewMouseDown(MouseButtonEventArgs e)
+        {
+            var currentState = StateManager.GetMatchingContainerState(e, this);
+            CurrentState = currentState;
+            CurrentState?.Enter();
+        }
+
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             Focus();
             if (Mouse.Captured == null || IsMouseCaptured)
             {
                 CaptureMouse();
+                CurrentState?.HandleMouseDown(e);
             }
-            CurrentState.HandleMouseDown(e);
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            CurrentState.HandleMouseMove(e);
+            if (IsMouseCaptured)
+            {
+                CurrentState?.HandleMouseMove(e);
+            }
         }
 
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            CurrentState.HandleMouseUp(e);
 
             // Release the mouse capture if all the mouse buttons are released
             if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
             {
+                CurrentState?.HandleMouseUp(e);
                 ReleaseMouseCapture();
-            }
-        }
-
-        protected override void OnGotMouseCapture(MouseEventArgs e)
-        {
-            if (e.Source == this && e.HasAnyButtonPressed())
-            {
-                CurrentState.Enter();
-            }
-        }
-
-        protected override void OnLostMouseCapture(MouseEventArgs e)
-        {
-            if (e.Source == this && e.HasAllButtonsReleased())
-            {
-                CurrentState.Exit();
             }
         }
 

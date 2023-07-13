@@ -153,7 +153,7 @@ namespace RichCanvas
         /// <inheritdoc/>
         public Rect MakeVisible(Visual visual, Rect rectangle)
         {
-            if (visual is RichItemContainer container)
+            if (visual is RichItemContainer container && container.ShouldBringIntoView)
             {
                 var containerLocation = new Vector(container.Left, container.Top);
                 var viewportCenter = new Vector(ViewportWidth / 2, ViewportHeight / 2);

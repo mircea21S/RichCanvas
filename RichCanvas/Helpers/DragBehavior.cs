@@ -16,32 +16,32 @@ namespace RichCanvas.Helpers
 
         private static void OnIsDraggingChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (d is RichItemContainer container)
-            {
-                bool isDragging = (bool)e.NewValue;
-                if (ItemsControl != null)
-                {
-                    ItemsControl.IsDragging = isDragging;
-                    if (isDragging)
-                    {
-                        container.MouseDown += OnSelectedContainerClicked;
-                        container.MouseMove += OnSelectedContainerMove;
-                        container.MouseUp += OnSelectedContainerReleased;
-                    }
-                    else
-                    {
-                        container.MouseDown -= OnSelectedContainerClicked;
-                        container.MouseMove -= OnSelectedContainerMove;
-                        container.MouseUp -= OnSelectedContainerReleased;
-                    }
-                }
-                else
-                {
-                    container.MouseDown -= OnSelectedContainerClicked;
-                    container.MouseMove -= OnSelectedContainerMove;
-                    container.MouseUp -= OnSelectedContainerReleased;
-                }
-            }
+            //if (d is RichItemContainer container)
+            //{
+            //    bool isDragging = (bool)e.NewValue;
+            //    if (ItemsControl != null)
+            //    {
+            //        ItemsControl.IsDragging = isDragging;
+            //        if (isDragging)
+            //        {
+            //            container.MouseDown += OnSelectedContainerClicked;
+            //            container.MouseMove += OnSelectedContainerMove;
+            //            container.MouseUp += OnSelectedContainerReleased;
+            //        }
+            //        else
+            //        {
+            //            container.MouseDown -= OnSelectedContainerClicked;
+            //            container.MouseMove -= OnSelectedContainerMove;
+            //            container.MouseUp -= OnSelectedContainerReleased;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        container.MouseDown -= OnSelectedContainerClicked;
+            //        container.MouseMove -= OnSelectedContainerMove;
+            //        container.MouseUp -= OnSelectedContainerReleased;
+            //    }
+            //}
         }
 
         private static void OnSelectedContainerClicked(object sender, MouseButtonEventArgs e)
