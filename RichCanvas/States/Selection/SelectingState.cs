@@ -1,5 +1,4 @@
-﻿using RichCanvas.Gestures;
-using RichCanvas.Helpers;
+﻿using RichCanvas.Helpers;
 using System;
 using System.Windows;
 using System.Windows.Input;
@@ -9,19 +8,15 @@ namespace RichCanvas.States.SelectionStates
     public class SelectingState : CanvasState
     {
         private Point _selectionRectangleInitialPosition;
-        private readonly SelectionStrategy? _selectionStrategy = SelectionHelper.GetSelectionStrategy();
+        private readonly SelectionStrategy? _selectionStrategy;
 
         public SelectingState(RichItemsControl parent) : base(parent)
         {
+            _selectionStrategy = SelectionHelper.GetSelectionStrategy();
         }
 
         public override void HandleMouseDown(MouseButtonEventArgs e)
         {
-            if (!Parent.SelectionEnabled)
-            {
-                return;
-            }
-
             Parent.SelectionRectangle = new Rect();
             Parent.IsSelecting = true;
             _selectionRectangleInitialPosition = e.GetPosition(Parent.ItemsHost);
@@ -67,39 +62,12 @@ namespace RichCanvas.States.SelectionStates
 
         private void DrawSelectionRectangle(Point position)
         {
-            //TransformGroup? transformGroup = Parent.SelectionRectangleTransform;
-            //var scaleTransform = (ScaleTransform?)transformGroup?.Children[0];
-
             double left = position.X < _selectionRectangleInitialPosition.X ? position.X : _selectionRectangleInitialPosition.X;
             double top = position.Y < _selectionRectangleInitialPosition.Y ? position.Y : _selectionRectangleInitialPosition.Y;
             double width = Math.Abs(position.X - _selectionRectangleInitialPosition.X);
             double height = Math.Abs(position.Y - _selectionRectangleInitialPosition.Y);
 
             Parent.SelectionRectangle = new Rect(left, top, width, height);
-
-            //if (scaleTransform != null)
-            //{
-            //    if (width < 0 && scaleTransform.ScaleX == 1)
-            //    {
-            //        scaleTransform.ScaleX = -1;
-            //    }
-
-            //    if (height < 0 && scaleTransform.ScaleY == 1)
-            //    {
-            //        scaleTransform.ScaleY = -1;
-            //    }
-
-            //    if (height > 0 && scaleTransform.ScaleY == -1)
-            //    {
-            //        scaleTransform.ScaleY = 1;
-            //    }
-
-            //    if (width > 0 && scaleTransform.ScaleX == -1)
-            //    {
-            //        scaleTransform.ScaleX = 1;
-            //    }
-            //}
-
         }
     }
 }
