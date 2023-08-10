@@ -329,37 +329,6 @@ namespace RichCanvas
         #region Override Methods
 
         /// <inheritdoc/>
-        protected override void OnMouseDown(MouseButtonEventArgs e)
-        {
-            if (Keyboard.IsKeyDown(Key.Space) && _parent != null && _parent.IsPanning)
-            {
-                _panInitialPosition = e.GetPosition(this);
-                CaptureMouse();
-            }
-        }
-
-        /// <inheritdoc/>
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            if (Mouse.LeftButton == MouseButtonState.Pressed && _parent != null && _parent.IsPanning
-                && IsMouseCaptured)
-            {
-                var currentPosition = e.GetPosition(this);
-                Pan(_panInitialPosition, currentPosition);
-                _panInitialPosition = currentPosition;
-            }
-        }
-
-        /// <inheritdoc/>
-        protected override void OnMouseUp(MouseButtonEventArgs e)
-        {
-            if (IsMouseCaptured)
-            {
-                ReleaseMouseCapture();
-            }
-        }
-
-        /// <inheritdoc/>
         protected override void OnPreviewMouseWheel(MouseWheelEventArgs e)
         {
             if (_parent != null && _parent.IsZooming && !_parent.DisableZoom)
