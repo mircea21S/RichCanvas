@@ -29,7 +29,7 @@ namespace RichCanvas.States
             {
                 return null;
             }
-            var state = (CanvasState)Activator.CreateInstance(matchingStateType, parent);
+            var state = (CanvasState?)Activator.CreateInstance(matchingStateType, parent);
             return state;
         }
 
@@ -40,7 +40,7 @@ namespace RichCanvas.States
             {
                 return null;
             }
-            var state = (ContainerState)Activator.CreateInstance(matchingStateType, parent);
+            var state = (ContainerState?)Activator.CreateInstance(matchingStateType, parent);
             return state;
         }
     }
