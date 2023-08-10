@@ -7,5 +7,6 @@ namespace RichCanvas.Gestures
         public static InputGesture Select { get; } = new MouseGesture(MouseAction.LeftClick);
         public static InputGesture Drawing { get; } = new MouseGesture(MouseAction.LeftClick);
         public static InputGesture Drag { get; } = new MouseGesture(MouseAction.LeftClick);
+        public static InputGesture Pan { get; } = new MouseKeyGesture(new MouseGesture(MouseAction.LeftClick), new KeyGesture(Key.Space));
     }
 }

@@ -605,7 +605,7 @@ namespace RichCanvas
 
         #region Internal Properties
         internal RichCanvas? ItemsHost => _mainPanel;
-        internal bool IsPanning => Keyboard.IsKeyDown(PanningKey);
+        internal bool IsPanning { get; set; }
         internal bool IsZooming => Keyboard.IsKeyDown(ZoomKey);
         internal bool InitializedScrollBarVisiblity { get; private set; }
         internal IList BaseSelectedItems => base.SelectedItems;
@@ -639,11 +639,16 @@ namespace RichCanvas
                 }
             };
 
-            // call this to set Dragging and Selecting strategies
+            // call this to initialize Dragging and Selecting strategies
             CanSelectMultipleItemsUpdated(CanSelectMultipleItems);
 
-            StateManager.RegisterCanvasState<DrawingState>(e => RichCanvasGestures.Drawing.Matches(e.Source, e) && this.CurrentDrawingIndexes.Count > 0);
-            StateManager.RegisterCanvasState<SelectingState>(e => RichCanvasGestures.Select.Matches(e.Source, e) && this.SelectionEnabled);
+            // order matters as you may have multiple states that can be executed simultanously so RichCanvas picks them in order
+            // try to avoid that
+            // also the order matters as you migh have custom gesture with custom key gesture and mouse gesture so
+            // RichCanvas searches the new state on MouseDown event and any key down besides KeyModifiers is ignored when Matching the Gesture 
+            StateManager.RegisterCanvasState<PanningState>(e => RichCanvasGestures.Pan.Matches(e.Source, e));
+            StateManager.RegisterCanvasState<DrawingState>(e => RichCanvasGestures.Drawing.Matches(e.Source, e) && CurrentDrawingIndexes.Count > 0);
+            StateManager.RegisterCanvasState<SelectingState>(e => RichCanvasGestures.Select.Matches(e.Source, e) && SelectionEnabled);
         }
 
         #endregion
@@ -676,6 +681,7 @@ namespace RichCanvas
             }
         };
 
+        /// <inheritdoc/>
         protected override void OnPreviewMouseDown(MouseButtonEventArgs e)
         {
             CurrentState = StateManager.GetMatchingCanvasState(e, this);
@@ -690,17 +696,6 @@ namespace RichCanvas
                 CaptureMouse();
                 CurrentState?.HandleMouseDown(e);
             }
-            //if (IsPanning)
-            //{
-            //    Cursor = Cursors.Hand;
-            //}
-            //else
-            //{
-            //    
-
-            //        
-            //    }
-            //}
         }
 
         /// <inheritdoc/>
@@ -716,10 +711,6 @@ namespace RichCanvas
         /// <inheritdoc/>
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-            //if (IsPanning)
-            //{
-            //    Cursor = Cursors.Arrow;
-            //}
             if (IsMouseCaptured)
             {
                 CurrentState?.HandleMouseUp(e);
@@ -731,6 +722,7 @@ namespace RichCanvas
             Focus();
         }
 
+        /// <inheritdoc/>
         protected override void OnLostMouseCapture(MouseEventArgs e)
             => CurrentState = null;
 
