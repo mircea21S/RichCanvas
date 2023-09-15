@@ -13,6 +13,7 @@ namespace RichCanvas.States.Dragging
 
         public override void Enter()
         {
+            _initialPosition = Mouse.GetPosition(Container?.Host?.ItemsHost);
             if (Container.IsSelectable)
             {
                 Container.IsSelected = true;
@@ -25,7 +26,6 @@ namespace RichCanvas.States.Dragging
 
         public override void HandleMouseDown(MouseButtonEventArgs e)
         {
-            _initialPosition = e.GetPosition(Container?.Host?.ItemsHost);
             Container?.RaiseDragStartedEvent(_initialPosition);
         }
 

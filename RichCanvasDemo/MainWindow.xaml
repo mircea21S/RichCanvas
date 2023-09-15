@@ -12,6 +12,8 @@
         xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:views="clr-namespace:RichCanvasDemo.CustomControls"
         xmlns:behaviors="clr-namespace:RichCanvasDemo.Helpers.Behaviors"
+        xmlns:gestures="clr-namespace:RichCanvas.Gestures;assembly=RichCanvas"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         x:Name="window"
         Title="MainWindow"
@@ -29,6 +31,7 @@
     </Window.DataContext>
 
     <Window.Resources>
+        <converters:KeyGestureConverter x:Key="StringToKeyGestureConverter"></converters:KeyGestureConverter>
         <local:PointToStringConverter x:Key="PointToStringConverter" />
         <converters:StringToFloatConverter x:Key="StringToFloatConverter" />
         <converters:CommandToListConverter x:Key="CommandsToListConverter" />
@@ -369,6 +372,8 @@
             </i:Interaction.Triggers>
 
             <richCanvas:RichItemsControl.Resources>
+                <sys:String x:Key="PanKey">A</sys:String>
+
                 <DataTemplate x:Key="SelectedAdornerTemplate">
                     <Border BorderBrush="DodgerBlue"
                             BorderThickness="1"
@@ -450,6 +455,15 @@
                 </DataTemplate>
 
             </richCanvas:RichItemsControl.Resources>
+
+            <richCanvas:RichItemsControl.PanGesture>
+                <gestures:MouseCustomKeyGesture CustomKeys="A">
+                    <gestures:MouseCustomKeyGesture.MouseGesture>
+                        <MouseGesture MouseAction="LeftClick">
+                        </MouseGesture>
+                    </gestures:MouseCustomKeyGesture.MouseGesture>
+                </gestures:MouseCustomKeyGesture>
+            </richCanvas:RichItemsControl.PanGesture>
 
             <richCanvas:RichItemsControl.ItemContainerStyle>
 

@@ -131,6 +131,6 @@ namespace RichCanvasDemo.ViewModels.Base
 
         protected virtual void OnIsSelectedChanged(bool value) { }
 
-        public virtual void OnDrawingEnded(Action<object> callback = default) { }
+        public virtual void OnDrawingEnded(Point drawEndedMousePosition, Action<object> callback = default) { }
     }
 }

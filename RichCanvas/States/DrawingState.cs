@@ -18,12 +18,6 @@ namespace RichCanvas.States
 
         public override void HandleMouseDown(MouseButtonEventArgs e)
         {
-            bool canComplete = RichCanvasGestures.Drawing.Matches(e.Source, e);
-            if (!canComplete)
-            {
-                return;
-            }
-
             var position = e.GetPosition(Parent.ItemsHost);
             if (VisualHelper.HasScrollBarParent((DependencyObject)e.OriginalSource))
             {
@@ -37,6 +31,7 @@ namespace RichCanvas.States
             }
 
             var currentDrawingContainerIndex = drawingContainersIndexes[drawingContainersIndexes.Count - 1];
+
             var container = (RichItemContainer)Parent.ItemContainerGenerator.ContainerFromIndex(currentDrawingContainerIndex);
             if (container == null)
             {
@@ -70,6 +65,7 @@ namespace RichCanvas.States
             double width = mousePosition.X - _currentDrawingContainer.Left;
             double height = mousePosition.Y - _currentDrawingContainer.Top;
 
+            //TODO: don't use scaleTransform
             _currentDrawingContainer.Width = width == 0 ? 1 : Math.Abs(width);
             _currentDrawingContainer.Height = height == 0 ? 1 : Math.Abs(height);
 
@@ -103,10 +99,12 @@ namespace RichCanvas.States
                 return;
             }
 
+            //TODO: remove this after not using scaleTransform
             SetItemPosition();
             SnapToGrid();
 
-            Parent.RaiseDrawEndedEvent(_currentDrawingContainer.DataContext);
+            var mousePosition = e.GetPosition(Parent.ItemsHost);
+            Parent.RaiseDrawEndedEvent(_currentDrawingContainer.DataContext, mousePosition);
 
             Parent.ItemsHost?.InvalidateMeasure();
             _isDrawing = false;

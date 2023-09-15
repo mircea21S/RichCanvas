@@ -14,6 +14,7 @@ using RichCanvas.States;
 using RichCanvas.States.Dragging;
 using RichCanvas.States.SelectionStates;
 using RichCanvas.Gestures;
+using RichCanvas.CustomEventArgs;
 
 namespace RichCanvas
 {
@@ -238,13 +239,13 @@ namespace RichCanvas
         /// <summary>
         /// Gets or sets the background grid style.
         /// </summary>
-        public static DependencyProperty GridStyleProperty = DependencyProperty.Register(nameof(GridStyle), typeof(System.Windows.Media.Drawing), typeof(RichItemsControl));
+        public static DependencyProperty GridStyleProperty = DependencyProperty.Register(nameof(GridStyle), typeof(Drawing), typeof(RichItemsControl));
         /// <summary>
         /// Gets or sets the background grid style.
         /// </summary>
-        public System.Windows.Media.Drawing GridStyle
+        public Drawing GridStyle
         {
-            get => (System.Windows.Media.Drawing)GetValue(GridStyleProperty);
+            get => (Drawing)GetValue(GridStyleProperty);
             set => SetValue(GridStyleProperty, value);
         }
 
@@ -601,6 +602,16 @@ namespace RichCanvas
             set => SetValue(HorizontalScrollBarVisibilityProperty, value);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public static DependencyProperty PanGestureProperty = DependencyProperty.Register(nameof(PanGesture), typeof(InputGesture), typeof(RichItemsControl), new FrameworkPropertyMetadata(RichCanvasGestures.Pan, OnPanGestureChanged));
+
+        public InputGesture PanGesture
+        {
+            get => (InputGesture)GetValue(PanGestureProperty);
+            set => SetValue(PanGestureProperty, value);
+        }
         #endregion
 
         #region Internal Properties
@@ -724,7 +735,9 @@ namespace RichCanvas
 
         /// <inheritdoc/>
         protected override void OnLostMouseCapture(MouseEventArgs e)
-            => CurrentState = null;
+        {
+            CurrentState?.Cancel();
+        }
 
         /// <inheritdoc/>
         protected override void OnItemsChanged(NotifyCollectionChangedEventArgs e)
@@ -746,6 +759,8 @@ namespace RichCanvas
         #endregion
 
         #region Properties Callbacks
+
+        private static void OnPanGestureChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => RichCanvasGestures.Pan = (InputGesture)e.NewValue;
 
         private static void OnDisableCacheChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).SetCachingMode((bool)e.NewValue);
 
@@ -1007,7 +1022,7 @@ namespace RichCanvas
 
         private void OnItemsDragStarted(object sender, DragStartedEventArgs e)
         {
-            SelectionHelper.GetDraggingStrategy().OnItemsDragStarted(sender, e);
+            SelectionHelper.GetDraggingStrategy()?.OnItemsDragStarted(sender, e);
         }
 
         private void CanSelectMultipleItemsUpdated(bool value)
@@ -1174,9 +1189,10 @@ namespace RichCanvas
                 _autoPanTimer.Interval = TimeSpan.FromMilliseconds(AutoPanTickRate);
             }
         }
-        internal void RaiseDrawEndedEvent(object context)
+
+        internal void RaiseDrawEndedEvent(object context, Point mousePosition)
         {
-            RoutedEventArgs newEventArgs = new RoutedEventArgs(DrawingEndedEvent, context);
+            RoutedEventArgs newEventArgs = new RoutedEventArgs(DrawingEndedEvent, new DrawEndedEventArgs(context, mousePosition));
             RaiseEvent(newEventArgs);
         }
 
