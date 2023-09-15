@@ -60,20 +60,19 @@ namespace RichCanvas.States.Dragging
             {
                 return;
             }
-
             for (int i = 0; i < _draggableContainers.Count; i++)
             {
                 RichItemContainer container = _draggableContainers[i];
                 TranslateTransform? translateTransform = container.TranslateTransform;
 
-                if (translateTransform != null)
+                if (Parent.RealTimeDraggingEnabled)
                 {
-                    if (Parent.RealTimeDraggingEnabled)
-                    {
-                        container.Top += e.VerticalChange;
-                        container.Left += e.HorizontalChange;
-                    }
-                    else
+                    container.Top += e.VerticalChange;
+                    container.Left += e.HorizontalChange;
+                }
+                else
+                {
+                    if (translateTransform != null)
                     {
                         translateTransform.X += e.HorizontalChange;
                         translateTransform.Y += e.VerticalChange;
@@ -113,15 +112,16 @@ namespace RichCanvas.States.Dragging
             for (var i = 0; i < _draggableContainers.Count; i++)
             {
                 RichItemContainer container = _draggableContainers[i];
-                var translateTransform = container.TranslateTransform;
+                //TODO: check this out, use it only when RealTimeDragging not enabled
+                //var translateTransform = container.TranslateTransform;
 
-                if (translateTransform != null)
-                {
-                    container.Left += translateTransform.X;
-                    container.Top += translateTransform.Y;
-                    translateTransform.X = 0;
-                    translateTransform.Y = 0;
-                }
+                //if (translateTransform != null)
+                //{
+                //    container.Left += translateTransform.X;
+                //    container.Top += translateTransform.Y;
+                //    translateTransform.X = 0;
+                //    translateTransform.Y = 0;
+                //}
 
                 // Correct the final position
                 if (Parent.EnableSnapping)
@@ -130,7 +130,6 @@ namespace RichCanvas.States.Dragging
                     container.Top = Math.Round(container.Top / container.Host.GridSpacing) * container.Host.GridSpacing;
                 }
             }
-
             _draggableContainers.Clear();
         }
     }

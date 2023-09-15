@@ -1,4 +1,5 @@
-﻿using RichCanvasDemo.Common;
+﻿using RichCanvas.CustomEventArgs;
+using RichCanvasDemo.Common;
 using RichCanvasDemo.CustomControls;
 using RichCanvasDemo.Services;
 using RichCanvasDemo.ViewModels;
@@ -7,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -307,13 +307,12 @@ namespace RichCanvasDemo
         {
             if (DrawingEndedHandled) { return; }
 
-            object element = args.OriginalSource;
-            if (element is Line line)
+            var element = (DrawEndedEventArgs)args.OriginalSource;
+            if (element.DataContext is Line line)
             {
-                line.OnDrawingEnded((result) =>
+                line.OnDrawingEnded(element.DrawEndedMousePosition, (result) =>
                 {
-                    var newLine = (Line)result;
-                    Items.Add(newLine);
+                    Items.Add(result as Line);
                 });
             }
         }
