@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 
 namespace RichCanvas.Gestures
 {
@@ -31,27 +30,6 @@ namespace RichCanvas.Gestures
             }
 
             return true;
-        }
-    }
-
-    public class MouseKeyGesture : InputGesture
-    {
-        private readonly MouseGesture _mouseGesture;
-        private readonly KeyGesture[] _keyGestures;
-
-        public MouseKeyGesture(MouseGesture mouseGesture, params KeyGesture[] keyGestures)
-        {
-            _mouseGesture = mouseGesture;
-            _keyGestures = keyGestures;
-        }
-
-        public override bool Matches(object targetElement, InputEventArgs inputEventArgs)
-        {
-            if (_keyGestures.All(k => Keyboard.IsKeyDown(k.Key)) && _mouseGesture.Matches(targetElement, inputEventArgs))
-            {
-                return true;
-            }
-            return false;
         }
     }
 }
