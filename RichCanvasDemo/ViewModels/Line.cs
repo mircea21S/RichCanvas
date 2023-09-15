@@ -3,6 +3,7 @@ using RichCanvasDemo.ViewModels.Connections;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace RichCanvasDemo.ViewModels
 {
@@ -44,15 +45,14 @@ namespace RichCanvasDemo.ViewModels
             Move(0, delta);
         }
 
-        public override void OnDrawingEnded(Action<object> callback = default)
+        public override void OnDrawingEnded(Point drawEndedMousePosition, Action<object> callback = default)
         {
-            Line createdLine = Scale.X < 1 && Scale.Y >= 1
-                ? new Line { Top = Top + Height, Left = Left }
-                : Scale.X < 1 && Scale.Y < 1
-                    ? new Line { Top = Top, Left = Left }
-                    : Scale.X >= 1 && Scale.Y < 1
-                                    ? new Line { Top = Top, Left = Left + Width }
-                                    : new Line { Top = Top + Height, Left = Left + Width };
+            var createdLine = new Line
+            {
+                Top = drawEndedMousePosition.Y,
+                Left = drawEndedMousePosition.X
+            };
+
             if (Parent == null)
             {
                 createdLine.Parent = this;
@@ -69,35 +69,35 @@ namespace RichCanvasDemo.ViewModels
 
         public void Move(double offsetX = 0, double offsetY = 0)
         {
-            if (Parent != null)
-            {
-                if (!Parent.IsSelected)
-                {
-                    Parent.Left -= offsetX;
-                    Parent.Top -= offsetY;
-                }
-                foreach (Drawable connection in ((IConnectable)Parent).Connections)
-                {
-                    //if it's selected is already moving
-                    if (!connection.IsSelected)
-                    {
-                        connection.Left -= offsetX;
-                        connection.Top -= offsetY;
-                    }
-                }
-            }
-            else
-            {
-                foreach (Drawable connection in Connections)
-                {
-                    //if it's selected is already moving
-                    if (!connection.IsSelected)
-                    {
-                        connection.Left -= offsetX;
-                        connection.Top -= offsetY;
-                    }
-                }
-            }
+            //if (Parent != null)
+            //{
+            //    if (!Parent.IsSelected)
+            //    {
+            //        Parent.Left -= offsetX;
+            //        Parent.Top -= offsetY;
+            //    }
+            //    foreach (Drawable connection in ((IConnectable)Parent).Connections)
+            //    {
+            //        //if it's selected is already moving
+            //        if (!connection.IsSelected)
+            //        {
+            //            connection.Left -= offsetX;
+            //            connection.Top -= offsetY;
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    foreach (Drawable connection in Connections)
+            //    {
+            //        //if it's selected is already moving
+            //        if (!connection.IsSelected)
+            //        {
+            //            connection.Left -= offsetX;
+            //            connection.Top -= offsetY;
+            //        }
+            //    }
+            //}
         }
     }
 }
