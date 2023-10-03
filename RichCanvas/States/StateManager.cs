@@ -7,15 +7,11 @@ namespace RichCanvas.States
 {
     public static class StateManager
     {
-        private static Dictionary<Type, Func<InputEventArgs, bool>> _canvasStates = new Dictionary<Type, Func<InputEventArgs, bool>>();
-        private static Dictionary<Type, Func<InputEventArgs, bool>> _containerStates = new Dictionary<Type, Func<InputEventArgs, bool>>();
-
-        public static void RegisterCanvasState<T>(Func<InputEventArgs, bool> canExecute) where T : CanvasState => _canvasStates[typeof(T)] = canExecute;
-
-        public static void RegisterContainerState<T>(Func<InputEventArgs, bool> canExecute) where T : ContainerState => _containerStates[typeof(T)] = canExecute;
+        private static readonly Dictionary<Type, InputGesture> _stateTypeByGesture = new Dictionary<Type, InputGesture>();
+        private static readonly Dictionary<Type, Func<bool>> _executableStates = new Dictionary<Type, Func<bool>>();
 
         /// <summary>
-        /// Finds the matching <see cref="CanvasState"/> based on canExecute condition passed on registration.
+        /// Finds the matching <see cref="CanvasState"/> based on <paramref name="e"/>.
         /// <br />
         /// Note: <i>If two or more states are matching, it picks up the first one in the order they were registered.</i>
         /// </summary>
@@ -24,24 +20,82 @@ namespace RichCanvas.States
         /// <returns></returns>
         public static CanvasState? GetMatchingCanvasState(InputEventArgs e, RichItemsControl parent)
         {
-            var matchingStateType = _canvasStates.FirstOrDefault(c => c.Value(e)).Key;
-            if (matchingStateType == null)
+            var matchingStateTypes = _stateTypeByGesture.Where(c => c.Value.Matches(e.Source, e)).Select(c => c.Key);
+            if (matchingStateTypes == null)
             {
                 return null;
             }
-            var state = (CanvasState?)Activator.CreateInstance(matchingStateType, parent);
-            return state;
+
+            foreach (var matchingType in matchingStateTypes)
+            {
+                if (!matchingType.IsSubclassOf(typeof(CanvasState)))
+                {
+                    continue;
+                }
+                var state = (CanvasState?)Activator.CreateInstance(matchingType, parent);
+                if (_executableStates.TryGetValue(matchingType, out var canExecute))
+                {
+                    if (canExecute())
+                    {
+                        return state;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+                return state;
+            }
+            return null;
         }
 
         public static ContainerState? GetMatchingContainerState(InputEventArgs e, RichItemContainer parent)
         {
-            var matchingStateType = _containerStates.FirstOrDefault(c => c.Value(e)).Key;
-            if (matchingStateType == null)
+            var matchingStateTypes = _stateTypeByGesture.Where(c => c.Value.Matches(e.Source, e)).Select(c => c.Key);
+            if (matchingStateTypes == null)
             {
                 return null;
             }
-            var state = (ContainerState?)Activator.CreateInstance(matchingStateType, parent);
-            return state;
+
+            foreach (var matchingType in matchingStateTypes)
+            {
+                if (!matchingType.IsSubclassOf(typeof(ContainerState)))
+                {
+                    continue;
+                }
+                var state = (ContainerState?)Activator.CreateInstance(matchingType, parent);
+                if (_executableStates.TryGetValue(matchingType, out var canExecute))
+                {
+                    if (canExecute())
+                    {
+                        return state;
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+                return state;
+            }
+            return null;
+        }
+
+        public static void RegisterCanvasState<T>(InputGesture inputGesture, Func<bool>? canExecute = null) where T : CanvasState
+        {
+            _stateTypeByGesture[typeof(T)] = inputGesture;
+            if (canExecute != null)
+            {
+                _executableStates[typeof(T)] = canExecute;
+            }
+        }
+
+        public static void RegisterContainerState<T>(InputGesture inputGesture, Func<bool>? canExecute = null) where T : ContainerState
+        {
+            _stateTypeByGesture[typeof(T)] = inputGesture;
+            if (canExecute != null)
+            {
+                _executableStates[typeof(T)] = canExecute;
+            }
         }
     }
 }

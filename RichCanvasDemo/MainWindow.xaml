@@ -31,7 +31,6 @@
     </Window.DataContext>
 
     <Window.Resources>
-        <converters:KeyGestureConverter x:Key="StringToKeyGestureConverter"></converters:KeyGestureConverter>
         <local:PointToStringConverter x:Key="PointToStringConverter" />
         <converters:StringToFloatConverter x:Key="StringToFloatConverter" />
         <converters:CommandToListConverter x:Key="CommandsToListConverter" />
@@ -372,8 +371,6 @@
             </i:Interaction.Triggers>
 
             <richCanvas:RichItemsControl.Resources>
-                <sys:String x:Key="PanKey">A</sys:String>
-
                 <DataTemplate x:Key="SelectedAdornerTemplate">
                     <Border BorderBrush="DodgerBlue"
                             BorderThickness="1"

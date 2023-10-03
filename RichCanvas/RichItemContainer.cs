@@ -235,7 +235,7 @@ namespace RichCanvas
 
         public RichItemContainer()
         {
-            StateManager.RegisterContainerState<DraggingContainerState>(e => RichCanvasGestures.Drag.Matches(e.Source, e) && IsDraggable);
+            StateManager.RegisterContainerState<DraggingContainerState>(RichCanvasGestures.Drag, () => IsDraggable);
         }
 
         /// <summary>

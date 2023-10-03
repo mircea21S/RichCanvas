@@ -1,4 +1,6 @@
-﻿using System.Windows.Input;
+﻿using System;
+using System.Windows;
+using System.Windows.Input;
 
 namespace RichCanvas.States
 {
@@ -14,5 +16,6 @@ namespace RichCanvas.States
         public virtual void HandleMouseDown(MouseButtonEventArgs e) { }
         public virtual void HandleMouseMove(MouseEventArgs e) { }
         public virtual void HandleMouseUp(MouseButtonEventArgs e) { }
+        public virtual void HandleAutoPanning(Point mousePosition, bool heightChanged = false) { }
     }
 }

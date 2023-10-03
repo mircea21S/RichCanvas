@@ -17,12 +17,10 @@ namespace RichCanvas
 
         private TranslateTransform? _translateTransform;
         private ScaleTransform? _scaleTransform;
-        private Zoom? _zoomGesture;
         private Vector _offset;
         private Vector _negativeOffset;
         private Size _extent;
         private Size _viewport;
-        private Point _panInitialPosition;
         private RichItemsControl? _parent;
         private Point _viewportBottomRightInitial;
         private Point _viewportTopLeftInitial = new Point(0, 0);
@@ -39,28 +37,30 @@ namespace RichCanvas
 
         #region Internal Properties
 
+        internal RichItemsControl Host => _parent;
+
         /// <summary>
         /// Positive Vertical offset of <see cref="ScrollOwner"/>
         /// </summary>
-        protected double TopOffset => HighestElement.HasValue && _scaleTransform != null ?
+        public double TopOffset => HighestElement.HasValue && _scaleTransform != null ?
             Math.Abs(TopLimit - HighestElement.Value) * _scaleTransform.ScaleY : double.NaN;
 
         /// <summary>
         /// Negative Vertical offset of <see cref="ScrollOwner"/>
         /// </summary>
-        protected double BottomOffset => LowestElement.HasValue && _scaleTransform != null ?
+        public double BottomOffset => LowestElement.HasValue && _scaleTransform != null ?
             (BottomLimit - LowestElement.Value) * _scaleTransform.ScaleY : double.NaN;
 
         /// <summary>
         /// Positive Horizontal offset of <see cref="ScrollOwner"/>
         /// </summary>
-        protected double LeftOffset => MostLeftElement.HasValue && _scaleTransform != null ?
+        public double LeftOffset => MostLeftElement.HasValue && _scaleTransform != null ?
             Math.Abs(LeftLimit - MostLeftElement.Value) * _scaleTransform.ScaleY : double.NaN;
 
         /// <summary>
         /// Negative Horizontal offset of <see cref="ScrollOwner"/>
         /// </summary>
-        protected double RightOffset => MostRightElement.HasValue && _scaleTransform != null ?
+        public double RightOffset => MostRightElement.HasValue && _scaleTransform != null ?
             (RightLimit - MostRightElement.Value) * _scaleTransform.ScaleY : double.NaN;
 
         /// <summary>
@@ -328,16 +328,7 @@ namespace RichCanvas
 
         #region Override Methods
 
-        /// <inheritdoc/>
-        protected override void OnPreviewMouseWheel(MouseWheelEventArgs e)
-        {
-            if (_parent != null && _parent.IsZooming && !_parent.DisableZoom)
-            {
-                var position = e.GetPosition(this);
-                Zoom(position, e.Delta);
-            }
-        }
-
+        //TODO: review this
         /// <inheritdoc/>
         protected override Size ArrangeOverride(Size arrangeSize)
         {
@@ -401,43 +392,43 @@ namespace RichCanvas
         /// </summary>
         /// <param name="position">Mouse position to zoom at</param>
         /// <param name="delta">Determines whether to zoom in or out by the sign</param>
-        public void Zoom(Point position, int delta)
+        public void Zoom(Point position, double delta)
         {
-            _zoomGesture?.ZoomToPosition(position, delta, _parent?.ScaleFactor);
+            //_zoomGesture?.ZoomToPosition(position, delta, _parent?.ScaleFactor);
 
             // Scrolling limitation
-            if (!_parent.ExtentSize.IsEmpty && HighestElement < TopLimit && Math.Round(TopOffset) > _parent.ExtentSize.Height)
-            {
-                _zoomGesture?.ZoomToPosition(position, -delta, _parent?.ScaleFactor);
-            }
+            //if (!_parent.ExtentSize.IsEmpty && HighestElement < TopLimit && Math.Round(TopOffset) > _parent.ExtentSize.Height)
+            //{
+            //    _zoomGesture?.ZoomToPosition(position, -delta, _parent?.ScaleFactor);
+            //}
 
-            if (!_parent.ExtentSize.IsEmpty && MostLeftElement < LeftLimit && Math.Round(LeftOffset) > _parent.ExtentSize.Width)
-            {
-                _zoomGesture?.ZoomToPosition(position, -delta, _parent?.ScaleFactor);
-            }
+            //if (!_parent.ExtentSize.IsEmpty && MostLeftElement < LeftLimit && Math.Round(LeftOffset) > _parent.ExtentSize.Width)
+            //{
+            //    _zoomGesture?.ZoomToPosition(position, -delta, _parent?.ScaleFactor);
+            //}
 
-            if (!_parent.EnableNegativeScrolling && MostRightElement > RightLimit && Math.Abs(Math.Round(RightOffset)) > 0)
-            {
-                _zoomGesture?.ZoomToPosition(position, -delta, _parent?.ScaleFactor);
-            }
-            else if (!_parent.ExtentSize.IsEmpty && MostRightElement > RightLimit && Math.Abs(Math.Round(RightOffset)) > _parent.ExtentSize.Width)
-            {
-                _zoomGesture?.ZoomToPosition(position, -delta, _parent?.ScaleFactor);
-            }
+            //if (!_parent.EnableNegativeScrolling && MostRightElement > RightLimit && Math.Abs(Math.Round(RightOffset)) > 0)
+            //{
+            //    _zoomGesture?.ZoomToPosition(position, -delta, _parent?.ScaleFactor);
+            //}
+            //else if (!_parent.ExtentSize.IsEmpty && MostRightElement > RightLimit && Math.Abs(Math.Round(RightOffset)) > _parent.ExtentSize.Width)
+            //{
+            //    _zoomGesture?.ZoomToPosition(position, -delta, _parent?.ScaleFactor);
+            //}
 
-            if (!_parent.EnableNegativeScrolling && LowestElement > BottomLimit && Math.Abs(Math.Round(BottomOffset)) > 0)
-            {
-                _zoomGesture?.ZoomToPosition(position, -delta, _parent?.ScaleFactor);
-            }
-            else if (!_parent.ExtentSize.IsEmpty && LowestElement > BottomLimit && Math.Abs(Math.Round(BottomOffset)) > _parent.ExtentSize.Height)
-            {
-                _zoomGesture?.ZoomToPosition(position, -delta, _parent?.ScaleFactor);
-            }
+            //if (!_parent.EnableNegativeScrolling && LowestElement > BottomLimit && Math.Abs(Math.Round(BottomOffset)) > 0)
+            //{
+            //    _zoomGesture?.ZoomToPosition(position, -delta, _parent?.ScaleFactor);
+            //}
+            //else if (!_parent.ExtentSize.IsEmpty && LowestElement > BottomLimit && Math.Abs(Math.Round(BottomOffset)) > _parent.ExtentSize.Height)
+            //{
+            //    _zoomGesture?.ZoomToPosition(position, -delta, _parent?.ScaleFactor);
+            //}
 
-            if (!_parent.DisableScroll)
-            {
-                SetCurrentScroll();
-            }
+            //if (!_parent.DisableScroll)
+            //{
+            //    SetCurrentScroll();
+            //}
         }
 
         /// <summary>
@@ -541,7 +532,6 @@ namespace RichCanvas
             _parent = richItemsControl;
             _translateTransform = _parent.TranslateTransform;
             _scaleTransform = _parent.ScaleTransform;
-            _zoomGesture = new Zoom(_scaleTransform, _translateTransform, _parent);
         }
 
         internal void SetCurrentScroll()
