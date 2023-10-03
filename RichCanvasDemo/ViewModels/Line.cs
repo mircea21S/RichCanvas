@@ -69,6 +69,7 @@ namespace RichCanvasDemo.ViewModels
 
         public void Move(double offsetX = 0, double offsetY = 0)
         {
+            //TODO: offsetX is actually the new Left value, update this events and the sent data
             //if (Parent != null)
             //{
             //    if (!Parent.IsSelected)

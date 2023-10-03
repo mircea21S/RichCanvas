@@ -617,7 +617,7 @@ namespace RichCanvas
         #region Internal Properties
         internal RichCanvas? ItemsHost => _mainPanel;
         internal bool IsPanning { get; set; }
-        internal bool IsZooming => Keyboard.IsKeyDown(ZoomKey);
+        internal bool IsZooming { get; set; }
         internal bool InitializedScrollBarVisiblity { get; private set; }
         internal IList BaseSelectedItems => base.SelectedItems;
         internal List<int> CurrentDrawingIndexes { get; } = new List<int>();
@@ -632,6 +632,7 @@ namespace RichCanvas
         static RichItemsControl()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RichItemsControl), new FrameworkPropertyMetadata(typeof(RichItemsControl)));
+            RichCanvasCommands.Register(typeof(RichItemsControl));
         }
         /// <summary>
         /// Creates a new instance of <see cref="RichItemsControl"/>
@@ -649,6 +650,9 @@ namespace RichCanvas
                     ScaleTransform, TranslateTransform
                 }
             };
+            // Register this with the PanGesture, re-register when PanGesture is changed by the user
+            //CommandManager.RegisterClassCommandBinding(typeof(RichItemsControl), new CommandBinding());
+            //CommandManager.RegisterClassInputBinding(typeof(RichItemsControl), new InputBinding();
 
             // call this to initialize Dragging and Selecting strategies
             CanSelectMultipleItemsUpdated(CanSelectMultipleItems);
@@ -657,9 +661,9 @@ namespace RichCanvas
             // try to avoid that
             // also the order matters as you migh have custom gesture with custom key gesture and mouse gesture so
             // RichCanvas searches the new state on MouseDown event and any key down besides KeyModifiers is ignored when Matching the Gesture 
-            StateManager.RegisterCanvasState<PanningState>(e => RichCanvasGestures.Pan.Matches(e.Source, e));
-            StateManager.RegisterCanvasState<DrawingState>(e => RichCanvasGestures.Drawing.Matches(e.Source, e) && CurrentDrawingIndexes.Count > 0);
-            StateManager.RegisterCanvasState<SelectingState>(e => RichCanvasGestures.Select.Matches(e.Source, e) && SelectionEnabled);
+            StateManager.RegisterCanvasState<PanningState>(RichCanvasGestures.Pan);
+            StateManager.RegisterCanvasState<DrawingState>(RichCanvasGestures.Drawing, () => CurrentDrawingIndexes.Count > 0);
+            StateManager.RegisterCanvasState<SelectingState>(RichCanvasGestures.Select, () => SelectionEnabled);
         }
 
         #endregion
@@ -691,6 +695,26 @@ namespace RichCanvas
                 Children = new TransformCollection(new Transform[] { new ScaleTransform(), new TranslateTransform() })
             }
         };
+
+        protected override void OnPreviewMouseWheel(MouseWheelEventArgs e)
+        {
+            if (RichCanvasGestures.Zoom == Keyboard.Modifiers)
+            {
+                var position = e.GetPosition(this);
+                IsZooming = true;
+                ZoomAtPosition(position, e.Delta, ScaleFactor);
+
+                //TODO: test this maybe add UnitTests
+                if (_mainPanel.HasTouchedExtentSizeLimit(position) || _mainPanel.HasTouchedNegativeLimit(position))
+                {
+                    ZoomAtPosition(position, -e.Delta, ScaleFactor);
+                }
+
+                IsZooming = false;
+                // handle the event so it won't trigger scrolling
+                e.Handled = true;
+            }
+        }
 
         /// <inheritdoc/>
         protected override void OnPreviewMouseDown(MouseButtonEventArgs e)
@@ -758,9 +782,81 @@ namespace RichCanvas
 
         #endregion
 
+        #region Public Api
+
+        public void ZoomAtPosition(Point mousePosition, double delta, double? factor)
+        {
+            var previousScaleX = ScaleTransform.ScaleX;
+            var previousScaleY = ScaleTransform.ScaleY;
+            var originX = (mousePosition.X - TranslateTransform.X) / ScaleTransform.ScaleX;
+            var originY = (mousePosition.Y - TranslateTransform.Y) / ScaleTransform.ScaleY;
+
+            if (delta > 0 && factor.HasValue)
+            {
+                var zoom = ScaleTransform.ScaleX * factor.Value;
+                ScaleTransform.ScaleX = zoom;
+                ScaleTransform.ScaleY = zoom;
+            }
+            else if (delta < 0 && factor.HasValue)
+            {
+                var zoom = ScaleTransform.ScaleX / factor.Value;
+                ScaleTransform.ScaleX = zoom;
+                ScaleTransform.ScaleY = zoom;
+            }
+
+            if (ScaleTransform.ScaleX <= MinScale)
+            {
+                ScaleTransform.ScaleX = MinScale;
+            }
+            if (ScaleTransform.ScaleY <= MinScale)
+            {
+                ScaleTransform.ScaleY = MinScale;
+            }
+            if (ScaleTransform.ScaleX >= MaxScale)
+            {
+                ScaleTransform.ScaleX = MaxScale;
+            }
+            if (ScaleTransform.ScaleY >= MaxScale)
+            {
+                ScaleTransform.ScaleY = MaxScale;
+            }
+
+            if (previousScaleX != ScaleTransform.ScaleX)
+            {
+                TranslateTransform.X = mousePosition.X - originX * ScaleTransform.ScaleX;
+            }
+            if (previousScaleY != ScaleTransform.ScaleY)
+            {
+                TranslateTransform.Y = mousePosition.Y - originY * ScaleTransform.ScaleY;
+            }
+
+            if (!DisableScroll)
+            {
+                ScrollContainer.SetCurrentScroll();
+            }
+        }
+
+        public void ZoomIn()
+        {
+            var delta = Math.Pow(2.0, 120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine);
+            ScrollContainer.Zoom(MousePosition, delta);
+        }
+
+        public void ZoomOut()
+        {
+            var delta = Math.Pow(2.0, -120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine);
+            ScrollContainer.Zoom(MousePosition, delta);
+        }
+
+        #endregion
+
         #region Properties Callbacks
 
-        private static void OnPanGestureChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => RichCanvasGestures.Pan = (InputGesture)e.NewValue;
+        private static void OnPanGestureChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            RichCanvasGestures.Pan = (InputGesture)e.NewValue;
+            StateManager.RegisterCanvasState<PanningState>(RichCanvasGestures.Pan);
+        }
 
         private static void OnDisableCacheChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).SetCachingMode((bool)e.NewValue);
 
@@ -851,6 +947,7 @@ namespace RichCanvas
 
         #endregion
 
+        //TODO: test all selection itemssource modifications
         #region Selection
 
         internal void BeginSelectionTransaction() => BeginUpdateSelectedItems();
@@ -1027,6 +1124,7 @@ namespace RichCanvas
 
         private void CanSelectMultipleItemsUpdated(bool value)
         {
+            //TODO: test this
             base.CanSelectMultipleItems = value;
             if (value)
             {
@@ -1137,43 +1235,42 @@ namespace RichCanvas
 
                 if (mousePosition.Y <= 0)
                 {
-                    //if (_isDrawing)
-                    //{
-                    //    CurrentDrawingItem.Height = Math.Abs(transformedPosition.Y - CurrentDrawingItem.Top);
-                    //}
-
+                    if (CurrentState is DrawingState)
+                    {
+                        CurrentState?.HandleAutoPanning(transformedPosition, true);
+                    }
                     ScrollContainer.PanVertically(-AutoPanSpeed);
                 }
                 else if (mousePosition.Y >= ScrollContainer.ViewportHeight)
                 {
-                    //if (_isDrawing)
-                    //{
-                    //    CurrentDrawingItem.Height = Math.Abs(transformedPosition.Y - CurrentDrawingItem.Top);
-                    //}
+                    if (CurrentState is DrawingState)
+                    {
+                        CurrentState?.HandleAutoPanning(transformedPosition, true);
+                    }
                     ScrollContainer.PanVertically(AutoPanSpeed);
                 }
 
                 if (mousePosition.X <= 0)
                 {
-                    //if (_isDrawing)
-                    //{
-                    //    CurrentDrawingItem.Width = Math.Abs(transformedPosition.X - CurrentDrawingItem.Left);
-                    //}
+                    if (CurrentState is DrawingState)
+                    {
+                        CurrentState?.HandleAutoPanning(transformedPosition);
+                    }
                     ScrollContainer.PanHorizontally(-AutoPanSpeed);
                 }
                 else if (mousePosition.X >= ScrollContainer.ViewportWidth)
                 {
-                    //if (_isDrawing)
-                    //{
-                    //    CurrentDrawingItem.Width = Math.Abs(transformedPosition.X - CurrentDrawingItem.Left);
-                    //}
+                    if (CurrentState is DrawingState)
+                    {
+                        CurrentState?.HandleAutoPanning(transformedPosition);
+                    }
                     ScrollContainer.PanHorizontally(AutoPanSpeed);
                 }
 
-                //if (IsSelecting)
-                //{
-                //    _selectingGesture.Update(transformedPosition);
-                //}
+                if (IsSelecting)
+                {
+                    CurrentState?.HandleAutoPanning(transformedPosition);
+                }
             }
         }
 
@@ -1216,7 +1313,6 @@ namespace RichCanvas
                 ScrollContainer.ScrollOwner.InvalidateScrollInfo();
             }
         }
-
         #endregion
     }
 }

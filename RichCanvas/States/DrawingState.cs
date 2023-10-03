@@ -1,5 +1,4 @@
-﻿using RichCanvas.Gestures;
-using RichCanvas.Helpers;
+﻿using RichCanvas.Helpers;
 using System;
 using System.Windows;
 using System.Windows.Input;
@@ -65,7 +64,6 @@ namespace RichCanvas.States
             double width = mousePosition.X - _currentDrawingContainer.Left;
             double height = mousePosition.Y - _currentDrawingContainer.Top;
 
-            //TODO: don't use scaleTransform
             _currentDrawingContainer.Width = width == 0 ? 1 : Math.Abs(width);
             _currentDrawingContainer.Height = height == 0 ? 1 : Math.Abs(height);
 
@@ -99,7 +97,6 @@ namespace RichCanvas.States
                 return;
             }
 
-            //TODO: remove this after not using scaleTransform
             SetItemPosition();
             SnapToGrid();
 
@@ -110,6 +107,20 @@ namespace RichCanvas.States
             _isDrawing = false;
         }
 
+        public override void HandleAutoPanning(Point mousePosition, bool heightChanged = false)
+        {
+            if (heightChanged)
+            {
+                _currentDrawingContainer.Height = Math.Abs(mousePosition.Y - _currentDrawingContainer.Top);
+            }
+            else
+            {
+                _currentDrawingContainer.Width = Math.Abs(mousePosition.X - _currentDrawingContainer.Left);
+            }
+        }
+
+        // ScaleTransform used, because drawing involves anything that the User adds inside the ContentPresenter
+        // so we can't change the position while drawing and we need to keep the scaling to display correctly.
         private void SetItemPosition()
         {
             ScaleTransform? scaleTransformItem = _currentDrawingContainer.ScaleTransform;
