@@ -46,10 +46,11 @@ namespace RichCanvas
         #endregion
 
         #region Properties API
-        /// <summary>
-        /// Gets whether at least one item is selected.
-        /// </summary>
-        public bool HasSelections => base.SelectedItems.Count > 1;
+
+        public CanvasState? CurrentState { get; private set; }
+
+        public RichItemContainer? SelectedContainer { get; private set; }
+
         /// <summary>
         /// <see cref="Grid"/> control wrapping the scrolling logic.
         /// </summary>
@@ -439,36 +440,6 @@ namespace RichCanvas
         }
 
         /// <summary>
-        /// Gets or sets current key used to zoom.
-        /// Default is <see cref="Key.LeftCtrl"/>.
-        /// </summary>
-        public static DependencyProperty ZoomKeyProperty = DependencyProperty.Register(nameof(ZoomKey), typeof(Key), typeof(RichItemsControl), new FrameworkPropertyMetadata(Key.LeftCtrl));
-        /// <summary>
-        /// Gets or sets current key used to zoom.
-        /// Default is <see cref="Key.LeftCtrl"/>.
-        /// </summary>
-        public Key ZoomKey
-        {
-            get => (Key)GetValue(ZoomKeyProperty);
-            set => SetValue(ZoomKeyProperty, value);
-        }
-
-        /// <summary>
-        /// Gets or sets current key used for panning.
-        /// Default is <see cref="Key.Space"/>.
-        /// </summary>
-        public static DependencyProperty PanningKeyProperty = DependencyProperty.Register(nameof(PanningKey), typeof(Key), typeof(RichItemsControl), new FrameworkPropertyMetadata(Key.Space));
-        /// <summary>
-        /// Gets or sets current key used for panning.
-        /// Default is <see cref="Key.Space"/>.
-        /// </summary>
-        public Key PanningKey
-        {
-            get => (Key)GetValue(PanningKeyProperty);
-            set => SetValue(PanningKeyProperty, value);
-        }
-
-        /// <summary>
         /// Occurs whenever <see cref="RichItemsControl.ScaleTransform"/> changes.
         /// </summary>
         public static readonly RoutedEvent ZoomingEvent = EventManager.RegisterRoutedEvent(nameof(Zooming), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(RichItemsControl));
@@ -546,7 +517,6 @@ namespace RichCanvas
         /// Default is <see langword="true"/>.
         /// </summary>
         public static DependencyProperty CanSelectMultipleItemsProperty = DependencyProperty.Register(nameof(CanSelectMultipleItems), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true, OnCanSelectMultipleItemsChanged));
-
         /// <summary>
         /// Gets or sets whether you can select multiple elements or not.
         /// Default is <see langword="true"/>.
@@ -606,7 +576,6 @@ namespace RichCanvas
         /// 
         /// </summary>
         public static DependencyProperty PanGestureProperty = DependencyProperty.Register(nameof(PanGesture), typeof(InputGesture), typeof(RichItemsControl), new FrameworkPropertyMetadata(RichCanvasGestures.Pan, OnPanGestureChanged));
-
         public InputGesture PanGesture
         {
             get => (InputGesture)GetValue(PanGestureProperty);
@@ -621,10 +590,6 @@ namespace RichCanvas
         internal bool InitializedScrollBarVisiblity { get; private set; }
         internal IList BaseSelectedItems => base.SelectedItems;
         internal List<int> CurrentDrawingIndexes { get; } = new List<int>();
-        public CanvasState? CurrentState { get; private set; }
-        public RichItemContainer? SelectedContainer { get; private set; }
-
-
         #endregion
 
         #region Constructors
@@ -650,13 +615,11 @@ namespace RichCanvas
                     ScaleTransform, TranslateTransform
                 }
             };
-            // Register this with the PanGesture, re-register when PanGesture is changed by the user
-            //CommandManager.RegisterClassCommandBinding(typeof(RichItemsControl), new CommandBinding());
-            //CommandManager.RegisterClassInputBinding(typeof(RichItemsControl), new InputBinding();
 
             // call this to initialize Dragging and Selecting strategies
             CanSelectMultipleItemsUpdated(CanSelectMultipleItems);
 
+            //TODO: move this to xml comment on Register method
             // order matters as you may have multiple states that can be executed simultanously so RichCanvas picks them in order
             // try to avoid that
             // also the order matters as you migh have custom gesture with custom key gesture and mouse gesture so
@@ -839,13 +802,13 @@ namespace RichCanvas
         public void ZoomIn()
         {
             var delta = Math.Pow(2.0, 120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine);
-            ScrollContainer.Zoom(MousePosition, delta);
+            ZoomAtPosition(MousePosition, delta, ScaleFactor);
         }
 
         public void ZoomOut()
         {
             var delta = Math.Pow(2.0, -120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine);
-            ScrollContainer.Zoom(MousePosition, delta);
+            ZoomAtPosition(MousePosition, delta, ScaleFactor);
         }
 
         #endregion
@@ -1110,6 +1073,7 @@ namespace RichCanvas
         private void OnItemsDragCompleted(object sender, DragCompletedEventArgs e)
         {
             SelectionHelper.GetDraggingStrategy()?.OnItemsDragCompleted(sender, e);
+            IsDragging = false;
         }
 
         private void OnItemsDragDelta(object sender, DragDeltaEventArgs e)
@@ -1119,6 +1083,7 @@ namespace RichCanvas
 
         private void OnItemsDragStarted(object sender, DragStartedEventArgs e)
         {
+            IsDragging = true;
             SelectionHelper.GetDraggingStrategy()?.OnItemsDragStarted(sender, e);
         }
 
