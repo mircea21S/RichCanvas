@@ -388,50 +388,6 @@ namespace RichCanvas
         }
 
         /// <summary>
-        /// Zooms at the specified position
-        /// </summary>
-        /// <param name="position">Mouse position to zoom at</param>
-        /// <param name="delta">Determines whether to zoom in or out by the sign</param>
-        public void Zoom(Point position, double delta)
-        {
-            //_zoomGesture?.ZoomToPosition(position, delta, _parent?.ScaleFactor);
-
-            // Scrolling limitation
-            //if (!_parent.ExtentSize.IsEmpty && HighestElement < TopLimit && Math.Round(TopOffset) > _parent.ExtentSize.Height)
-            //{
-            //    _zoomGesture?.ZoomToPosition(position, -delta, _parent?.ScaleFactor);
-            //}
-
-            //if (!_parent.ExtentSize.IsEmpty && MostLeftElement < LeftLimit && Math.Round(LeftOffset) > _parent.ExtentSize.Width)
-            //{
-            //    _zoomGesture?.ZoomToPosition(position, -delta, _parent?.ScaleFactor);
-            //}
-
-            //if (!_parent.EnableNegativeScrolling && MostRightElement > RightLimit && Math.Abs(Math.Round(RightOffset)) > 0)
-            //{
-            //    _zoomGesture?.ZoomToPosition(position, -delta, _parent?.ScaleFactor);
-            //}
-            //else if (!_parent.ExtentSize.IsEmpty && MostRightElement > RightLimit && Math.Abs(Math.Round(RightOffset)) > _parent.ExtentSize.Width)
-            //{
-            //    _zoomGesture?.ZoomToPosition(position, -delta, _parent?.ScaleFactor);
-            //}
-
-            //if (!_parent.EnableNegativeScrolling && LowestElement > BottomLimit && Math.Abs(Math.Round(BottomOffset)) > 0)
-            //{
-            //    _zoomGesture?.ZoomToPosition(position, -delta, _parent?.ScaleFactor);
-            //}
-            //else if (!_parent.ExtentSize.IsEmpty && LowestElement > BottomLimit && Math.Abs(Math.Round(BottomOffset)) > _parent.ExtentSize.Height)
-            //{
-            //    _zoomGesture?.ZoomToPosition(position, -delta, _parent?.ScaleFactor);
-            //}
-
-            //if (!_parent.DisableScroll)
-            //{
-            //    SetCurrentScroll();
-            //}
-        }
-
-        /// <summary>
         /// Scrolls and translates vertically the <see cref="ScrollOwner"/> viewport
         /// </summary>
         /// <param name="offset">Scroll factor which determines the speed</param>
@@ -688,15 +644,9 @@ namespace RichCanvas
             }
         }
 
-        private void ScrollVertically(double offset)
-        {
-            _translateTransform.Y += -offset;
-        }
+        private void ScrollVertically(double offset) => _translateTransform.Y += -offset;
 
-        private void ScrollHorizontally(double offset)
-        {
-            _translateTransform.X += -offset;
-        }
+        private void ScrollHorizontally(double offset) => _translateTransform.X += -offset;
 
         #endregion
     }
