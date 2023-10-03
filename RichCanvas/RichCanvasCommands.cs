@@ -25,6 +25,15 @@ namespace RichCanvas
         internal static void Register(Type type)
         {
             CommandManager.RegisterClassCommandBinding(type, new CommandBinding(ZoomIn, OnZoomIn));
+            CommandManager.RegisterClassCommandBinding(type, new CommandBinding(ZoomOut, OnZoomOut));
+        }
+
+        private static void OnZoomOut(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (sender is RichItemsControl richItemsControl)
+            {
+                richItemsControl.ZoomOut();
+            }
         }
 
         private static void OnZoomIn(object sender, ExecutedRoutedEventArgs e)
