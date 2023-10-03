@@ -60,6 +60,11 @@ namespace RichCanvas.States.SelectionStates
             Parent.IsSelecting = false;
         }
 
+        public override void HandleAutoPanning(Point mousePosition, bool heightChanged = false)
+        {
+            DrawSelectionRectangle(mousePosition);
+        }
+
         private void DrawSelectionRectangle(Point position)
         {
             double left = position.X < _selectionRectangleInitialPosition.X ? position.X : _selectionRectangleInitialPosition.X;
