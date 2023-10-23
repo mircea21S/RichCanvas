@@ -39,7 +39,7 @@ namespace RichCanvas
         internal readonly ScaleTransform ScaleTransform = new ScaleTransform();
         internal readonly TranslateTransform TranslateTransform = new TranslateTransform();
         private RichCanvas? _mainPanel;
-        private PanningGrid? _canvasContainer;
+        private ScrollingGrid? _canvasContainer;
         private DispatcherTimer? _autoPanTimer;
         private bool _fromEvent;
 
@@ -54,7 +54,7 @@ namespace RichCanvas
         /// <summary>
         /// <see cref="Grid"/> control wrapping the scrolling logic.
         /// </summary>
-        public PanningGrid? ScrollContainer => _canvasContainer;
+        public ScrollingGrid? ScrollContainer => _canvasContainer;
 
         /// <summary>
         /// Gets or sets mouse position relative to <see cref="RichItemsControl.ItemsHost"/>.
@@ -195,31 +195,14 @@ namespace RichCanvas
             set => SetValue(GridSpacingProperty, value);
         }
 
-        internal static readonly DependencyPropertyKey ViewportRectPropertyKey = DependencyProperty.RegisterReadOnly(nameof(ViewportRect), typeof(Rect), typeof(RichItemsControl), new FrameworkPropertyMetadata(Rect.Empty));
+        public static DependencyProperty ViewportLocationProperty = DependencyProperty.Register(nameof(ViewportLocation), typeof(Point), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(Point), OnViewportLocationChanged));
         /// <summary>
         /// Gets current viewport rectangle.
         /// </summary>
-        public static readonly DependencyProperty ViewportRectProperty = ViewportRectPropertyKey.DependencyProperty;
-        /// <summary>
-        /// Gets current viewport rectangle.
-        /// </summary>
-        public Rect ViewportRect
+        public Point ViewportLocation
         {
-            get => (Rect)GetValue(ViewportRectProperty);
-            internal set => SetValue(ViewportRectPropertyKey, value);
-        }
-
-        /// <summary>
-        /// Gets or sets current <see cref="RichItemsControl.TranslateTransform"/>.
-        /// </summary>
-        public static DependencyProperty TranslateOffsetProperty = DependencyProperty.Register(nameof(TranslateOffset), typeof(Point), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(Point), OnOffsetChanged));
-        /// <summary>
-        /// Gets or sets current <see cref="RichItemsControl.TranslateTransform"/>.
-        /// </summary>
-        public Point TranslateOffset
-        {
-            get => (Point)GetValue(TranslateOffsetProperty);
-            set => SetValue(TranslateOffsetProperty, value);
+            get => (Point)GetValue(ViewportLocationProperty);
+            set => SetValue(ViewportLocationProperty, value);
         }
 
         /// <summary>
@@ -543,12 +526,12 @@ namespace RichCanvas
         }
 
         /// <summary>
-        /// Gets or sets whether <see cref="PanningGrid.ScrollOwner"/> vertical scrollbar visibility.
+        /// Gets or sets whether <see cref="ScrollingGrid.ScrollOwner"/> vertical scrollbar visibility.
         /// Default is <see cref="ScrollBarVisibility.Visible"/>.
         /// </summary>
         public static DependencyProperty VerticalScrollBarVisibilityProperty = DependencyProperty.Register(nameof(VerticalScrollBarVisibility), typeof(ScrollBarVisibility), typeof(RichItemsControl), new FrameworkPropertyMetadata(ScrollBarVisibility.Visible, OnVerticalScrollBarVisiblityChanged));
         /// <summary>
-        /// Gets or sets whether <see cref="PanningGrid.ScrollOwner"/> vertical scrollbar visibility.
+        /// Gets or sets whether <see cref="ScrollingGrid.ScrollOwner"/> vertical scrollbar visibility.
         /// Default is <see cref="ScrollBarVisibility.Visible"/>.
         /// </summary>
         public ScrollBarVisibility VerticalScrollBarVisibility
@@ -558,12 +541,12 @@ namespace RichCanvas
         }
 
         /// <summary>
-        /// Gets or sets whether <see cref="PanningGrid.ScrollOwner"/> horizontal scrollbar visibility.
+        /// Gets or sets whether <see cref="ScrollingGrid.ScrollOwner"/> horizontal scrollbar visibility.
         /// Default is <see cref="ScrollBarVisibility.Visible"/>.
         /// </summary>
         public static DependencyProperty HorizontalScrollBarVisibilityProperty = DependencyProperty.Register(nameof(HorizontalScrollBarVisibility), typeof(ScrollBarVisibility), typeof(RichItemsControl), new FrameworkPropertyMetadata(ScrollBarVisibility.Visible, OnHorizontalScrollBarVisiblityChanged));
         /// <summary>
-        /// Gets or sets whether <see cref="PanningGrid.ScrollOwner"/> horizontal scrollbar visibility.
+        /// Gets or sets whether <see cref="ScrollingGrid.ScrollOwner"/> horizontal scrollbar visibility.
         /// Default is <see cref="ScrollBarVisibility.Visible"/>.
         /// </summary>
         public ScrollBarVisibility HorizontalScrollBarVisibility
@@ -599,6 +582,7 @@ namespace RichCanvas
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RichItemsControl), new FrameworkPropertyMetadata(typeof(RichItemsControl)));
             RichCanvasCommands.Register(typeof(RichItemsControl));
         }
+
         /// <summary>
         /// Creates a new instance of <see cref="RichItemsControl"/>
         /// </summary>
@@ -640,10 +624,9 @@ namespace RichCanvas
             _mainPanel.ItemsOwner = this;
             SetCachingMode(DisableCache);
 
-            _canvasContainer = (PanningGrid)GetTemplateChild(CanvasContainerName);
+            _canvasContainer = (ScrollingGrid)GetTemplateChild(CanvasContainerName);
             _canvasContainer.Initialize(this);
 
-            TranslateTransform.Changed += OnTranslateChanged;
             ScaleTransform.Changed += OnScaleChanged;
         }
 
@@ -689,7 +672,7 @@ namespace RichCanvas
         /// <inheritdoc/>
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
-            if (Mouse.Captured == null || IsMouseCaptured)
+            if ((Mouse.Captured == null || IsMouseCaptured) && e.HasAnyButtonPressed())
             {
                 CaptureMouse();
                 CurrentState?.HandleMouseDown(e);
@@ -801,14 +784,16 @@ namespace RichCanvas
 
         public void ZoomIn()
         {
+            // delta isn't used as we have the ScaleFactor
+            // it's used just to define the direction of zoom
             var delta = Math.Pow(2.0, 120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine);
             ZoomAtPosition(MousePosition, delta, ScaleFactor);
         }
 
         public void ZoomOut()
         {
-            var delta = Math.Pow(2.0, -120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine);
-            ZoomAtPosition(MousePosition, delta, ScaleFactor);
+            var delta = Math.Pow(2.0, 120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine);
+            ZoomAtPosition(MousePosition, -delta, ScaleFactor);
         }
 
         #endregion
@@ -1112,12 +1097,13 @@ namespace RichCanvas
             _fromEvent = false;
         }
 
-        private void OnTranslateChanged(object? sender, EventArgs e)
+        private static void OnViewportLocationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            _fromEvent = true;
-            TranslateOffset = new Point(TranslateTransform.X, TranslateTransform.Y);
-            RaiseScrollingEvent(e);
-            _fromEvent = false;
+            var host = (RichItemsControl)d;
+            var translate = (Point)e.NewValue;
+
+            host.TranslateTransform.X += -translate.X;
+            host.TranslateTransform.Y += -translate.Y;
         }
 
         private void RaiseScrollingEvent(object context)
@@ -1204,7 +1190,7 @@ namespace RichCanvas
                     {
                         CurrentState?.HandleAutoPanning(transformedPosition, true);
                     }
-                    ScrollContainer.PanVertically(-AutoPanSpeed);
+                    ScrollContainer.ScrollVertically(-AutoPanSpeed);
                 }
                 else if (mousePosition.Y >= ScrollContainer.ViewportHeight)
                 {
@@ -1212,7 +1198,7 @@ namespace RichCanvas
                     {
                         CurrentState?.HandleAutoPanning(transformedPosition, true);
                     }
-                    ScrollContainer.PanVertically(AutoPanSpeed);
+                    ScrollContainer.ScrollVertically(AutoPanSpeed);
                 }
 
                 if (mousePosition.X <= 0)
