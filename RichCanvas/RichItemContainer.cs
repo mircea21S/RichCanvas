@@ -232,7 +232,7 @@ namespace RichCanvas
         internal bool TopPropertySet { get; private set; }
 
         internal bool LeftPropertySet { get; private set; }
-
+        
         public RichItemContainer()
         {
             StateManager.RegisterContainerState<DraggingContainerState>(RichCanvasGestures.Drag, () => IsDraggable);
