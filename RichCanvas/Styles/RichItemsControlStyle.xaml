@@ -54,7 +54,7 @@
                                       HorizontalScrollBarVisibility="Auto"
                                       VerticalScrollBarVisibility="Auto"
                                       Focusable="False">
-                            <local:PanningGrid x:Name="CanvasContainer"
+                            <local:ScrollingGrid x:Name="CanvasContainer"
                                                Background="{Binding EnableGrid, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToBackground}, ConverterParameter={StaticResource GridBrush}}">
 
                                 <Canvas RenderTransform="{Binding AppliedTransform, RelativeSource={RelativeSource TemplatedParent}}"
@@ -73,7 +73,7 @@
 
                                 </Canvas>
 
-                            </local:PanningGrid>
+                            </local:ScrollingGrid>
                         </ScrollViewer>
                     </Grid>
 

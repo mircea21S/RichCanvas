@@ -1,9 +1,8 @@
-﻿using RichCanvas.Gestures;
+﻿using RichCanvas.Helpers;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Input;
 using System.Windows.Media;
 
 namespace RichCanvas
@@ -11,7 +10,7 @@ namespace RichCanvas
     /// <summary>
     /// Grid defining scrolling functionalty
     /// </summary>
-    public class PanningGrid : Grid, IScrollInfo
+    public class ScrollingGrid : Grid, IScrollInfo
     {
         #region Private Fields
 
@@ -119,7 +118,7 @@ namespace RichCanvas
         {
             if (_parent != null && !_parent.IsZooming && !_parent.DisableScroll)
             {
-                PanVertically(_parent.ScrollFactor);
+                ScrollVertically(_parent.ScrollFactor);
             }
         }
 
@@ -146,7 +145,7 @@ namespace RichCanvas
         {
             if (_parent != null && !_parent.IsZooming && !_parent.DisableScroll)
             {
-                PanVertically(-_parent.ScrollFactor);
+                ScrollVertically(-_parent.ScrollFactor);
             }
         }
 
@@ -177,7 +176,7 @@ namespace RichCanvas
         {
             if (_parent != null && !_parent.IsZooming && !_parent.DisableScroll)
             {
-                PanVertically(_parent.ScrollFactor);
+                ScrollVertically(_parent.ScrollFactor);
             }
         }
 
@@ -204,7 +203,7 @@ namespace RichCanvas
         {
             if (_parent != null && !_parent.IsZooming && !_parent.DisableScroll)
             {
-                PanVertically(-_parent.ScrollFactor);
+                ScrollVertically(-_parent.ScrollFactor);
             }
         }
 
@@ -213,7 +212,7 @@ namespace RichCanvas
         {
             if (_parent != null && !_parent.IsZooming && !_parent.DisableScroll)
             {
-                PanVertically(_parent.ScrollFactor);
+                ScrollVertically(_parent.ScrollFactor);
             }
         }
 
@@ -240,7 +239,7 @@ namespace RichCanvas
         {
             if (_parent != null && !_parent.IsZooming && !_parent.DisableScroll)
             {
-                PanVertically(-_parent.ScrollFactor);
+                ScrollVertically(-_parent.ScrollFactor);
             }
         }
 
@@ -280,7 +279,7 @@ namespace RichCanvas
                 }
                 _offset.X = offset;
                 _negativeOffset.X -= thumbOffset;
-                ScrollHorizontally(-thumbOffset);
+                //ScrollHorizontally(-thumbOffset);
             }
         }
 
@@ -368,22 +367,19 @@ namespace RichCanvas
         /// <summary>
         /// Panning of the canvas using the difference between the specified points.
         /// </summary>
-        /// <param name="initialPosition">Calculated initial mouse position. For example, on click.</param>
-        /// <param name="currentMousePosition">Current calculated mouse position.</param>
-        public void Pan(Point initialPosition, Point currentMousePosition)
+        /// <param name="delta">Point represnting vertical change and horizontal change.</param>
+        public void Scroll(Point delta)
         {
-            var deltaHeight = currentMousePosition.Y - initialPosition.Y;
-            var deltaWidth = currentMousePosition.X - initialPosition.X;
-
-            if (deltaWidth != 0)
+            if (delta.X != 0)
             {
-                PanHorizontally(-deltaWidth);
+                PanHorizontally(-delta.X);
             }
 
-            if (deltaHeight != 0)
+            if (delta.Y != 0)
             {
-                PanVertically(-deltaHeight);
+                ScrollVertically(-delta.Y);
             }
+
             ScrollOwner?.InvalidateScrollInfo();
         }
 
@@ -391,48 +387,50 @@ namespace RichCanvas
         /// Scrolls and translates vertically the <see cref="ScrollOwner"/> viewport
         /// </summary>
         /// <param name="offset">Scroll factor which determines the speed</param>
-        public void PanVertically(double offset)
+        public void ScrollVertically(double offset)
         {
-            if (_parent != null && !_parent.DisableScroll)
+            //TODO: same for PanHorizontally
+            if (_parent.DisableScroll || _parent.ItemsHost.HasTouchedNegativeLimit(new Point(0, offset))
+                || _parent.ItemsHost.HasTouchedExtentSizeLimit(new Point(0, offset)))
             {
-                // Scrolling limitation
-                if (!_parent.EnableNegativeScrolling && offset < 0 && LowestElement >= BottomLimit && Math.Abs(Math.Round(BottomOffset)) >= 0)
-                {
-                    _translateTransform.Y -= Math.Abs(BottomOffset);
-                    CoerceVerticalOffset();
-                    CoerceExtentHeight();
-                    return;
-                }
-
-                if (!_parent.ExtentSize.IsEmpty && HighestElement <= TopLimit && LowestElement >= BottomLimit && Math.Round(TopOffset) >= _parent.ExtentSize.Height
-                    && Math.Abs(Math.Round(BottomOffset)) >= _parent.ExtentSize.Height)
-                {
-                    CoerceVerticalOffset();
-                    return;
-                }
-
-                if (!_parent.ExtentSize.IsEmpty && offset > 0 && HighestElement <= TopLimit && Math.Round(TopOffset) >= _parent.ExtentSize.Height)
-                {
-                    _translateTransform.Y += TopOffset - _parent.ExtentSize.Height;
-                    CoerceVerticalOffset();
-                    return;
-                }
-
-                if (!_parent.ExtentSize.IsEmpty && offset < 0 && LowestElement >= BottomLimit && Math.Abs(Math.Round(BottomOffset)) >= _parent.ExtentSize.Height)
-                {
-                    _translateTransform.Y -= Math.Abs(BottomOffset) - _parent.ExtentSize.Height;
-                    CoerceVerticalOffset();
-                    return;
-                }
-
-                ScrollVertically(offset);
-                SetVerticalOffset(offset);
-                ScrollOwner?.InvalidateScrollInfo();
+                CoerceVerticalOffset();
+                CoerceExtentHeight();
+                //TODO: Coerce ViewportLocation
+                return;
             }
-            else if (_parent != null && (_parent.IsPanning || !_parent.DisableAutoPanning))
-            {
-                ScrollVertically(offset);
-            }
+
+            // Scrolling limitation
+            //if (!_parent.EnableNegativeScrolling && offset < 0 && LowestElement >= BottomLimit && Math.Abs(Math.Round(BottomOffset)) >= 0)
+            //{
+            //    _translateTransform.Y -= Math.Abs(BottomOffset);
+            //    CoerceVerticalOffset();
+            //    CoerceExtentHeight();
+            //    return;
+            //}
+
+            //if (!_parent.ExtentSize.IsEmpty && HighestElement <= TopLimit && LowestElement >= BottomLimit && Math.Round(TopOffset) >= _parent.ExtentSize.Height
+            //    && Math.Abs(Math.Round(BottomOffset)) >= _parent.ExtentSize.Height)
+            //{
+            //    CoerceVerticalOffset();
+            //    return;
+            //}
+
+            //if (!_parent.ExtentSize.IsEmpty && offset > 0 && HighestElement <= TopLimit && Math.Round(TopOffset) >= _parent.ExtentSize.Height)
+            //{
+            //    _translateTransform.Y += TopOffset - _parent.ExtentSize.Height;
+            //    CoerceVerticalOffset();
+            //    return;
+            //}
+
+            //if (!_parent.ExtentSize.IsEmpty && offset < 0 && LowestElement >= BottomLimit && Math.Abs(Math.Round(BottomOffset)) >= _parent.ExtentSize.Height)
+            //{
+            //    _translateTransform.Y -= Math.Abs(BottomOffset) - _parent.ExtentSize.Height;
+            //    CoerceVerticalOffset();
+            //    return;
+            //}
+
+            SetVerticalOffset(offset);
+            ScrollOwner?.InvalidateScrollInfo();
         }
 
         /// <summary>
@@ -473,14 +471,13 @@ namespace RichCanvas
                     return;
                 }
 
-                ScrollHorizontally(offset);
                 SetHorizontalOffset(offset);
                 ScrollOwner?.InvalidateScrollInfo();
             }
-            else if (_parent != null && (_parent.IsPanning || !_parent.DisableAutoPanning))
-            {
-                ScrollHorizontally(offset);
-            }
+            //else if (_parent != null && (_parent.IsPanning || !_parent.DisableAutoPanning))
+            //{
+            //    ScrollHorizontally(offset);
+            //}
         }
 
         internal void Initialize(RichItemsControl richItemsControl)
@@ -643,11 +640,6 @@ namespace RichCanvas
                 _extent.Width = _viewport.Width + _offset.X;
             }
         }
-
-        private void ScrollVertically(double offset) => _translateTransform.Y += -offset;
-
-        private void ScrollHorizontally(double offset) => _translateTransform.X += -offset;
-
         #endregion
     }
 }
