@@ -344,11 +344,11 @@
                                      MaxScale="{Binding MaxScale, Converter={StaticResource StringToFloatConverter},ConverterParameter=double}"
                                      AutoPanSpeed="{Binding AutoPanSpeed, Converter={StaticResource StringToFloatConverter}}"
                                      AutoPanTickRate="{Binding AutoPanTickRate, Converter={StaticResource StringToFloatConverter}}"
-                                     TranslateOffset="{Binding TranslateOffset, Mode=TwoWay}"
                                      SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                                      RealTimeDraggingEnabled="True"
                                      RealTimeSelectionEnabled="True"
                                      VerticalScrollBarVisibility="{Binding VerticalScrollBarVisibility}">
+            <!--TranslateOffset="{Binding TranslateOffset, Mode=TwoWay}"-->
 
             <richCanvas:RichItemsControl.ContextMenu>
                 <ContextMenu>
