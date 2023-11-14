@@ -15,6 +15,8 @@ using RichCanvas.States.Dragging;
 using RichCanvas.States.SelectionStates;
 using RichCanvas.Gestures;
 using RichCanvas.CustomEventArgs;
+using System.Windows.Automation.Peers;
+using RichCanvas.Automation;
 
 namespace RichCanvas
 {
@@ -629,6 +631,10 @@ namespace RichCanvas
 
             ScaleTransform.Changed += OnScaleChanged;
         }
+
+        /// <inheritdoc/>
+        protected override AutomationPeer OnCreateAutomationPeer()
+            => new RichItemsControlAutomationPeer(this);
 
         /// <inheritdoc/>
         protected override bool IsItemItsOwnContainerOverride(object item) => item is RichItemContainer;

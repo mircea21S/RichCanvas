@@ -2,7 +2,6 @@
 
 	<PropertyGroup>
 		<Nullable>enable</Nullable>
-		<TargetFramework>netcoreapp3.1</TargetFramework>
 		<TargetFrameworks>net5-windows;netcoreapp3.1;net48;net472</TargetFrameworks>
 		<LangVersion>8.0</LangVersion>
 		<UseWPF>true</UseWPF>
@@ -29,5 +28,9 @@
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<PackageIconUrl />
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	</ItemGroup>
 
 </Project>
