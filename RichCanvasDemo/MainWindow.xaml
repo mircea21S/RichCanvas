@@ -238,6 +238,7 @@
                         HorizontalAlignment="Right" />
 
                 <Button Content="Draw Rect"
+                        AutomationProperties.AutomationId="DrawRectButton"
                         Command="{Binding DrawRectCommand}"
                         Width="120"
                         Height="30"
