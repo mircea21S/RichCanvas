@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using RichCanvas.Automation.ControlInformations;
 using RichCanvas.UITests.Extensions;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace RichCanvas.UITests
 {
@@ -12,6 +13,10 @@ namespace RichCanvas.UITests
         public RichItemsControlAutomation(FrameworkAutomationElementBase frameworkAutomationElement) : base(frameworkAutomationElement)
         {
         }
+
+        public Size DemoControlSize => new Size(1187, 800);
+
+        public Point ViewportCenter => new Point(DemoControlSize.Width / 2, DemoControlSize.Height / 2);
 
         public RichItemsControlData RichItemsControlData => JsonConvert.DeserializeObject<RichItemsControlData>(Patterns.Value.Pattern.Value.Value, new JsonSerializerSettings
         {
