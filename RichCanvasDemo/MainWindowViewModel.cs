@@ -292,7 +292,7 @@ namespace RichCanvasDemo
             }
         }
 
-        private void Delete() => Items.Remove(SelectedItem);
+        private void Delete() => Items.Clear();
 
         private void OnDrawCommand()
         {
@@ -301,7 +301,13 @@ namespace RichCanvasDemo
 
         private void DrawLine() => Items.Add(new Line());
 
-        private void Resize() => SelectedItem.Height += 20;
+        private void Resize() => Items.Add(new Rectangle
+        {
+            Top = 100,
+            Left = 100,
+            Width = 100,
+            Height = 100
+        });
 
         private void DrawEnded(RoutedEventArgs args)
         {

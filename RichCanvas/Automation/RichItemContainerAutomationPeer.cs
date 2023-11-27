@@ -13,7 +13,9 @@ namespace RichCanvas.Automation
 
         public string Value => JsonConvert.SerializeObject(new RichItemContainerData
         {
-            IsSelected = CurrentContainer.IsSelected
+            IsSelected = CurrentContainer.IsSelected,
+            ScaleX = CurrentContainer.ScaleTransform.ScaleX,
+            ScaleY = CurrentContainer.ScaleTransform.ScaleY,
         });
 
         public bool IsReadOnly => true;
