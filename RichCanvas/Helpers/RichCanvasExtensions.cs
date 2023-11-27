@@ -5,10 +5,10 @@ namespace RichCanvas.Helpers
     public static class RichCanvasExtensions
     {
         public static bool HasTouchedNegativeLimit(this RichCanvas canvas, Point offset) =>
-            canvas.BottomElement.HasTouchedBottomLimit(offset) || canvas.RightElement.HasTouchedRightLimit(offset);
+            (canvas.BottomElement?.HasTouchedBottomLimit(offset) ?? false) || (canvas.RightElement?.HasTouchedRightLimit(offset) ?? false);
 
         public static bool HasTouchedExtentSizeLimit(this RichCanvas canvas, Point offset) =>
-            canvas.TopElement.HasTouchedTopExtentSizeLimit(offset) || canvas.LeftElement.HasTouchedLeftExtentSizeLimit(offset) ||
-            canvas.RightElement.HasTouchedRightExtentSizeLimit(offset) || canvas.BottomElement.HasTouchedBottomExtentSizeLimit(offset);
+            (canvas.TopElement?.HasTouchedTopExtentSizeLimit(offset) ?? false) || (canvas.LeftElement?.HasTouchedLeftExtentSizeLimit(offset) ?? false) ||
+            (canvas.RightElement?.HasTouchedRightExtentSizeLimit(offset) ?? false) || (canvas.BottomElement?.HasTouchedBottomExtentSizeLimit(offset) ?? false);
     }
 }

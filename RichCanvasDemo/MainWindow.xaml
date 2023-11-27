@@ -247,6 +247,7 @@
 
                 <Button Content="Resize"
                         Command="{Binding ResizeCommand}"
+                        AutomationProperties.AutomationId="AddDrawnRectangle"
                         MinWidth="120"
                         Height="30"
                         HorizontalAlignment="Right"
@@ -266,8 +267,9 @@
                         HorizontalAlignment="Right"
                         Grid.Row="4" />
 
-                <Button Content="Delete"
+                <Button Content="Clear All Items"
                         Command="{Binding DeleteCommand}"
+                        AutomationProperties.AutomationId="ClearItems"
                         Width="120"
                         Height="30"
                         HorizontalAlignment="Right"
