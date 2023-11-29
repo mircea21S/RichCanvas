@@ -4,5 +4,7 @@
     {
         internal const string RichCanvasDemoBinPath = @"C:\Programming Projects\RichCanvas\RichCanvasDemo\bin\Debug\netcoreapp3.1\RichCanvasDemo.exe";
         internal const string RichCanvasDemoProcessName = "RichCanvasDemo.exe";
+        // size of Title bar (SystemParamters.WindowCaptionHeight) = 22.5
+        internal const double RichCavnasDemoTitleBarHeight = 22.5;
     }
 }

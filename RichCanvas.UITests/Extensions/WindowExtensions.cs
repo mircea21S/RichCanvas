@@ -1,43 +1,27 @@
 ﻿using FlaUI.Core.AutomationElements;
+using RichCanvasDemo;
 
-namespace RichCanvas.UITests.Extensions
+namespace RichCanvas.UITests
 {
     internal static class WindowExtensions
     {
         /// <summary>
-        /// When RichCanvasDemo is running, finds the button that adds a new Rectangle to <see cref="RichItemsControl"/> ItemsSource and invokes it.
+        /// When RichCanvasDemo is running, finds the button with specified <paramref name="buttonAutomationId"/> and invokes it.
         /// </summary>
-        /// <param name="window"></param>
-        internal static void AddEmptyRectangle(this Window window)
+        /// <param name="buttonAutomationId">Button automation id.</param>
+        internal static void InvokeButton(this Window window, string buttonAutomationId)
         {
-            var drawRectButton = window.FindFirstDescendant(d => d.ByAutomationId("DrawRectButton"));
-            if (drawRectButton.Patterns.Invoke.TryGetPattern(out var invokePattern))
+            var button = window.FindFirstDescendant(d => d.ByAutomationId(buttonAutomationId));
+            if (button.Patterns.Invoke.TryGetPattern(out var invokePattern))
             {
                 invokePattern.Invoke();
             }
         }
 
-        /// <summary>
-        /// When RichCanvasDemo is running, finds the button that clears all items from <see cref="RichItemsControl"/> ItemsSource and invokes it.
-        /// </summary>
-        /// <param name="window"></param>
         internal static void ClearAllItems(this Window window)
         {
-            var drawRectButton = window.FindFirstDescendant(d => d.ByAutomationId("ClearItems"));
-            if (drawRectButton.Patterns.Invoke.TryGetPattern(out var invokePattern))
-            {
-                invokePattern.Invoke();
-            }
-        }
-
-        /// <summary>
-        /// When RichCanvasDemo is running, finds the button that adds a defined rectangle to <see cref="RichItemsControl"/> ItemsSource and invokes it.
-        /// </summary>
-        /// <param name="window"></param>
-        internal static void AddDrawnRectangle(this Window window)
-        {
-            var drawRectButton = window.FindFirstDescendant(d => d.ByAutomationId("AddDrawnRectangle"));
-            if (drawRectButton.Patterns.Invoke.TryGetPattern(out var invokePattern))
+            var button = window.FindFirstDescendant(d => d.ByAutomationId(AutomationIds.ClearItemsButtonId));
+            if (button.Patterns.Invoke.TryGetPattern(out var invokePattern))
             {
                 invokePattern.Invoke();
             }

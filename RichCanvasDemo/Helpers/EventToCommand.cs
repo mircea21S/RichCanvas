@@ -64,7 +64,7 @@ namespace RichCanvasDemo.Helpers
         {
             _events.Clear();
             var container = (RichItemContainer)d;
-            foreach (string ev in ((string)e.NewValue).Split(","))
+            foreach (string ev in ((string)e.NewValue).Split(','))
             {
                 EventInfo x = container.GetType().GetEvent(ev.Trim());
                 _events.Add(x);

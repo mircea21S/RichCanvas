@@ -9,13 +9,15 @@ namespace RichCanvas.Automation
     {
         protected RichItemsControl OwnerItemsControl => (RichItemsControl)ItemsControlAutomationPeer.Owner;
 
-        protected RichItemContainer CurrentContainer => (RichItemContainer)OwnerItemsControl.ItemContainerGenerator.ContainerFromItem(Item);
+        protected RichItemContainer Container => (RichItemContainer)OwnerItemsControl.ItemContainerGenerator.ContainerFromItem(Item);
 
         public string Value => JsonConvert.SerializeObject(new RichItemContainerData
         {
-            IsSelected = CurrentContainer.IsSelected,
-            ScaleX = CurrentContainer.ScaleTransform.ScaleX,
-            ScaleY = CurrentContainer.ScaleTransform.ScaleY,
+            Top = Container.Top,
+            Left = Container.Left,
+            IsSelected = Container.IsSelected,
+            ScaleX = Container.ScaleTransform.ScaleX,
+            ScaleY = Container.ScaleTransform.ScaleY,
         });
 
         public bool IsReadOnly => true;
