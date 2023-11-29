@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using RichCanvas.States;
+﻿using RichCanvas.States;
 
 namespace RichCanvas.Automation.ControlInformations
 {

@@ -1,6 +1,6 @@
 ﻿using FlaUI.Core.AutomationElements;
 
-namespace RichCanvas.UITests.Extensions
+namespace RichCanvas.UITests
 {
     internal static class AutomationElementExtensions
     {
