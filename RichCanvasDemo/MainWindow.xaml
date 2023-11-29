@@ -71,7 +71,7 @@
         </Grid.ColumnDefinitions>
 
         <!--INFORMATIONS PROPS API-->
-        <Grid Grid.Row="1">
+        <!--<Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
@@ -210,12 +210,12 @@
                           md:HintAssist.IsFloating="True">
                 </ComboBox>
             </StackPanel>
-            <!--<StackPanel Grid.Row="9">
+            --><!--<StackPanel Grid.Row="9">
                 <TextBox Text="{Binding TranslateOffset, Mode=TwoWay}"
                          md:HintAssist.Hint="Translate Offset"
                          md:HintAssist.IsFloating="True" />
-            </StackPanel>-->
-        </Grid>
+            </StackPanel>--><!--
+        </Grid>-->
 
         <!--ACTIONS-->
         <Grid Grid.Column="2"
@@ -238,27 +238,34 @@
                         HorizontalAlignment="Right" />
 
                 <Button Content="Draw Rect"
-                        AutomationProperties.AutomationId="DrawRectButton"
+                        AutomationProperties.AutomationId="{x:Static local:AutomationIds.AddEmptyRectangleButtonId}"
                         Command="{Binding DrawRectCommand}"
                         Width="120"
                         Height="30"
                         HorizontalAlignment="Right"
                         Grid.Row="1" />
 
-                <Button Content="Resize"
+                <Button Content="Add Drawn Rect"
                         Command="{Binding ResizeCommand}"
-                        AutomationProperties.AutomationId="AddDrawnRectangle"
+                        AutomationProperties.AutomationId="{x:Static local:AutomationIds.AddDrawnRectangleButtonId}"
                         MinWidth="120"
                         Height="30"
                         HorizontalAlignment="Right"
                         Grid.Row="2" />
 
-                <Button Content="Draw Bezier"
-                        Command="{Binding DrawBezierCommand}"
+                <Button Command="{Binding DrawBezierCommand}"
+                        AutomationProperties.AutomationId="{x:Static local:AutomationIds.AddPositionedRectangleButtonId}"
                         Width="120"
-                        Height="30"
+                        Height="50"
                         HorizontalAlignment="Right"
-                        Grid.Row="3" />
+                        Grid.Row="3">
+                    <Button.Content>
+                        <TextBlock TextWrapping="Wrap"
+                                   TextAlignment="Center">
+                            Add positioned rect
+                        </TextBlock>
+                    </Button.Content>
+                </Button>
 
                 <Button Content="Draw Group"
                         Command="{Binding DrawGroupCommand}"
@@ -269,7 +276,7 @@
 
                 <Button Content="Clear All Items"
                         Command="{Binding DeleteCommand}"
-                        AutomationProperties.AutomationId="ClearItems"
+                        AutomationProperties.AutomationId="{x:Static local:AutomationIds.ClearItemsButtonId}"
                         Width="120"
                         Height="30"
                         HorizontalAlignment="Right"

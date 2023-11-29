@@ -4,15 +4,90 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 using NUnit.Framework;
 using RichCanvas.States;
-using RichCanvas.UITests.Extensions;
 using RichCanvas.UITests.Helpers;
-using System.Drawing;
+using RichCanvasDemo;
+using Point = System.Drawing.Point;
 
 namespace RichCanvas.UITests
 {
     [TestFixture]
     public class DrawingStateTests
     {
+        [Test]
+        public void DrawAlreadyPositionedContainer_MouseClick_ShouldNotModifyTopAndLeft()
+        {
+            using (var automation = new UIA3Automation())
+            {
+                using (var app = ApplicationHelper.AttachOrLaunchRichCanvasDemo())
+                {
+                    app.WaitWhileMainHandleIsMissing();
+
+                    // arrange
+                    var window = app.GetMainWindow(automation);
+                    var richItemsControl = window.FindFirstDescendant(d => d.ByAutomationId("source")).AsRichItemsControlAutomation();
+                    //TODO: create a utitlity method for Points and Mouse to be able to drag into a specified direction
+                    // fluent: startPoint.DragToRight(point) -> next iteration -> previousPoint.DragToTop(point)
+                    // for moving the point and dragging: startPoint.Move(x,y).DragToRight(point)
+                    // or something like that, that could be used throughout testing and mouse using
+                    var rectangleWidth = 150;
+                    var rectangleHeight = 150;
+                    var endPoint = new Point(rectangleWidth, rectangleHeight);
+
+                    // act
+                    window.InvokeButton(AutomationIds.AddPositionedRectangleButtonId);
+                    Mouse.Drag(endPoint, new Point(151, 151));
+                    var drawnContainer = richItemsControl.Items[0].AsRichItemContainerAutomation();
+
+                    // assert
+                    using (new AssertionScope())
+                    {
+                        drawnContainer.RichItemContainerData.Top.Should().Be(100);
+                        drawnContainer.RichItemContainerData.Left.Should().Be(100);
+                        drawnContainer.ActualHeight.Should().Be(rectangleWidth - 100);
+                        drawnContainer.ActualWidth.Should().Be(rectangleHeight - 100);
+                        richItemsControl.RichItemsControlData.CurrentState.Should().BeOfType<DrawingState>();
+                        window.ClearAllItems();
+                    }
+                }
+            }
+        }
+
+        [Test]
+        public void DrawContainer_MouseDrag_ShouldSetTopAndLeftToMouseClickPosition()
+        {
+            using (var automation = new UIA3Automation())
+            {
+                using (var app = ApplicationHelper.AttachOrLaunchRichCanvasDemo())
+                {
+                    app.WaitWhileMainHandleIsMissing();
+
+                    // arrange
+                    var window = app.GetMainWindow(automation);
+                    var richItemsControl = window.FindFirstDescendant(d => d.ByAutomationId("source")).AsRichItemsControlAutomation();
+                    var startPoint = new Point(0, (int)(ApplicationInfo.RichCavnasDemoTitleBarHeight + 0.5));
+                    var rectangleWidth = 50;
+                    var rectangleHeight = 50;
+                    var endPoint = new Point(startPoint.X + rectangleWidth, startPoint.Y + rectangleHeight);
+
+                    // act
+                    window.InvokeButton(AutomationIds.AddEmptyRectangleButtonId);
+                    Mouse.Drag(startPoint, endPoint);
+                    var drawnContainer = richItemsControl.Items[0].AsRichItemContainerAutomation();
+
+                    // assert
+                    using (new AssertionScope())
+                    {
+                        drawnContainer.RichItemContainerData.Top.Should().Be(startPoint.Y - ApplicationInfo.RichCavnasDemoTitleBarHeight);
+                        drawnContainer.RichItemContainerData.Left.Should().Be(startPoint.X);
+                        drawnContainer.ActualHeight.Should().Be(rectangleWidth);
+                        drawnContainer.ActualWidth.Should().Be(rectangleHeight);
+                        richItemsControl.RichItemsControlData.CurrentState.Should().BeOfType<DrawingState>();
+                        window.ClearAllItems();
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Test to draw multiple rectangles in specified <paramref name="horizontalDirection"/> and <paramref name="verticalDirection"/> and verify their ActualSize.
         /// <br></br>
@@ -76,23 +151,14 @@ namespace RichCanvas.UITests
                     for (int i = 0; i < rectanglesCount; i++)
                     {
                         // add rectangle to ItemsSource
-                        window.AddEmptyRectangle();
+                        window.InvokeButton(AutomationIds.AddEmptyRectangleButtonId);
 
                         // draw the rectanlge
                         Mouse.Drag(startPoint, endPoint);
 
                         // move points
-                        if (horizontalDirection == HorizontalDirection.LeftToRight)
-                        {
-                            startPoint.X = endPoint.X + 1;
-                            endPoint.X = startPoint.X + rectangleWidth;
-                        }
-
-                        if (horizontalDirection == HorizontalDirection.RightToLeft)
-                        {
-                            startPoint.X = endPoint.X - 1;
-                            endPoint.X = startPoint.X - rectangleWidth;
-                        }
+                        startPoint.MoveX(1, horizontalDirection);
+                        endPoint.MoveX(rectangleWidth, horizontalDirection);
                     }
 
                     // assert
@@ -127,13 +193,15 @@ namespace RichCanvas.UITests
                     var richItemsControl = window.FindFirstDescendant(d => d.ByAutomationId("source")).AsRichItemsControlAutomation();
 
                     // act
-                    window.AddDrawnRectangle();
+                    window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);
                     var drawnContainer = richItemsControl.Items[0].AsRichItemContainerAutomation();
 
                     // assert
                     using (new AssertionScope())
                     {
                         // values pre-defined in RichCanvasDemo MainWindowViewModel
+                        drawnContainer.RichItemContainerData.Top.Should().Be(100);
+                        drawnContainer.RichItemContainerData.Left.Should().Be(100);
                         drawnContainer.ActualHeight.Should().Be(100);
                         drawnContainer.ActualWidth.Should().Be(100);
                         richItemsControl.RichItemsControlData.CurrentState.Should().BeNull();

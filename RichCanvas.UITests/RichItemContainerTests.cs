@@ -4,7 +4,6 @@ using FlaUI.UIA3;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using NUnit.Framework;
-using RichCanvas.UITests.Extensions;
 using RichCanvas.UITests.Helpers;
 using System.Drawing;
 using System.Linq;
@@ -39,7 +38,7 @@ namespace RichCanvas.UITests
                     }
                     else
                     {
-                        window.AddDrawnRectangle();
+                        //window.InvokeAddDrawnRectangleButton();
                         existingContainer = richItemsControl.Items[0].AsRichItemContainerAutomation();
                     }
 

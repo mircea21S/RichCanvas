@@ -40,7 +40,7 @@ namespace RichCanvas
             set => SetValue(IsSelectedProperty, value);
         }
 
-        public static DependencyProperty TopProperty = DependencyProperty.Register(nameof(Top), typeof(double), typeof(RichItemContainer), new FrameworkPropertyMetadata(OnPositionChanged));
+        public static DependencyProperty TopProperty = DependencyProperty.Register(nameof(Top), typeof(double), typeof(RichItemContainer), new FrameworkPropertyMetadata(OnPositionChanged, CoerceTopProperty));
         /// <summary>
         /// Gets or sets the Top position of this <see cref="RichItemContainer"/> on <see cref="RichItemsControl.ItemsHost"/>
         /// </summary>
@@ -50,7 +50,8 @@ namespace RichCanvas
             set => SetValue(TopProperty, value);
         }
 
-        public static DependencyProperty LeftProperty = DependencyProperty.Register(nameof(Left), typeof(double), typeof(RichItemContainer), new FrameworkPropertyMetadata(OnPositionChanged));
+        public static DependencyProperty LeftProperty = DependencyProperty.Register(nameof(Left), typeof(double), typeof(RichItemContainer), new FrameworkPropertyMetadata(OnPositionChanged, CoerceLeftProperty));
+
         /// <summary>
         /// Gets or sets the Left position of this <see cref="RichItemContainer"/> on <see cref="RichItemsControl.ItemsHost"/>
         /// </summary>
@@ -232,7 +233,7 @@ namespace RichCanvas
         internal bool TopPropertySet { get; private set; }
 
         internal bool LeftPropertySet { get; private set; }
-        
+
         public RichItemContainer()
         {
             StateManager.RegisterContainerState<DraggingContainerState>(RichCanvasGestures.Drag, () => IsDraggable);
@@ -432,6 +433,30 @@ namespace RichCanvas
                 ScaleTransform.ScaleX = value.X;
                 ScaleTransform.ScaleY = value.Y;
             }
+        }
+
+        private static object CoerceTopProperty(DependencyObject d, object newValue) => ((RichItemContainer)d).CoerceTopValue((double)newValue);
+
+        private object CoerceTopValue(double newValue)
+        {
+            if (TopPropertySet)
+            {
+                return Top;
+            }
+            Top = newValue;
+            return Top;
+        }
+
+        private static object CoerceLeftProperty(DependencyObject d, object newValue) => ((RichItemContainer)d).CoerceLeftValue((double)newValue);
+
+        private object CoerceLeftValue(double newValue)
+        {
+            if (LeftPropertySet)
+            {
+                return Left;
+            }
+            Left = newValue;
+            return Left;
         }
     }
 }

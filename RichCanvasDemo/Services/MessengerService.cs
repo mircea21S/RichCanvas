@@ -18,7 +18,7 @@ namespace RichCanvasDemo.Services
 
         public void Register(MessageChannel channel, MessageHandler handler)
         {
-            _channelsHandlers.TryAdd(channel, handler);
+            _channelsHandlers.Add(channel, handler);
         }
 
         public void Send<TMessage>(MessageChannel channel, TMessage message)
