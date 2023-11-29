@@ -99,6 +99,9 @@ namespace RichCanvas.States
 
             SetItemPosition();
             SnapToGrid();
+            _currentDrawingContainer.CoerceValue(RichItemContainer.TopProperty);
+            _currentDrawingContainer.CoerceValue(RichItemContainer.LeftProperty);
+            _currentDrawingContainer.Scale = new Point(_currentDrawingContainer.ScaleTransform.ScaleX, _currentDrawingContainer.ScaleTransform.ScaleY);
 
             var mousePosition = e.GetPosition(Parent.ItemsHost);
             Parent.RaiseDrawEndedEvent(_currentDrawingContainer.DataContext, mousePosition);
@@ -141,7 +144,6 @@ namespace RichCanvas.States
                 {
                     _currentDrawingContainer.Top -= _currentDrawingContainer.Height;
                 }
-                _currentDrawingContainer.Scale = new Point(scaleTransformItem.ScaleX, scaleTransformItem.ScaleY);
             }
         }
 

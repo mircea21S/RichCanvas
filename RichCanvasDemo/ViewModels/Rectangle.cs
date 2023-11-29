@@ -1,7 +1,7 @@
-﻿using RichCanvasDemo.ViewModels.Base;
+﻿using Newtonsoft.Json;
+using RichCanvasDemo.ViewModels.Base;
 using RichCanvasDemo.ViewModels.Grouping;
 using System;
-using System.Text.Json;
 
 namespace RichCanvasDemo.ViewModels
 {
@@ -11,6 +11,6 @@ namespace RichCanvasDemo.ViewModels
 
         public Group Group { get => _group; set => IsDraggable = value != null; }
 
-        public object Clone() => JsonSerializer.Deserialize<Rectangle>(JsonSerializer.Serialize(this));
+        public object Clone() => JsonConvert.DeserializeObject<Rectangle>(JsonConvert.SerializeObject(this));
     }
 }

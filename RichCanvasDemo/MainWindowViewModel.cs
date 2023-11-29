@@ -241,11 +241,15 @@ namespace RichCanvasDemo
 
         private void OnDrawBezier()
         {
-            var bezier = new Bezier
+            //var bezier = new Bezier
+            //{
+            //    Points = new List<Point>(),
+            //};
+            //Items.Add(bezier);
+            Items.Add(new Rectangle
             {
-                Points = new List<Point>(),
-            };
-            Items.Add(bezier);
+                Left = 100,
+            });
         }
 
         private void OnGenerateElements()
