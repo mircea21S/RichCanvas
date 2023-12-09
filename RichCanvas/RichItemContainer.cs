@@ -237,6 +237,14 @@ namespace RichCanvas
         public RichItemContainer()
         {
             StateManager.RegisterContainerState<DraggingContainerState>(RichCanvasGestures.Drag, () => IsDraggable);
+            SourceUpdated += RichItemContainer_SourceUpdated;
+        }
+
+        private void RichItemContainer_SourceUpdated(object? sender, System.Windows.Data.DataTransferEventArgs e)
+        {
+            if (e.Property.Name is nameof(Top))
+            {
+            }
         }
 
         /// <summary>
@@ -393,6 +401,7 @@ namespace RichCanvas
 
         private void UpdatePosition(DependencyProperty prop)
         {
+            //TODO: how to know when a property is being set by the user.
             if (prop.Name is nameof(Top))
             {
                 TopPropertySet = true;
@@ -443,8 +452,7 @@ namespace RichCanvas
             {
                 return Top;
             }
-            Top = newValue;
-            return Top;
+            return newValue;
         }
 
         private static object CoerceLeftProperty(DependencyObject d, object newValue) => ((RichItemContainer)d).CoerceLeftValue((double)newValue);
@@ -455,8 +463,7 @@ namespace RichCanvas
             {
                 return Left;
             }
-            Left = newValue;
-            return Left;
+            return newValue;
         }
     }
 }
