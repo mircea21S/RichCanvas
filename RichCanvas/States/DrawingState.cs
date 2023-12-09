@@ -15,6 +15,21 @@ namespace RichCanvas.States
         {
         }
 
+        public override void Enter()
+        {
+            //TODO: fix setting the value correct in mouse move on click as there is the where the click happens
+            //set here the container if it's null then mouse move can't work and _isDrawing is true there
+            var drawingContainersIndexes = Parent.CurrentDrawingIndexes;
+            if (drawingContainersIndexes.Count == 0)
+            {
+                return;
+            }
+
+            var currentDrawingContainerIndex = drawingContainersIndexes[drawingContainersIndexes.Count - 1];
+            var container = (RichItemContainer)Parent.ItemContainerGenerator.ContainerFromIndex(currentDrawingContainerIndex);
+            _currentDrawingContainer = container;
+        }
+
         public override void HandleMouseDown(MouseButtonEventArgs e)
         {
             var position = e.GetPosition(Parent.ItemsHost);
@@ -39,15 +54,18 @@ namespace RichCanvas.States
 
             _isDrawing = true;
 
-            if (!container.TopPropertySet)
-            {
-                container.Top = position.Y;
-            }
-            if (!container.LeftPropertySet)
-            {
-                container.Left = position.X;
-            }
+            //if (!container.TopPropertySet)
+            //{
+            container.Top = position.Y;
+            //}
+            //if (!container.LeftPropertySet)
+            //{
+            container.Left = position.X;
+            //}
+
             _currentDrawingContainer = container;
+            _currentDrawingContainer.CoerceValue(RichItemContainer.TopProperty);
+            _currentDrawingContainer.CoerceValue(RichItemContainer.LeftProperty);
             drawingContainersIndexes.Remove(currentDrawingContainerIndex);
         }
 
