@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using NUnit.Framework;
+using System.Drawing;
 
 namespace RichCanvas.UITests.Tests
 {
@@ -14,6 +15,12 @@ namespace RichCanvas.UITests.Tests
 
         public RichCanvasDemoTest() : base(RichCanvasDemoBinPath)
         {
+        }
+
+        [TearDown]
+        public void UITestBaseTearDown()
+        {
+            Window.ClearAllItems();
         }
     }
 }
