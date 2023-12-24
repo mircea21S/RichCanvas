@@ -11,7 +11,7 @@ namespace RichCanvas.States
         private static readonly Dictionary<Type, Func<bool>> _executableStates = new Dictionary<Type, Func<bool>>();
 
         /// <summary>
-        /// Finds the matching <see cref="CanvasState"/> based on <paramref name="e"/>.
+        /// Finds the matching <see cref="CanvasState"/> based on the specified <see cref="InputEventArgs"/>.
         /// <br />
         /// Note: <i>If two or more states are matching, it picks up the first one in the order they were registered.</i>
         /// </summary>

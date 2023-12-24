@@ -37,7 +37,6 @@ namespace RichCanvas.UITests
                 drawnContainer.ActualHeight.Should().Be(rectangleWidth - 100);
                 drawnContainer.ActualWidth.Should().Be(rectangleHeight - 100);
                 RichItemsControl.RichItemsControlData.CurrentState.Should().BeOfType<DrawingState>();
-                Window.ClearAllItems();
             }
         }
 
@@ -64,7 +63,6 @@ namespace RichCanvas.UITests
                 drawnContainer.ActualHeight.Should().Be(rectangleWidth);
                 drawnContainer.ActualWidth.Should().Be(rectangleHeight);
                 richItemsControl.RichItemsControlData.CurrentState.Should().BeOfType<DrawingState>();
-                Window.ClearAllItems();
             }
 
         }
@@ -130,7 +128,6 @@ namespace RichCanvas.UITests
                     item.ActualWidth.Should().Be(rectangleWidth);
                     item.ActualHeight.Should().Be(rectangleHeight);
                 }
-                Window.ClearAllItems();
             }
         }
 
@@ -150,7 +147,6 @@ namespace RichCanvas.UITests
                 drawnContainer.ActualHeight.Should().Be(100);
                 drawnContainer.ActualWidth.Should().Be(100);
                 RichItemsControl.RichItemsControlData.CurrentState.Should().BeNull();
-                Window.ClearAllItems();
             }
         }
     }
