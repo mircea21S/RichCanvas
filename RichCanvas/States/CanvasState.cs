@@ -3,6 +3,9 @@ using System.Windows.Input;
 
 namespace RichCanvas.States
 {
+    /// <summary>
+    /// TODO: Excalidraw diagram
+    /// </summary>
     public abstract class CanvasState
     {
         protected RichItemsControl Parent { get; }
@@ -10,7 +13,7 @@ namespace RichCanvas.States
         {
             Parent = parent;
         }
-        public virtual void Enter() { }
+        public virtual void Enter(MouseEventArgs e) { }
         public virtual void Cancel() { }
         public virtual void HandleMouseDown(MouseButtonEventArgs e) { }
         public virtual void HandleMouseMove(MouseEventArgs e) { }

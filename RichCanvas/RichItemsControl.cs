@@ -648,6 +648,7 @@ namespace RichCanvas
             }
         };
 
+        /// <inheritdoc/>
         protected override void OnPreviewMouseWheel(MouseWheelEventArgs e)
         {
             if (RichCanvasGestures.Zoom == Keyboard.Modifiers)
@@ -669,15 +670,22 @@ namespace RichCanvas
         }
 
         /// <inheritdoc/>
+        protected override void OnGotMouseCapture(MouseEventArgs e)
+        {
+            CurrentState?.Enter(e);
+        }
+
+        /// <inheritdoc/>
         protected override void OnPreviewMouseDown(MouseButtonEventArgs e)
         {
             CurrentState = StateManager.GetMatchingCanvasState(e, this);
-            CurrentState?.Enter();
         }
 
         /// <inheritdoc/>
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
+            CurrentState ??= StateManager.GetMatchingCanvasState(e, this);
+
             if ((Mouse.Captured == null || IsMouseCaptured) && e.HasAnyButtonPressed())
             {
                 CaptureMouse();
