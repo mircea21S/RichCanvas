@@ -26,6 +26,8 @@ namespace RichCanvas
         private const string ContentPresenterName = "PART_ContentPresenter";
         private RichItemsControl? _host;
 
+        internal const double DefaultWidth = 1d;
+        internal const double DefaultHeight = 1d;
         internal ScaleTransform? ScaleTransform => RenderTransform is TransformGroup group ? group.Children.OfType<ScaleTransform>().FirstOrDefault() : null;
         internal TranslateTransform? TranslateTransform => RenderTransform is TransformGroup group ? group.Children.OfType<TranslateTransform>().FirstOrDefault() : null;
 
@@ -40,7 +42,7 @@ namespace RichCanvas
             set => SetValue(IsSelectedProperty, value);
         }
 
-        public static DependencyProperty TopProperty = DependencyProperty.Register(nameof(Top), typeof(double), typeof(RichItemContainer), new FrameworkPropertyMetadata(OnPositionChanged, CoerceTopProperty));
+        public static DependencyProperty TopProperty = DependencyProperty.Register(nameof(Top), typeof(double), typeof(RichItemContainer), new FrameworkPropertyMetadata(OnPositionChanged));
         /// <summary>
         /// Gets or sets the Top position of this <see cref="RichItemContainer"/> on <see cref="RichItemsControl.ItemsHost"/>
         /// </summary>
@@ -50,7 +52,7 @@ namespace RichCanvas
             set => SetValue(TopProperty, value);
         }
 
-        public static DependencyProperty LeftProperty = DependencyProperty.Register(nameof(Left), typeof(double), typeof(RichItemContainer), new FrameworkPropertyMetadata(OnPositionChanged, CoerceLeftProperty));
+        public static DependencyProperty LeftProperty = DependencyProperty.Register(nameof(Left), typeof(double), typeof(RichItemContainer), new FrameworkPropertyMetadata(OnPositionChanged));
 
         /// <summary>
         /// Gets or sets the Left position of this <see cref="RichItemContainer"/> on <see cref="RichItemsControl.ItemsHost"/>
@@ -125,6 +127,16 @@ namespace RichCanvas
         {
             get => (Rect)GetValue(BoundingBoxProperty);
             internal set => SetValue(BoundingBoxPropertyKey, value);
+        }
+
+        public static DependencyProperty AllowScaleChangeToUpdatePositionProperty = DependencyProperty.Register(nameof(AllowScaleChangeToUpdatePosition), typeof(bool), typeof(RichItemContainer), new FrameworkPropertyMetadata(true));
+        /// <summary>
+        /// Gets or sets whether this <see cref="RichItemContainer"/> Left and Top can be updated while Drawing if the <see cref="Scale"/> is changed.
+        /// </summary>
+        public bool AllowScaleChangeToUpdatePosition
+        {
+            get => (bool)GetValue(AllowScaleChangeToUpdatePositionProperty);
+            set => SetValue(AllowScaleChangeToUpdatePositionProperty, value);
         }
 
         /// <summary>
@@ -230,21 +242,13 @@ namespace RichCanvas
 
         internal bool IsDrawn { get; set; }
 
-        internal bool TopPropertySet { get; private set; }
+        internal bool TopPropertyInitalized { get; private set; }
 
-        internal bool LeftPropertySet { get; private set; }
+        internal bool LeftPropertyInitialized { get; private set; }
 
         public RichItemContainer()
         {
             StateManager.RegisterContainerState<DraggingContainerState>(RichCanvasGestures.Drag, () => IsDraggable);
-            SourceUpdated += RichItemContainer_SourceUpdated;
-        }
-
-        private void RichItemContainer_SourceUpdated(object? sender, System.Windows.Data.DataTransferEventArgs e)
-        {
-            if (e.Property.Name is nameof(Top))
-            {
-            }
         }
 
         /// <summary>
@@ -396,22 +400,22 @@ namespace RichCanvas
             if ((bool)e.NewValue)
             {
                 ((RichItemContainer)d).BringIntoView();
+
             }
         }
 
         private void UpdatePosition(DependencyProperty prop)
         {
-            //TODO: how to know when a property is being set by the user.
-            if (prop.Name is nameof(Top))
+            if (prop.Name is nameof(Top) && !TopPropertyInitalized)
             {
-                TopPropertySet = true;
-                RaiseEvent(new RoutedEventArgs(TopChangedEvent, Top));
+                TopPropertyInitalized = true;
             }
-            if (prop.Name is nameof(Left))
+            if (prop.Name is nameof(Left) && !LeftPropertyInitialized)
             {
-                LeftPropertySet = true;
-                RaiseEvent(new RoutedEventArgs(LeftChangedEvent, Left));
+                LeftPropertyInitialized = true;
             }
+            RaiseEvent(new RoutedEventArgs(TopChangedEvent, Top));
+            RaiseEvent(new RoutedEventArgs(LeftChangedEvent, Left));
             Host?.ItemsHost?.InvalidateArrange();
         }
 
@@ -442,28 +446,6 @@ namespace RichCanvas
                 ScaleTransform.ScaleX = value.X;
                 ScaleTransform.ScaleY = value.Y;
             }
-        }
-
-        private static object CoerceTopProperty(DependencyObject d, object newValue) => ((RichItemContainer)d).CoerceTopValue((double)newValue);
-
-        private object CoerceTopValue(double newValue)
-        {
-            if (TopPropertySet)
-            {
-                return Top;
-            }
-            return newValue;
-        }
-
-        private static object CoerceLeftProperty(DependencyObject d, object newValue) => ((RichItemContainer)d).CoerceLeftValue((double)newValue);
-
-        private object CoerceLeftValue(double newValue)
-        {
-            if (LeftPropertySet)
-            {
-                return Left;
-            }
-            return newValue;
         }
     }
 }
