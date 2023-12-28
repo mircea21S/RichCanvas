@@ -26,8 +26,8 @@ namespace RichCanvas
         private const string ContentPresenterName = "PART_ContentPresenter";
         private RichItemsControl? _host;
 
-        internal const double DefaultWidth = 1d;
-        internal const double DefaultHeight = 1d;
+        public const double DefaultWidth = 1d;
+        public const double DefaultHeight = 1d;
         internal ScaleTransform? ScaleTransform => RenderTransform is TransformGroup group ? group.Children.OfType<ScaleTransform>().FirstOrDefault() : null;
         internal TranslateTransform? TranslateTransform => RenderTransform is TransformGroup group ? group.Children.OfType<TranslateTransform>().FirstOrDefault() : null;
 
