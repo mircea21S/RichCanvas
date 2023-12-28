@@ -1,10 +1,11 @@
-﻿using System.Drawing;
+﻿using RichCanvas.UITests.Tests;
+using System.Drawing;
 
 namespace RichCanvas.UITests
 {
     internal static class PointExtensions
     {
-        internal static void MoveX(this Point point, int x, HorizontalDirection direction)
+        internal static Point MoveX(this Point point, int x, HorizontalDirection direction)
         {
             if (direction == HorizontalDirection.LeftToRight)
             {
@@ -14,6 +15,8 @@ namespace RichCanvas.UITests
             {
                 point.X += x;
             }
+            return point;
         }
+        internal static System.Windows.Point ToCanvasPoint(this Point point) => new System.Windows.Point(point.X, point.Y - RichCanvasDemoTest.RichCanvasDemoTitleBarHeight);
     }
 }
