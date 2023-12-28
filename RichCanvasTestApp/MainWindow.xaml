@@ -1,0 +1,556 @@
+﻿<Window x:Class="RichCanvasTestApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RichCanvasTestApp"
+        xmlns:richCanvas="clr-namespace:RichCanvas;assembly=RichCanvas"
+        xmlns:vm="clr-namespace:RichCanvasTestApp.ViewModels"
+        xmlns:converters="clr-namespace:RichCanvasTestApp.Converters"
+        xmlns:helpers="clr-namespace:RichCanvasTestApp.Helpers"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:views="clr-namespace:RichCanvasTestApp.CustomControls"
+        xmlns:behaviors="clr-namespace:RichCanvasTestApp.Helpers.Behaviors"
+        xmlns:gestures="clr-namespace:RichCanvas.Gestures;assembly=RichCanvas"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        x:Name="window"
+        Title="MainWindow"
+        Height="800"
+        WindowState="Maximized"
+        Width="800"
+        KeyboardNavigation.DirectionalNavigation="Once">
+    <Window.InputBindings>
+        <KeyBinding Key="Esc"
+                    Command="{Binding CancelActionCommand}" />
+    </Window.InputBindings>
+
+    <Window.DataContext>
+        <local:MainWindowViewModel />
+    </Window.DataContext>
+
+    <Window.Resources>
+        <local:PointToStringConverter x:Key="PointToStringConverter" />
+        <converters:StringToFloatConverter x:Key="StringToFloatConverter" />
+        <converters:CommandToListConverter x:Key="CommandsToListConverter" />
+        <GeometryDrawing x:Key="GridStyle"
+                         Geometry="M0,0 L0,1 0.03,1 0.03,0.03 1,0.03 1,0 Z"
+                         Brush="Green" />
+        <converters:ListToPointCollectionConverter x:Key="ListToPointCollectionConverter" />
+        <converters:ColorToSolidBrushColorConverter x:Key="ColorToSolidBrushColorConverter" />
+        <Style BasedOn="{StaticResource MaterialDesignTextBlock}"
+               TargetType="TextBlock">
+        </Style>
+        <Style BasedOn="{StaticResource MaterialDesignRaisedButton}"
+               TargetType="Button">
+            <Setter Property="Margin"
+                    Value="0,0,0,4" />
+            <Setter Property="FontSize"
+                    Value="12" />
+        </Style>
+        <Style BasedOn="{StaticResource MaterialDesignTextBoxBase}"
+               TargetType="TextBox">
+            <Setter Property="Margin"
+                    Value="0,2,0,8" />
+        </Style>
+
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="auto" />
+        </Grid.ColumnDefinitions>
+
+        <!--INFORMATIONS PROPS API-->
+        <!--<Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+
+            <StackPanel>
+                <CheckBox Content="Enable Grid"
+                          IsChecked="{Binding EnableGrid, Mode=TwoWay}"
+                          HorizontalAlignment="Left" />
+
+                <TextBox Text="{Binding GridSpacing, Mode=TwoWay}"
+                         Width="100"
+                         HorizontalAlignment="Left"
+                         md:HintAssist.Hint="Grid spacing value"
+                         md:HintAssist.IsFloating="True" />
+            </StackPanel>
+            <StackPanel>
+                <CheckBox Content="Enable Grid"
+                          IsChecked="{Binding EnableGrid, Mode=TwoWay}"
+                          HorizontalAlignment="Left" />
+
+                <TextBox Text="{Binding GridSpacing, Mode=TwoWay}"
+                         Width="100"
+                         HorizontalAlignment="Left"
+                         md:HintAssist.Hint="Grid spacing value"
+                         md:HintAssist.IsFloating="True" />
+            </StackPanel>
+
+            <StackPanel Grid.Row="1">
+                <CheckBox Content="Enable Snapping"
+                          IsChecked="{Binding EnableSnapping, Mode=TwoWay}"
+                          HorizontalAlignment="Left" />
+            </StackPanel>
+
+            <StackPanel Grid.Row="2">
+                <CheckBox Content="Disable Cache"
+                          IsChecked="{Binding DisableCache, Mode=TwoWay}"
+                          HorizontalAlignment="Left" />
+            </StackPanel>
+
+            <StackPanel Grid.Row="3">
+                <CheckBox Content="Disable Zoom"
+                          IsChecked="{Binding DisableZoom, Mode=TwoWay}"
+                          HorizontalAlignment="Left" />
+            </StackPanel>
+
+            <StackPanel Grid.Row="4">
+                <CheckBox Content="Disable Scroll"
+                          IsChecked="{Binding DisableScroll, Mode=TwoWay}"
+                          HorizontalAlignment="Left" />
+            </StackPanel>
+
+            <StackPanel Grid.Row="5">
+                <CheckBox Content="Disable AutoPanning"
+                          IsChecked="{Binding DisableAutoPanning, Mode=TwoWay}"
+                          HorizontalAlignment="Left" />
+
+                <ComboBox SelectedItem="{Binding VerticalScrollBarVisibility, Mode=TwoWay}"
+                          HorizontalAlignment="Left"
+                          md:HintAssist.Hint="Visibility"
+                          md:HintAssist.IsFloating="True">
+                    <ScrollBarVisibility>Hidden</ScrollBarVisibility>
+                    <ScrollBarVisibility>Visible</ScrollBarVisibility>
+                    <ScrollBarVisibility>Disabled</ScrollBarVisibility>
+                    <ScrollBarVisibility>Auto</ScrollBarVisibility>
+                </ComboBox>
+
+                <TextBox Text="{Binding AutoPanSpeed, Mode=TwoWay}"
+                         Width="100"
+                         HorizontalAlignment="Left"
+                         md:HintAssist.Hint="Auto-Pan speed"
+                         md:HintAssist.IsFloating="True" />
+
+                <TextBox Text="{Binding AutoPanTickRate, Mode=TwoWay}"
+                         Width="100"
+                         HorizontalAlignment="Left"
+                         md:HintAssist.Hint="Auto-Pan TickRate"
+                         md:HintAssist.IsFloating="True" />
+            </StackPanel>
+            <StackPanel Grid.Row="6">
+                <TextBox Text="{Binding ScrollFactor, Mode=TwoWay}"
+                         Width="100"
+                         HorizontalAlignment="Left"
+                         md:HintAssist.Hint="Scroll Factor"
+                         md:HintAssist.IsFloating="True" />
+
+                <TextBox Text="{Binding ZoomFactor, Mode=TwoWay}"
+                         Width="100"
+                         HorizontalAlignment="Left"
+                         md:HintAssist.Hint="Zoom Factor"
+                         md:HintAssist.IsFloating="True" />
+
+                <TextBox Text="{Binding MaxScale, Mode=TwoWay}"
+                         Width="100"
+                         HorizontalAlignment="Left"
+                         md:HintAssist.Hint="Max Scale"
+                         md:HintAssist.IsFloating="True" />
+
+                <TextBox Text="{Binding MinScale, Mode=TwoWay}"
+                         Width="100"
+                         HorizontalAlignment="Left"
+                         md:HintAssist.Hint="Min Scale"
+                         md:HintAssist.IsFloating="True" />
+
+                <TextBox Text="{Binding Scale, Mode=TwoWay}"
+                         Width="100"
+                         HorizontalAlignment="Left"
+                         md:HintAssist.Hint="Scale"
+                         md:HintAssist.IsFloating="True" />
+            </StackPanel>
+
+            <StackPanel Grid.Row="7">
+                <TextBox Text="{Binding ElementsCount, Mode=TwoWay}"
+                         md:HintAssist.Hint="Number of elements"
+                         md:HintAssist.IsFloating="True" />
+                <Button Content="Generate"
+                        Width="100"
+                        Height="30"
+                        HorizontalAlignment="Left"
+                        Command="{Binding GenerateElements}" />
+            </StackPanel>
+            <StackPanel Grid.Row="8">
+                <ComboBox ItemsSource="{Binding ViewPresetItems}"
+                          SelectedItem="{Binding SelectedViewPreset}"
+                          DisplayMemberPath="Name"
+                          md:HintAssist.Hint="View Preset"
+                          md:HintAssist.IsFloating="True">
+                </ComboBox>
+            </StackPanel>
+            --><!--<StackPanel Grid.Row="9">
+                <TextBox Text="{Binding TranslateOffset, Mode=TwoWay}"
+                         md:HintAssist.Hint="Translate Offset"
+                         md:HintAssist.IsFloating="True" />
+            </StackPanel>--><!--
+        </Grid>-->
+
+        <!--ACTIONS-->
+        <Grid Grid.Column="2"
+              Grid.Row="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Button Content="Draw Line"
+                        Command="{Binding DrawLineCommand}"
+                        Width="120"
+                        Height="30"
+                        HorizontalAlignment="Right" />
+
+                <Button Content="Draw Rect"
+                        AutomationProperties.AutomationId="{x:Static local:AutomationIds.AddEmptyRectangleButtonId}"
+                        Command="{Binding DrawRectCommand}"
+                        Width="120"
+                        Height="30"
+                        HorizontalAlignment="Right"
+                        Grid.Row="1" />
+
+                <Button Content="Add Drawn Rect"
+                        Command="{Binding ResizeCommand}"
+                        AutomationProperties.AutomationId="{x:Static local:AutomationIds.AddDrawnRectangleButtonId}"
+                        MinWidth="120"
+                        Height="30"
+                        HorizontalAlignment="Right"
+                        Grid.Row="2" />
+
+                <Button Command="{Binding DrawBezierCommand}"
+                        AutomationProperties.AutomationId="{x:Static local:AutomationIds.AddPositionedRectangleButtonId}"
+                        Width="120"
+                        Height="50"
+                        HorizontalAlignment="Right"
+                        Grid.Row="3">
+                    <Button.Content>
+                        <TextBlock TextWrapping="Wrap"
+                                   TextAlignment="Center">
+                            Add positioned rect
+                        </TextBlock>
+                    </Button.Content>
+                </Button>
+
+                <Button Content="Draw Group"
+                        Command="{Binding DrawGroupCommand}"
+                        Width="120"
+                        Height="30"
+                        HorizontalAlignment="Right"
+                        Grid.Row="4" />
+
+                <Button Content="Clear All Items"
+                        Command="{Binding DeleteCommand}"
+                        AutomationProperties.AutomationId="{x:Static local:AutomationIds.ClearItemsButtonId}"
+                        Width="120"
+                        Height="30"
+                        HorizontalAlignment="Right"
+                        Grid.Row="5" />
+                <StackPanel Grid.Row="6"
+                            Visibility="{Binding ShowProperties, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <views:PropertiesInfo DataContext="{Binding SelectedItem}" />
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+        <!--INFO FOOTER-->
+        <Grid Grid.Row="2"
+              Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal"
+                        Margin="2"
+                        Grid.Column="1">
+                <TextBlock Text="Transform Offset: " />
+                <TextBlock Text="{Binding TranslateOffset, ElementName=source, Converter={StaticResource PointToStringConverter}}"
+                           HorizontalAlignment="Left"></TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        Margin="2"
+                        Grid.Column="2">
+                <TextBlock Text="Mouse Location: " />
+                <TextBlock Text="{Binding MousePosition, ElementName=source, Converter={StaticResource PointToStringConverter}}"
+                           HorizontalAlignment="Left"></TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        Grid.Column="3"
+                        Margin="2">
+                <TextBlock Text="Zoom: " />
+                <TextBlock Text="{Binding Scale, ElementName=source}"
+                           HorizontalAlignment="Left"></TextBlock>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        Grid.Column="4"
+                        Margin="2">
+                <TextBlock Text="Bounding Box: " />
+                <TextBlock Text="{Binding ElementName=source, Path=ViewportRect.Location, StringFormat= '\{0\} (left, top)'}"></TextBlock>
+            </StackPanel>
+            <StackPanel>
+                <TextBlock HorizontalAlignment="Left"
+                           Text="{Binding SelectedItems.Count, StringFormat= '\{0\} (selected items)'}" />
+            </StackPanel>
+        </Grid>
+
+        <richCanvas:RichItemsControl ItemsSource="{Binding Items}"
+                                     Grid.Column="1"
+                                     Grid.Row="1"
+                                     Name="source"
+                                     SelectedItems="{Binding SelectedItems}"
+                                     EnableGrid="{Binding EnableGrid}"
+                                     EnableSnapping="{Binding EnableSnapping}"
+                                     GridStyle="{StaticResource GridStyle}"
+                                     Background="AliceBlue"
+                                     GridSpacing="{Binding GridSpacing, Converter={StaticResource StringToFloatConverter}}"
+                                     Scrolling="OnScrolling"
+                                     DisableCache="{Binding DisableCache}"
+                                     DisableZoom="{Binding DisableZoom}"
+                                     DisableScroll="{Binding DisableScroll}"
+                                     DisableAutoPanning="{Binding DisableAutoPanning}"
+                                     MousePosition="{Binding MousePosition, Mode=OneWayToSource}"
+                                     Scale="{Binding Scale, Converter={StaticResource StringToFloatConverter}, Mode=TwoWay}"
+                                     ScrollFactor="{Binding ScrollFactor, Converter={StaticResource StringToFloatConverter},ConverterParameter=double}"
+                                     ScaleFactor="{Binding ZoomFactor, Converter={StaticResource StringToFloatConverter},ConverterParameter=double}"
+                                     MinScale="{Binding MinScale, Converter={StaticResource StringToFloatConverter},ConverterParameter=double}"
+                                     MaxScale="{Binding MaxScale, Converter={StaticResource StringToFloatConverter},ConverterParameter=double}"
+                                     AutoPanSpeed="{Binding AutoPanSpeed, Converter={StaticResource StringToFloatConverter}}"
+                                     AutoPanTickRate="{Binding AutoPanTickRate, Converter={StaticResource StringToFloatConverter}}"
+                                     SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                                     RealTimeDraggingEnabled="True"
+                                     RealTimeSelectionEnabled="True"
+                                     VerticalScrollBarVisibility="{Binding VerticalScrollBarVisibility}">
+            <!--TranslateOffset="{Binding TranslateOffset, Mode=TwoWay}"-->
+
+            <richCanvas:RichItemsControl.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Add Image"
+                              Command="{Binding AddImageCommand}" />
+                    <MenuItem Header="Add Text"
+                              Command="{Binding AddTextCommand}" />
+                    <MenuItem Header="Paste"
+                              Command="{Binding PasteCommand}" />
+                    <MenuItem Header="Add View Preset"
+                              Command="{Binding AddViewPresetCommand}" />
+                </ContextMenu>
+            </richCanvas:RichItemsControl.ContextMenu>
+
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="DrawingEnded">
+                    <i:InvokeCommandAction Command="{Binding DrawEndedCommand}"
+                                           PassEventArgsToCommand="True" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+
+            <richCanvas:RichItemsControl.Resources>
+                <DataTemplate x:Key="SelectedAdornerTemplate">
+                    <Border BorderBrush="DodgerBlue"
+                            BorderThickness="1"
+                            Background="DodgerBlue">
+                        <TextBlock Foreground="White"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   MaxWidth="60">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} x {1}">
+                                    <Binding Path="Width" />
+                                    <Binding Path="Height" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </Border>
+                </DataTemplate>
+
+                <DataTemplate x:Key="HoverAdornerTemplate">
+                    <Border BorderBrush="DodgerBlue"
+                            BorderThickness="3">
+                    </Border>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type vm:Bezier}">
+                    <views:BezierLine DataContext="{Binding}"></views:BezierLine>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type vm:Rectangle}">
+                    <Rectangle Stroke="{Binding VisualProperties.BorderColor, Converter={StaticResource ColorToSolidBrushColorConverter}}"
+                               Fill="{Binding VisualProperties.FillColor, Converter={StaticResource ColorToSolidBrushColorConverter}}"
+                               StrokeThickness="3">
+                        <Rectangle.Style>
+                            <Style>
+                                <Setter Property="richCanvas:RichItemContainer.ApplyTransform">
+                                    <Setter.Value>
+                                        <TransformGroup>
+                                            <RotateTransform Angle="{Binding Angle}" />
+                                            <ScaleTransform />
+                                            <TranslateTransform />
+                                        </TransformGroup>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Rectangle.Style>
+                    </Rectangle>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type vm:Line}">
+                    <Line  Stroke="{Binding VisualProperties.BorderColor, Converter={StaticResource ColorToSolidBrushColorConverter}}"
+                           StrokeThickness="3"
+                           X2="{Binding Width}"
+                           Y2="{Binding Height}"
+                           helpers:AttachedAdorner.HasLineHoverAdorner="True">
+                    </Line>
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type vm:ImageVisual}">
+                    <Image Source="{Binding ImageSource}"
+                           Stretch="Fill" />
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type vm:TextVisual}">
+                    <TextBlock Text="{Binding Text}"
+                               TextAlignment="Center"
+                               VerticalAlignment="Center" />
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type vm:Group}">
+                    <Rectangle Stroke="Black"
+                               StrokeThickness="2"
+                               Fill="Transparent"
+                               StrokeDashArray="2"
+                               IsHitTestVisible="{Binding IsSelectable}">
+                        <i:Interaction.Behaviors>
+                            <behaviors:GroupBehavior />
+                        </i:Interaction.Behaviors>
+                    </Rectangle>
+                </DataTemplate>
+
+            </richCanvas:RichItemsControl.Resources>
+
+            <richCanvas:RichItemsControl.PanGesture>
+                <gestures:MouseCustomKeyGesture CustomKeys="A">
+                    <gestures:MouseCustomKeyGesture.MouseGesture>
+                        <MouseGesture MouseAction="LeftClick">
+                        </MouseGesture>
+                    </gestures:MouseCustomKeyGesture.MouseGesture>
+                </gestures:MouseCustomKeyGesture>
+            </richCanvas:RichItemsControl.PanGesture>
+
+            <richCanvas:RichItemsControl.ItemContainerStyle>
+
+                <Style TargetType="richCanvas:RichItemContainer">
+
+                    <Setter Property="helpers:EventToCommand.Event"
+                            Value="LeftChanged, TopChanged" />
+                    <Setter Property="helpers:EventToCommand.Command">
+                        <Setter.Value>
+                            <MultiBinding Converter="{StaticResource CommandsToListConverter}">
+                                <Binding Path="LeftChangedCommand" />
+                                <Binding Path="TopChangedCommand" />
+                            </MultiBinding>
+                        </Setter.Value>
+                    </Setter>
+
+                    <Setter Property="helpers:EventToCommand.CanExecute"
+                            Value="{Binding IsSelected}" />
+
+                    <Setter Property="Tag"
+                            Value="{Binding DataContext, ElementName=window}" />
+
+                    <Setter Property="helpers:AttachedAdorner.HasHoverAdorner"
+                            Value="{Binding IsSelectable}" />
+
+                    <Setter Property="helpers:AttachedAdorner.ShowResizeAdorner"
+                            Value="{Binding IsSelected}" />
+
+                    <Setter Property="Top"
+                            Value="{Binding Top, Mode=TwoWay}" />
+
+                    <Setter Property="Left"
+                            Value="{Binding Left, Mode=TwoWay}" />
+
+                    <Setter Property="IsSelected"
+                            Value="{Binding IsSelected, Mode=TwoWay}" />
+
+                    <Setter Property="Width"
+                            Value="{Binding Width, Mode=TwoWay}" />
+
+                    <Setter Property="Height"
+                            Value="{Binding Height, Mode=TwoWay}" />
+
+                    <Setter Property="IsSelectable"
+                            Value="{Binding IsSelectable}" />
+
+                    <Setter Property="IsDraggable"
+                            Value="{Binding IsDraggable}" />
+
+                    <Setter Property="HasCustomBehavior"
+                            Value="{Binding HasCustomBehavior}" />
+
+                    <Setter Property="ShouldBringIntoView"
+                            Value="{Binding ShouldBringIntoView, Mode=TwoWay}" />
+
+                    <Setter Property="Scale"
+                            Value="{Binding Scale, Mode=TwoWay}" />
+
+                    <Setter Property="ContextMenu">
+                        <Setter.Value>
+                            <ContextMenu DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                <MenuItem Header="Copy"
+                                          Command="{Binding CopyCommand}" />
+                            </ContextMenu>
+                        </Setter.Value>
+                    </Setter>
+
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected"
+                                 Value="True">
+                            <Setter Property="Opacity"
+                                    Value="0.6" />
+                        </Trigger>
+                    </Style.Triggers>
+
+                </Style>
+            </richCanvas:RichItemsControl.ItemContainerStyle>
+
+        </richCanvas:RichItemsControl>
+
+    </Grid>
+
+</Window>

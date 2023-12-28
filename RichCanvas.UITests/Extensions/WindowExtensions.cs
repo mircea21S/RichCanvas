@@ -1,5 +1,5 @@
 ﻿using FlaUI.Core.AutomationElements;
-using RichCanvasDemo;
+using RichCanvasTestApp;
 
 namespace RichCanvas.UITests
 {
