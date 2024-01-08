@@ -3,13 +3,11 @@ using System.Drawing;
 
 namespace RichCanvas.UITests.Tests
 {
-    public class RichCanvasDemoTest : UITestBase
+    public class RichCanvasTestAppTest : UITestBase
     {
-        private const string RichCanvasDemoBinPath = @"C:\Programming Projects\RichCanvas\RichCanvasDemo\bin\Debug\net48\RichCanvasDemo.exe";
+        private const string RichCanvasDemoBinPath = @"C:\Programming Projects\RichCanvas\RichCanvasTestApp\bin\Debug\net48\RichCanvasTestApp.exe";
         /// <summary>
         /// Size of Title bar (SystemParamters.WindowCaptionHeight) = 22.5
-        /// <br/>
-        /// Note: Use 23 for easier usage. Be aware that when using it like this the Top will be 0.5.
         /// </summary>
         public const double RichCanvasDemoTitleBarHeight = 22.5;
 
@@ -17,7 +15,7 @@ namespace RichCanvas.UITests.Tests
         protected Size DemoControlSize => new Size(1187, 800);
         protected Point ViewportCenter => new Point(DemoControlSize.Width / 2, DemoControlSize.Height / 2);
 
-        public RichCanvasDemoTest() : base(RichCanvasDemoBinPath)
+        public RichCanvasTestAppTest() : base(RichCanvasDemoBinPath)
         {
         }
 
