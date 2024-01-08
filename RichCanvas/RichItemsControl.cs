@@ -566,6 +566,18 @@ namespace RichCanvas
             get => (InputGesture)GetValue(PanGestureProperty);
             set => SetValue(PanGestureProperty, value);
         }
+
+        public static DependencyProperty TranslationProperty = DependencyProperty.Register(nameof(Translation), typeof(Point), typeof(RichItemsControl), new FrameworkPropertyMetadata(new Point(0, 0)));
+        /// <summary>
+        /// Gets or sets whether Auto-Panning is disabled.
+        /// Default is enabled.
+        /// </summary>
+        public Point Translation
+        {
+            get => (Point)GetValue(TranslationProperty);
+            set => SetValue(TranslationProperty, value);
+        }
+
         #endregion
 
         #region Internal Properties
@@ -613,6 +625,12 @@ namespace RichCanvas
             StateManager.RegisterCanvasState<PanningState>(RichCanvasGestures.Pan);
             StateManager.RegisterCanvasState<DrawingState>(RichCanvasGestures.Drawing, () => CurrentDrawingIndexes.Count > 0);
             StateManager.RegisterCanvasState<SelectingState>(RichCanvasGestures.Select, () => SelectionEnabled);
+            TranslateTransform.Changed += TranslateTransform_Changed;
+        }
+
+        private void TranslateTransform_Changed(object? sender, EventArgs e)
+        {
+            Translation = new Point(TranslateTransform.X, TranslateTransform.Y);
         }
 
         #endregion

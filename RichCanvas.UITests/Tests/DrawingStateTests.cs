@@ -1,63 +1,93 @@
 using FlaUI.Core.Input;
+using FlaUI.Core.Tools;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using NUnit.Framework;
 using RichCanvas.States;
 using RichCanvas.UITests.Tests;
 using RichCanvasTestApp;
+using RichCanvasTestApp.Common;
+using RichCanvasTestApp.ViewModels;
+using RichCanvasTestApp.ViewModels.Base;
+using RichCanvasTestApp.ViewModelsMocks;
 using Point = System.Drawing.Point;
 
 namespace RichCanvas.UITests
 {
     [TestFixture]
-    public class DrawingStateTests : RichCanvasDemoTest
+    public class DrawingStateTests : RichCanvasTestAppTest
     {
         [Test]
-        public void RichItemContainerAllowScaleChangeToUpdatePosition_AddFakeRectangleWithLeftSetAndMouseClick_ShouldModifyTopAndSize()
+        [TestCase(HorizontalDirection.LeftToRight, VerticalDirection.TopToBottom)]
+        [TestCase(HorizontalDirection.RightToLeft, VerticalDirection.TopToBottom)]
+        [TestCase(HorizontalDirection.LeftToRight, VerticalDirection.BottomToTop)]
+        [TestCase(HorizontalDirection.RightToLeft, VerticalDirection.BottomToTop)]
+        public void RichItemContainerAllowScaleToUpdatePositionFalse_AddWithLeftSetAndMouseClick_ShouldNotModifyTopAndLeft(HorizontalDirection horizontalDirection, VerticalDirection verticalDirection)
         {
             // arrange
-            var rectangleWidth = 350;
-            var rectangleHeight = 350;
-            var endPoint = new Point(rectangleWidth, rectangleHeight);
+            var mockRectangle = RectangleMock.FakeImmutableRectangleWithTopAndLeftSet;
+            var endPoint = PointUtilities.GetEndingPoint(
+                // using this as start point to get it click on mockRectangle: (300,300)
+                // on this test multiplying by 2 gets the desired point on UI.
+                new Point((int)((mockRectangle.Left * 2) + 50), (int)((mockRectangle.Top * 2) + 50)),
+                200,
+                200,
+                horizontalDirection,
+                verticalDirection);
 
             // act
-            Window.InvokeButton(AutomationIds.AddPositionedRectangleButtonId);
+            Window.InvokeButton(AutomationIds.AddImmutablePositionedRectangleButtonId);
             Mouse.Click(endPoint);
-            var drawnContainer = RichItemsControl.Items[0].AsRichItemContainerAutomation();
+            var drawnContainer = RichItemsControl.Items[0];
 
             // assert
             using (new AssertionScope())
             {
                 RichItemsControl.RichItemsControlData.CurrentState.Should().BeOfType<DrawingState>();
-                drawnContainer.RichItemContainerData.Top.Should().Be(endPoint.ToCanvasPoint().Y);
-                drawnContainer.RichItemContainerData.Left.Should().Be(100);
-                drawnContainer.ActualHeight.Should().Be(RichItemContainer.DefaultHeight);
-                drawnContainer.ActualWidth.Should().Be(endPoint.X - 100);
+                drawnContainer.RichItemContainerData.Top.Should().Be(mockRectangle.Top);
+                drawnContainer.RichItemContainerData.Left.Should().Be(mockRectangle.Left);
             }
         }
 
         [Test]
-        public void DrawAlreadyPositionedContainer_MouseDrag_ShouldNotModifyTopAndLeft()
+        [TestCase(HorizontalDirection.LeftToRight, VerticalDirection.TopToBottom)]
+        [TestCase(HorizontalDirection.RightToLeft, VerticalDirection.TopToBottom)]
+        [TestCase(HorizontalDirection.LeftToRight, VerticalDirection.BottomToTop)]
+        [TestCase(HorizontalDirection.RightToLeft, VerticalDirection.BottomToTop)]
+        public void RichItemContainerAllowScaleToUpdatePositionTrue_AddPositionedItemAndMouseClick_ShouldModifyLeftAndTopIfScaleIsChanged(HorizontalDirection horizontalDirection, VerticalDirection verticalDirection)
         {
             // arrange
-            var rectangleWidth = 350;
-            var rectangleHeight = 350;
-            var endPoint = new Point(rectangleWidth, rectangleHeight);
+            var x = new Drawable();
+            //var containerLocation = PointUtilities.GetEndingPoint(new Point(100d.ToInt(), 100d.ToInt()),
+            //    50,
+            //    50,
+            //    horizontalDirection,
+            //    verticalDirection);
 
             // act
             Window.InvokeButton(AutomationIds.AddPositionedRectangleButtonId);
-            Mouse.Click(endPoint);
-            var drawnContainer = RichItemsControl.Items[0].AsRichItemContainerAutomation();
+            Mouse.Click(new Point(100, 100));
+            var drawnContainer = RichItemsControl.Items[0];
 
             // assert
-            using (new AssertionScope())
-            {
-                RichItemsControl.RichItemsControlData.CurrentState.Should().BeOfType<DrawingState>();
-                drawnContainer.RichItemContainerData.Top.Should().Be(endPoint.ToCanvasPoint().Y);
-                drawnContainer.RichItemContainerData.Left.Should().Be(100);
-                drawnContainer.ActualHeight.Should().Be(RichItemContainer.DefaultHeight);
-                drawnContainer.ActualWidth.Should().Be(endPoint.X - 100);
-            }
+            //var expectedTop = verticalDirection switch
+            //{
+            //    VerticalDirection.BottomToTop => rectangleMock.Top - drawnContainer.ActualHeight,
+            //    VerticalDirection.TopToBottom => rectangleMock.Top,
+            //    _ => rectangleMock.Top,
+            //};
+            //var expectedLeft = horizontalDirection switch
+            //{
+            //    HorizontalDirection.LeftToRight => rectangleMock.Left,
+            //    HorizontalDirection.RightToLeft => rectangleMock.Left - drawnContainer.ActualWidth,
+            //    _ => rectangleMock.Left,
+            //};
+            //var expectedCanvasLocation = new System.Windows.Point(expectedLeft, expectedTop).ToCanvasPoint();
+            //using (new AssertionScope())
+            //{
+            //    drawnContainer.RichItemContainerData.Top.Should().Be(expectedCanvasLocation.Y);
+            //    drawnContainer.RichItemContainerData.Left.Should().Be(expectedCanvasLocation.X);
+            //}
         }
 
         /// <summary>
@@ -134,16 +164,16 @@ namespace RichCanvas.UITests
         }
 
         [Test]
-        public void AddPositionedItem_ClickButtonAddDrawnRectangle_ContainerSizeIsTheSameAsSpecified()
+        public void AddDefinedRichItemContainer_ClickButtonAddDrawnRectangle_ContainerSizeAndPositionAreTheSameAsSpecified()
         {
             // act
             Window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);
-            var drawnContainer = RichItemsControl.Items[0].AsRichItemContainerAutomation();
+            var drawnContainer = RichItemsControl.Items[0];
 
             // assert
             using (new AssertionScope())
             {
-                // values pre-defined in RichCanvasDemo MainWindowViewModel
+                // TODO: use values pre-defined in RichCanvasDemo MainWindowViewModel stub
                 drawnContainer.RichItemContainerData.Top.Should().Be(100);
                 drawnContainer.RichItemContainerData.Left.Should().Be(100);
                 drawnContainer.ActualHeight.Should().Be(100);

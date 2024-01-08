@@ -17,6 +17,7 @@ namespace RichCanvas.UITests
             }
             return point;
         }
-        internal static System.Windows.Point ToCanvasPoint(this Point point) => new System.Windows.Point(point.X, point.Y - RichCanvasDemoTest.RichCanvasDemoTitleBarHeight);
+        internal static System.Windows.Point ToCanvasPoint(this Point point) => new System.Windows.Point(point.X, point.Y - RichCanvasTestAppTest.RichCanvasDemoTitleBarHeight);
+        internal static System.Windows.Point ToCanvasPoint(this System.Windows.Point point) => new System.Windows.Point(point.X, point.Y - RichCanvasTestAppTest.RichCanvasDemoTitleBarHeight);
     }
 }
