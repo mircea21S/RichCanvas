@@ -24,7 +24,7 @@ namespace RichCanvasTestApp
         private RelayCommand deleteCommand;
         private RelayCommand generateElementsCommand;
         private RelayCommand drawRectCommand;
-        private RelayCommand addPositionedRectangleCommand;
+        private RelayCommand<bool> addPositionedRectangleCommand;
         private ICommand drawEndedCommand;
         private bool _enableSnapping;
         private bool _disableCache = true;
@@ -39,7 +39,6 @@ namespace RichCanvasTestApp
         private string _minScale = "0.05";
         private bool _showProperties;
         private Drawable _selectedItem;
-        private ViewPresetItem _selectedViewPreset;
         private Point _translateOffset;
         private ICommand addImageCommand;
         private string scale = "1";
@@ -52,20 +51,18 @@ namespace RichCanvasTestApp
         private readonly FileService _fileService;
         private readonly DialogService _dialogService;
         private RelayCommand cancelActionCommand;
-        private RelayCommand addViewPresetCommand;
         private RelayCommand drawGroupCommand;
         private bool _canSelectMultipleItems;
 
         public ICommand DrawEndedCommand => drawEndedCommand ??= new RelayCommand<RoutedEventArgs>(DrawEnded);
         public ObservableCollection<Drawable> Items { get; }
         public ObservableCollection<Drawable> SelectedItems { get; }
-        public ObservableCollection<ViewPresetItem> ViewPresetItems { get; }
         public ICommand DrawRectCommand => drawRectCommand ??= new RelayCommand(OnDrawCommand);
         public ICommand GenerateElements => generateElementsCommand ??= new RelayCommand(OnGenerateElements);
         public ICommand DrawLineCommand => drawLineCommand ??= new RelayCommand(DrawLine);
         public ICommand ResizeCommand => resizeCommand ??= new RelayCommand(Resize);
         public ICommand DeleteCommand => deleteCommand ??= new RelayCommand(Delete);
-        public ICommand AddPositionedRectangleCommand => addPositionedRectangleCommand ??= new RelayCommand(OnAddPositionedRectangle);
+        public ICommand AddPositionedRectangleCommand => addPositionedRectangleCommand ??= new RelayCommand<bool>(OnAddPositionedRectangle);
         public ICommand DrawGroupCommand => drawGroupCommand ??= new RelayCommand(OnDrawGroup);
 
 
@@ -73,7 +70,6 @@ namespace RichCanvasTestApp
         public ICommand AddImageCommand => addImageCommand ??= new RelayCommand(AddImage);
         public ICommand CopyCommand => copyCommand ??= new RelayCommand<Drawable>(Copy);
         public RelayCommand PasteCommand => pasteCommand ??= new RelayCommand(Paste, () => _copiedElement != null);
-        public ICommand AddViewPresetCommand => addViewPresetCommand ??= new RelayCommand(AddViewPreset);
 
         public bool EnableGrid
         {
@@ -145,18 +141,6 @@ namespace RichCanvasTestApp
 
         public Point TranslateOffset { get => _translateOffset; set => SetProperty(ref _translateOffset, value); }
 
-        public ViewPresetItem SelectedViewPreset
-        {
-            get => _selectedViewPreset;
-            set
-            {
-                SetProperty(ref _selectedViewPreset, value);
-
-                TranslateOffset = value.Offset;
-                Scale = value.Scale;
-            }
-        }
-
         public bool CanSelectMultipleItems { get => _canSelectMultipleItems; set => SetProperty(ref _canSelectMultipleItems, value); }
 
 
@@ -164,7 +148,6 @@ namespace RichCanvasTestApp
         {
             Items = new ObservableCollection<Drawable>();
             SelectedItems = new ObservableCollection<Drawable>();
-            ViewPresetItems = new ObservableCollection<ViewPresetItem>();
             SelectedItems.CollectionChanged += SelectedItemsChanged;
             _fileService = new FileService();
             _dialogService = new DialogService();
@@ -239,9 +222,9 @@ namespace RichCanvasTestApp
 
         private void OnDrawGroup() => Items.Add(new Group());
 
-        private void OnAddPositionedRectangle()
+        private void OnAddPositionedRectangle(bool isImmutable = false)
         {
-            Items.Add(RectangleMock.FakeRectangleWithLeftSet);
+            Items.Add(isImmutable ? RectangleMock.FakeImmutableRectangleWithTopAndLeftSet : RectangleMock.FakePositionedRectangle);
         }
 
         private void OnGenerateElements()
@@ -350,17 +333,6 @@ namespace RichCanvasTestApp
         private void CancelAction()
         {
             DrawingEndedHandled = true;
-        }
-
-        private void AddViewPreset()
-        {
-            ViewPresetItems.Add(
-                new ViewPresetItem
-                {
-                    Name = $"Sample name {this.ViewPresetItems.Count + 1}",
-                    Offset = TranslateOffset,
-                    Scale = Scale
-                });
         }
 
         private System.Windows.Controls.ScrollBarVisibility verticalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Visible;

@@ -2,21 +2,14 @@
 using FlaUI.Core.AutomationElements;
 using Newtonsoft.Json;
 using RichCanvas.Automation.ControlInformations;
+using RichCanvasTestApp.ViewModels;
+using System;
 using System.Collections.Generic;
 
 namespace RichCanvas.UITests
 {
     public class RichItemsControlAutomation : AutomationElement
     {
-        public RichItemsControlAutomation(FrameworkAutomationElementBase frameworkAutomationElement) : base(frameworkAutomationElement)
-        {
-        }
-        
-        public RichItemsControlData RichItemsControlData => JsonConvert.DeserializeObject<RichItemsControlData>(Patterns.Value.Pattern.Value.Value, new JsonSerializerSettings
-        {
-            TypeNameHandling = TypeNameHandling.All
-        });
-
         public RichItemContainerAutomation[] Items
         {
             get
@@ -60,5 +53,13 @@ namespace RichCanvas.UITests
             }
         }
 
+        public RichItemsControlData RichItemsControlData => JsonConvert.DeserializeObject<RichItemsControlData>(Patterns.Value.Pattern.Value.Value, new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.All
+        });
+
+        public RichItemsControlAutomation(FrameworkAutomationElementBase frameworkAutomationElement) : base(frameworkAutomationElement)
+        {
+        }
     }
 }

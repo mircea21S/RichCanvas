@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace RichCanvasTestApp.ViewModels.Base
 {
-    public abstract class Drawable : ObservableObject
+    public class Drawable : ObservableObject
     {
         private double _top;
         private double _left;
@@ -21,6 +21,7 @@ namespace RichCanvasTestApp.ViewModels.Base
         private RelayCommand<double> topChangedCommand;
         private double _angle = 0;
         private bool _hasCustomBehavior;
+        private bool _allowScaleChangeToUpdatePosition = true;
 
         public double Angle
         {
@@ -108,6 +109,12 @@ namespace RichCanvasTestApp.ViewModels.Base
         {
             get => _directionPoint;
             set => SetProperty(ref _directionPoint, value);
+        }
+
+        public bool AllowScaleChangeToUpdatePosition
+        {
+            get => _allowScaleChangeToUpdatePosition;
+            set => SetProperty(ref _allowScaleChangeToUpdatePosition, value);
         }
 
         public ICommand LeftChangedCommand => leftChangedCommand ??= new RelayCommand<double>(OnLeftChanged);
