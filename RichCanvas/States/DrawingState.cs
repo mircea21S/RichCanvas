@@ -10,7 +10,6 @@ namespace RichCanvas.States
     {
         private RichItemContainer _currentDrawingContainer;
         private bool _isDrawing;
-        private Point _initialPosition;
 
         public DrawingState(RichItemsControl parent) : base(parent)
         {
@@ -31,7 +30,6 @@ namespace RichCanvas.States
                 return;
             }
 
-            _initialPosition = e.GetPosition(Parent.ItemsHost);
             _currentDrawingContainer = container;
         }
 
@@ -42,24 +40,24 @@ namespace RichCanvas.States
                 return;
             }
             _isDrawing = true;
+            var mousePosition = e.GetPosition(Parent.ItemsHost);
 
             if (!_currentDrawingContainer.TopPropertyInitalized)
             {
-                _currentDrawingContainer.Top = _initialPosition.Y;
+                _currentDrawingContainer.Top = mousePosition.Y;
             }
             if (!_currentDrawingContainer.LeftPropertyInitialized)
             {
-                _currentDrawingContainer.Left = _initialPosition.X;
+                _currentDrawingContainer.Left = mousePosition.X;
             }
 
-            ScaleTransform? scaleTransform = _currentDrawingContainer.ScaleTransform;
-
-            double width = _initialPosition.X - _currentDrawingContainer.Left;
-            double height = _initialPosition.Y - _currentDrawingContainer.Top;
+            double width = mousePosition.X - _currentDrawingContainer.Left;
+            double height = mousePosition.Y - _currentDrawingContainer.Top;
 
             _currentDrawingContainer.Width = width == 0 ? RichItemContainer.DefaultWidth : Math.Abs(width);
             _currentDrawingContainer.Height = height == 0 ? RichItemContainer.DefaultHeight : Math.Abs(height);
 
+            ScaleTransform? scaleTransform = _currentDrawingContainer.ScaleTransform;
             if (scaleTransform != null)
             {
                 if (width < 0 && scaleTransform.ScaleX == 1)
@@ -94,7 +92,6 @@ namespace RichCanvas.States
             }
 
             var mousePosition = e.GetPosition(Parent.ItemsHost);
-            ScaleTransform? scaleTransform = _currentDrawingContainer.ScaleTransform;
 
             double width = mousePosition.X - _currentDrawingContainer.Left;
             double height = mousePosition.Y - _currentDrawingContainer.Top;
@@ -102,6 +99,7 @@ namespace RichCanvas.States
             _currentDrawingContainer.Width = width == 0 ? 1 : Math.Abs(width);
             _currentDrawingContainer.Height = height == 0 ? 1 : Math.Abs(height);
 
+            ScaleTransform? scaleTransform = _currentDrawingContainer.ScaleTransform;
             if (scaleTransform != null)
             {
                 if (width < 0 && scaleTransform.ScaleX == 1)
