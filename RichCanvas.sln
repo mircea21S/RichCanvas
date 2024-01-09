@@ -14,6 +14,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RichCanvas.UITests", "RichC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RichCanvasTestApp", "RichCanvasTestApp\RichCanvasTestApp.csproj", "{51D16771-8A66-4647-BB0A-539B64050C2E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RichCanvasUITests.App", "RichCanvasUITests.App\RichCanvasUITests.App.csproj", "{AEFA33F4-C688-4E12-B9D7-04FE100E5CF3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{51D16771-8A66-4647-BB0A-539B64050C2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51D16771-8A66-4647-BB0A-539B64050C2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51D16771-8A66-4647-BB0A-539B64050C2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEFA33F4-C688-4E12-B9D7-04FE100E5CF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEFA33F4-C688-4E12-B9D7-04FE100E5CF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEFA33F4-C688-4E12-B9D7-04FE100E5CF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEFA33F4-C688-4E12-B9D7-04FE100E5CF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
