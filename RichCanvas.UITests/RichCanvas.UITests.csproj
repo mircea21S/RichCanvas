@@ -16,7 +16,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\RichCanvasTestApp\RichCanvasTestApp.csproj" />
+		<ProjectReference Include="..\RichCanvasUITests.App\RichCanvasUITests.App.csproj" />
 		<ProjectReference Include="..\RichCanvas\RichCanvas.csproj" />
 	</ItemGroup>
 

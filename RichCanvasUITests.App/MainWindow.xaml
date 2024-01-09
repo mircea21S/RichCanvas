@@ -1,0 +1,123 @@
+﻿<Window x:Class="RichCanvasUITests.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RichCanvasUITests.App"
+        xmlns:richCanvas="clr-namespace:RichCanvas;assembly=RichCanvas"
+        xmlns:s="clr-namespace:System;assembly=mscorlib"
+        xmlns:auto="clr-namespace:RichCanvasUITests.App.Automation"
+        mc:Ignorable="d"
+        Title="MainWindow"
+        Height="450"
+        WindowState="Maximized"
+        Width="800">
+    <Window.DataContext>
+        <local:MainWindowViewModel />
+    </Window.DataContext>
+
+    <Window.Resources>
+        <s:Boolean x:Key="FalseValue">False</s:Boolean>
+        <s:Boolean x:Key="TrueValue">True</s:Boolean>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="auto" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="1"
+                    Width="100">
+            <Button Command="{Binding AddPositionedRectangleCommand}"
+                    CommandParameter="{StaticResource FalseValue}"
+                    AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddPositionedRectangleButtonId}">
+                <Button.Content>
+                    <TextBlock TextWrapping="Wrap"
+                               TextAlignment="Center">
+                        Add positioned Rectangle
+                    </TextBlock>
+                </Button.Content>
+            </Button>
+
+            <Button Command="{Binding AddPositionedRectangleCommand}"
+                    CommandParameter="{StaticResource TrueValue}"
+                    AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddImmutablePositionedRectangleButtonId}">
+                <Button.Content>
+                    <TextBlock TextWrapping="Wrap"
+                               TextAlignment="Center">
+                        Add immutable pos. Rectangle
+                    </TextBlock>
+                </Button.Content>
+            </Button>
+
+            <Button Command="{Binding AddDrawnRectangleCommand}"
+                    AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddDrawnRectangleButtonId}"
+                    Content="Add drawn rectangle">
+            </Button>
+
+            <Button Command="{Binding AddEmptyRectangleCommand}"
+                    AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddEmptyRectangleButtonId}"
+                    Content="Add empty rectangle">
+            </Button>
+
+            <Button Command="{Binding ClearAllItemsCommand}"
+                    AutomationProperties.AutomationId="{x:Static auto:AutomationIds.ClearItemsButtonId}"
+                    Content="Clear all items">
+            </Button>
+
+            <Border BorderThickness="1"
+                    BorderBrush="Black"
+                    Margin="2">
+                <StackPanel>
+                    <TextBlock Text="{Binding SelectedItem.Height, StringFormat= '\{0\} height'}" />
+                    <TextBlock Text="{Binding SelectedItem.Width, StringFormat='\{0\} width'}" />
+                    <TextBlock Text="{Binding SelectedItem.Top, StringFormat='\{0\} top'}" />
+                    <TextBlock Text="{Binding SelectedItem.Left, StringFormat='\{0\} left'}" />
+                </StackPanel>
+            </Border>
+
+            <TextBlock Text="{Binding MousePosition, ElementName=source, StringFormat='\{0\} mouse position'}"></TextBlock>
+        </StackPanel>
+
+        <richCanvas:RichItemsControl Background="AliceBlue"
+                                     ItemsSource="{Binding Items}"
+                                     SelectedItem="{Binding SelectedItem}"
+                                     Name="source">
+            <richCanvas:RichItemsControl.Resources>
+                <DataTemplate DataType="{x:Type local:RichItemContainerModel}">
+                    <Rectangle Fill="Red"></Rectangle>
+                </DataTemplate>
+            </richCanvas:RichItemsControl.Resources>
+
+            <richCanvas:RichItemsControl.ItemContainerStyle>
+                <Style TargetType="richCanvas:RichItemContainer">
+
+                    <Setter Property="Top"
+                            Value="{Binding Top, Mode=TwoWay}" />
+
+                    <Setter Property="Left"
+                            Value="{Binding Left, Mode=TwoWay}" />
+
+                    <Setter Property="Width"
+                            Value="{Binding Width, Mode=TwoWay}" />
+
+                    <Setter Property="Height"
+                            Value="{Binding Height, Mode=TwoWay}" />
+
+                    <Setter Property="AllowScaleChangeToUpdatePosition"
+                            Value="{Binding AllowScaleChangeToUpdatePosition}" />
+
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected"
+                                 Value="True">
+                            <Setter Property="Opacity"
+                                    Value="0.6" />
+                        </Trigger>
+                    </Style.Triggers>
+
+                </Style>
+            </richCanvas:RichItemsControl.ItemContainerStyle>
+        </richCanvas:RichItemsControl>
+    </Grid>
+</Window>

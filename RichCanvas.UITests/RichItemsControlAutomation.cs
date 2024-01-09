@@ -2,8 +2,6 @@
 using FlaUI.Core.AutomationElements;
 using Newtonsoft.Json;
 using RichCanvas.Automation.ControlInformations;
-using RichCanvasTestApp.ViewModels;
-using System;
 using System.Collections.Generic;
 
 namespace RichCanvas.UITests
