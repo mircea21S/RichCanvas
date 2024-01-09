@@ -20,11 +20,7 @@ namespace RichCanvas.States.SelectionStates
             Parent.SelectionRectangle = new Rect();
             Parent.IsSelecting = true;
             _selectionRectangleInitialPosition = e.GetPosition(Parent.ItemsHost);
-
-            if (Parent.BaseSelectedItems.Count > 0 || Parent.SelectedItem != null)
-            {
-                Parent.UnselectAll();
-            }
+            Parent.UnselectAll();
         }
 
         public override void HandleMouseMove(MouseEventArgs e)
