@@ -45,6 +45,10 @@ namespace RichCanvas.States.SelectionStates
                     }
                 }
             }
+            if (selected?.Count == 1 || Parent.BaseSelectedItems?.Count == 1)
+            {
+                Parent.SelectedItem = Parent.BaseSelectedItems[0];
+            }
         }
 
         private HitTestResultBehavior OnHitTestResultCallback(HitTestResult result)
@@ -55,8 +59,7 @@ namespace RichCanvas.States.SelectionStates
                 var container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
                 if (container != null && container.IsSelectable)
                 {
-                    Parent.SelectedItems?.Add(container.DataContext);
-                    container.IsSelected = true;
+                    Parent.BaseSelectedItems.Add(container.DataContext);
                 }
             }
             return HitTestResultBehavior.Continue;

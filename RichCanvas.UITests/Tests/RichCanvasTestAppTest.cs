@@ -5,7 +5,7 @@ namespace RichCanvas.UITests.Tests
 {
     public class RichCanvasTestAppTest : UITestBase
     {
-        private const string RichCanvasDemoBinPath = @"C:\Programming Projects\RichCanvas\RichCanvasTestApp\bin\Debug\net48\RichCanvasTestApp.exe";
+        private const string RichCanvasDemoBinPath = @"C:\Programming Projects\RichCanvas\RichCanvasUITests.App\bin\Debug\RichCanvasUITests.App.exe";
         /// <summary>
         /// Size of Title bar (SystemParamters.WindowCaptionHeight) = 22.5
         /// </summary>
