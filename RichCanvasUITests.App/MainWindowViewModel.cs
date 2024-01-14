@@ -1,4 +1,5 @@
 ﻿using RichCanvasUITests.App.TestMocks;
+using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -33,6 +34,7 @@ namespace RichCanvasUITests.App
 
         private void AddPositionedRectangle(bool isImmutable)
         {
+            Console.WriteLine("INVOKED");
             Items.Add(isImmutable ? RichItemContainerModelMocks.ImmutablePositionedRectangleMock : RichItemContainerModelMocks.PositionedRectangleMock);
         }
 
