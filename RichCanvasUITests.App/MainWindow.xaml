@@ -83,6 +83,7 @@
         <richCanvas:RichItemsControl Background="AliceBlue"
                                      ItemsSource="{Binding Items}"
                                      SelectedItem="{Binding SelectedItem}"
+                                     RealTimeDraggingEnabled="True"
                                      Name="source">
             <richCanvas:RichItemsControl.Resources>
                 <DataTemplate DataType="{x:Type local:RichItemContainerModel}">

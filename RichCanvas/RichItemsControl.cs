@@ -702,8 +702,6 @@ namespace RichCanvas
         /// <inheritdoc/>
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
-            CurrentState ??= StateManager.GetMatchingCanvasState(e, this);
-
             if ((Mouse.Captured == null || IsMouseCaptured) && e.HasAnyButtonPressed())
             {
                 CaptureMouse();
@@ -756,6 +754,14 @@ namespace RichCanvas
                     container.IsDrawn = true;
                 }
             }
+            // TODO: implement list update on delete
+            // verify what happens if you add an Item to the ItemSource then delete it, before drawing
+            // CurrentDrawingIndexes should be updataed
+
+            // TODO: same as above for Move and Replace
+
+            // TODO: also check what happens if the added item because Valid before drawing
+            // maybe double check inside DrawingState if it's valid for drawing (width 0 and height 0)
         }
 
         #endregion
