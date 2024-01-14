@@ -1,4 +1,7 @@
 ﻿using FlaUI.Core.AutomationElements;
+using FlaUI.Core.Input;
+using FlaUI.Core.WindowsAPI;
+using RichCanvas.Gestures;
 using RichCanvasUITests.App.Automation;
 
 namespace RichCanvas.UITests

@@ -9,19 +9,25 @@ namespace RichCanvas.Gestures
     public class MouseKeyGesture : InputGesture
     {
         private MouseGesture _mouseGesture;
-        private KeyGesture[] _keyGestures;
-
         public MouseGesture MouseGesture
         {
             get => _mouseGesture;
             set => _mouseGesture = value;
         }
 
+        private KeyGesture[] _keyGestures;
         [TypeConverter(typeof(MouseKeyGestureConverter))]
         public KeyGesture[] KeyGestures
         {
             get => _keyGestures;
             set => _keyGestures = value;
+        }
+
+        private Key[] _keys;
+        public Key[] Keys
+        {
+            get => _keys;
+            set => _keys = value;
         }
 
         public MouseKeyGesture()
@@ -34,11 +40,27 @@ namespace RichCanvas.Gestures
             _keyGestures = keyGestures;
         }
 
+        public MouseKeyGesture(MouseGesture mouseGesture, params Key[] keys)
+        {
+            _mouseGesture = mouseGesture;
+            _keys = keys;
+        }
+
         public override bool Matches(object targetElement, InputEventArgs inputEventArgs)
         {
-            if (_keyGestures.All(k => Keyboard.IsKeyDown(k.Key)) && _mouseGesture.Matches(targetElement, inputEventArgs))
+            if (_keyGestures != null)
             {
-                return true;
+                if (_keyGestures.All(k => Keyboard.IsKeyDown(k.Key)) && _mouseGesture.Matches(targetElement, inputEventArgs))
+                {
+                    return true;
+                }
+            }
+            if (_keys != null)
+            {
+                if (_keys.All(k => Keyboard.IsKeyDown(k)) && _mouseGesture.Matches(targetElement, inputEventArgs))
+                {
+                    return true;
+                }
             }
             return false;
         }
