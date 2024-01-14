@@ -22,11 +22,17 @@ namespace RichCanvas.States
             {
                 return;
             }
-
+            Console.Write("Indexes: ");
+            foreach (var containerIndex in drawingContainersIndexes)
+            {
+                Console.Write(containerIndex);
+            }
             var currentDrawingContainerIndex = drawingContainersIndexes[drawingContainersIndexes.Count - 1];
+            Console.WriteLine("using to get container: " + currentDrawingContainerIndex);
             var container = (RichItemContainer)Parent.ItemContainerGenerator.ContainerFromIndex(currentDrawingContainerIndex);
             if (container == null)
             {
+                Console.WriteLine("null");
                 return;
             }
 
@@ -35,13 +41,13 @@ namespace RichCanvas.States
 
         public override void HandleMouseDown(MouseButtonEventArgs e)
         {
-            if (VisualHelper.HasScrollBarParent((DependencyObject)e.OriginalSource))
+            if (_currentDrawingContainer == null || VisualHelper.HasScrollBarParent((DependencyObject)e.OriginalSource))
             {
                 return;
             }
             _isDrawing = true;
-            var mousePosition = e.GetPosition(Parent.ItemsHost);
 
+            var mousePosition = e.GetPosition(Parent.ItemsHost);
             if (!_currentDrawingContainer.TopPropertyInitalized)
             {
                 _currentDrawingContainer.Top = mousePosition.Y;
@@ -50,37 +56,10 @@ namespace RichCanvas.States
             {
                 _currentDrawingContainer.Left = mousePosition.X;
             }
-
-            double width = mousePosition.X - _currentDrawingContainer.Left;
-            double height = mousePosition.Y - _currentDrawingContainer.Top;
-
-            _currentDrawingContainer.Width = width == 0 ? RichItemContainer.DefaultWidth : Math.Abs(width);
-            _currentDrawingContainer.Height = height == 0 ? RichItemContainer.DefaultHeight : Math.Abs(height);
-
-            ScaleTransform? scaleTransform = _currentDrawingContainer.ScaleTransform;
-            if (scaleTransform != null)
-            {
-                if (width < 0 && scaleTransform.ScaleX == 1)
-                {
-                    scaleTransform.ScaleX = -1;
-                }
-
-                if (height < 0 && scaleTransform.ScaleY == 1)
-                {
-                    scaleTransform.ScaleY = -1;
-                }
-
-                if (height > 0 && scaleTransform.ScaleY == -1)
-                {
-                    scaleTransform.ScaleY = 1;
-                }
-                if (width > 0 && scaleTransform.ScaleX == -1)
-                {
-                    scaleTransform.ScaleX = 1;
-                }
-            }
+            DrawContainer(mousePosition);
 
             var drawingContainersIndexes = Parent.CurrentDrawingIndexes;
+            Console.WriteLine("removed " + drawingContainersIndexes[drawingContainersIndexes.Count - 1]);
             drawingContainersIndexes.Remove(drawingContainersIndexes[drawingContainersIndexes.Count - 1]);
         }
 
@@ -92,35 +71,7 @@ namespace RichCanvas.States
             }
 
             var mousePosition = e.GetPosition(Parent.ItemsHost);
-
-            double width = mousePosition.X - _currentDrawingContainer.Left;
-            double height = mousePosition.Y - _currentDrawingContainer.Top;
-
-            _currentDrawingContainer.Width = width == 0 ? 1 : Math.Abs(width);
-            _currentDrawingContainer.Height = height == 0 ? 1 : Math.Abs(height);
-
-            ScaleTransform? scaleTransform = _currentDrawingContainer.ScaleTransform;
-            if (scaleTransform != null)
-            {
-                if (width < 0 && scaleTransform.ScaleX == 1)
-                {
-                    scaleTransform.ScaleX = -1;
-                }
-
-                if (height < 0 && scaleTransform.ScaleY == 1)
-                {
-                    scaleTransform.ScaleY = -1;
-                }
-
-                if (height > 0 && scaleTransform.ScaleY == -1)
-                {
-                    scaleTransform.ScaleY = 1;
-                }
-                if (width > 0 && scaleTransform.ScaleX == -1)
-                {
-                    scaleTransform.ScaleX = 1;
-                }
-            }
+            DrawContainer(mousePosition);
         }
 
         public override void HandleMouseUp(MouseButtonEventArgs e)
@@ -156,6 +107,38 @@ namespace RichCanvas.States
             else
             {
                 _currentDrawingContainer.Width = Math.Abs(mousePosition.X - _currentDrawingContainer.Left);
+            }
+        }
+
+        private void DrawContainer(Point mousePosition)
+        {
+            double width = mousePosition.X - _currentDrawingContainer.Left;
+            double height = mousePosition.Y - _currentDrawingContainer.Top;
+
+            _currentDrawingContainer.Width = width == 0 ? RichItemContainer.DefaultWidth : Math.Abs(width);
+            _currentDrawingContainer.Height = height == 0 ? RichItemContainer.DefaultHeight : Math.Abs(height);
+
+            ScaleTransform? scaleTransform = _currentDrawingContainer.ScaleTransform;
+            if (scaleTransform != null)
+            {
+                if (width < 0 && scaleTransform.ScaleX == 1)
+                {
+                    scaleTransform.ScaleX = -1;
+                }
+
+                if (height < 0 && scaleTransform.ScaleY == 1)
+                {
+                    scaleTransform.ScaleY = -1;
+                }
+
+                if (height > 0 && scaleTransform.ScaleY == -1)
+                {
+                    scaleTransform.ScaleY = 1;
+                }
+                if (width > 0 && scaleTransform.ScaleX == -1)
+                {
+                    scaleTransform.ScaleX = 1;
+                }
             }
         }
 
