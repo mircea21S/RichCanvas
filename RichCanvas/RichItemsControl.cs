@@ -17,6 +17,7 @@ using RichCanvas.Gestures;
 using RichCanvas.CustomEventArgs;
 using System.Windows.Automation.Peers;
 using RichCanvas.Automation;
+using System.Linq;
 
 namespace RichCanvas
 {
@@ -742,26 +743,25 @@ namespace RichCanvas
         /// <inheritdoc/>
         protected override void OnItemsChanged(NotifyCollectionChangedEventArgs e)
         {
-            if (e.NewStartingIndex != -1 && e.Action == NotifyCollectionChangedAction.Add)
+            if (e.Action == NotifyCollectionChangedAction.Reset)
             {
-                var container = (RichItemContainer)ItemContainerGenerator.ContainerFromIndex(e.NewStartingIndex);
-                if (!container.IsValid())
-                {
-                    CurrentDrawingIndexes.Add(e.NewStartingIndex);
-                }
-                else
-                {
-                    container.IsDrawn = true;
-                }
+                CurrentDrawingIndexes.Clear();
             }
-            // TODO: implement list update on delete
-            // verify what happens if you add an Item to the ItemSource then delete it, before drawing
-            // CurrentDrawingIndexes should be updataed
-
-            // TODO: same as above for Move and Replace
-
-            // TODO: also check what happens if the added item because Valid before drawing
-            // maybe double check inside DrawingState if it's valid for drawing (width 0 and height 0)
+            else if (e.NewStartingIndex != -1 && e.Action == NotifyCollectionChangedAction.Add)
+            {
+                CurrentDrawingIndexes.Add(e.NewStartingIndex);
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                CurrentDrawingIndexes.Remove(e.OldStartingIndex);
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Move)
+            {
+                var oldValue = CurrentDrawingIndexes[e.OldStartingIndex];
+                CurrentDrawingIndexes.Remove(oldValue);
+                CurrentDrawingIndexes.Insert(e.NewStartingIndex, oldValue);
+            }
+            // Replace event not implemented because the index doesn't change
         }
 
         #endregion
