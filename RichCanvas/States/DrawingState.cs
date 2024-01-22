@@ -22,17 +22,11 @@ namespace RichCanvas.States
             {
                 return;
             }
-            Console.Write("Indexes: ");
-            foreach (var containerIndex in drawingContainersIndexes)
-            {
-                Console.Write(containerIndex);
-            }
+     
             var currentDrawingContainerIndex = drawingContainersIndexes[drawingContainersIndexes.Count - 1];
-            Console.WriteLine("using to get container: " + currentDrawingContainerIndex);
             var container = (RichItemContainer)Parent.ItemContainerGenerator.ContainerFromIndex(currentDrawingContainerIndex);
             if (container == null)
             {
-                Console.WriteLine("null");
                 return;
             }
 
@@ -43,6 +37,11 @@ namespace RichCanvas.States
         {
             if (_currentDrawingContainer == null || VisualHelper.HasScrollBarParent((DependencyObject)e.OriginalSource))
             {
+                return;
+            }
+            if (_currentDrawingContainer.IsValid())
+            {
+                _currentDrawingContainer.IsDrawn = true;
                 return;
             }
             _isDrawing = true;
@@ -59,7 +58,6 @@ namespace RichCanvas.States
             DrawContainer(mousePosition);
 
             var drawingContainersIndexes = Parent.CurrentDrawingIndexes;
-            Console.WriteLine("removed " + drawingContainersIndexes[drawingContainersIndexes.Count - 1]);
             drawingContainersIndexes.Remove(drawingContainersIndexes[drawingContainersIndexes.Count - 1]);
         }
 
