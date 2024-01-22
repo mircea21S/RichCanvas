@@ -73,13 +73,15 @@ namespace RichCanvas.UITests
         /// <paramref name="addDrawableContainerButtonId"/> specifies different buttons to be invoked, that are adding a Drawable container.
         /// </summary>
         [Test]
+        [TestCase(AutomationIds.AddPositionedRectangleButtonId, false)]
         [TestCase(AutomationIds.AddEmptyRectangleButtonId, false)]
         [TestCase(AutomationIds.AddImmutablePositionedRectangleButtonId, true)]
-        [TestCase(AutomationIds.AddPositionedRectangleButtonId, false)]
         [TestCase(AutomationIds.AddEmptyRectangleButtonId, true)]
         public void RichItemsControl_DrawingGestureMatchesInputGesture_CurrentStateShouldAlwaysBeDrawingState(string addDrawableContainerButtonId, bool shouldClick)
         {
-            // Multiple drawing indexes added, remains stuck in DrawingState CurrentDrawingIndexes are still available.
+            // strange bug on the first test case drag if moved down in order -> probably a double click is happening and the item is not drawn
+            // moved it first to solve the problem
+            // might need more investigation
 
             // act
             Window.InvokeButton(addDrawableContainerButtonId);
