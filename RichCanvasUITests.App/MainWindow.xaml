@@ -66,7 +66,14 @@
                     Content="Clear all items">
             </Button>
 
-            <Border BorderThickness="1"
+            <Button Command="{Binding DeleteItemCommand}"
+                    Content="Delete Item Test"></Button>
+
+            <Button Command="{Binding TestCommand}"
+                    Content="Test Button"></Button>
+
+            <Border Name="SelectedItemProperties"
+                    BorderThickness="1"
                     BorderBrush="Black"
                     Margin="2">
                 <StackPanel>
@@ -78,6 +85,7 @@
             </Border>
 
             <TextBlock Text="{Binding MousePosition, ElementName=source, StringFormat='\{0\} mouse position'}"></TextBlock>
+            <TextBlock Text="{Binding ItemsSource.Count, ElementName=source, StringFormat='\{0\} items'}"></TextBlock>
         </StackPanel>
 
         <richCanvas:RichItemsControl Background="AliceBlue"

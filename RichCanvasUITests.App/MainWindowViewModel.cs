@@ -1,5 +1,4 @@
 ﻿using RichCanvasUITests.App.TestMocks;
-using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -17,39 +16,38 @@ namespace RichCanvasUITests.App
             Items = new ObservableCollection<RichItemContainerModel>();
         }
 
-        private RelayCommand<bool> addPositionedRectangleCommand;
+        private RelayCommand<bool> _addPositionedRectangleCommand;
 
         public ICommand AddPositionedRectangleCommand
         {
             get
             {
-                if (addPositionedRectangleCommand == null)
+                if (_addPositionedRectangleCommand == null)
                 {
-                    addPositionedRectangleCommand = new RelayCommand<bool>(AddPositionedRectangle);
+                    _addPositionedRectangleCommand = new RelayCommand<bool>(AddPositionedRectangle);
                 }
 
-                return addPositionedRectangleCommand;
+                return _addPositionedRectangleCommand;
             }
         }
 
         private void AddPositionedRectangle(bool isImmutable)
         {
-            Console.WriteLine("INVOKED");
             Items.Add(isImmutable ? RichItemContainerModelMocks.ImmutablePositionedRectangleMock : RichItemContainerModelMocks.PositionedRectangleMock);
         }
 
-        private RelayCommand clearAllItemsCommand;
+        private RelayCommand _clearAllItemsCommand;
 
         public ICommand ClearAllItemsCommand
         {
             get
             {
-                if (clearAllItemsCommand == null)
+                if (_clearAllItemsCommand == null)
                 {
-                    clearAllItemsCommand = new RelayCommand(ClearAllItems);
+                    _clearAllItemsCommand = new RelayCommand(ClearAllItems);
                 }
 
-                return clearAllItemsCommand;
+                return _clearAllItemsCommand;
             }
         }
 
@@ -58,18 +56,18 @@ namespace RichCanvasUITests.App
             Items.Clear();
         }
 
-        private RelayCommand addDrawnRectangleCommand;
+        private RelayCommand _addDrawnRectangleCommand;
 
         public ICommand AddDrawnRectangleCommand
         {
             get
             {
-                if (addDrawnRectangleCommand == null)
+                if (_addDrawnRectangleCommand == null)
                 {
-                    addDrawnRectangleCommand = new RelayCommand(AddDrawnRectangle);
+                    _addDrawnRectangleCommand = new RelayCommand(AddDrawnRectangle);
                 }
 
-                return addDrawnRectangleCommand;
+                return _addDrawnRectangleCommand;
             }
         }
 
@@ -78,24 +76,67 @@ namespace RichCanvasUITests.App
             Items.Add(RichItemContainerModelMocks.DrawnRectangleMock);
         }
 
-        private RelayCommand addEmptyRectangleCommand;
+        private RelayCommand _addEmptyRectangleCommand;
 
         public ICommand AddEmptyRectangleCommand
         {
             get
             {
-                if (addEmptyRectangleCommand == null)
+                if (_addEmptyRectangleCommand == null)
                 {
-                    addEmptyRectangleCommand = new RelayCommand(AddEmptyRectangle);
+                    _addEmptyRectangleCommand = new RelayCommand(AddEmptyRectangle);
                 }
 
-                return addEmptyRectangleCommand;
+                return _addEmptyRectangleCommand;
             }
         }
 
         private void AddEmptyRectangle()
         {
             Items.Add(new RichItemContainerModel());
+        }
+
+        private RelayCommand _deleteItemCommand;
+
+        public ICommand DeleteItemCommand
+        {
+            get
+            {
+                if (_deleteItemCommand == null)
+                {
+                    _deleteItemCommand = new RelayCommand(DeleteItem);
+                }
+
+                return _deleteItemCommand;
+            }
+        }
+
+        private void DeleteItem()
+        {
+            // testing purpose: delete frist item, before drawing anything (entering DrawingState)
+            Items.Remove(Items[1]);
+            Items.Remove(Items[2]);
+        }
+
+        private RelayCommand _testCommand;
+
+        public ICommand TestCommand
+        {
+            get
+            {
+                if (_testCommand == null)
+                {
+                    _testCommand = new RelayCommand(Test);
+                }
+
+                return _testCommand;
+            }
+        }
+
+        private void Test()
+        {
+            // changable method to test stuff
+            Items[0] = Items[1];
         }
     }
 }
