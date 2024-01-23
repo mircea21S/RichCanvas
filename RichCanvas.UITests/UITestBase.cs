@@ -16,12 +16,7 @@ namespace RichCanvas.UITests
 
         public UITestBase(string applicationPath)
         {
-            var app = Application.AttachOrLaunch(new ProcessStartInfo
-            {
-                FileName = applicationPath
-            });
-            app.WaitWhileMainHandleIsMissing();
-            Application = app;
+            StartApplication(applicationPath);
         }
 
         // Note: use TearDown and SetUp attributes for NUnit if any usage for before and after each test executes is needed
@@ -36,6 +31,16 @@ namespace RichCanvas.UITests
                 Application.Dispose();
                 Application = null;
             }
+        }
+
+        protected void StartApplication(string applicationPath)
+        {
+            var app = Application.AttachOrLaunch(new ProcessStartInfo
+            {
+                FileName = applicationPath
+            });
+            app.WaitWhileMainHandleIsMissing();
+            Application = app;
         }
     }
 }
