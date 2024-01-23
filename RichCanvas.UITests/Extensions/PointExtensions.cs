@@ -5,7 +5,7 @@ namespace RichCanvas.UITests
 {
     internal static class PointExtensions
     {
-        internal static Point MoveX(this Point point, int x, HorizontalDirection direction)
+        internal static Point MoveX(this Point point, int x, HorizontalDirection direction = HorizontalDirection.LeftToRight)
         {
             if (direction == HorizontalDirection.LeftToRight)
             {

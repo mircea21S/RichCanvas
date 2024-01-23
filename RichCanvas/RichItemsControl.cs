@@ -17,7 +17,6 @@ using RichCanvas.Gestures;
 using RichCanvas.CustomEventArgs;
 using System.Windows.Automation.Peers;
 using RichCanvas.Automation;
-using System.Linq;
 
 namespace RichCanvas
 {

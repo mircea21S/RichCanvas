@@ -1,5 +1,8 @@
-﻿using RichCanvasUITests.App.TestMocks;
+﻿using RichCanvasUITests.App.Models;
+using RichCanvasUITests.App.TestMocks;
+using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Windows.Input;
 
 namespace RichCanvasUITests.App
@@ -76,46 +79,58 @@ namespace RichCanvasUITests.App
             Items.Add(RichItemContainerModelMocks.DrawnRectangleMock);
         }
 
-        private RelayCommand _addEmptyRectangleCommand;
+        private RelayCommand<Type> _addEmptyItemCommand;
 
-        public ICommand AddEmptyRectangleCommand
+        public ICommand AddEmptyItemCommand
         {
             get
             {
-                if (_addEmptyRectangleCommand == null)
+                if (_addEmptyItemCommand == null)
                 {
-                    _addEmptyRectangleCommand = new RelayCommand(AddEmptyRectangle);
+                    _addEmptyItemCommand = new RelayCommand<Type>(AddEmptyRectangle);
                 }
 
-                return _addEmptyRectangleCommand;
+                return _addEmptyItemCommand;
             }
         }
 
-        private void AddEmptyRectangle()
+        private void AddEmptyRectangle(Type itemType)
         {
-            Items.Add(new RichItemContainerModel());
+            if (itemType == typeof(RichItemContainerModel))
+            {
+                Items.Add(new RichItemContainerModel());
+            }
+            else if (itemType == typeof(Line))
+            {
+                Items.Add(new Line());
+            }
         }
 
-        private RelayCommand _deleteItemCommand;
+        private RelayCommand<NotifyCollectionChangedAction> _updateItemsSourceCommand;
 
-        public ICommand DeleteItemCommand
+        public ICommand UpdateItemsSourceCommand
         {
             get
             {
-                if (_deleteItemCommand == null)
+                if (_updateItemsSourceCommand == null)
                 {
-                    _deleteItemCommand = new RelayCommand(DeleteItem);
+                    _updateItemsSourceCommand = new RelayCommand<NotifyCollectionChangedAction>(UpdateItemsSource);
                 }
 
-                return _deleteItemCommand;
+                return _updateItemsSourceCommand;
             }
         }
 
-        private void DeleteItem()
+        private void UpdateItemsSource(NotifyCollectionChangedAction actionType)
         {
-            // testing purpose: delete frist item, before drawing anything (entering DrawingState)
-            Items.Remove(Items[1]);
-            Items.Remove(Items[2]);
+            if (actionType == NotifyCollectionChangedAction.Move)
+            {
+                Items.Move(0, Items.Count - 1);
+            }
+            else if (actionType == NotifyCollectionChangedAction.Remove)
+            {
+                Items.RemoveAt(0);
+            }
         }
 
         private RelayCommand _testCommand;

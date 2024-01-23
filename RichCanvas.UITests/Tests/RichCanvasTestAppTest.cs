@@ -14,15 +14,29 @@ namespace RichCanvas.UITests.Tests
         protected RichItemsControlAutomation RichItemsControl => Window.FindFirstDescendant(d => d.ByAutomationId("source")).AsRichItemsControlAutomation();
         protected Size DemoControlSize => new Size(1187, 800);
         protected Point ViewportCenter => new Point(DemoControlSize.Width / 2, DemoControlSize.Height / 2);
+        protected bool ShouldRestartApplication { get; set; }
 
         public RichCanvasTestAppTest() : base(RichCanvasDemoBinPath)
         {
         }
 
+        [SetUp]
+        public void SetUp()
+        {
+            if (ShouldRestartApplication)
+            {
+                StartApplication(RichCanvasDemoBinPath);
+            }
+        }
+
         [TearDown]
-        public void UITestBaseTearDown()
+        public void TearDown()
         {
             Window.ClearAllItems();
+            if (ShouldRestartApplication)
+            {
+                CloseApplication();
+            }
         }
     }
 }

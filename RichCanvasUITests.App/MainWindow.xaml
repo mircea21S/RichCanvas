@@ -6,7 +6,9 @@
         xmlns:local="clr-namespace:RichCanvasUITests.App"
         xmlns:richCanvas="clr-namespace:RichCanvas;assembly=RichCanvas"
         xmlns:s="clr-namespace:System;assembly=mscorlib"
+        xmlns:scs="clr-namespace:System.Collections.Specialized;assembly=System"
         xmlns:auto="clr-namespace:RichCanvasUITests.App.Automation"
+        xmlns:models="clr-namespace:RichCanvasUITests.App.Models"
         mc:Ignorable="d"
         Title="MainWindow"
         Height="450"
@@ -56,21 +58,34 @@
                     Content="Add drawn rectangle">
             </Button>
 
-            <Button Command="{Binding AddEmptyRectangleCommand}"
+            <Button Command="{Binding AddEmptyItemCommand}"
+                    CommandParameter="{x:Type local:RichItemContainerModel}"
                     AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddEmptyRectangleButtonId}"
                     Content="Add empty rectangle">
             </Button>
+            
+            <Button Command="{Binding AddEmptyItemCommand}"
+                    CommandParameter="{x:Type models:Line}"
+                    AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddEmptyLineButtonId}"
+                    Content="Add Empty Line"></Button>
 
+            <Button Command="{Binding UpdateItemsSourceCommand}"
+                    CommandParameter="{x:Static scs:NotifyCollectionChangedAction.Move}"
+                    AutomationProperties.AutomationId="{x:Static auto:AutomationIds.MoveFirstItemToTheEndButtonId}"
+                    Content="Move First Item"></Button>
+
+            <Button Command="{Binding UpdateItemsSourceCommand}"
+                    CommandParameter="{x:Static scs:NotifyCollectionChangedAction.Remove}"
+                    AutomationProperties.AutomationId="{x:Static auto:AutomationIds.RemoveFirstItemButtonId}"
+                    Content="Remove First Item"></Button>
+
+            <Button Command="{Binding TestCommand}"
+                    Content="Test Button"></Button>
+            
             <Button Command="{Binding ClearAllItemsCommand}"
                     AutomationProperties.AutomationId="{x:Static auto:AutomationIds.ClearItemsButtonId}"
                     Content="Clear all items">
             </Button>
-
-            <Button Command="{Binding DeleteItemCommand}"
-                    Content="Delete Item Test"></Button>
-
-            <Button Command="{Binding TestCommand}"
-                    Content="Test Button"></Button>
 
             <Border Name="SelectedItemProperties"
                     BorderThickness="1"
@@ -96,6 +111,13 @@
             <richCanvas:RichItemsControl.Resources>
                 <DataTemplate DataType="{x:Type local:RichItemContainerModel}">
                     <Rectangle Fill="Red"></Rectangle>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type models:Line}">
+                    <Line  Stroke="Red"
+                           StrokeThickness="3"
+                           X2="{Binding Width}"
+                           Y2="{Binding Height}">
+                    </Line>
                 </DataTemplate>
             </richCanvas:RichItemsControl.Resources>
 
