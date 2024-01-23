@@ -4,6 +4,7 @@ using FlaUI.Core.Tools;
 using FlaUI.UIA3;
 using System;
 using System.Diagnostics;
+using System.Threading;
 
 namespace RichCanvas.UITests
 {
@@ -40,6 +41,8 @@ namespace RichCanvas.UITests
                 FileName = applicationPath
             });
             app.WaitWhileMainHandleIsMissing();
+            // hack to wait for all the initializations (some NullRefException being thrown if not)
+            Thread.Sleep(1000);
             Application = app;
         }
     }
