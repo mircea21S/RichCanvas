@@ -3,7 +3,6 @@ using FlaUI.Core.AutomationElements;
 using RichCanvas.Automation;
 using RichCanvas.Automation.ControlInformations;
 using System.Collections.Generic;
-using System.Windows.Input;
 
 namespace RichCanvas.UITests
 {
