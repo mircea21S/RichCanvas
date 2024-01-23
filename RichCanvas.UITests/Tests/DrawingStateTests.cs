@@ -136,7 +136,6 @@ namespace RichCanvas.UITests
         {
             // strange bug on the first test case drag if moved down in order -> probably a double click is happening and the item is not drawn
             // moved it first to solve the problem
-            // also strange that using ShouldRestartApplication -> this fails with NullReferenceException
             // might need more investigation
             ShouldRestartApplication = true;
 
