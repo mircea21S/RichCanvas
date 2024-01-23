@@ -8,7 +8,7 @@ namespace RichCanvas.States
 {
     public class DrawingState : CanvasState
     {
-        private RichItemContainer _currentDrawingContainer;
+        private RichItemContainer? _currentDrawingContainer;
         private bool _isDrawing;
 
         public DrawingState(RichItemsControl parent) : base(parent)
@@ -22,11 +22,13 @@ namespace RichCanvas.States
             {
                 return;
             }
-     
+
             var currentDrawingContainerIndex = drawingContainersIndexes[drawingContainersIndexes.Count - 1];
             var container = (RichItemContainer)Parent.ItemContainerGenerator.ContainerFromIndex(currentDrawingContainerIndex);
-            if (container == null)
+            if (container.IsValid())
             {
+                container.IsDrawn = true;
+                drawingContainersIndexes.Remove(currentDrawingContainerIndex);
                 return;
             }
 
@@ -37,11 +39,6 @@ namespace RichCanvas.States
         {
             if (_currentDrawingContainer == null || VisualHelper.HasScrollBarParent((DependencyObject)e.OriginalSource))
             {
-                return;
-            }
-            if (_currentDrawingContainer.IsValid())
-            {
-                _currentDrawingContainer.IsDrawn = true;
                 return;
             }
             _isDrawing = true;

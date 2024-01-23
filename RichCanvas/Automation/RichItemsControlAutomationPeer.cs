@@ -7,7 +7,7 @@ namespace RichCanvas.Automation
 {
     // TODO: ScrollingGridAutomationPeer : IScrollProvider
     public class RichItemsControlAutomationPeer : SelectorAutomationPeer, IValueProvider
-    //ITransformProvider, ISelectionProvider
+    //ITransformProvider
     {
         protected RichItemsControl OwnerItemsControl => (RichItemsControl)Owner;
 
@@ -19,7 +19,7 @@ namespace RichCanvas.Automation
         {
             CurrentState = OwnerItemsControl.CurrentState,
             TranslateTransformX = OwnerItemsControl.TranslateTransform.X,
-            TranslateTransformY = OwnerItemsControl.TranslateTransform.Y,
+            TranslateTransformY = OwnerItemsControl.TranslateTransform.Y
         }, Formatting.Indented, new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All });
 
         public RichItemsControlAutomationPeer(RichItemsControl owner) : base(owner)

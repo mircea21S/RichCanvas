@@ -5,7 +5,6 @@ namespace RichCanvas.UITests.Tests
 {
     public class RichCanvasTestAppTest : UITestBase
     {
-        internal const string RichCanvasDemoBinPath = @"C:\Programming Projects\RichCanvas\RichCanvasUITests.App\bin\Debug\RichCanvasUITests.App.exe";
         /// <summary>
         /// Size of Title bar (SystemParamters.WindowCaptionHeight) = 22.5
         /// </summary>
@@ -16,7 +15,7 @@ namespace RichCanvas.UITests.Tests
         protected Point ViewportCenter => new Point(DemoControlSize.Width / 2, DemoControlSize.Height / 2);
         protected bool ShouldRestartApplication { get; set; }
 
-        public RichCanvasTestAppTest() : base(RichCanvasDemoBinPath)
+        public RichCanvasTestAppTest()
         {
         }
 
@@ -25,7 +24,7 @@ namespace RichCanvas.UITests.Tests
         {
             if (ShouldRestartApplication)
             {
-                StartApplication(RichCanvasDemoBinPath);
+                StartApplication();
             }
         }
 

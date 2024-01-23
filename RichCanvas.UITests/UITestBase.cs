@@ -2,8 +2,10 @@
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Tools;
 using FlaUI.UIA3;
+using RichCanvasUITests.App;
 using System;
 using System.Diagnostics;
+using System.Reflection;
 using System.Threading;
 
 namespace RichCanvas.UITests
@@ -12,12 +14,16 @@ namespace RichCanvas.UITests
     {
         private AutomationBase _automation = new UIA3Automation();
 
+        private string AppPath { get; }
         protected Application Application { get; private set; }
         protected Window Window => Application.GetMainWindow(_automation);
+        protected IEventLibrary EventLibrary => _automation.EventLibrary;
 
-        public UITestBase(string applicationPath)
+
+        public UITestBase()
         {
-            StartApplication(applicationPath);
+            AppPath = Assembly.GetAssembly(typeof(MainWindow)).Location;
+            StartApplication();
         }
 
         // Note: use TearDown and SetUp attributes for NUnit if any usage for before and after each test executes is needed
@@ -34,11 +40,11 @@ namespace RichCanvas.UITests
             }
         }
 
-        protected void StartApplication(string applicationPath)
+        protected void StartApplication()
         {
             var app = Application.AttachOrLaunch(new ProcessStartInfo
             {
-                FileName = applicationPath
+                FileName = AppPath
             });
             app.WaitWhileMainHandleIsMissing();
             // hack to wait for all the initializations (some NullRefException being thrown if not)
