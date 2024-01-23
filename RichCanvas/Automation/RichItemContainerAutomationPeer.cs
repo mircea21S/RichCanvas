@@ -18,6 +18,7 @@ namespace RichCanvas.Automation
             IsSelected = Container.IsSelected,
             ScaleX = Container.ScaleTransform.ScaleX,
             ScaleY = Container.ScaleTransform.ScaleY,
+            DataContextType = Container.DataContext.GetType()
         });
 
         public bool IsReadOnly => true;
