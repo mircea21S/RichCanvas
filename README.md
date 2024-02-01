@@ -1,3 +1,7 @@
+> 🚧 **Work is in progress for v3.0.0. A lot of changes and stuff coming out, also most of if not all open issues will be addrressed.**
+> <br/>
+> Thank you for your patience!🙏
+
 # RichCanvas
 [![NuGet](https://img.shields.io/nuget/v/RichCanvas?style=for-the-badge&logo=nuget&label=release)](https://www.nuget.org/packages/RichCanvas/)
 [![NuGet](https://img.shields.io/nuget/dt/RichCanvas?label=downloads&style=for-the-badge&logo=nuget)](https://www.nuget.org/packages/RichCanvas/)
