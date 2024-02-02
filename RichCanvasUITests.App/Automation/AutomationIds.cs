@@ -10,5 +10,6 @@
         public const string MoveFirstItemToTheEndButtonId = "MoveFirstItemToTheEnd";
         public const string RemoveFirstItemButtonId = "RemoveFirstItem";
         public const string AddEmptyLineButtonId = "AddEmptyLine";
+        public const string AddSelectableItemsButtonId = "AddSelectableItems";
     }
 }

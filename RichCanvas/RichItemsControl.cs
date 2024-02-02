@@ -748,7 +748,12 @@ namespace RichCanvas
             }
             else if (e.NewStartingIndex != -1 && e.Action == NotifyCollectionChangedAction.Add)
             {
-                CurrentDrawingIndexes.Add(e.NewStartingIndex);
+                // a container is not able to be drawn if it has Width or Height already
+                var container = (RichItemContainer)ItemContainerGenerator.ContainerFromIndex(e.NewStartingIndex);
+                if (!container.IsValid())
+                {
+                    CurrentDrawingIndexes.Add(e.NewStartingIndex);
+                }
             }
             else if (e.Action == NotifyCollectionChangedAction.Remove)
             {
@@ -1207,10 +1212,7 @@ namespace RichCanvas
             }
             else
             {
-                if (_autoPanTimer != null)
-                {
-                    _autoPanTimer.Stop();
-                }
+                _autoPanTimer?.Stop();
             }
         }
 

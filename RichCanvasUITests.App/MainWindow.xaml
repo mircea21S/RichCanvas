@@ -63,7 +63,7 @@
                     AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddEmptyRectangleButtonId}"
                     Content="Add empty rectangle">
             </Button>
-            
+
             <Button Command="{Binding AddEmptyItemCommand}"
                     CommandParameter="{x:Type models:Line}"
                     AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddEmptyLineButtonId}"
@@ -81,7 +81,11 @@
 
             <Button Command="{Binding TestCommand}"
                     Content="Test Button"></Button>
-            
+
+            <Button Command="{Binding AddSelectableItemsCommmand}"
+                    AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddSelectableItemsButtonId}"
+                    Content="Add Selectable Items" />
+
             <Button Command="{Binding ClearAllItemsCommand}"
                     AutomationProperties.AutomationId="{x:Static auto:AutomationIds.ClearItemsButtonId}"
                     Content="Clear all items">

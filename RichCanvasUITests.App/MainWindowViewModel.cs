@@ -1,4 +1,5 @@
-﻿using RichCanvasUITests.App.Models;
+﻿using RichCanvasUITests.App;
+using RichCanvasUITests.App.Models;
 using RichCanvasUITests.App.TestMocks;
 using System;
 using System.Collections.ObjectModel;
@@ -152,6 +153,29 @@ namespace RichCanvasUITests.App
         {
             // changable method to test stuff
             Items[0] = Items[1];
+        }
+
+        private RelayCommand _addSelectableItemsCommmand;
+
+        public ICommand AddSelectableItemsCommmand
+        {
+            get
+            {
+                if (_addSelectableItemsCommmand == null)
+                {
+                    _addSelectableItemsCommmand = new RelayCommand(AddSelectableItems);
+                }
+
+                return _addSelectableItemsCommmand;
+            }
+        }
+
+        private void AddSelectableItems()
+        {
+            foreach (var item in RichItemContainerModelMocks.PositionedSelectableItemListMock)
+            {
+                Items.Add(item);
+            }
         }
     }
 }
