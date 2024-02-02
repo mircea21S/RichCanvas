@@ -1,4 +1,4 @@
-> 🚧 **Work is in progress for v3.0.0. A lot of changes and stuff coming out, also most of if not all open issues will be addrressed.**
+> 🚧 **Work is in progress for v3.0.0. A lot of changes and stuff coming out, also most of, if not all open issues will be addressed.**
 > <br/>
 > Thank you for your patience!🙏
 
