@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using FlaUI.Core.AutomationElements;
+using FluentAssertions;
 using NUnit.Framework;
 using RichCanvas.Gestures;
 using RichCanvas.UITests.Helpers;
@@ -22,7 +23,16 @@ namespace RichCanvas.UITests.Tests
 
             // act
             // TODO: implement a way to set the DataContext with a mock for RichItemsControl to change the DPs values
+            var buton = Window.FindFirstDescendant(AutomationIds.AddSelectableItemsButtonId).AsButton();
+            buton.RegisterAutomationEvent(EventLibrary.Invoke.InvokedEvent, FlaUI.Core.Definitions.TreeScope.Element, (element, evnt) =>
+            {
+
+            });
             Window.InvokeButton(AutomationIds.AddSelectableItemsButtonId);
+            RichItemsControl.Items[0].RegisterAutomationEvent(EventLibrary.SelectionItem.ElementSelectedEvent, FlaUI.Core.Definitions.TreeScope.Element, (element, evnt) =>
+            {
+
+            });
             Input.WithGesture(RichCanvasGestures.Select).Drag(startPointFixed, endPointFixed);
 
             // assert

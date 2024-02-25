@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Gma.System.MouseKeyHook;
+using NUnit.Framework;
 using System.Drawing;
 
 namespace RichCanvas.UITests.Tests
@@ -18,6 +19,7 @@ namespace RichCanvas.UITests.Tests
 
         public RichCanvasTestAppTest() : base(RichCanvasDemoBinPath)
         {
+            var globalHookEvents = Hook.GlobalEvents();
         }
 
         [SetUp]

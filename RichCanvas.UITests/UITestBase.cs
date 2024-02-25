@@ -14,6 +14,7 @@ namespace RichCanvas.UITests
 
         protected Application Application { get; private set; }
         protected Window Window => Application.GetMainWindow(_automation);
+        protected IEventLibrary EventLibrary => _automation.EventLibrary;
 
         public UITestBase(string applicationPath)
         {
