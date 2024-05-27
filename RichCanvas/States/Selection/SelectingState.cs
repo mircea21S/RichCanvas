@@ -15,11 +15,11 @@ namespace RichCanvas.States.SelectionStates
             _selectionStrategy = SelectionHelper.GetSelectionStrategy();
         }
 
-        public override void HandleMouseDown(MouseButtonEventArgs e)
+        public override void Enter()
         {
             Parent.SelectionRectangle = new Rect();
             Parent.IsSelecting = true;
-            _selectionRectangleInitialPosition = e.GetPosition(Parent.ItemsHost);
+            _selectionRectangleInitialPosition = Mouse.GetPosition(Parent.ItemsHost);
             Parent.UnselectAll();
         }
 
