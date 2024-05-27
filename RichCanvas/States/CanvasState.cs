@@ -13,11 +13,13 @@ namespace RichCanvas.States
         {
             Parent = parent;
         }
-        public virtual void Enter(MouseEventArgs e) { }
+        public virtual void Enter() { }
         public virtual void Cancel() { }
         public virtual void HandleMouseDown(MouseButtonEventArgs e) { }
         public virtual void HandleMouseMove(MouseEventArgs e) { }
         public virtual void HandleMouseUp(MouseButtonEventArgs e) { }
         public virtual void HandleAutoPanning(Point mousePosition, bool heightChanged = false) { }
+        public virtual void PushState(CanvasState state) => Parent.PushState(state);
+        public virtual void PopState() => Parent.PopState();
     }
 }

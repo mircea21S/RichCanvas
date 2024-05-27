@@ -44,12 +44,13 @@ namespace RichCanvas
         private ScrollingGrid? _canvasContainer;
         private DispatcherTimer? _autoPanTimer;
         private bool _fromEvent;
+        private Stack<CanvasState> _states;
 
         #endregion
 
         #region Properties API
 
-        public CanvasState? CurrentState { get; private set; }
+        public CanvasState? CurrentState => _states.Peek();
 
         public RichItemContainer? SelectedContainer { get; private set; }
 
@@ -617,14 +618,9 @@ namespace RichCanvas
             // call this to initialize Dragging and Selecting strategies
             CanSelectMultipleItemsUpdated(CanSelectMultipleItems);
 
-            //TODO: move this to xml comment on Register method
-            // order matters as you may have multiple states that can be executed simultanously so RichCanvas picks them in order
-            // try to avoid that
-            // also the order matters as you migh have custom gesture with custom key gesture and mouse gesture so
-            // RichCanvas searches the new state on MouseDown event and any key down besides KeyModifiers is ignored when Matching the Gesture 
-            StateManager.RegisterCanvasState<PanningState>(RichCanvasGestures.Pan);
-            StateManager.RegisterCanvasState<DrawingState>(RichCanvasGestures.Drawing, () => CurrentDrawingIndexes.Count > 0);
-            StateManager.RegisterCanvasState<SelectingState>(RichCanvasGestures.Select, () => SelectionEnabled);
+            _states = new Stack<CanvasState>();
+            _states.Push(GetDefaultState());
+
             TranslateTransform.Changed += TranslateTransform_Changed;
         }
 
@@ -636,6 +632,8 @@ namespace RichCanvas
         #endregion
 
         #region Override Methods
+
+        public virtual CanvasState GetDefaultState() => new DefaultState(this);
 
         /// <inheritdoc/>
         public override void OnApplyTemplate()
@@ -688,18 +686,6 @@ namespace RichCanvas
         }
 
         /// <inheritdoc/>
-        protected override void OnGotMouseCapture(MouseEventArgs e)
-        {
-            CurrentState?.Enter(e);
-        }
-
-        /// <inheritdoc/>
-        protected override void OnPreviewMouseDown(MouseButtonEventArgs e)
-        {
-            CurrentState = StateManager.GetMatchingCanvasState(e, this);
-        }
-
-        /// <inheritdoc/>
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             if ((Mouse.Captured == null || IsMouseCaptured) && e.HasAnyButtonPressed())
@@ -729,14 +715,9 @@ namespace RichCanvas
                 {
                     ReleaseMouseCapture();
                 }
+                PopState();
             }
             Focus();
-        }
-
-        /// <inheritdoc/>
-        protected override void OnLostMouseCapture(MouseEventArgs e)
-        {
-            CurrentState?.Cancel();
         }
 
         /// <inheritdoc/>
@@ -771,6 +752,23 @@ namespace RichCanvas
         #endregion
 
         #region Public Api
+
+        public void PushState(CanvasState state)
+        {
+            var prev = CurrentState;
+            _states.Push(state);
+            state.Enter();
+        }
+
+        public void PopState()
+        {
+            // Never remove the default state
+            if (_states.Count > 1)
+            {
+                CanvasState prev = _states.Pop();
+                prev.Cancel();
+            }
+        }
 
         public void ZoomAtPosition(Point mousePosition, double delta, double? factor)
         {
@@ -845,7 +843,6 @@ namespace RichCanvas
         private static void OnPanGestureChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             RichCanvasGestures.Pan = (InputGesture)e.NewValue;
-            StateManager.RegisterCanvasState<PanningState>(RichCanvasGestures.Pan);
         }
 
         private static void OnDisableCacheChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).SetCachingMode((bool)e.NewValue);
