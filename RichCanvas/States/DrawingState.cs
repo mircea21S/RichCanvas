@@ -1,5 +1,4 @@
-﻿using RichCanvas.Helpers;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -15,7 +14,7 @@ namespace RichCanvas.States
         {
         }
 
-        public override void Enter(MouseEventArgs e)
+        public override void Enter()
         {
             var drawingContainersIndexes = Parent.CurrentDrawingIndexes;
             if (drawingContainersIndexes.Count == 0)
@@ -33,17 +32,9 @@ namespace RichCanvas.States
             }
 
             _currentDrawingContainer = container;
-        }
-
-        public override void HandleMouseDown(MouseButtonEventArgs e)
-        {
-            if (_currentDrawingContainer == null || VisualHelper.HasScrollBarParent((DependencyObject)e.OriginalSource))
-            {
-                return;
-            }
             _isDrawing = true;
 
-            var mousePosition = e.GetPosition(Parent.ItemsHost);
+            var mousePosition = Mouse.GetPosition(Parent.ItemsHost);
             if (!_currentDrawingContainer.TopPropertyInitalized)
             {
                 _currentDrawingContainer.Top = mousePosition.Y;
@@ -54,7 +45,6 @@ namespace RichCanvas.States
             }
             DrawContainer(mousePosition);
 
-            var drawingContainersIndexes = Parent.CurrentDrawingIndexes;
             drawingContainersIndexes.Remove(drawingContainersIndexes[drawingContainersIndexes.Count - 1]);
         }
 

@@ -11,9 +11,9 @@ namespace RichCanvas.States
         {
         }
 
-        public override void HandleMouseDown(MouseButtonEventArgs e)
+        public override void Enter()
         {
-            _initialPosition = e.GetPosition(Parent.ScrollContainer);
+            _initialPosition = Mouse.GetPosition(Parent.ScrollContainer);
             Parent.IsPanning = true;
             Parent.Cursor = Cursors.Hand;
         }
