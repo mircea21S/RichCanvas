@@ -1,4 +1,5 @@
-﻿using RichCanvas.Helpers;
+﻿using RichCanvas.Gestures;
+using RichCanvas.Helpers;
 using System;
 using System.Windows;
 using System.Windows.Input;
@@ -21,6 +22,33 @@ namespace RichCanvas.States.SelectionStates
             Parent.IsSelecting = true;
             _selectionRectangleInitialPosition = Mouse.GetPosition(Parent.ItemsHost);
             Parent.UnselectAll();
+        }
+
+        public override void ReEnter()
+        {
+            DrawSelectionRectangle(Mouse.GetPosition(Parent.ItemsHost));
+
+            if (Parent.RealTimeSelectionEnabled)
+            {
+                _selectionStrategy?.MouseMoveOnRealTimeSelection();
+            }
+            _selectionStrategy?.MouseMoveOnDeferredSelection();
+        }
+
+        public override void HandleKeyDown(KeyEventArgs e)
+        {
+            if (RichCanvasGestures.Pan.Matches(e.Source, e))
+            {
+                PushState(new PanningState(Parent));
+            }
+        }
+
+        public override void HandleMouseDown(MouseButtonEventArgs e)
+        {
+            if (RichCanvasGestures.Pan.Matches(e.Source, e))
+            {
+                PushState(new PanningState(Parent));
+            }
         }
 
         public override void HandleMouseMove(MouseEventArgs e)

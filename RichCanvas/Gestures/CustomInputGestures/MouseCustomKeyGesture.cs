@@ -35,11 +35,20 @@ namespace RichCanvas.Gestures
         }
         public override bool Matches(object targetElement, InputEventArgs inputEventArgs)
         {
-            if (_customKeys.All(k => Keyboard.IsKeyDown(k)) && _mouseGesture.Matches(targetElement, inputEventArgs))
+            if (_customKeys.All(k => Keyboard.IsKeyDown(k)) && IsMouseGestureMatching(_mouseGesture.MouseAction) && Keyboard.Modifiers == _mouseGesture.Modifiers)
             {
                 return true;
             }
             return false;
+        }
+
+        private bool IsMouseGestureMatching(MouseAction mouseAction)
+        {
+            return mouseAction switch
+            {
+                MouseAction.LeftClick => Mouse.LeftButton == MouseButtonState.Pressed,
+                _ => false
+            };
         }
     }
 

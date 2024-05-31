@@ -13,10 +13,7 @@ namespace RichCanvas.States.SelectionStates
         public override void MouseMoveOnRealTimeSelection()
         {
             RectangleGeometry geom = Parent.SelectionRectangle.ToRectangleGeometry();
-            if (Parent.SelectedItems?.Count > 0)
-            {
-                Parent.SelectedItems?.Clear();
-            }
+            Parent.SelectedItems?.Clear();
 
             Parent.BeginSelectionTransaction();
 
