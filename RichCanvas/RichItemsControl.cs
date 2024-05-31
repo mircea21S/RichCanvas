@@ -50,7 +50,7 @@ namespace RichCanvas
 
         #region Properties API
 
-        public CanvasState? CurrentState => _states.Peek();
+        public CanvasState CurrentState => _states.Peek();
 
         public RichItemContainer? SelectedContainer { get; private set; }
 
@@ -691,7 +691,7 @@ namespace RichCanvas
             if ((Mouse.Captured == null || IsMouseCaptured) && e.HasAnyButtonPressed())
             {
                 CaptureMouse();
-                CurrentState?.HandleMouseDown(e);
+                CurrentState.HandleMouseDown(e);
             }
         }
 
@@ -701,7 +701,7 @@ namespace RichCanvas
             MousePosition = e.GetPosition(_mainPanel);
             if (IsMouseCaptured)
             {
-                CurrentState?.HandleMouseMove(e);
+                CurrentState.HandleMouseMove(e);
             }
         }
 
@@ -710,7 +710,7 @@ namespace RichCanvas
         {
             if (IsMouseCaptured)
             {
-                CurrentState?.HandleMouseUp(e);
+                CurrentState.HandleMouseUp(e);
                 if (e.HasAllButtonsReleased())
                 {
                     ReleaseMouseCapture();
@@ -718,6 +718,17 @@ namespace RichCanvas
                 PopState();
             }
             Focus();
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            CurrentState.HandleKeyDown(e);
+        }
+
+        protected override void OnKeyUp(KeyEventArgs e)
+        {
+            CurrentState.HandleKeyUp(e);
+            PopState();
         }
 
         /// <inheritdoc/>
@@ -766,7 +777,8 @@ namespace RichCanvas
             if (_states.Count > 1)
             {
                 CanvasState prev = _states.Pop();
-                prev.Cancel();
+                prev.Exit();
+                CurrentState.ReEnter();
             }
         }
 
