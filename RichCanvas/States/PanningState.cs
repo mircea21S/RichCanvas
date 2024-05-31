@@ -32,7 +32,7 @@ namespace RichCanvas.States
             }
         }
 
-        public override void HandleMouseUp(MouseButtonEventArgs e)
+        public override void Exit()
         {
             Parent.IsPanning = false;
             Parent.Cursor = Cursors.Arrow;
