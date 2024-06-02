@@ -1,4 +1,4 @@
-﻿namespace RichCanvas.States.SelectionStates
+﻿namespace RichCanvas.States
 {
     public class SelectionStrategy
     {

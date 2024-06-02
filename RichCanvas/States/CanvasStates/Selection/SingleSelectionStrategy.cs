@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Media;
 
-namespace RichCanvas.States.SelectionStates
+namespace RichCanvas.States
 {
     public class SingleSelectionStrategy : SelectionStrategy
     {

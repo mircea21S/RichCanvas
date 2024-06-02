@@ -1,7 +1,7 @@
 ﻿using System.Windows.Media;
 using System.Windows;
-using RichCanvas.States.SelectionStates;
-using RichCanvas.States.Dragging;
+using RichCanvas.States;
+using RichCanvas.States.ContainerStates;
 
 namespace RichCanvas.Helpers
 {
