@@ -1,7 +1,6 @@
-﻿using RichCanvas.Gestures;
-using RichCanvas.Helpers;
-using RichCanvas.States;
-using RichCanvas.States.Dragging;
+﻿using RichCanvas.Helpers;
+using RichCanvas.States.ContainerStates;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,11 +24,14 @@ namespace RichCanvas
     {
         private const string ContentPresenterName = "PART_ContentPresenter";
         private RichItemsControl? _host;
+        private Stack<ContainerState> _states;
 
         public const double DefaultWidth = 1d;
         public const double DefaultHeight = 1d;
         internal ScaleTransform? ScaleTransform => RenderTransform is TransformGroup group ? group.Children.OfType<ScaleTransform>().FirstOrDefault() : null;
         internal TranslateTransform? TranslateTransform => RenderTransform is TransformGroup group ? group.Children.OfType<TranslateTransform>().FirstOrDefault() : null;
+
+        #region Properties API
 
         public static DependencyProperty IsSelectedProperty = Selector.IsSelectedProperty.AddOwner(typeof(RichItemContainer), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnIsSelectedChanged));
         /// <summary>
@@ -219,12 +221,14 @@ namespace RichCanvas
             remove => RemoveHandler(DragCompletedEvent, value);
         }
 
+        #endregion
+
         static RichItemContainer()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RichItemContainer), new FrameworkPropertyMetadata(typeof(RichItemContainer)));
         }
 
-        public ContainerState CurrentState { get; private set; }
+        public ContainerState CurrentState => _states.Peek();
         /// <summary>
         /// The <see cref="RichItemsControl"/> that owns this <see cref="RichItemContainer"/>.
         /// </summary>
@@ -241,14 +245,30 @@ namespace RichCanvas
         public double TransformedLeft => ScaleTransform != null ? (ScaleTransform.ScaleX < 0 ? Left - Width : Left) : 0;
 
         internal bool IsDrawn { get; set; }
-
         internal bool TopPropertyInitalized { get; private set; }
-
         internal bool LeftPropertyInitialized { get; private set; }
 
         public RichItemContainer()
         {
-            StateManager.RegisterContainerState<DraggingContainerState>(RichCanvasGestures.Drag, () => IsDraggable);
+            _states = new Stack<ContainerState>();
+            _states.Push(GetDefaultState());
+        }
+
+        public void PushState(ContainerState state)
+        {
+            _states.Push(state);
+            state.Enter();
+        }
+
+        public void PopState()
+        {
+            // Never remove the default state
+            if (_states.Count > 1)
+            {
+                ContainerState prev = _states.Pop();
+                prev.Exit();
+                CurrentState.ReEnter();
+            }
         }
 
         /// <summary>
@@ -267,12 +287,7 @@ namespace RichCanvas
             BoundingBox = bounds;
         }
 
-        protected override void OnPreviewMouseDown(MouseButtonEventArgs e)
-        {
-            var currentState = StateManager.GetMatchingContainerState(e, this);
-            CurrentState = currentState;
-            CurrentState?.Enter();
-        }
+        protected virtual ContainerState GetDefaultState() => new ContainerDefaultState(this);
 
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
@@ -280,7 +295,7 @@ namespace RichCanvas
             if (Mouse.Captured == null || IsMouseCaptured)
             {
                 CaptureMouse();
-                CurrentState?.HandleMouseDown(e);
+                CurrentState.HandleMouseDown(e);
             }
         }
 
@@ -288,7 +303,7 @@ namespace RichCanvas
         {
             if (IsMouseCaptured)
             {
-                CurrentState?.HandleMouseMove(e);
+                CurrentState.HandleMouseMove(e);
             }
         }
 
@@ -298,44 +313,11 @@ namespace RichCanvas
             // Release the mouse capture if all the mouse buttons are released
             if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
             {
-                CurrentState?.HandleMouseUp(e);
+                CurrentState.HandleMouseUp(e);
+                PopState();
                 ReleaseMouseCapture();
             }
         }
-
-        ///// <inheritdoc/>
-        //protected override void OnMouseEnter(MouseEventArgs e)
-        //{
-        //    if (Host != null)
-        //    {
-        //        Host.HasCustomBehavior = HasCustomBehavior;
-        //    }
-
-        //    if (IsDraggable)
-        //    {
-        //        DragBehavior.SetIsDragging((RichItemContainer)e.OriginalSource, true);
-        //    }
-        //}
-
-        ///// <inheritdoc/>
-        //protected override void OnMouseLeave(MouseEventArgs e)
-        //{
-        //    // ignore custom behavior as mouse is not on this container
-        //    if (Host != null)
-        //    {
-        //        Host.HasCustomBehavior = false;
-        //    }
-
-        //    if (IsDraggable)
-        //    {
-        //        var position = e.GetPosition(Host?.ItemsHost);
-        //        DragBehavior.SetIsDragging((RichItemContainer)e.OriginalSource, false);
-        //        RaiseEvent(new DragCompletedEventArgs(position.X, position.Y, true)
-        //        {
-        //            RoutedEvent = DragCompletedEvent
-        //        });
-        //    }
-        //}
 
         /// <summary>
         /// Occurs when the <see cref="RichItemContainer"/> is being dragged.
