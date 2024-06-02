@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
-namespace RichCanvas.States.Dragging
+namespace RichCanvas.States.ContainerStates
 {
     public class SingleDraggingStrategy : DraggingStrategy
     {

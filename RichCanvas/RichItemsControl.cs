@@ -11,12 +11,11 @@ using System.Collections.Specialized;
 using System.Collections;
 using System.Collections.Generic;
 using RichCanvas.States;
-using RichCanvas.States.Dragging;
-using RichCanvas.States.SelectionStates;
 using RichCanvas.Gestures;
 using RichCanvas.CustomEventArgs;
 using System.Windows.Automation.Peers;
 using RichCanvas.Automation;
+using RichCanvas.States.ContainerStates;
 
 namespace RichCanvas
 {
@@ -711,11 +710,11 @@ namespace RichCanvas
             if (IsMouseCaptured)
             {
                 CurrentState.HandleMouseUp(e);
+                PopState();
                 if (e.HasAllButtonsReleased())
                 {
                     ReleaseMouseCapture();
                 }
-                PopState();
             }
             Focus();
         }
@@ -766,7 +765,6 @@ namespace RichCanvas
 
         public void PushState(CanvasState state)
         {
-            var prev = CurrentState;
             _states.Push(state);
             state.Enter();
         }

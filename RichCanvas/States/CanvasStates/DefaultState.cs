@@ -1,6 +1,5 @@
 ﻿using RichCanvas.Gestures;
 using RichCanvas.Helpers;
-using RichCanvas.States.SelectionStates;
 using System.Windows;
 using System.Windows.Input;
 

@@ -4,7 +4,7 @@ using System;
 using System.Windows;
 using System.Windows.Input;
 
-namespace RichCanvas.States.SelectionStates
+namespace RichCanvas.States
 {
     public class SelectingState : CanvasState
     {
