@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls.Primitives;
 
-namespace RichCanvas.States.Dragging
+namespace RichCanvas.States.ContainerStates
 {
     public class DraggingStrategy
     {

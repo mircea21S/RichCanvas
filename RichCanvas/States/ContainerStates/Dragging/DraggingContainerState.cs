@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 
-namespace RichCanvas.States.Dragging
+namespace RichCanvas.States.ContainerStates
 {
     public class DraggingContainerState : ContainerState
     {
@@ -22,10 +22,6 @@ namespace RichCanvas.States.Dragging
                     Container?.Host?.UpdateSelectedItem(Container);
                 }
             }
-        }
-
-        public override void HandleMouseDown(MouseButtonEventArgs e)
-        {
             Container?.RaiseDragStartedEvent(_initialPosition);
         }
 
