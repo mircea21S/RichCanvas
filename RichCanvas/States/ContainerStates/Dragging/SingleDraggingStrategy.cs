@@ -15,7 +15,7 @@ namespace RichCanvas.States.ContainerStates
         public override void OnItemsDragDelta(object sender, DragDeltaEventArgs e)
         {
             var offset = new Point(e.HorizontalChange, e.VerticalChange);
-            var container = Parent.SelectedContainer;
+            var container = Parent.SingleSelectedContainer;
 
             if (Parent.ItemsHost.HasTouchedNegativeLimit(offset))
             {
@@ -48,7 +48,7 @@ namespace RichCanvas.States.ContainerStates
 
         public override void OnItemsDragCompleted(object sender, DragCompletedEventArgs e)
         {
-            var container = Parent.SelectedContainer;
+            var container = Parent.SingleSelectedContainer;
             TranslateTransform? translateTransform = container.TranslateTransform;
 
             if (translateTransform != null)

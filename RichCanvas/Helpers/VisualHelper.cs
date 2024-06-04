@@ -23,7 +23,7 @@ namespace RichCanvas.Helpers
             }
 
             var parent = VisualTreeHelper.GetParent(d);
-            while (!(parent is RichItemContainer) && parent != null)
+            while (parent is not RichItemContainer && parent != null)
             {
                 parent = VisualTreeHelper.GetParent(parent);
             }
@@ -37,7 +37,7 @@ namespace RichCanvas.Helpers
         /// <returns></returns>
         public static bool HasScrollBarParent(DependencyObject reference)
         {
-            if (!(reference is ScrollBar))
+            if (reference is not ScrollBar)
             {
                 if (reference != null)
                 {

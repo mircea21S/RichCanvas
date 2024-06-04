@@ -250,7 +250,7 @@
                             Height="30"
                             HorizontalAlignment="Right" />
 
-                    <Button Command="{Binding AddPositionedRectangleCommand}"
+                    <Button Command="{Binding SelectItemsTestCommand}"
                             CommandParameter="{StaticResource FalseValue}"
                             AutomationProperties.AutomationId="{x:Static local:AutomationIds.AddPositionedRectangleButtonId}"
                             Width="120"
@@ -366,8 +366,9 @@
                                      AutoPanTickRate="{Binding AutoPanTickRate, Converter={StaticResource StringToFloatConverter}}"
                                      SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                                      RealTimeDraggingEnabled="True"
-                                     RealTimeSelectionEnabled="True"
-                                     VerticalScrollBarVisibility="{Binding VerticalScrollBarVisibility}">
+                                     RealTimeSelectionEnabled="False"
+                                     VerticalScrollBarVisibility="{Binding VerticalScrollBarVisibility}"
+                                     CanSelectMultipleItems="False">
             <!--TranslateOffset="{Binding TranslateOffset, Mode=TwoWay}"-->
 
             <richCanvas:RichItemsControl.ContextMenu>
