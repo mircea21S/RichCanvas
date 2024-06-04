@@ -44,6 +44,7 @@ namespace RichCanvas
         private DispatcherTimer? _autoPanTimer;
         private bool _fromEvent;
         private Stack<CanvasState> _states;
+        private DraggingStrategy _draggingStrategy;
 
         #endregion
 
@@ -51,7 +52,7 @@ namespace RichCanvas
 
         public CanvasState CurrentState => _states.Peek();
 
-        public RichItemContainer? SelectedContainer { get; private set; }
+        public RichItemContainer? SingleSelectedContainer { get; private set; }
 
         /// <summary>
         /// <see cref="Grid"/> control wrapping the scrolling logic.
@@ -975,47 +976,6 @@ namespace RichCanvas
             return intersectedElements;
         }
 
-        /// <inheritdoc/>
-        protected override void OnSelectionChanged(SelectionChangedEventArgs e)
-        {
-            base.OnSelectionChanged(e);
-
-            if (!IsSelecting && CanSelectMultipleItems)
-            {
-                IList selected = SelectedItems;
-
-                if (selected != null)
-                {
-                    IList added = e.AddedItems;
-                    IList removed = e.RemovedItems;
-                    for (var i = 0; i < added.Count; i++)
-                    {
-                        // Ensure no duplicates are added
-                        if (!selected.Contains(added[i]))
-                        {
-                            selected.Add(added[i]);
-                        }
-                    }
-
-                    for (var i = 0; i < removed.Count; i++)
-                    {
-                        selected.Remove(removed[i]);
-                    }
-                }
-            }
-            else if (!IsSelecting && !CanSelectMultipleItems)
-            {
-                var added = e.AddedItems;
-                if (added.Count == 1)
-                {
-                    if (SelectedContainer != null && added[0] != SelectedContainer.DataContext)
-                    {
-                        SelectedContainer.IsSelected = false;
-                    }
-                }
-            }
-        }
-
         private static void OnSelectedItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
             => ((RichItemsControl)d).OnSelectedItemsSourceChanged((IList)e.OldValue, (IList)e.NewValue);
 
@@ -1091,13 +1051,18 @@ namespace RichCanvas
             }
         }
 
-        internal void UpdateSelectedItem(RichItemContainer container)
+        public void UpdateSingleSelectedItem(RichItemContainer selectedContainer)
         {
-            if (SelectedContainer != null)
+            if (SelectedItem == null)
             {
-                SelectedContainer.IsSelected = false;
+                selectedContainer.IsSelected = true;
             }
-            SelectedContainer = container;
+            else
+            {
+                SelectedItem = null;
+                selectedContainer.IsSelected = true;
+            }
+            SingleSelectedContainer = selectedContainer;
         }
 
         #endregion
@@ -1106,19 +1071,19 @@ namespace RichCanvas
 
         private void OnItemsDragCompleted(object sender, DragCompletedEventArgs e)
         {
-            SelectionHelper.GetDraggingStrategy()?.OnItemsDragCompleted(sender, e);
+            _draggingStrategy.OnItemsDragCompleted(sender, e);
             IsDragging = false;
         }
 
         private void OnItemsDragDelta(object sender, DragDeltaEventArgs e)
         {
-            SelectionHelper.GetDraggingStrategy()?.OnItemsDragDelta(sender, e);
+            _draggingStrategy.OnItemsDragDelta(sender, e);
         }
 
         private void OnItemsDragStarted(object sender, DragStartedEventArgs e)
         {
             IsDragging = true;
-            SelectionHelper.GetDraggingStrategy()?.OnItemsDragStarted(sender, e);
+            _draggingStrategy.OnItemsDragStarted(sender, e);
         }
 
         private void CanSelectMultipleItemsUpdated(bool value)
@@ -1127,13 +1092,11 @@ namespace RichCanvas
             base.CanSelectMultipleItems = value;
             if (value)
             {
-                SelectionHelper.SetSelectionStrategy(new MultipleSelectionStrategy(this));
-                SelectionHelper.SetDraggingStrategy(new MultipleDraggingStrategy(this));
+                _draggingStrategy = new MultipleDraggingStrategy(this);
             }
             else
             {
-                SelectionHelper.SetSelectionStrategy(new SingleSelectionStrategy(this));
-                SelectionHelper.SetDraggingStrategy(new SingleDraggingStrategy(this));
+                _draggingStrategy = new SingleDraggingStrategy(this);
             }
         }
 
