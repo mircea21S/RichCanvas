@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<Nullable>enable</Nullable>
 		<TargetFrameworks>net5-windows;netcoreapp3.1;net48;net472</TargetFrameworks>
-		<LangVersion>8.0</LangVersion>
+		<LangVersion>latest</LangVersion>
 		<UseWPF>true</UseWPF>
 		<Authors>Mircea Staicu</Authors>
 		<RepositoryUrl>https://github.com/mircea21S/RichCanvas</RepositoryUrl>

@@ -16,10 +16,13 @@ namespace RichCanvas.States.ContainerStates
             _initialPosition = Mouse.GetPosition(Container?.Host?.ItemsHost);
             if (Container.IsSelectable)
             {
-                Container.IsSelected = true;
-                if (!Container.Host.CanSelectMultipleItems)
+                if (Container.Host.CanSelectMultipleItems)
                 {
-                    Container?.Host?.UpdateSelectedItem(Container);
+                    Container.IsSelected = true;
+                }
+                else
+                {
+                    Container?.Host?.UpdateSingleSelectedItem(Container);
                 }
             }
             Container?.RaiseDragStartedEvent(_initialPosition);
