@@ -1,25 +1,19 @@
-﻿using System.Windows.Media;
+﻿using System;
 using System.Windows;
-using RichCanvas.States;
-using RichCanvas.States.ContainerStates;
+using System.Windows.Media;
 
 namespace RichCanvas.Helpers
 {
-    internal static class SelectionHelper
+    public static class SelectionHelper
     {
-        private static SelectionStrategy? _selectionStrategy;
-        private static DraggingStrategy? _draggingStrategy;
+        public static Rect DrawSelectionRectangle(Point position, Point initialPosition)
+        {
+            double left = position.X < initialPosition.X ? position.X : initialPosition.X;
+            double top = position.Y < initialPosition.Y ? position.Y : initialPosition.Y;
+            double width = Math.Abs(position.X - initialPosition.X);
+            double height = Math.Abs(position.Y - initialPosition.Y);
 
-        internal static void SetSelectionStrategy(SelectionStrategy selectionStrategy) => _selectionStrategy = selectionStrategy;
-
-        internal static SelectionStrategy? GetSelectionStrategy() => _selectionStrategy;
-
-        internal static void SetDraggingStrategy(DraggingStrategy draggingStrategy) => _draggingStrategy = draggingStrategy;
-
-        internal static DraggingStrategy? GetDraggingStrategy() => _draggingStrategy;
-
-        internal static RectangleGeometry ToRectangleGeometry(this Rect selectionRectangle)
-            => new RectangleGeometry(selectionRectangle);
-
+            return new Rect(left, top, width, height);
+        }
     }
 }

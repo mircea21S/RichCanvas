@@ -4,7 +4,6 @@ using RichCanvasTestApp.CustomControls;
 using RichCanvasTestApp.Services;
 using RichCanvasTestApp.ViewModels;
 using RichCanvasTestApp.ViewModels.Base;
-using RichCanvasTestApp.ViewModelsMocks;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -62,7 +61,7 @@ namespace RichCanvasTestApp
         public ICommand DrawLineCommand => drawLineCommand ??= new RelayCommand(DrawLine);
         public ICommand ResizeCommand => resizeCommand ??= new RelayCommand(Resize);
         public ICommand DeleteCommand => deleteCommand ??= new RelayCommand(Delete);
-        public ICommand AddPositionedRectangleCommand => addPositionedRectangleCommand ??= new RelayCommand<bool>(OnAddPositionedRectangle);
+        public ICommand SelectItemsTestCommand => addPositionedRectangleCommand ??= new RelayCommand<bool>(SelectItemTest);
         public ICommand DrawGroupCommand => drawGroupCommand ??= new RelayCommand(OnDrawGroup);
 
 
@@ -222,9 +221,9 @@ namespace RichCanvasTestApp
 
         private void OnDrawGroup() => Items.Add(new Group());
 
-        private void OnAddPositionedRectangle(bool isImmutable = false)
+        private void SelectItemTest(bool isImmutable = false)
         {
-            Items.Add(isImmutable ? RectangleMock.FakeImmutableRectangleWithTopAndLeftSet : RectangleMock.FakePositionedRectangle);
+            SelectedItem = Items[0];
         }
 
         private void OnGenerateElements()

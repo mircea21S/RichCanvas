@@ -1,5 +1,6 @@
 ﻿using RichCanvas.Gestures;
 using RichCanvas.Helpers;
+using RichCanvas.States.CanvasStates;
 using System.Windows;
 using System.Windows.Input;
 
@@ -25,9 +26,16 @@ namespace RichCanvas.States
             }
             else if (RichCanvasGestures.Select.Matches(e.Source, e) && Parent.SelectionEnabled)
             {
-                PushState(new SelectingState(Parent));
+                if (Parent.CanSelectMultipleItems)
+                {
+                    PushState(new MultipleSelectionState(Parent));
+                }
+                else
+                {
+                    PushState(new SingleSelectionState(Parent));
+                }
             }
-            
+
         }
     }
 }
