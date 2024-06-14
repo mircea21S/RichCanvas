@@ -18,6 +18,12 @@ namespace RichCanvas.UITests
             }
         }
 
+        internal static void ToggleButton(this Window window, string buttonAutomationId)
+        {
+            var toggleButton = window.FindFirstDescendant(d => d.ByAutomationId(buttonAutomationId));
+            toggleButton.AsToggleButton()?.Toggle();
+        }
+
         internal static void ClearAllItems(this Window window)
         {
             var button = window.FindFirstDescendant(d => d.ByAutomationId(AutomationIds.ClearItemsButtonId));

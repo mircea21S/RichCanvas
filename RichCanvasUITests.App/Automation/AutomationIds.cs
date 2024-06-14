@@ -11,5 +11,8 @@
         public const string RemoveFirstItemButtonId = "RemoveFirstItem";
         public const string AddEmptyLineButtonId = "AddEmptyLine";
         public const string AddSelectableItemsButtonId = "AddSelectableItems";
+        public const string RealTimeSelectionToggleButtonId = "RealTimeSelectionToggle";
+        public const string CanSelectMultipleItemsToggleButtonId = "CanSelectMultipleItemsToggle";
+        public const string AddTestSingleSelectionItemsButtonId = "AddTestSingleSelectionItems";
     }
 }
