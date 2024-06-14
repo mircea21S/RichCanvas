@@ -1,5 +1,4 @@
-﻿using RichCanvasUITests.App;
-using RichCanvasUITests.App.Models;
+﻿using RichCanvasUITests.App.Models;
 using RichCanvasUITests.App.TestMocks;
 using System;
 using System.Collections.ObjectModel;
@@ -18,6 +17,7 @@ namespace RichCanvasUITests.App
         public MainWindowViewModel()
         {
             Items = new ObservableCollection<RichItemContainerModel>();
+            SelectedItems = new ObservableCollection<RichItemContainerModel>();
         }
 
         private RelayCommand<bool> _addPositionedRectangleCommand;
@@ -173,6 +173,46 @@ namespace RichCanvasUITests.App
         private void AddSelectableItems()
         {
             foreach (var item in RichItemContainerModelMocks.PositionedSelectableItemListMock)
+            {
+                Items.Add(item);
+            }
+        }
+
+        public ObservableCollection<RichItemContainerModel> SelectedItems { get; }
+
+        private bool _realTimeSelectionEnabled;
+
+        public bool RealTimeSelectionEnabled
+        {
+            get => _realTimeSelectionEnabled;
+            set => SetProperty(ref _realTimeSelectionEnabled, value);
+        }
+
+        private bool _canSelectMultipleItems;
+
+        public bool CanSelectMultipleItems
+        {
+            get => _canSelectMultipleItems;
+            set => SetProperty(ref _canSelectMultipleItems, value);
+        }
+
+        private ICommand _addSingleSelectionItemsForTest;
+        public ICommand AddSingleSelectionItemsForTest
+        {
+            get
+            {
+                if (_addSingleSelectionItemsForTest == null)
+                {
+                    _addSingleSelectionItemsForTest = new RelayCommand(AddTestSingleSelectionItems);
+                }
+
+                return _addSingleSelectionItemsForTest;
+            }
+        }
+
+        private void AddTestSingleSelectionItems()
+        {
+            foreach (var item in RichItemContainerModelMocks.SingleSelectionRealTimeDragTestItems)
             {
                 Items.Add(item);
             }

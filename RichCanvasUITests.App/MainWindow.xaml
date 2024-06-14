@@ -4,11 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RichCanvasUITests.App"
-        xmlns:richCanvas="clr-namespace:RichCanvas;assembly=RichCanvas"
         xmlns:s="clr-namespace:System;assembly=mscorlib"
         xmlns:scs="clr-namespace:System.Collections.Specialized;assembly=System"
         xmlns:auto="clr-namespace:RichCanvasUITests.App.Automation"
         xmlns:models="clr-namespace:RichCanvasUITests.App.Models"
+        xmlns:richCanvas="clr-namespace:RichCanvas;assembly=RichCanvas"
         mc:Ignorable="d"
         Title="MainWindow"
         Height="450"
@@ -86,10 +86,31 @@
                     AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddSelectableItemsButtonId}"
                     Content="Add Selectable Items" />
 
+            <Button Command="{Binding AddSingleSelectionItemsForTest}"
+                    AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddTestSingleSelectionItemsButtonId}"
+                    Content="Add Single Selection Test Items" />
+
             <Button Command="{Binding ClearAllItemsCommand}"
                     AutomationProperties.AutomationId="{x:Static auto:AutomationIds.ClearItemsButtonId}"
                     Content="Clear all items">
             </Button>
+
+            <Border Name="ToggleProperties"
+                    BorderThickness="1"
+                    BorderBrush="BlueViolet"
+                    Margin="2">
+                <StackPanel>
+                    <ToggleButton AutomationProperties.AutomationId="{x:Static auto:AutomationIds.RealTimeSelectionToggleButtonId}"
+                                  IsChecked="{Binding RealTimeSelectionEnabled, Mode=TwoWay}"
+                                  Content="RealTimeSelection">
+                    </ToggleButton>
+
+                    <ToggleButton AutomationProperties.AutomationId="{x:Static auto:AutomationIds.CanSelectMultipleItemsToggleButtonId}"
+                                  IsChecked="{Binding CanSelectMultipleItems, Mode=TwoWay}"
+                                  Content="CanSelectMultipleItems">
+                    </ToggleButton>
+                </StackPanel>
+            </Border>
 
             <Border Name="SelectedItemProperties"
                     BorderThickness="1"
@@ -105,12 +126,16 @@
 
             <TextBlock Text="{Binding MousePosition, ElementName=source, StringFormat='\{0\} mouse position'}"></TextBlock>
             <TextBlock Text="{Binding ItemsSource.Count, ElementName=source, StringFormat='\{0\} items'}"></TextBlock>
+            <TextBlock Text="{Binding SelectedItems.Count, ElementName=source, StringFormat='\{0\} selected items'}"></TextBlock>
         </StackPanel>
 
         <richCanvas:RichItemsControl Background="AliceBlue"
                                      ItemsSource="{Binding Items}"
                                      SelectedItem="{Binding SelectedItem}"
+                                     SelectedItems="{Binding SelectedItems}"
                                      RealTimeDraggingEnabled="True"
+                                     RealTimeSelectionEnabled="{Binding RealTimeSelectionEnabled}"
+                                     CanSelectMultipleItems="{Binding CanSelectMultipleItems}"
                                      Name="source">
             <richCanvas:RichItemsControl.Resources>
                 <DataTemplate DataType="{x:Type local:RichItemContainerModel}">
@@ -142,7 +167,7 @@
 
                     <Setter Property="AllowScaleChangeToUpdatePosition"
                             Value="{Binding AllowScaleChangeToUpdatePosition}" />
-
+                    
                     <Style.Triggers>
                         <Trigger Property="IsSelected"
                                  Value="True">

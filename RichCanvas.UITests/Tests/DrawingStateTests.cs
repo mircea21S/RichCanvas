@@ -5,7 +5,6 @@ using NUnit.Framework;
 using RichCanvas.Gestures;
 using RichCanvas.States;
 using RichCanvas.UITests.Helpers;
-using RichCanvas.UITests.Tests;
 using RichCanvasUITests.App;
 using RichCanvasUITests.App.Automation;
 using RichCanvasUITests.App.Models;
@@ -14,7 +13,7 @@ using System.Windows.Input;
 using Mouse = FlaUI.Core.Input.Mouse;
 using Point = System.Drawing.Point;
 
-namespace RichCanvas.UITests
+namespace RichCanvas.UITests.Tests
 {
     [TestFixture]
     public class DrawingStateTests : RichCanvasTestAppTest

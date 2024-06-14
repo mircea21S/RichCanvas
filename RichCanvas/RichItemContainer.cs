@@ -120,17 +120,6 @@ namespace RichCanvas
             set => SetValue(ScaleProperty, value);
         }
 
-        protected static readonly DependencyPropertyKey BoundingBoxPropertyKey = DependencyProperty.RegisterReadOnly(nameof(BoundingBox), typeof(Rect), typeof(RichItemContainer), new FrameworkPropertyMetadata(Rect.Empty));
-        public static DependencyProperty BoundingBoxProperty = BoundingBoxPropertyKey.DependencyProperty;
-        /// <summary>
-        /// Gets this <see cref="RichItemContainer"/> TransformBounds.
-        /// </summary>
-        public Rect BoundingBox
-        {
-            get => (Rect)GetValue(BoundingBoxProperty);
-            internal set => SetValue(BoundingBoxPropertyKey, value);
-        }
-
         public static DependencyProperty AllowScaleChangeToUpdatePositionProperty = DependencyProperty.Register(nameof(AllowScaleChangeToUpdatePosition), typeof(bool), typeof(RichItemContainer), new FrameworkPropertyMetadata(true));
         /// <summary>
         /// Gets or sets whether this <see cref="RichItemContainer"/> Left and Top can be updated while Drawing if the <see cref="Scale"/> is changed.
@@ -227,6 +216,11 @@ namespace RichCanvas
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(RichItemContainer), new FrameworkPropertyMetadata(typeof(RichItemContainer)));
         }
+
+        /// <summary>
+        /// Gets this <see cref="RichItemContainer"/> TransformBounds.
+        /// </summary>
+        public Rect BoundingBox { get; private set; }
 
         public ContainerState CurrentState => _states.Peek();
         /// <summary>

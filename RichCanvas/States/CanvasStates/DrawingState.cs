@@ -22,12 +22,12 @@ namespace RichCanvas.States
                 return;
             }
 
-            var currentDrawingContainerIndex = drawingContainersIndexes[drawingContainersIndexes.Count - 1];
+            var currentDrawingContainerIndex = drawingContainersIndexes[0];
             var container = (RichItemContainer)Parent.ItemContainerGenerator.ContainerFromIndex(currentDrawingContainerIndex);
             if (container.IsValid())
             {
                 container.IsDrawn = true;
-                drawingContainersIndexes.Remove(currentDrawingContainerIndex);
+                drawingContainersIndexes.RemoveAt(0);
                 return;
             }
 
@@ -45,7 +45,7 @@ namespace RichCanvas.States
             }
             DrawContainer(mousePosition);
 
-            drawingContainersIndexes.Remove(drawingContainersIndexes[drawingContainersIndexes.Count - 1]);
+            drawingContainersIndexes.RemoveAt(0);
         }
 
         public override void HandleMouseMove(MouseEventArgs e)

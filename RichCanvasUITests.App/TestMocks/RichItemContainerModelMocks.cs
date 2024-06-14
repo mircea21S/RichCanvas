@@ -23,8 +23,8 @@ namespace RichCanvasUITests.App.TestMocks
             Height = 100,
             Width = 100
         };
-        public static List<RichItemContainerModel> PositionedSelectableItemListMock => new()
-        {
+        public static List<RichItemContainerModel> PositionedSelectableItemListMock =>
+        [
             new()
             {
                 Top = 50,
@@ -32,41 +32,37 @@ namespace RichCanvasUITests.App.TestMocks
                 Height = 50,
                 Width = 50
             },
-            new ()
-            {
-                Top = 100,
-                Left = 50,
-                Height = 50,
-                Width = 50
-            },
-            new ()
-            {
-                Top = 50,
-                Left = 100,
-                Height = 50,
-                Width = 50
-            },
-            new ()
+            new()
             {
                 Top = 150,
                 Left = 150,
                 Height = 50,
                 Width = 50
-            },
-            new Line
-            {
-                Top = 200,
-                Left = 200,
-                Width = 250,
-                Height = 250
-            },
-            new Line
-            {
-                Top = 200,
-                Left = 200,
-                Width = 250,
-                Height = 200
             }
-        };
+        ];
+        public static List<RichItemContainerModel> SingleSelectionRealTimeDragTestItems =>
+        [
+            new()
+            {
+                Top = 50,
+                Left = 50,
+                Height = 50,
+                Width = 50
+            },
+            new()
+            {
+                Top = 150,
+                Left = 90,
+                Height = 50,
+                Width = 50
+            },
+            new()
+            {
+                Top = 250,
+                Left = 150,
+                Height = 50,
+                Width = 50
+            }
+        ];
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace RichCanvasUITests.App
+﻿using System.Windows;
+
+namespace RichCanvasUITests.App
 {
     public class RichItemContainerModel : ObservableObject
     {
@@ -36,5 +38,7 @@
             get => _allowScaleChangeToUpdatePosition;
             set => SetProperty(ref _allowScaleChangeToUpdatePosition, value);
         }
+
+        public Rect BoundingBox => new(Left, Top, Width, Height);
     }
 }
