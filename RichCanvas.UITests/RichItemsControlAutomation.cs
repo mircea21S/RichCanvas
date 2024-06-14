@@ -3,6 +3,7 @@ using FlaUI.Core.AutomationElements;
 using RichCanvas.Automation;
 using RichCanvas.Automation.ControlInformations;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RichCanvas.UITests
 {
@@ -46,6 +47,18 @@ namespace RichCanvas.UITests
                         }
                     }
                     return allItems.ToArray();
+                }
+                return null;
+            }
+        }
+
+        public RichItemContainerAutomation SelectedItem
+        {
+            get
+            {
+                if (Patterns.Selection.TryGetPattern(out var selectionPattern) && !selectionPattern.CanSelectMultiple)
+                {
+                    return selectionPattern.Selection.ValueOrDefault.SingleOrDefault().AsRichItemContainerAutomation();
                 }
                 return null;
             }

@@ -16,7 +16,7 @@ namespace RichCanvas.UITests
 
         private string AppPath { get; }
         protected Application Application { get; private set; }
-        protected Window Window => Application.GetMainWindow(_automation);
+        protected Window Window { get; private set; }
         protected IEventLibrary EventLibrary => _automation.EventLibrary;
 
 
@@ -50,6 +50,7 @@ namespace RichCanvas.UITests
             // hack to wait for all the initializations (some NullRefException being thrown if not)
             Thread.Sleep(1000);
             Application = app;
+            Window = app.GetMainWindow(_automation);
         }
     }
 }
