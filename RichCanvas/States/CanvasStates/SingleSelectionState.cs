@@ -11,7 +11,7 @@ namespace RichCanvas.States.CanvasStates
     {
         private Point _selectionRectangleInitialPosition;
         private RichItemContainer _selectedContainer;
-        private List<RichItemContainer> _selectedContainers;
+        private List<RichItemContainer> _selectedContainers = [];
 
         public SingleSelectionState(RichItemsControl parent) : base(parent)
         {
@@ -22,20 +22,12 @@ namespace RichCanvas.States.CanvasStates
             Parent.SelectionRectangle = new Rect();
             Parent.IsSelecting = true;
             _selectionRectangleInitialPosition = Mouse.GetPosition(Parent.ItemsHost);
-            if (!Parent.RealTimeSelectionEnabled)
-            {
-                Parent.SelectedItem = null;
-            }
+            Parent.SelectedItem = null;
         }
 
         public override void ReEnter()
         {
-            if (!Parent.RealTimeSelectionEnabled)
-            {
-                SelectItem(true);
-                return;
-            }
-            SelectItem();
+            SelectItem(Parent.RealTimeSelectionEnabled);
         }
 
         public override void HandleKeyDown(KeyEventArgs e)
@@ -92,13 +84,6 @@ namespace RichCanvas.States.CanvasStates
         {
             if (!defferedSelection)
             {
-                if (_selectedContainer != null)
-                {
-                    if (!_selectedContainers.Contains(_selectedContainer))
-                    {
-                        _selectedContainer.IsSelected = false;
-                    }
-                }
                 _selectedContainers.Clear();
             }
 
@@ -107,6 +92,30 @@ namespace RichCanvas.States.CanvasStates
             VisualTreeHelper.HitTest(Parent.ItemsHost, null,
                 new HitTestResultCallback(OnHitTestResultCallback),
                 new GeometryHitTestParameters(geom));
+
+            if (!defferedSelection)
+            {
+                if (Parent.SelectedItem == null && _selectedContainers.Count > 0)
+                {
+                    Parent.SelectedItem = _selectedContainers[0].DataContext;
+                    _selectedContainers[0].IsSelected = true;
+                    _selectedContainer = _selectedContainers[0];
+                }
+                if ((_selectedContainers.Count > 0 && !_selectedContainers.Contains(_selectedContainer)) || _selectedContainers.Count == 0)
+                {
+                    Parent.SelectedItem = null;
+                    if (_selectedContainer != null)
+                    {
+                        _selectedContainer.IsSelected = false;
+                    }
+                    if (_selectedContainers.Count > 0)
+                    {
+                        Parent.SelectedItem = _selectedContainers[0].DataContext;
+                        _selectedContainers[0].IsSelected = true;
+                        _selectedContainer = _selectedContainers[0];
+                    }
+                }
+            }
 
             if (defferedSelection && _selectedContainers.Count > 0)
             {
@@ -122,11 +131,7 @@ namespace RichCanvas.States.CanvasStates
                 var container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
                 if (container != null && container.IsSelectable)
                 {
-                    if (Parent.SelectedItem == null && Parent.RealTimeSelectionEnabled)
-                    {
-                        _selectedContainer = container;
-                        container.IsSelected = true;
-                    }
+                    // first element of this list is the last added item in the ItemsSource
                     _selectedContainers.Add(container);
                 }
             }
