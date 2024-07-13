@@ -737,6 +737,15 @@ namespace RichCanvas
             if (e.Action == NotifyCollectionChangedAction.Reset)
             {
                 CurrentDrawingIndexes.Clear();
+                if (CanSelectMultipleItems)
+                {
+                    base.SelectedItems?.Clear();
+                    SelectedItems?.Clear();
+                }
+                else
+                {
+                    SelectedItem = null;
+                }
             }
             else if (e.NewStartingIndex != -1 && e.Action == NotifyCollectionChangedAction.Add)
             {

@@ -18,6 +18,7 @@ namespace RichCanvas.UITests
             return point;
         }
         internal static System.Windows.Point ToCanvasPoint(this Point point) => new System.Windows.Point(point.X, point.Y - RichCanvasTestAppTest.RichCanvasDemoTitleBarHeight);
+        internal static Point ToCanvasDrawingPoint(this Point point) => new Point(point.X, point.Y + (int)RichCanvasTestAppTest.RichCanvasDemoTitleBarHeight);
         internal static System.Windows.Point ToCanvasPoint(this System.Windows.Point point) => new System.Windows.Point(point.X, point.Y - RichCanvasTestAppTest.RichCanvasDemoTitleBarHeight);
         /// <summary>
         /// Workaround of issue with FlaUI https://github.com/FlaUI/FlaUI/issues/612.
@@ -26,5 +27,7 @@ namespace RichCanvas.UITests
         /// </summary>
         /// <returns></returns>
         internal static Point AsFlaUIFixedPoint(this Point point) => new Point(point.X * 2, point.Y * 2);
+
+        internal static Point AsDrawingPoint(this System.Windows.Point windowsPoint) => new Point((int)windowsPoint.X, (int)windowsPoint.Y);
     }
 }

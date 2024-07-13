@@ -33,6 +33,7 @@ namespace RichCanvas
 
         #region Properties API
 
+        /// <inheritdoc/>
         public static DependencyProperty IsSelectedProperty = Selector.IsSelectedProperty.AddOwner(typeof(RichItemContainer), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnIsSelectedChanged));
         /// <summary>
         /// Gets or sets a value that indicates whether this item is selected.
@@ -376,7 +377,6 @@ namespace RichCanvas
             if ((bool)e.NewValue)
             {
                 ((RichItemContainer)d).BringIntoView();
-
             }
         }
 
