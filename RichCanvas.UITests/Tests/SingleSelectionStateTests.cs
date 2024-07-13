@@ -2,49 +2,17 @@
 using FluentAssertions;
 using NUnit.Framework;
 using RichCanvasUITests.App.Automation;
-using RichCanvasUITests.App.TestMocks;
-using System;
 using System.Drawing;
 using System.Linq;
 
 namespace RichCanvas.UITests.Tests
 {
     [TestFixture]
-    public class SelectingStateTests : RichCanvasTestAppTest
+    public class SingleSelectionStateTests : RichCanvasTestAppTest
     {
         // TODO: use the actual UI APP static "mocks" on acting and asserting
         [Test]
-        public void SelectingStateDrag_WithRealTimeSelectionEnabledAndMultipleSelection_ShouldSelectItemsWhileDragging()
-        {
-            // arrange
-            // enable real-time selection
-            Window.ToggleButton(AutomationIds.RealTimeSelectionToggleButtonId);
-            // enable multiple selection
-            Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
-            // add items for selection
-            Window.InvokeButton(AutomationIds.AddSelectableItemsButtonId);
-            var currentUiItems = RichItemContainerModelMocks.PositionedSelectableItemListMock;
-            Wait.UntilInputIsProcessed();
-
-            // act and assert
-            Mouse.Position = new Point((int)currentUiItems[0].Left - 1, (int)currentUiItems[0].Top - 1);
-
-            Mouse.Down();
-
-            // select first item
-            Mouse.Position = new Point((int)currentUiItems[0].BoundingBox.BottomRight.X + 1, (int)currentUiItems[0].BoundingBox.BottomRight.Y + 1);
-            RichItemsControl.SelectedItems.Length.Should().Be(1);
-
-            // select second item
-            Mouse.Position = new Point((int)currentUiItems[1].BoundingBox.BottomRight.X + 1, (int)currentUiItems[1].BoundingBox.BottomRight.Y + 1);
-            RichItemsControl.SelectedItems.Length.Should().Be(2);
-
-            Mouse.Up();
-            RichItemsControl.SelectedItems.Length.Should().Be(2);
-        }
-
-        [Test]
-        public void SelectingStateDrag_WithRealTimeSelectionEnabledAndSingleSelection_ShouldSelectFirstInteresectingItem()
+        public void SingleSelectionStateDrag_WithRealTimeSelectionEnabled_ShouldSelectFirstInteresectingItem()
         {
             // arrange
             // enable real-time selection
@@ -73,7 +41,7 @@ namespace RichCanvas.UITests.Tests
         }
 
         [Test]
-        public void SelectingStateDrag_WithRealTimeSelectionEnabledAndSingleSelection_ShouldUpdateSelectedItemIfSelectionAreaDoesNotContainCurrentOne()
+        public void SingleSelectionStateDrag_WithRealTimeSelectionEnabled_ShouldUpdateSelectedItemIfSelectionAreaDoesNotContainCurrentOne()
         {
             // arrange
             // enable real-time selection
