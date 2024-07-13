@@ -270,8 +270,6 @@ namespace RichCanvas.UITests.Tests
             RichItemsControl.SelectedItems.Should().BeEmpty();
         }
 
-        // [] Test selection happens without problems when SelectedItems property is not binded
-
         private void ArrangeRealTimeScenario(string buttonId = AutomationIds.AddSelectableItemsButtonId1)
         {
             // enable real-time selection
