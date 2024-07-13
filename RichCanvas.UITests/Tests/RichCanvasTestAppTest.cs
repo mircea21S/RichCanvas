@@ -20,7 +20,7 @@ namespace RichCanvas.UITests.Tests
         }
 
         [SetUp]
-        public void SetUp()
+        public virtual void SetUp()
         {
             if (ShouldRestartApplication)
             {
@@ -29,7 +29,7 @@ namespace RichCanvas.UITests.Tests
         }
 
         [TearDown]
-        public void TearDown()
+        public virtual void TearDown()
         {
             Window.ClearAllItems();
             if (ShouldRestartApplication)
