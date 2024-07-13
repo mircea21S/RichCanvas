@@ -40,5 +40,7 @@ namespace RichCanvasUITests.App
         }
 
         public Rect BoundingBox => new(Left, Top, Width, Height);
+
+        public Point Center => new((Width / 2) + Left, (Height / 2) + Top);
     }
 }
