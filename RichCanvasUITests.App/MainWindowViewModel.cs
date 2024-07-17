@@ -172,7 +172,7 @@ namespace RichCanvasUITests.App
 
         private void AddSelectableItems()
         {
-            foreach (var item in RichItemContainerModelMocks.PositionedSelectableItemListMock)
+            foreach (var item in RichItemContainerModelMocks.PositionedSelectableItemsListMock)
             {
                 Items.Add(item);
             }
