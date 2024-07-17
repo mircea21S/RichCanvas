@@ -22,6 +22,7 @@ namespace RichCanvas.UITests.Tests
             {
                 // un-toggle real-time selection button
                 Window.ToggleButton(AutomationIds.RealTimeSelectionToggleButtonId);
+                ReleaseRealTimeSelection = false;
             }
             base.TearDown();
         }
@@ -94,13 +95,16 @@ namespace RichCanvas.UITests.Tests
             }
 
             // act and assert
-            Mouse.Click(RichItemContainerModelMocks.SingleSelectionRealTimeDragTestItems[0].Center.AsDrawingPoint().ToCanvasDrawingPoint());
+            Input.WithGesture(RichCanvasGestures.Select)
+                .Click(RichItemContainerModelMocks.SingleSelectionRealTimeDragTestItems[0].Center.AsDrawingPoint().ToCanvasDrawingPoint());
             RichItemsControl.SelectedItem.Should().Be(RichItemsControl.Items[0]);
 
-            Mouse.Click(RichItemContainerModelMocks.SingleSelectionRealTimeDragTestItems[1].Center.AsDrawingPoint().ToCanvasDrawingPoint());
+            Input.WithGesture(RichCanvasGestures.Select)
+                .Click(RichItemContainerModelMocks.SingleSelectionRealTimeDragTestItems[1].Center.AsDrawingPoint().ToCanvasDrawingPoint());
             RichItemsControl.SelectedItem.Should().Be(RichItemsControl.Items[1]);
 
-            Mouse.Click(RichItemContainerModelMocks.SingleSelectionRealTimeDragTestItems[2].Center.AsDrawingPoint().ToCanvasDrawingPoint());
+            Input.WithGesture(RichCanvasGestures.Select)
+                .Click(RichItemContainerModelMocks.SingleSelectionRealTimeDragTestItems[2].Center.AsDrawingPoint().ToCanvasDrawingPoint());
             RichItemsControl.SelectedItem.Should().Be(RichItemsControl.Items[2]);
         }
 
@@ -115,7 +119,7 @@ namespace RichCanvas.UITests.Tests
             // act and assert
             var startPoint = new Point(30, 30);
             Input.WithGesture(RichCanvasGestures.Select).DefferedDrag(startPoint, [
-                (new Point(100, 100), () => 
+                (new Point(100, 100), () =>
                 {
                     RichItemsControl.SelectedItem.Should().BeNull();
                     RichItemsControl.SelectedItems.Should().BeEmpty();
@@ -142,7 +146,7 @@ namespace RichCanvas.UITests.Tests
             Wait.UntilInputIsProcessed();
 
             // act
-            Mouse.Drag(new Point(30, 30), new Point(300, 300));
+            Input.WithGesture(RichCanvasGestures.Select).Drag(new Point(30, 30), new Point(300, 300));
 
             // assert
             RichItemsControl.SelectedItem.Should().NotBeNull();
@@ -158,7 +162,7 @@ namespace RichCanvas.UITests.Tests
             Wait.UntilInputIsProcessed();
 
             // act
-            Mouse.Drag(new Point(30, 30), new Point(300, 300));
+            Input.WithGesture(RichCanvasGestures.Select).Drag(new Point(30, 30), new Point(300, 300));
 
             // assert
             RichItemsControl.SelectedItem.Should().Be(RichItemsControl.Items[2]);
