@@ -23,7 +23,7 @@ namespace RichCanvasUITests.App.TestMocks
             Height = 100,
             Width = 100
         };
-        public static List<RichItemContainerModel> PositionedSelectableItemListMock =>
+        public static List<RichItemContainerModel> PositionedSelectableItemsListMock =>
         [
             new()
             {
