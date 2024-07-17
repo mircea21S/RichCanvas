@@ -11,6 +11,10 @@ namespace RichCanvas.UITests.Tests
 {
     public class MultipleSelectionStateTests : RichCanvasTestAppTest
     {
+        // tests:
+        // operations on binded SelectedItems collection should reflect
+        // do the same for Single Selection through SelectedItem only
+
         private bool ReleaseRealTimeSelection { get; set; }
 
         public override void SetUp()
@@ -25,6 +29,7 @@ namespace RichCanvas.UITests.Tests
             if (ReleaseRealTimeSelection)
             {
                 Window.ToggleButton(AutomationIds.RealTimeSelectionToggleButtonId);
+                ReleaseRealTimeSelection = false;
             }
             // disable multiple selection
             Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
@@ -67,7 +72,7 @@ namespace RichCanvas.UITests.Tests
         [TestCase(true)]
         [TestCase(false)]
         [Test]
-        public void MultipleSelectionStateClickItem_WithEachSelectionType_ShouldSelectItemsWhenClickingThem(bool realTimeSelectionEnabled)
+        public void MultipleSelectionStateClickItem_WithRealTimeSelectionEnabledOrDisabled_ShouldSelectItemsWhenClickingThem(bool realTimeSelectionEnabled)
         {
             // arrange
             if (realTimeSelectionEnabled)
@@ -83,10 +88,12 @@ namespace RichCanvas.UITests.Tests
             var currentUiItems = RichItemContainerModelMocks.PositionedSelectableItemsListMock;
 
             // act and assert
-            Mouse.Click(currentUiItems[0].Center.AsDrawingPoint().ToCanvasDrawingPoint());
+            Input.WithGesture(RichCanvasGestures.Select)
+                .Click(currentUiItems[0].Center.AsDrawingPoint().ToCanvasDrawingPoint());
             RichItemsControl.SelectedItems.Length.Should().Be(1);
 
-            Mouse.Click(currentUiItems[1].Center.AsDrawingPoint().ToCanvasDrawingPoint());
+            Input.WithGesture(RichCanvasGestures.Select)
+               .Click(currentUiItems[1].Center.AsDrawingPoint().ToCanvasDrawingPoint());
             RichItemsControl.SelectedItems.Length.Should().Be(2);
         }
 
