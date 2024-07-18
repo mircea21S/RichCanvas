@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="RichCanvasUITests.App.StatePresenters.MultipleSelectionStateView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:RichCanvasUITests.App.StatePresenters"
+             xmlns:vm="clr-namespace:RichCanvasUITests.App.States"
+             xmlns:auto="clr-namespace:RichCanvasUITests.App.Automation"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=vm:MultipleSelectionStateViewModel}">
+    <StackPanel>
+        <Button Command="{Binding AddSelectableItemsCommmand}"
+                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddSelectableItemsButtonId}"
+                Content="Add Selectable Items" />
+
+    </StackPanel>
+</UserControl>
