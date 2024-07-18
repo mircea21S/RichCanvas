@@ -165,7 +165,7 @@ namespace RichCanvas.UITests.Tests
         public void RichItemsControlAndDrawingState_AddItemWithAllowScaleToUpdatePositionFalse_ShouldNotModifyTopAndLeft(HorizontalDirection horizontalDirection, VerticalDirection verticalDirection)
         {
             // arrange
-            var mockRectangle = RichItemContainerModelMocks.ImmutablePositionedRectangleMock;
+            var mockRectangle = DrawingStateDataMocks.ImmutablePositionedRectangleMock;
             var endPoint = PointUtilities.GetEndingPoint(
                 new Point(mockRectangle.Left.ToInt(), mockRectangle.Top.ToInt()),
                 50,
@@ -194,7 +194,7 @@ namespace RichCanvas.UITests.Tests
         public void RichItemsControlAndDrawingState_AddItemWithAllowScaleToUpdatePositionTrue_ShouldModifyLeftAndTopIfScaleIsChanged(HorizontalDirection horizontalDirection, VerticalDirection verticalDirection)
         {
             // arrange
-            var rectangleMock = RichItemContainerModelMocks.PositionedRectangleMock;
+            var rectangleMock = DrawingStateDataMocks.PositionedRectangleMock;
             var containerLocation = PointUtilities.GetEndingPoint(new Point(rectangleMock.Left.ToInt(), rectangleMock.Top.ToInt()),
                 50,
                 50,
@@ -310,7 +310,7 @@ namespace RichCanvas.UITests.Tests
         public void RichItemsControlAndDrawingState_AddItemWithBindedPositionAndSize_ShouldHavePositionAndSizeTheSameAsSpecified()
         {
             // arrange
-            var mockRectangle = RichItemContainerModelMocks.DrawnRectangleMock;
+            var mockRectangle = DrawingStateDataMocks.DrawnRectangleMock;
 
             // act
             Window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);

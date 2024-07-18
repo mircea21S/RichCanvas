@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="RichCanvasUITests.App.StatePresenters.DrawingStateView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:RichCanvasUITests.App.States"
+             xmlns:auto="clr-namespace:RichCanvasUITests.App.Automation"
+             xmlns:local="clr-namespace:RichCanvasUITests.App"
+             xmlns:models="clr-namespace:RichCanvasUITests.App.Models"
+             xmlns:s="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=vm:DrawingStateViewModel}">
+    
+    <UserControl.Resources>
+        <s:Boolean x:Key="FalseValue">False</s:Boolean>
+        <s:Boolean x:Key="TrueValue">True</s:Boolean>
+    </UserControl.Resources>
+    
+    <StackPanel>
+        <Button Command="{Binding AddPositionedRectangleCommand}"
+                CommandParameter="{StaticResource FalseValue}"
+                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddPositionedRectangleButtonId}">
+            <Button.Content>
+                <TextBlock TextWrapping="Wrap"
+                           TextAlignment="Center">
+                    Add positioned Rectangle
+                </TextBlock>
+            </Button.Content>
+        </Button>
+
+        <Button Command="{Binding AddPositionedRectangleCommand}"
+                CommandParameter="{StaticResource TrueValue}"
+                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddImmutablePositionedRectangleButtonId}">
+            <Button.Content>
+                <TextBlock TextWrapping="Wrap"
+                           TextAlignment="Center">
+                    Add immutable pos. Rectangle
+                </TextBlock>
+            </Button.Content>
+        </Button>
+
+        <Button Command="{Binding AddDrawnRectangleCommand}"
+                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddDrawnRectangleButtonId}"
+                Content="Add drawn rectangle">
+        </Button>
+
+        <Button Command="{Binding AddEmptyItemCommand}"
+                CommandParameter="{x:Type local:RichItemContainerModel}"
+                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddEmptyRectangleButtonId}"
+                Content="Add empty rectangle">
+        </Button>
+
+        <Button Command="{Binding AddEmptyItemCommand}"
+                CommandParameter="{x:Type models:Line}"
+                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddEmptyLineButtonId}"
+                Content="Add Empty Line"></Button>
+    </StackPanel>
+</UserControl>

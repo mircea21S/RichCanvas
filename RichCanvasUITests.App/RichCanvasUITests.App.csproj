@@ -64,7 +64,21 @@
     <Compile Include="Models\Line.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="RichItemContainerModel.cs" />
-    <Compile Include="TestMocks\RichItemContainerModelMocks.cs" />
+    <Compile Include="StatePresenters\DrawingStateView.xaml.cs">
+      <DependentUpon>DrawingStateView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="StatePresenters\MultipleSelectionStateView.xaml.cs">
+      <DependentUpon>MultipleSelectionStateView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="StatePresenters\SingleSelectionStateView.xaml.cs">
+      <DependentUpon>SingleSelectionStateView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="States\DrawingStateViewModel.cs" />
+    <Compile Include="States\MultipleSelectionStateViewModel.cs" />
+    <Compile Include="States\SingleSelectionStateViewModel.cs" />
+    <Compile Include="TestMocks\DrawingStateDataMocks.cs" />
+    <Compile Include="TestMocks\MultipleSelectionStateDataMocks.cs" />
+    <Compile Include="TestMocks\SingleSelectionStateDataMocks.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -77,6 +91,18 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="StatePresenters\DrawingStateView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StatePresenters\MultipleSelectionStateView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StatePresenters\SingleSelectionStateView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainWindowViewModel.cs" />

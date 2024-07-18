@@ -4,11 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RichCanvasUITests.App"
-        xmlns:s="clr-namespace:System;assembly=mscorlib"
         xmlns:scs="clr-namespace:System.Collections.Specialized;assembly=System"
         xmlns:auto="clr-namespace:RichCanvasUITests.App.Automation"
         xmlns:models="clr-namespace:RichCanvasUITests.App.Models"
         xmlns:richCanvas="clr-namespace:RichCanvas;assembly=RichCanvas"
+        xmlns:statePresenters="clr-namespace:RichCanvasUITests.App.StatePresenters"
         mc:Ignorable="d"
         Title="MainWindow"
         Height="450"
@@ -18,11 +18,6 @@
         <local:MainWindowViewModel />
     </Window.DataContext>
 
-    <Window.Resources>
-        <s:Boolean x:Key="FalseValue">False</s:Boolean>
-        <s:Boolean x:Key="TrueValue">True</s:Boolean>
-    </Window.Resources>
-
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -31,43 +26,8 @@
 
         <StackPanel Grid.Column="1"
                     Width="100">
-            <Button Command="{Binding AddPositionedRectangleCommand}"
-                    CommandParameter="{StaticResource FalseValue}"
-                    AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddPositionedRectangleButtonId}">
-                <Button.Content>
-                    <TextBlock TextWrapping="Wrap"
-                               TextAlignment="Center">
-                        Add positioned Rectangle
-                    </TextBlock>
-                </Button.Content>
-            </Button>
 
-            <Button Command="{Binding AddPositionedRectangleCommand}"
-                    CommandParameter="{StaticResource TrueValue}"
-                    AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddImmutablePositionedRectangleButtonId}">
-                <Button.Content>
-                    <TextBlock TextWrapping="Wrap"
-                               TextAlignment="Center">
-                        Add immutable pos. Rectangle
-                    </TextBlock>
-                </Button.Content>
-            </Button>
-
-            <Button Command="{Binding AddDrawnRectangleCommand}"
-                    AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddDrawnRectangleButtonId}"
-                    Content="Add drawn rectangle">
-            </Button>
-
-            <Button Command="{Binding AddEmptyItemCommand}"
-                    CommandParameter="{x:Type local:RichItemContainerModel}"
-                    AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddEmptyRectangleButtonId}"
-                    Content="Add empty rectangle">
-            </Button>
-
-            <Button Command="{Binding AddEmptyItemCommand}"
-                    CommandParameter="{x:Type models:Line}"
-                    AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddEmptyLineButtonId}"
-                    Content="Add Empty Line"></Button>
+            <statePresenters:DrawingStateView DataContext="{Binding DrawingState}" />
 
             <Button Command="{Binding UpdateItemsSourceCommand}"
                     CommandParameter="{x:Static scs:NotifyCollectionChangedAction.Move}"
@@ -79,16 +39,12 @@
                     AutomationProperties.AutomationId="{x:Static auto:AutomationIds.RemoveFirstItemButtonId}"
                     Content="Remove First Item"></Button>
 
-            <Button Command="{Binding TestCommand}"
-                    Content="Test Button"></Button>
+            <Button Command="{Binding SwitchItemsPositionCommand}"
+                    Content="Switch Items"></Button>
 
-            <Button Command="{Binding AddSelectableItemsCommmand}"
-                    AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddSelectableItemsButtonId}"
-                    Content="Add Selectable Items" />
+            <statePresenters:MultipleSelectionStateView DataContext="{Binding MultipleSelectionState}" />
 
-            <Button Command="{Binding AddSingleSelectionItemsForTest}"
-                    AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddTestSingleSelectionItemsButtonId}"
-                    Content="Add Single Selection Test Items" />
+            <statePresenters:SingleSelectionStateView DataContext="{Binding SingleSelectionState}" />
 
             <Button Command="{Binding ClearAllItemsCommand}"
                     AutomationProperties.AutomationId="{x:Static auto:AutomationIds.ClearItemsButtonId}"
@@ -167,7 +123,7 @@
 
                     <Setter Property="AllowScaleChangeToUpdatePosition"
                             Value="{Binding AllowScaleChangeToUpdatePosition}" />
-                    
+
                     <Style.Triggers>
                         <Trigger Property="IsSelected"
                                  Value="True">

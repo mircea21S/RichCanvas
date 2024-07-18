@@ -96,15 +96,15 @@ namespace RichCanvas.UITests.Tests
 
             // act and assert
             Input.WithGesture(RichCanvasGestures.Select)
-                .Click(RichItemContainerModelMocks.SingleSelectionRealTimeDragTestItems[0].Center.AsDrawingPoint().ToCanvasDrawingPoint());
+                .Click(SingleSelectionStateDataMocks.SingleSelectionRealTimeDragTestItems[0].Center.AsDrawingPoint().ToCanvasDrawingPoint());
             RichItemsControl.SelectedItem.Should().Be(RichItemsControl.Items[0]);
 
             Input.WithGesture(RichCanvasGestures.Select)
-                .Click(RichItemContainerModelMocks.SingleSelectionRealTimeDragTestItems[1].Center.AsDrawingPoint().ToCanvasDrawingPoint());
+                .Click(SingleSelectionStateDataMocks.SingleSelectionRealTimeDragTestItems[1].Center.AsDrawingPoint().ToCanvasDrawingPoint());
             RichItemsControl.SelectedItem.Should().Be(RichItemsControl.Items[1]);
 
             Input.WithGesture(RichCanvasGestures.Select)
-                .Click(RichItemContainerModelMocks.SingleSelectionRealTimeDragTestItems[2].Center.AsDrawingPoint().ToCanvasDrawingPoint());
+                .Click(SingleSelectionStateDataMocks.SingleSelectionRealTimeDragTestItems[2].Center.AsDrawingPoint().ToCanvasDrawingPoint());
             RichItemsControl.SelectedItem.Should().Be(RichItemsControl.Items[2]);
         }
 
