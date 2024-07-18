@@ -43,7 +43,7 @@ namespace RichCanvas.UITests.Tests
         {
             // arrange
             ArrangeRealTimeScenario();
-            var currentUiItems = RichItemContainerModelMocks.PositionedSelectableItemsListMock;
+            var currentUiItems = MultipleSelectionStateDataMocks.PositionedSelectableItemsListMock;
             Wait.UntilInputIsProcessed();
 
             // act and assert
@@ -85,7 +85,7 @@ namespace RichCanvas.UITests.Tests
                 Window.InvokeButton(AutomationIds.AddSelectableItemsButtonId);
                 Wait.UntilInputIsProcessed();
             }
-            var currentUiItems = RichItemContainerModelMocks.PositionedSelectableItemsListMock;
+            var currentUiItems = MultipleSelectionStateDataMocks.PositionedSelectableItemsListMock;
 
             // act and assert
             Input.WithGesture(RichCanvasGestures.Select)
