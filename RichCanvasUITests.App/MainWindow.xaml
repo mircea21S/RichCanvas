@@ -17,6 +17,16 @@
     <Window.DataContext>
         <local:MainWindowViewModel />
     </Window.DataContext>
+    <Window.Resources>
+        <Style TargetType="Separator">
+            <Setter Property="HorizontalAlignment"
+                    Value="Stretch" />
+            <Setter Property="Height"
+                    Value="2" />
+            <Setter Property="Margin"
+                    Value="5,5,5,5"/>
+        </Style>
+    </Window.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -25,9 +35,19 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Grid.Column="1"
-                    Width="100">
+                    Width="150">
 
+            <TextBlock Text="Drawing State Tests" />
             <statePresenters:DrawingStateView DataContext="{Binding DrawingState}" />
+            <Separator />
+
+            <TextBlock Text="Multiple Selection State Tests" />
+            <statePresenters:MultipleSelectionStateView DataContext="{Binding MultipleSelectionState}" />
+            <Separator />
+
+            <TextBlock Text="Single Selection State Tests" />
+            <statePresenters:SingleSelectionStateView DataContext="{Binding SingleSelectionState}" />
+            <Separator />
 
             <Button Command="{Binding UpdateItemsSourceCommand}"
                     CommandParameter="{x:Static scs:NotifyCollectionChangedAction.Move}"
@@ -41,11 +61,7 @@
 
             <Button Command="{Binding SwitchItemsPositionCommand}"
                     Content="Switch Items"></Button>
-
-            <statePresenters:MultipleSelectionStateView DataContext="{Binding MultipleSelectionState}" />
-
-            <statePresenters:SingleSelectionStateView DataContext="{Binding SingleSelectionState}" />
-
+            
             <Button Command="{Binding ClearAllItemsCommand}"
                     AutomationProperties.AutomationId="{x:Static auto:AutomationIds.ClearItemsButtonId}"
                     Content="Clear all items">
@@ -87,7 +103,7 @@
 
         <richCanvas:RichItemsControl Background="AliceBlue"
                                      ItemsSource="{Binding Items}"
-                                     SelectedItem="{Binding SelectedItem}"
+                                     SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                                      SelectedItems="{Binding SelectedItems}"
                                      RealTimeDraggingEnabled="True"
                                      RealTimeSelectionEnabled="{Binding RealTimeSelectionEnabled}"
