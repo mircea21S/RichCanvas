@@ -6,14 +6,48 @@
              xmlns:local="clr-namespace:RichCanvasUITests.App.StatePresenters"
              xmlns:vm="clr-namespace:RichCanvasUITests.App.States"
              xmlns:auto="clr-namespace:RichCanvasUITests.App.Automation"
+             xmlns:s="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=vm:MultipleSelectionStateViewModel}">
+
+    <UserControl.Resources>
+        <s:Int64 x:Key="1">1</s:Int64>
+        <s:Int64 x:Key="2">2</s:Int64>
+
+        <s:Int64 x:Key="Select1Item">1</s:Int64>
+        <s:Int64 x:Key="Select2Items">2</s:Int64>
+        <s:Int64 x:Key="Select3Items">3</s:Int64>
+        <s:Int64 x:Key="Select5Items">5</s:Int64>
+
+    </UserControl.Resources>
+
     <StackPanel>
         <Button Command="{Binding AddSelectableItemsCommmand}"
-                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddSelectableItemsButtonId}"
-                Content="Add Selectable Items" />
+                CommandParameter="{StaticResource 1}"
+                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddSelectableItemsButtonId1}"
+                Content="Add Selectable Items 1" />
+        <Button Command="{Binding AddSelectableItemsCommmand}"
+                CommandParameter="{StaticResource 2}"
+                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddSelectableItemsButtonId2}"
+                Content="Add Selectable Items 2" />
 
+        <Button Command="{Binding AddSelectedItemsCommand}"
+                CommandParameter="{StaticResource Select1Item}"
+                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.SelectFirst1ItemsNotSelectedButtonId}"
+                Content="Add 1 Selected Item" />
+        <Button Command="{Binding AddSelectedItemsCommand}"
+                CommandParameter="{StaticResource Select2Items}"
+                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.SelectFirst2ItemsNotSelectedButtonId}"
+                Content="Add 2 Selected Item" />
+        <Button Command="{Binding AddSelectedItemsCommand}"
+                CommandParameter="{StaticResource Select3Items}"
+                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.SelectFirst3ItemsNotSelectedButtonId}"
+                Content="Add 3 Selected Item" />
+        <Button Command="{Binding AddSelectedItemsCommand}"
+                CommandParameter="{StaticResource Select5Items}"
+                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.SelectFirst5ItemsNotSelectedButtonId}"
+                Content="Add 5 Selected Item" />
     </StackPanel>
 </UserControl>
