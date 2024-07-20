@@ -14,6 +14,7 @@ namespace RichCanvas.UITests.Tests
         protected Size DemoControlSize => new Size(1187, 800);
         protected Point ViewportCenter => new Point(DemoControlSize.Width / 2, DemoControlSize.Height / 2);
         protected bool ShouldRestartApplication { get; set; }
+        protected bool IgnoreItemsClearOnTearDown { get; set; }
 
         public RichCanvasTestAppTest()
         {
@@ -24,6 +25,7 @@ namespace RichCanvas.UITests.Tests
         {
             if (ShouldRestartApplication)
             {
+                ShouldRestartApplication = false;
                 StartApplication();
             }
         }
@@ -31,11 +33,17 @@ namespace RichCanvas.UITests.Tests
         [TearDown]
         public virtual void TearDown()
         {
-            Window.ClearAllItems();
             if (ShouldRestartApplication)
             {
+                ShouldRestartApplication = false;
                 CloseApplication();
             }
+            if (IgnoreItemsClearOnTearDown)
+            {
+                IgnoreItemsClearOnTearDown = false;
+                return;
+            }
+            Window.ClearAllItems();
         }
     }
 }

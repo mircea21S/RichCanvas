@@ -4,7 +4,7 @@ namespace RichCanvasUITests.App.TestMocks
 {
     public static class SingleSelectionStateDataMocks
     {
-        public static List<RichItemContainerModel> SingleSelectionRealTimeDragTestItems =>
+        public static List<RichItemContainerModel> SingleSelectionItems =>
        [
            new()
             {

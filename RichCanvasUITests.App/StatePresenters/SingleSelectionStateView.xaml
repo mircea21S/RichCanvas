@@ -6,14 +6,36 @@
              xmlns:local="clr-namespace:RichCanvasUITests.App.StatePresenters"
              xmlns:vm="clr-namespace:RichCanvasUITests.App.States"
              xmlns:auto="clr-namespace:RichCanvasUITests.App.Automation"
+             xmlns:s="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=vm:SingleSelectionStateViewModel}">
 
+    <UserControl.Resources>
+        <s:Int64 x:Key="1">0</s:Int64>
+        <s:Int64 x:Key="2">1</s:Int64>
+        <s:Int64 x:Key="3">2</s:Int64>
+    </UserControl.Resources>
+
     <StackPanel>
         <Button Command="{Binding AddSingleSelectionItemsForTest}"
                 AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddTestSingleSelectionItemsButtonId}"
                 Content="Add Single Selection Test Items" />
+
+        <Button Command="{Binding SetSelectedItemCommand}"
+                CommandParameter="{StaticResource 1}"
+                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.SetSingleSelectedItemButtonId1}"
+                Content="Set Selected Item 1" />
+
+        <Button Command="{Binding SetSelectedItemCommand}"
+                CommandParameter="{StaticResource 2}"
+                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.SetSingleSelectedItemButtonId2}"
+                Content="Set Selected Item 2" />
+
+        <Button Command="{Binding SetSelectedItemCommand}"
+                CommandParameter="{StaticResource 3}"
+                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.SetSingleSelectedItemButtonId3}"
+                Content="Set Selected Item 3" />
     </StackPanel>
 </UserControl>
