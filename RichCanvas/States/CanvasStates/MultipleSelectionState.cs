@@ -20,7 +20,6 @@ namespace RichCanvas.States
             Parent.IsSelecting = true;
             _selectionRectangleInitialPosition = Mouse.GetPosition(Parent.ItemsHost);
             Parent.UnselectAll();
-            Parent.SelectedItems?.Clear();
         }
 
         public override void ReEnter()
@@ -67,11 +66,11 @@ namespace RichCanvas.States
                 return;
             }
 
+            Parent.IsSelecting = false;
             if (!Parent.RealTimeSelectionEnabled)
             {
                 SelectItems();
             }
-            Parent.IsSelecting = false;
         }
 
         public override void HandleAutoPanning(Point mousePosition, bool heightChanged = false)
@@ -82,7 +81,6 @@ namespace RichCanvas.States
         protected void SelectItems()
         {
             Parent.UnselectAll();
-            Parent.SelectedItems?.Clear();
             RectangleGeometry geom = new RectangleGeometry(Parent.SelectionRectangle);
 
             Parent.BeginSelectionTransaction();
@@ -102,9 +100,7 @@ namespace RichCanvas.States
                 var container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
                 if (container != null && container.IsSelectable)
                 {
-                    Parent.BaseSelectedItems.Add(container.DataContext);
-                    Parent.SelectedItems?.Add(container.DataContext);
-
+                    container.IsSelected = true;
                 }
             }
             return HitTestResultBehavior.Continue;

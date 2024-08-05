@@ -398,7 +398,7 @@ namespace RichCanvas
         private void OnSelectedChanged(bool value)
         {
             // Raise event after the selection operation ended
-            if ((!Host?.IsSelecting ?? false) || (Host?.RealTimeSelectionEnabled ?? false))
+            if ((!Host?.IsSelecting ?? false))
             {
                 // Add to base SelectedItems
                 RaiseEvent(new RoutedEventArgs(value ? SelectedEvent : UnselectedEvent, this));

@@ -70,14 +70,7 @@ namespace RichCanvas.UITests.Tests
         public void MultipleSelectionStateWithSelectionAbility_ClickItem_ShouldSelectItemsWhenClicked(bool realTimeSelectionEnabled)
         {
             // arrange
-            if (realTimeSelectionEnabled)
-            {
-                ArrangeRealTimeScenario();
-            }
-            else
-            {
-                AddMultipleItemsForSelection();
-            }
+            ArrangeSelectionScenario(realTimeSelectionEnabled);
             var currentUiItems = MultipleSelectionStateDataMocks.MultipleSelectionCloselyPositionedDummyItems;
 
             // act and assert
@@ -96,14 +89,7 @@ namespace RichCanvas.UITests.Tests
         public void MultipleSelectionStateWithSelectionAbility_ClickingItems_ShouldSelectItemsWithoutUnselectingAny(bool realTimeSelectionEnabled)
         {
             // arrange
-            if (realTimeSelectionEnabled)
-            {
-                ArrangeRealTimeScenario();
-            }
-            else
-            {
-                AddMultipleItemsForSelection();
-            }
+            ArrangeSelectionScenario(realTimeSelectionEnabled);
             var currentUiItems = MultipleSelectionStateDataMocks.MultipleSelectionCloselyPositionedDummyItems;
 
             // act and assert
@@ -122,14 +108,7 @@ namespace RichCanvas.UITests.Tests
         public void MultipleSelectionStateWithSelectionAbility_AddToSelectedItemsBindedCollection_ShouldSelectAddedItems(bool realTimeSelectionEnabled)
         {
             // arrange
-            if (realTimeSelectionEnabled)
-            {
-                ArrangeRealTimeScenario(AutomationIds.AddSelectableItemsButtonId2);
-            }
-            else
-            {
-                AddMultipleItemsForSelection(AutomationIds.AddSelectableItemsButtonId2);
-            }
+            ArrangeSelectionScenario(realTimeSelectionEnabled, AutomationIds.AddSelectableItemsButtonId2);
 
             // act & assert
             Window.InvokeButton(AutomationIds.SelectFirst1ItemsNotSelectedButtonId);
@@ -162,14 +141,7 @@ namespace RichCanvas.UITests.Tests
         public void MultipleSelectionStateWithSelectionAbility_SetSelectedItemsThroughBindingThenClickOnItems_ShouldSelectClickedItems(bool realTimeSelectionEnabled, int itemsClicked)
         {
             // arrange
-            if (realTimeSelectionEnabled)
-            {
-                ArrangeRealTimeScenario(AutomationIds.AddSelectableItemsButtonId2);
-            }
-            else
-            {
-                AddMultipleItemsForSelection(AutomationIds.AddSelectableItemsButtonId2);
-            }
+            ArrangeSelectionScenario(realTimeSelectionEnabled, AutomationIds.AddSelectableItemsButtonId2);
             Window.InvokeButton(AutomationIds.SelectFirst3ItemsNotSelectedButtonId);
             // act & assert
             RichItemsControl.SelectedItems.Should().HaveCount(3);
@@ -197,14 +169,7 @@ namespace RichCanvas.UITests.Tests
         public void MultipleSelectionStateWithSelectionAbility_SetSelectedItemsThroughBindingThenClickOnEmptyCanvas_ShouldClearSelectedItems(bool realTimeSelectionEnabled)
         {
             // arrange
-            if (realTimeSelectionEnabled)
-            {
-                ArrangeRealTimeScenario(AutomationIds.AddSelectableItemsButtonId2);
-            }
-            else
-            {
-                AddMultipleItemsForSelection(AutomationIds.AddSelectableItemsButtonId2);
-            }
+            ArrangeSelectionScenario(realTimeSelectionEnabled, AutomationIds.AddSelectableItemsButtonId2);
             Window.InvokeButton(AutomationIds.SelectFirst5ItemsNotSelectedButtonId);
 
             // act & assert
@@ -255,20 +220,51 @@ namespace RichCanvas.UITests.Tests
         {
             // arrange
             IgnoreItemsClearOnTearDown = true;
-            if (realTimeSelectionEnabled)
-            {
-                ArrangeRealTimeScenario(AutomationIds.AddSelectableItemsButtonId2);
-            }
-            else
-            {
-                AddMultipleItemsForSelection(AutomationIds.AddSelectableItemsButtonId2);
-            }
+            ArrangeSelectionScenario(realTimeSelectionEnabled, AutomationIds.AddSelectableItemsButtonId2);
             Window.InvokeButton(AutomationIds.SelectFirst5ItemsNotSelectedButtonId);
 
-            // act & assert
+            // act
             Window.ClearAllItems();
+
+            // assert
             RichItemsControl.SelectedItems.Should().BeEmpty();
         }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        [Test]
+        public void MultipleSelectionStateWithOneSelectedItem_WhenSetCanSelectMultipleItemsFalse_ShouldSetSelectedItemToTheOneItemSelected(bool realTimeSelectionEnabled)
+        {
+            // arrange
+            ArrangeSelectionScenario(realTimeSelectionEnabled);
+            var currentUiItems = MultipleSelectionStateDataMocks.MultipleSelectionDummyItems;
+
+            // act
+            Input.WithGesture(RichCanvasGestures.Select).Click(currentUiItems[0].Center.AsDrawingPoint().ToCanvasDrawingPoint());
+            Window.InvokeButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
+
+            // assert
+            RichItemsControl.SelectedItem.Should().Be(RichItemsControl.Items[0]);
+            RichItemsControl.SelectedItems.Length.Should().Be(1);
+            RichItemsControl.SelectedItems[0].Should().Be(RichItemsControl.Items[0]);
+            // toggle button again preparing for teardown
+            Window.InvokeButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
+        }
+
+        [Test]
+        public void MultipleSelectionStateWithSelectedItems_WhenSetCanSelectMultipleItemsFalse_ShouldClearSelection()
+        {
+
+        }
+
+        [Test]
+        public void MultipleSelectionStateWithSelectableItems_WhenSetCanSelectMultipleItemsFalse_ShouldSelectOnlyOneItem()
+        {
+
+        }
+
+        // TODO: add events tests for Selected and Unselected and other selection related events
+        // + tests for IsSelecting
 
         private void ArrangeRealTimeScenario(string buttonId = AutomationIds.AddSelectableItemsButtonId1)
         {
@@ -283,6 +279,18 @@ namespace RichCanvas.UITests.Tests
             // add items for selection
             Window.InvokeButton(buttonId);
             Wait.UntilInputIsProcessed();
+        }
+
+        private void ArrangeSelectionScenario(bool realTimeSelectionEnabled, string buttonId = AutomationIds.AddSelectableItemsButtonId1)
+        {
+            if (realTimeSelectionEnabled)
+            {
+                ArrangeRealTimeScenario(buttonId);
+            }
+            else
+            {
+                AddMultipleItemsForSelection(buttonId);
+            }
         }
     }
 }
