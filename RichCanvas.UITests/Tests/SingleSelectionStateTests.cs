@@ -254,6 +254,18 @@ namespace RichCanvas.UITests.Tests
             RichItemsControl.SelectedItem.Should().BeNull();
         }
 
+        [Test]
+        public void SingleSelectionStateWithSelectedItem_WhenSetCanSelectMultipleItemsTrue_ShouldSetSelectedItemNull()
+        {
+
+        }
+
+        [Test]
+        public void SingleSelectionStateWithSelectedItem_WhenSetCanSelectMultipleItemsTrue_ShouldSelectMultipleItems()
+        {
+
+        }
+
         private void ArrangeRealTimeScenario()
         {
             // enable real-time selection
