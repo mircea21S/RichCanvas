@@ -1,4 +1,5 @@
 ﻿using FlaUI.Core.AutomationElements;
+using FlaUI.Core.Input;
 using RichCanvasUITests.App.Automation;
 
 namespace RichCanvas.UITests
@@ -16,12 +17,14 @@ namespace RichCanvas.UITests
             {
                 invokePattern.Invoke();
             }
+            Wait.UntilInputIsProcessed();
         }
 
         internal static void ToggleButton(this Window window, string buttonAutomationId)
         {
             var toggleButton = window.FindFirstDescendant(d => d.ByAutomationId(buttonAutomationId));
             toggleButton.AsToggleButton()?.Toggle();
+            Wait.UntilInputIsProcessed();
         }
 
         internal static void ClearAllItems(this Window window)
@@ -31,6 +34,7 @@ namespace RichCanvas.UITests
             {
                 invokePattern.Invoke();
             }
+            Wait.UntilInputIsProcessed();
         }
     }
 }

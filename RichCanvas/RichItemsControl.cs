@@ -995,7 +995,7 @@ namespace RichCanvas
                 {
                     throw new ArgumentOutOfRangeException($"Cannot select more than 1 item when {nameof(CanSelectMultipleItems)} is set to false.");
                 }
-                if (e.RemovedItems.Count == 1 && e.RemovedItems[0] == SelectedItems[0])
+                if (e.RemovedItems.Count == 1 && SelectedItems.Count > 0 && e.RemovedItems[0] == SelectedItems[0])
                 {
                     SelectedItems.Remove(e.RemovedItems[0]);
                 }
@@ -1143,7 +1143,6 @@ namespace RichCanvas
 
         private void CanSelectMultipleItemsUpdated(bool value)
         {
-            //TODO: test this
             base.CanSelectMultipleItems = value;
             if (value)
             {
@@ -1158,6 +1157,7 @@ namespace RichCanvas
                 if (SelectedItems?.Count > 1)
                 {
                     SelectedItems?.Clear();
+                    SelectedItem = null;
                 }
                 else if (SelectedItems?.Count == 1)
                 {
