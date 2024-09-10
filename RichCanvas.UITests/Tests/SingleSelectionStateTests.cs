@@ -254,9 +254,17 @@ namespace RichCanvas.UITests.Tests
             RichItemsControl.SelectedItem.Should().BeNull();
         }
 
-        // [] Test selection happens without problems when SelectedItem property is not binded
-        // [] Test SelectedItems is populated on Single Selection in case people just want to set CanSelectMultipleItems to 'false' and just basically limit SelectedItems to have a single item
-        // without using the separated SelectedItem property.
+        [Test]
+        public void SingleSelectionStateWithSelectedItem_WhenSetCanSelectMultipleItemsTrue_ShouldSetSelectedItemNull()
+        {
+
+        }
+
+        [Test]
+        public void SingleSelectionStateWithSelectedItem_WhenSetCanSelectMultipleItemsTrue_ShouldSelectMultipleItems()
+        {
+
+        }
 
         private void ArrangeRealTimeScenario()
         {

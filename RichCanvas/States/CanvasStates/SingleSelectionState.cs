@@ -67,12 +67,11 @@ namespace RichCanvas.States.CanvasStates
             {
                 return;
             }
-
+            Parent.IsSelecting = false;
             if (!Parent.RealTimeSelectionEnabled)
             {
                 SelectItem(true);
             }
-            Parent.IsSelecting = false;
         }
 
         public override void HandleAutoPanning(Point mousePosition, bool heightChanged = false)
@@ -119,7 +118,7 @@ namespace RichCanvas.States.CanvasStates
 
             if (defferedSelection && _selectedContainers.Count > 0)
             {
-                Parent.SelectedItem = _selectedContainers[0].DataContext;
+                _selectedContainers[0].IsSelected = true;
             }
         }
 

@@ -67,11 +67,11 @@ namespace RichCanvas.States
                 return;
             }
 
+            Parent.IsSelecting = false;
             if (!Parent.RealTimeSelectionEnabled)
             {
                 SelectItems();
             }
-            Parent.IsSelecting = false;
         }
 
         public override void HandleAutoPanning(Point mousePosition, bool heightChanged = false)
@@ -102,9 +102,7 @@ namespace RichCanvas.States
                 var container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
                 if (container != null && container.IsSelectable)
                 {
-                    Parent.BaseSelectedItems.Add(container.DataContext);
-                    Parent.SelectedItems?.Add(container.DataContext);
-
+                    container.IsSelected = true;
                 }
             }
             return HitTestResultBehavior.Continue;

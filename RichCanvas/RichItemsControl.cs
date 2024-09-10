@@ -44,7 +44,6 @@ namespace RichCanvas
         private DispatcherTimer? _autoPanTimer;
         private bool _fromEvent;
         private Stack<CanvasState> _states;
-        private DraggingStrategy _draggingStrategy;
 
         #endregion
 
@@ -582,12 +581,16 @@ namespace RichCanvas
         #endregion
 
         #region Internal Properties
+
+        private DraggingStrategy _draggingStrategy;
+        private DraggingStrategy DraggingStrategy => _draggingStrategy ??= CanSelectMultipleItems ? new MultipleDraggingStrategy(this) : new SingleDraggingStrategy(this);
         internal RichCanvas? ItemsHost => _mainPanel;
         internal bool IsPanning { get; set; }
         internal bool IsZooming { get; set; }
         internal bool InitializedScrollBarVisiblity { get; private set; }
         internal IList BaseSelectedItems => base.SelectedItems;
-        internal List<int> CurrentDrawingIndexes { get; } = new List<int>();
+        internal List<int> CurrentDrawingIndexes { get; } = [];
+
         #endregion
 
         #region Constructors
@@ -614,9 +617,6 @@ namespace RichCanvas
                     ScaleTransform, TranslateTransform
                 }
             };
-
-            // call this to initialize Dragging and Selecting strategies
-            CanSelectMultipleItemsUpdated(CanSelectMultipleItems);
 
             _states = new Stack<CanvasState>();
             _states.Push(GetDefaultState());
@@ -660,7 +660,7 @@ namespace RichCanvas
         {
             RenderTransform = new TransformGroup
             {
-                Children = new TransformCollection(new Transform[] { new ScaleTransform(), new TranslateTransform() })
+                Children = new TransformCollection([new ScaleTransform(), new TranslateTransform()])
             }
         };
 
@@ -720,11 +720,13 @@ namespace RichCanvas
             Focus();
         }
 
+        /// <inheritdoc/>
         protected override void OnKeyDown(KeyEventArgs e)
         {
             CurrentState.HandleKeyDown(e);
         }
 
+        /// <inheritdoc/>
         protected override void OnKeyUp(KeyEventArgs e)
         {
             CurrentState.HandleKeyUp(e);
@@ -954,8 +956,51 @@ namespace RichCanvas
 
         #endregion
 
-        //TODO: test all selection itemssource modifications
         #region Selection
+
+        /// <inheritdoc/>
+        protected override void OnSelectionChanged(SelectionChangedEventArgs e)
+        {
+            base.OnSelectionChanged(e);
+            if (CanSelectMultipleItems)
+            {
+                IList? selected = SelectedItems;
+                if (selected != null)
+                {
+                    IList added = e.AddedItems;
+                    for (var i = 0; i < added.Count; i++)
+                    {
+                        // Ensure no duplicates are added
+                        if (!selected.Contains(added[i]))
+                        {
+                            selected.Add(added[i]);
+                        }
+                    }
+
+                    IList removed = e.RemovedItems;
+                    for (var i = 0; i < removed.Count; i++)
+                    {
+                        selected.Remove(removed[i]);
+                    }
+                }
+            }
+            else
+            {
+                if (e.AddedItems.Count == 1)
+                {
+                    SelectedItem = e.AddedItems[0];
+                    SelectedItems.Add(e.AddedItems[0]);
+                }
+                else if (e.AddedItems.Count > 1)
+                {
+                    throw new ArgumentOutOfRangeException($"Cannot select more than 1 item when {nameof(CanSelectMultipleItems)} is set to false.");
+                }
+                if (e.RemovedItems.Count == 1 && e.RemovedItems[0] == SelectedItems[0])
+                {
+                    SelectedItems.Remove(e.RemovedItems[0]);
+                }
+            }
+        }
 
         internal void BeginSelectionTransaction() => BeginUpdateSelectedItems();
 
@@ -1060,6 +1105,7 @@ namespace RichCanvas
             }
         }
 
+        //TODO: test this method when Dragging
         public void UpdateSingleSelectedItem(RichItemContainer selectedContainer)
         {
             if (SelectedItem == null)
@@ -1080,19 +1126,19 @@ namespace RichCanvas
 
         private void OnItemsDragCompleted(object sender, DragCompletedEventArgs e)
         {
-            _draggingStrategy.OnItemsDragCompleted(sender, e);
+            DraggingStrategy.OnItemsDragCompleted(sender, e);
             IsDragging = false;
         }
 
         private void OnItemsDragDelta(object sender, DragDeltaEventArgs e)
         {
-            _draggingStrategy.OnItemsDragDelta(sender, e);
+            DraggingStrategy.OnItemsDragDelta(sender, e);
         }
 
         private void OnItemsDragStarted(object sender, DragStartedEventArgs e)
         {
             IsDragging = true;
-            _draggingStrategy.OnItemsDragStarted(sender, e);
+            DraggingStrategy.OnItemsDragStarted(sender, e);
         }
 
         private void CanSelectMultipleItemsUpdated(bool value)
@@ -1101,10 +1147,22 @@ namespace RichCanvas
             base.CanSelectMultipleItems = value;
             if (value)
             {
+                if (SelectedItem != null)
+                {
+                    SelectedItem = null;
+                }
                 _draggingStrategy = new MultipleDraggingStrategy(this);
             }
             else
             {
+                if (SelectedItems?.Count > 1)
+                {
+                    SelectedItems?.Clear();
+                }
+                else if (SelectedItems?.Count == 1)
+                {
+                    SelectedItem = SelectedItems?[0];
+                }
                 _draggingStrategy = new SingleDraggingStrategy(this);
             }
         }
