@@ -20,6 +20,7 @@ namespace RichCanvas.States
             Parent.IsSelecting = true;
             _selectionRectangleInitialPosition = Mouse.GetPosition(Parent.ItemsHost);
             Parent.UnselectAll();
+            Parent.SelectedItems?.Clear();
         }
 
         public override void ReEnter()
@@ -81,6 +82,7 @@ namespace RichCanvas.States
         protected void SelectItems()
         {
             Parent.UnselectAll();
+            Parent.SelectedItems?.Clear();
             RectangleGeometry geom = new RectangleGeometry(Parent.SelectionRectangle);
 
             Parent.BeginSelectionTransaction();
