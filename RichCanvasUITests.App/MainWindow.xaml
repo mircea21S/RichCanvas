@@ -124,6 +124,10 @@
 
             <richCanvas:RichItemsControl.ItemContainerStyle>
                 <Style TargetType="richCanvas:RichItemContainer">
+                    <EventSetter Event="Selected"
+                                 Handler="RichItemContainer_Selected" />
+                    <EventSetter Event="Unselected"
+                                 Handler="RichItemContainer_Unselected" />
 
                     <Setter Property="Top"
                             Value="{Binding Top, Mode=TwoWay}" />
