@@ -19,7 +19,7 @@ namespace RichCanvas.UITests.Tests
     public class DrawingStateTests : RichCanvasTestAppTest
     {
         [Test]
-        public void RichItemsControlAndDrawingState_AddRectangleAndLineThenRemoveFirstItem_ShouldDrawOnlyLine()
+        public void DragMouse_WhenRemovingOneItem_ShouldDrawOnlyRemainingItem()
         {
             // arrange
             var endingPointLine = PointUtilities.GetEndingPoint(ViewportCenter, 50, 50);
@@ -42,7 +42,7 @@ namespace RichCanvas.UITests.Tests
         }
 
         [Test]
-        public void RichItemsControlAndDrawingState_AddRectangleAndLineThenMoveRectangleOnSecondPosition_ShouldDrawLineFirst()
+        public void DragMouse_WhenMovingItemsOrder_ShouldDrawItemsInOrder()
         {
             // arrange
             var endingPointLine = PointUtilities.GetEndingPoint(ViewportCenter, 50, 50);
