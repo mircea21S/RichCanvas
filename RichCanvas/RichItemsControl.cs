@@ -761,6 +761,10 @@ namespace RichCanvas
             else if (e.Action == NotifyCollectionChangedAction.Remove)
             {
                 CurrentDrawingIndexes.Remove(e.OldStartingIndex);
+                for (int i = e.OldStartingIndex; i < CurrentDrawingIndexes.Count; i++)
+                {
+                    CurrentDrawingIndexes[i]--;
+                }
             }
             else if (e.Action == NotifyCollectionChangedAction.Move)
             {
