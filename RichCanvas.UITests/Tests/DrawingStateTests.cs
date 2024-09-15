@@ -3,14 +3,11 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 using NUnit.Framework;
 using RichCanvas.Gestures;
-using RichCanvas.States;
 using RichCanvas.UITests.Helpers;
 using RichCanvasUITests.App;
 using RichCanvasUITests.App.Automation;
 using RichCanvasUITests.App.Models;
 using RichCanvasUITests.App.TestMocks;
-using System.Windows.Input;
-using Mouse = FlaUI.Core.Input.Mouse;
 using Point = System.Drawing.Point;
 
 namespace RichCanvas.UITests.Tests
@@ -19,7 +16,7 @@ namespace RichCanvas.UITests.Tests
     public class DrawingStateTests : RichCanvasTestAppTest
     {
         [Test]
-        public void DragMouse_WhenRemovingOneItem_ShouldDrawOnlyRemainingItem()
+        public void DragMouseToDraw_WhenRemovingOneItem_ShouldDrawOnlyRemainingItem()
         {
             // arrange
             var endingPointLine = PointUtilities.GetEndingPoint(ViewportCenter, 50, 50);
@@ -33,7 +30,7 @@ namespace RichCanvas.UITests.Tests
             Window.InvokeButton(AutomationIds.RemoveFirstItemButtonId);
 
             // draw
-            Mouse.Drag(ViewportCenter, endingPointLine);
+            Input.WithGesture(RichCanvasGestures.Drawing).Drag(ViewportCenter, endingPointLine);
             var itemDrawn = RichItemsControl.Items[0];
 
             // assert
@@ -42,7 +39,7 @@ namespace RichCanvas.UITests.Tests
         }
 
         [Test]
-        public void DragMouse_WhenMovingItemsOrder_ShouldDrawItemsInOrder()
+        public void DragMouseToDraw_WhenMovingItemsOrder_ShouldDrawItemsInOrder()
         {
             // arrange
             var endingPointLine = PointUtilities.GetEndingPoint(ViewportCenter, 50, 50);
@@ -57,104 +54,16 @@ namespace RichCanvas.UITests.Tests
             Window.InvokeButton(AutomationIds.MoveFirstItemToTheEndButtonId);
 
             // draw first item
-            Mouse.Drag(ViewportCenter, endingPointLine);
+            Input.WithGesture(RichCanvasGestures.Drawing).Drag(ViewportCenter, endingPointLine);
             var firstItemDrawn = RichItemsControl.Items[0];
             // assert
             firstItemDrawn.RichItemContainerData.DataContextType.Should().Be(typeof(Line));
 
             // draw second item
-            Mouse.Drag(ViewportCenter.MoveX(100, HorizontalDirection.LeftToRight), endingPointRectangle);
+            Input.WithGesture(RichCanvasGestures.Drawing).Drag(ViewportCenter.MoveX(100, HorizontalDirection.LeftToRight), endingPointRectangle);
             var secondItemDrawn = RichItemsControl.Items[1];
             // assert
             secondItemDrawn.RichItemContainerData.DataContextType.Should().Be(typeof(RichItemContainerModel));
-        }
-
-        [Test]
-        [TestCase(AutomationIds.AddEmptyRectangleButtonId)]
-        [TestCase(AutomationIds.AddImmutablePositionedRectangleButtonId)]
-        [TestCase(AutomationIds.AddPositionedRectangleButtonId)]
-        public void RichItemsControlAndDrawingState_DrawingGestureDoesNotMatchInputGesture_CurrentStateShouldBeNullOrNotDrawingState(string addDrawableContainerButtonId)
-        {
-            // arrange
-            ShouldRestartApplication = true;
-            var wrongDrawingGesture = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Control);
-
-            // act
-            Window.InvokeButton(addDrawableContainerButtonId);
-            Input.WithGesture(wrongDrawingGesture)
-                .Click(ViewportCenter.AsFlaUIFixedPoint());
-
-            // assert
-            if (RichItemsControl.RichItemsControlData.CurrentState == null)
-            {
-                RichItemsControl.RichItemsControlData.CurrentState.Should().BeNull();
-            }
-            else
-            {
-                RichItemsControl.RichItemsControlData.CurrentState.Should().NotBeOfType<DrawingState>();
-            }
-        }
-
-
-        [Test]
-        [TestCase(AutomationIds.AddEmptyRectangleButtonId)]
-        [TestCase(AutomationIds.AddImmutablePositionedRectangleButtonId)]
-        [TestCase(AutomationIds.AddPositionedRectangleButtonId)]
-        public void RichItemsControlAndDrawingState_DrawingGestureDoesNotMatchInputGesture_AddedItemShouldNotBeDrawn(string addDrawableContainerButtonId)
-        {
-            // arrange
-            ShouldRestartApplication = true;
-            var wrongDrawingGesture = new MouseGesture(MouseAction.LeftClick, ModifierKeys.Control);
-
-            // act
-            Window.InvokeButton(addDrawableContainerButtonId);
-            var startPoint = ViewportCenter.AsFlaUIFixedPoint();
-            var endPoint = PointUtilities.GetEndingPoint(startPoint, 100, 100);
-            Input.WithGesture(wrongDrawingGesture)
-                .Drag(startPoint, endPoint);
-
-            // assert
-            using (new AssertionScope())
-            {
-                RichItemsControl.Items[0].ActualHeight.Should().Be(0);
-                RichItemsControl.Items[0].ActualWidth.Should().Be(0);
-            }
-        }
-
-        /// <summary>
-        /// Drawable Container is a <see cref="RichItemContainer"/> where <see cref="RichItemContainer.IsValid()"/> is false.
-        /// <br/>
-        /// <paramref name="addDrawableContainerButtonId"/> specifies different buttons to be invoked, that are adding a Drawable container.
-        /// </summary>
-        [Test]
-        [TestCase(AutomationIds.AddPositionedRectangleButtonId, false)]
-        [TestCase(AutomationIds.AddEmptyRectangleButtonId, false)]
-        [TestCase(AutomationIds.AddImmutablePositionedRectangleButtonId, true)]
-        [TestCase(AutomationIds.AddEmptyRectangleButtonId, true)]
-        public void RichItemsControlAndDrawingState_DrawingGestureMatchesInputGesture_CurrentStateShouldAlwaysBeDrawingState(string addDrawableContainerButtonId, bool shouldClick)
-        {
-            // strange bug on the first test case drag if moved down in order -> probably a double click is happening and the item is not drawn
-            // moved it first to solve the problem
-            // might need more investigation
-            ShouldRestartApplication = true;
-
-            // act
-            Window.InvokeButton(addDrawableContainerButtonId);
-            if (shouldClick)
-            {
-                Input.WithGesture(RichCanvasGestures.Drawing)
-                    .Click(ViewportCenter.AsFlaUIFixedPoint());
-            }
-            else
-            {
-                var startPoint = ViewportCenter.AsFlaUIFixedPoint();
-                var endPoint = PointUtilities.GetEndingPoint(startPoint, 100, 100);
-                Input.WithGesture(RichCanvasGestures.Drawing)
-                    .Drag(startPoint, endPoint);
-            }
-
-            // assert
-            RichItemsControl.RichItemsControlData.CurrentState.Should().BeOfType<DrawingState>();
         }
 
         [Test]
@@ -162,7 +71,7 @@ namespace RichCanvas.UITests.Tests
         [TestCase(HorizontalDirection.RightToLeft, VerticalDirection.TopToBottom)]
         [TestCase(HorizontalDirection.LeftToRight, VerticalDirection.BottomToTop)]
         [TestCase(HorizontalDirection.RightToLeft, VerticalDirection.BottomToTop)]
-        public void RichItemsControlAndDrawingState_AddItemWithAllowScaleToUpdatePositionFalse_ShouldNotModifyTopAndLeft(HorizontalDirection horizontalDirection, VerticalDirection verticalDirection)
+        public void DragMouseToDraw_WhenAddingItemWithAllowScaleToUpdatePositionFalse_ShouldNotModifyTopAndLeft(HorizontalDirection horizontalDirection, VerticalDirection verticalDirection)
         {
             // arrange
             var mockRectangle = DrawingStateDataMocks.ImmutablePositionedRectangleMock;
@@ -175,7 +84,7 @@ namespace RichCanvas.UITests.Tests
 
             // act
             Window.InvokeButton(AutomationIds.AddImmutablePositionedRectangleButtonId);
-            Mouse.Click(endPoint);
+            Input.WithGesture(RichCanvasGestures.Drawing).Click(endPoint);
             var drawnContainer = RichItemsControl.Items[0];
 
             // assert
@@ -191,7 +100,7 @@ namespace RichCanvas.UITests.Tests
         [TestCase(HorizontalDirection.RightToLeft, VerticalDirection.TopToBottom)]
         [TestCase(HorizontalDirection.LeftToRight, VerticalDirection.BottomToTop)]
         [TestCase(HorizontalDirection.RightToLeft, VerticalDirection.BottomToTop)]
-        public void RichItemsControlAndDrawingState_AddItemWithAllowScaleToUpdatePositionTrue_ShouldModifyLeftAndTopIfScaleIsChanged(HorizontalDirection horizontalDirection, VerticalDirection verticalDirection)
+        public void DragMouseToDraw_WhenAddingItemWithAllowScaleToUpdatePositionTrue_ShouldModifyLeftAndTopIfScaleIsChanged(HorizontalDirection horizontalDirection, VerticalDirection verticalDirection)
         {
             // arrange
             var rectangleMock = DrawingStateDataMocks.PositionedRectangleMock;
@@ -203,15 +112,13 @@ namespace RichCanvas.UITests.Tests
 
             // act
             Window.InvokeButton(AutomationIds.AddPositionedRectangleButtonId);
-            Mouse.Click(containerLocation);
+            Input.WithGesture(RichCanvasGestures.Drawing).Click(containerLocation);
             var drawnContainer = RichItemsControl.Items[0];
 
             // assert
             var expectedTop = verticalDirection switch
             {
-                // added +0.5 as it seems that ActualHeight is approximated to the upper value
-                // could use the actual serialized Height in RichItemContainerData
-                VerticalDirection.BottomToTop => rectangleMock.Top - drawnContainer.ActualHeight + 0.5,
+                VerticalDirection.BottomToTop => rectangleMock.Top - drawnContainer.ActualHeight,
                 VerticalDirection.TopToBottom => rectangleMock.Top,
                 _ => rectangleMock.Top,
             };
@@ -255,7 +162,7 @@ namespace RichCanvas.UITests.Tests
         [TestCase(3, HorizontalDirection.RightToLeft, VerticalDirection.BottomToTop)]
         [TestCase(4, HorizontalDirection.RightToLeft, VerticalDirection.BottomToTop)]
         [TestCase(1, HorizontalDirection.RightToLeft, VerticalDirection.BottomToTop)]
-        public void RichItemsControlAndDrawingState_AddEmptyContainer_ContainerSizeIsTheDraggedSizeAndPositionIsRelativeToScaleTransform(int rectanglesCount, HorizontalDirection horizontalDirection, VerticalDirection verticalDirection)
+        public void DragMouseToDraw_WhenAddingEmptyContainer_ContainerSizeIsTheDraggedSizeAndPositionIsRelativeToScaleTransform(int rectanglesCount, HorizontalDirection horizontalDirection, VerticalDirection verticalDirection)
         {
             // arrange
             var rectangleWidth = 50;
@@ -272,7 +179,7 @@ namespace RichCanvas.UITests.Tests
                 Window.InvokeButton(AutomationIds.AddEmptyRectangleButtonId);
 
                 // draw the rectanlge
-                Mouse.Drag(startPoint, endPoint);
+                Input.WithGesture(RichCanvasGestures.Drawing).Drag(startPoint, endPoint);
                 // save rectangle position (on click)
                 var startPointRelativeToCanvas = startPoint.ToCanvasPoint();
                 itemMouseDownPositions[i] = startPointRelativeToCanvas;
@@ -307,7 +214,7 @@ namespace RichCanvas.UITests.Tests
         }
 
         [Test]
-        public void RichItemsControlAndDrawingState_AddItemWithBindedPositionAndSize_ShouldHavePositionAndSizeTheSameAsSpecified()
+        public void AddContainerWithBindedPositionAndSize_ShouldDrawContainerWithPositionAndSizeTheSameAsSpecified()
         {
             // arrange
             var mockRectangle = DrawingStateDataMocks.DrawnRectangleMock;
