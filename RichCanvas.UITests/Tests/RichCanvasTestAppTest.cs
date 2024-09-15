@@ -8,7 +8,7 @@ namespace RichCanvas.UITests.Tests
         /// <summary>
         /// Size of Title bar (SystemParamters.WindowCaptionHeight) = 22.5
         /// </summary>
-        public const double RichCanvasDemoTitleBarHeight = 22.5;
+        public const double RichCanvasDemoTitleBarHeight = 23;
 
         protected RichItemsControlAutomation RichItemsControl => Window.FindFirstDescendant(d => d.ByAutomationId("source")).AsRichItemsControlAutomation();
         protected Size DemoControlSize => new Size(1187, 800);
