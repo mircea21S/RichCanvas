@@ -1,6 +1,7 @@
 ﻿using RichCanvasUITests.App.Models;
 using RichCanvasUITests.App.TestMocks;
 using System;
+using System.Windows;
 using System.Windows.Input;
 
 namespace RichCanvasUITests.App.States
@@ -43,6 +44,20 @@ namespace RichCanvasUITests.App.States
             {
                 Parent.Items.Add(new Line());
             }
+        }
+
+        private RelayCommand<Point> _drawingEndedCommand;
+        public ICommand DrawingEndedCommand => _drawingEndedCommand ??= new RelayCommand<Point>(DrawingEnded);
+
+        private void DrawingEnded(Point mousePositon)
+        {
+            Parent.Items.Add(new DrawingEndedRepresentation
+            {
+                Top = mousePositon.Y,
+                Left = mousePositon.X,
+                Width = 100,
+                Height = 100
+            });
         }
     }
 }
