@@ -379,6 +379,17 @@ namespace RichCanvas
             remove { RemoveHandler(DrawingEndedEvent, value); }
         }
 
+        public static readonly DependencyProperty DrawingEndedCommandProperty = DependencyProperty.Register(nameof(DrawingEndedCommand), typeof(ICommand), typeof(RichItemsControl));
+        /// <summary>
+        /// Invoked when drawing opertation is completed. <br />
+        /// Parameter is <see cref="Point"/>, representing the mouse position when drawing has finished.
+        /// </summary>
+        public ICommand? DrawingEndedCommand
+        {
+            get => (ICommand?)GetValue(DrawingEndedCommandProperty);
+            set => SetValue(DrawingEndedCommandProperty, value);
+        }
+
         /// <summary>
         /// Occurs whenever <see cref="RichItemsControl.TranslateTransform"/> changes.
         /// </summary>
