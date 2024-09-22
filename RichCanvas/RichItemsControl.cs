@@ -593,8 +593,6 @@ namespace RichCanvas
 
         #region Internal Properties
 
-        private DraggingStrategy _draggingStrategy;
-        private DraggingStrategy DraggingStrategy => _draggingStrategy ??= CanSelectMultipleItems ? new MultipleDraggingStrategy(this) : new SingleDraggingStrategy(this);
         internal RichCanvas? ItemsHost => _mainPanel;
         internal bool IsPanning { get; set; }
         internal bool IsZooming { get; set; }
@@ -617,10 +615,6 @@ namespace RichCanvas
         /// </summary>
         public RichItemsControl()
         {
-            AddHandler(RichItemContainer.DragStartedEvent, new DragStartedEventHandler(OnItemsDragStarted));
-            AddHandler(RichItemContainer.DragDeltaEvent, new DragDeltaEventHandler(OnItemsDragDelta));
-            AddHandler(RichItemContainer.DragCompletedEvent, new DragCompletedEventHandler(OnItemsDragCompleted));
-
             AppliedTransform = new TransformGroup()
             {
                 Children = new TransformCollection
@@ -1139,23 +1133,6 @@ namespace RichCanvas
 
         #region Handlers And Private Methods
 
-        private void OnItemsDragCompleted(object sender, DragCompletedEventArgs e)
-        {
-            DraggingStrategy.OnItemsDragCompleted(sender, e);
-            IsDragging = false;
-        }
-
-        private void OnItemsDragDelta(object sender, DragDeltaEventArgs e)
-        {
-            DraggingStrategy.OnItemsDragDelta(sender, e);
-        }
-
-        private void OnItemsDragStarted(object sender, DragStartedEventArgs e)
-        {
-            IsDragging = true;
-            DraggingStrategy.OnItemsDragStarted(sender, e);
-        }
-
         private void CanSelectMultipleItemsUpdated(bool value)
         {
             base.CanSelectMultipleItems = value;
@@ -1165,7 +1142,6 @@ namespace RichCanvas
                 {
                     SelectedItem = null;
                 }
-                _draggingStrategy = new MultipleDraggingStrategy(this);
             }
             else
             {
@@ -1178,7 +1154,6 @@ namespace RichCanvas
                 {
                     SelectedItem = SelectedItems?[0];
                 }
-                _draggingStrategy = new SingleDraggingStrategy(this);
             }
         }
 

@@ -12,17 +12,16 @@ namespace RichCanvas.States.ContainerStates
         {
         }
 
-        public override void OnItemsDragDelta(object sender, DragDeltaEventArgs e)
+        public override void OnItemsDragDelta(Point offsetPoint)
         {
-            var offset = new Point(e.HorizontalChange, e.VerticalChange);
             var container = Parent.SingleSelectedContainer;
 
-            if (Parent.ItemsHost.HasTouchedNegativeLimit(offset))
+            if (Parent.ItemsHost.HasTouchedNegativeLimit(offsetPoint))
             {
                 return;
             }
 
-            if (Parent.ItemsHost.HasTouchedExtentSizeLimit(offset))
+            if (Parent.ItemsHost.HasTouchedExtentSizeLimit(offsetPoint))
             {
                 return;
             }
@@ -33,20 +32,20 @@ namespace RichCanvas.States.ContainerStates
             {
                 if (container.Host.RealTimeDraggingEnabled)
                 {
-                    container.Top += e.VerticalChange;
-                    container.Left += e.HorizontalChange;
+                    container.Top += offsetPoint.Y;
+                    container.Left += offsetPoint.X;
                 }
                 else
                 {
-                    translateTransform.X += e.HorizontalChange;
-                    translateTransform.Y += e.VerticalChange;
+                    translateTransform.X += offsetPoint.X;
+                    translateTransform.Y += offsetPoint.Y;
                     container.CalculateBoundingBox();
                     container.OnPreviewLocationChanged(new Point(container.Left + translateTransform.X, container.Top + translateTransform.Y));
                 }
             }
         }
 
-        public override void OnItemsDragCompleted(object sender, DragCompletedEventArgs e)
+        public override void OnItemsDragCompleted()
         {
             var container = Parent.SingleSelectedContainer;
             TranslateTransform? translateTransform = container.TranslateTransform;

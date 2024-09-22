@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls.Primitives;
+﻿using System.Windows;
+using System.Windows.Controls.Primitives;
 
 namespace RichCanvas.States.ContainerStates
 {
@@ -11,8 +12,8 @@ namespace RichCanvas.States.ContainerStates
             Parent = parent;
         }
 
-        public virtual void OnItemsDragStarted(object sender, DragStartedEventArgs e) { }
-        public virtual void OnItemsDragDelta(object sender, DragDeltaEventArgs e) { }
-        public virtual void OnItemsDragCompleted(object sender, DragCompletedEventArgs e) { }
+        public virtual void OnItemsDragStarted() { }
+        public virtual void OnItemsDragDelta(Point offsetPoint) { }
+        public virtual void OnItemsDragCompleted() { }
     }
 }
