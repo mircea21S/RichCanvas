@@ -1,3 +1,5 @@
+using FlaUI.Core.AutomationElements;
+using FlaUI.Core.Input;
 using FlaUI.Core.Tools;
 using FluentAssertions;
 using FluentAssertions.Execution;
@@ -8,6 +10,7 @@ using RichCanvasUITests.App;
 using RichCanvasUITests.App.Automation;
 using RichCanvasUITests.App.Models;
 using RichCanvasUITests.App.TestMocks;
+using System.Linq;
 using Point = System.Drawing.Point;
 
 namespace RichCanvas.UITests.Tests
@@ -231,6 +234,23 @@ namespace RichCanvas.UITests.Tests
                 drawnContainer.ActualHeight.Should().Be(mockRectangle.Height);
                 drawnContainer.ActualWidth.Should().Be(mockRectangle.Width);
             }
+        }
+
+        [Test]
+        public void DragMouseToDraw_WhenDrawingIsFinished_ShouldInvokeDrawEndedCommand()
+        {
+            // arrange
+            var drawingStartPoint = ViewportCenter;
+            var drawingEndPoint = new Point(drawingStartPoint.X + 50, drawingStartPoint.Y + 50);
+
+            // act
+            Window.InvokeButton(AutomationIds.AddEmptyRectangleButtonId);
+            Input.WithGesture(RichCanvasGestures.Drawing).Drag(drawingStartPoint, drawingEndPoint);
+            Wait.UntilInputIsProcessed();
+
+            // assert
+            var drawingEndedTextBox = RichItemsControl.FindFirstDescendant(x => x.ByAutomationId(AutomationIds.DrawingEndedTextBoxId)).AsTextBox();
+            drawingEndedTextBox.Name.Should().Be("DRAWING ENDED");
         }
     }
 
