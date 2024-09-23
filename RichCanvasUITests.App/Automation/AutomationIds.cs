@@ -26,5 +26,7 @@
         public const string SelectFirst2ItemsNotSelectedButtonId = "SelectFirst2ItemsNotSelected";
         public const string SelectFirst3ItemsNotSelectedButtonId = "SelectFirst3ItemsNotSelected";
         public const string SelectFirst5ItemsNotSelectedButtonId = "SelectFirst5ItemsNotSelected";
+
+        public const string RealTimeDraggingToggleButtonId = "RealTimeDraggingToggleButton";
     }
 }

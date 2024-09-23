@@ -77,7 +77,7 @@ namespace RichCanvas.UITests.Tests
         public void DragMouseToDraw_WhenAddingItemWithAllowScaleToUpdatePositionFalse_ShouldNotModifyTopAndLeft(HorizontalDirection horizontalDirection, VerticalDirection verticalDirection)
         {
             // arrange
-            var mockRectangle = DrawingStateDataMocks.ImmutablePositionedRectangleMock;
+            var mockRectangle = DrawingStateDataMocks.ImmutablePositionedRectangleMockWithoutSize;
             var endPoint = PointUtilities.GetEndingPoint(
                 new Point(mockRectangle.Left.ToInt(), mockRectangle.Top.ToInt()),
                 50,
@@ -106,7 +106,7 @@ namespace RichCanvas.UITests.Tests
         public void DragMouseToDraw_WhenAddingItemWithAllowScaleToUpdatePositionTrue_ShouldModifyLeftAndTopIfScaleIsChanged(HorizontalDirection horizontalDirection, VerticalDirection verticalDirection)
         {
             // arrange
-            var rectangleMock = DrawingStateDataMocks.PositionedRectangleMock;
+            var rectangleMock = DrawingStateDataMocks.PositionedRectangleMockWithoutSize;
             var containerLocation = PointUtilities.GetEndingPoint(new Point(rectangleMock.Left.ToInt(), rectangleMock.Top.ToInt()),
                 50,
                 50,
