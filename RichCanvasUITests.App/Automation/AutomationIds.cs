@@ -14,6 +14,7 @@
 
         public const string AddSelectableItemsButtonId1 = "AddSelectableItems1";
         public const string AddSelectableItemsButtonId2 = "AddSelectableItems2";
+        public const string SelectAllItemsButtonId = "SelectAllItems";
         public const string RealTimeSelectionToggleButtonId = "RealTimeSelectionToggle";
         public const string CanSelectMultipleItemsToggleButtonId = "CanSelectMultipleItemsToggle";
 
