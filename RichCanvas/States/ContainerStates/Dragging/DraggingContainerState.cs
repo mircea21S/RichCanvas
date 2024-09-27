@@ -7,7 +7,7 @@ namespace RichCanvas.States.ContainerStates
     {
         private Point _initialPosition;
         private DraggingStrategy _draggingStrategy;
-        private DraggingStrategy DraggingStrategy => _draggingStrategy ??= Container.Host.CanSelectMultipleItems ? new MultipleDraggingStrategy(Container.Host) : new SingleDraggingStrategy(Container.Host);
+        private DraggingStrategy DraggingStrategy => _draggingStrategy ??= Container.Host.CanSelectMultipleItems ? new MultipleDraggingStrategy(Container) : new SingleDraggingStrategy(Container);
 
         public DraggingContainerState(RichItemContainer container) : base(container)
         {

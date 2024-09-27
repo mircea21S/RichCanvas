@@ -15,7 +15,6 @@ using RichCanvas.Gestures;
 using RichCanvas.CustomEventArgs;
 using System.Windows.Automation.Peers;
 using RichCanvas.Automation;
-using RichCanvas.States.ContainerStates;
 
 namespace RichCanvas
 {
@@ -1126,7 +1125,7 @@ namespace RichCanvas
                 SelectedItem = null;
                 selectedContainer.IsSelected = true;
             }
-            SingleSelectedContainer = selectedContainer;
+            //SingleSelectedContainer = selectedContainer;
         }
 
         #endregion

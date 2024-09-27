@@ -11,7 +11,7 @@ namespace RichCanvas.States.ContainerStates
     {
         private readonly List<RichItemContainer> _draggableContainers = new List<RichItemContainer>(16);
 
-        public MultipleDraggingStrategy(RichItemsControl parent) : base(parent)
+        public MultipleDraggingStrategy(RichItemContainer container) : base(container)
         {
         }
 
@@ -110,16 +110,18 @@ namespace RichCanvas.States.ContainerStates
             for (var i = 0; i < _draggableContainers.Count; i++)
             {
                 RichItemContainer container = _draggableContainers[i];
-                //TODO: check this out, use it only when RealTimeDragging not enabled
-                //var translateTransform = container.TranslateTransform;
+                if (!Parent.RealTimeDraggingEnabled)
+                {
+                    var translateTransform = container.TranslateTransform;
 
-                //if (translateTransform != null)
-                //{
-                //    container.Left += translateTransform.X;
-                //    container.Top += translateTransform.Y;
-                //    translateTransform.X = 0;
-                //    translateTransform.Y = 0;
-                //}
+                    if (translateTransform != null)
+                    {
+                        container.Left += translateTransform.X;
+                        container.Top += translateTransform.Y;
+                        translateTransform.X = 0;
+                        translateTransform.Y = 0;
+                    }
+                }
 
                 // Correct the final position
                 if (Parent.EnableSnapping)

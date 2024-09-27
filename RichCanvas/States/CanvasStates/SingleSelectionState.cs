@@ -96,9 +96,7 @@ namespace RichCanvas.States.CanvasStates
             {
                 if (Parent.SelectedItem == null && _selectedContainers.Count > 0)
                 {
-                    Parent.SelectedItem = _selectedContainers[0].DataContext;
-                    _selectedContainers[0].IsSelected = true;
-                    _selectedContainer = _selectedContainers[0];
+                    UpdateSelectedItem();
                 }
                 if ((_selectedContainers.Count > 0 && !_selectedContainers.Contains(_selectedContainer)) || _selectedContainers.Count == 0)
                 {
@@ -109,9 +107,7 @@ namespace RichCanvas.States.CanvasStates
                     }
                     if (_selectedContainers.Count > 0)
                     {
-                        Parent.SelectedItem = _selectedContainers[0].DataContext;
-                        _selectedContainers[0].IsSelected = true;
-                        _selectedContainer = _selectedContainers[0];
+                        UpdateSelectedItem();
                     }
                 }
             }
@@ -135,6 +131,12 @@ namespace RichCanvas.States.CanvasStates
                 }
             }
             return HitTestResultBehavior.Continue;
+        }
+
+        private void UpdateSelectedItem()
+        {
+            _selectedContainers[0].IsSelected = true;
+            _selectedContainer = _selectedContainers[0];
         }
     }
 }

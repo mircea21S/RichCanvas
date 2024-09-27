@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using FlaUI.Core.Input;
+using FluentAssertions;
 using NUnit.Framework;
 using RichCanvas.Gestures;
 using RichCanvas.UITests.Helpers;
@@ -10,12 +11,19 @@ namespace RichCanvas.UITests.Tests
 {
     public class DraggingContainerStateTests : RichCanvasTestAppTest
     {
+        [TestCase(true)]
+        [TestCase(false)]
         [Test]
-        public void DragContainer_WithRealTimeDraggingEnabled_ShouldUpdateTopLeftPositionWhileDragging()
+        public void DragContainer_WithRealTimeDraggingEnabled_ShouldUpdateTopLeftPositionWhileDragging(bool canSelectMultipleItems)
         {
             // arrange
             Window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);
-            Window.InvokeButton(AutomationIds.RealTimeDraggingToggleButtonId);
+            Window.ToggleButton(AutomationIds.RealTimeDraggingToggleButtonId);
+            if (canSelectMultipleItems)
+            {
+                Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
+            }
+
             var pointOnRectangle = new Point((int)DrawingStateDataMocks.DrawnRectangleMock.Left + 1, (int)DrawingStateDataMocks.DrawnRectangleMock.Top + 1);
             var dragPoint1 = new Point(pointOnRectangle.X + 50, pointOnRectangle.Y + 50);
             var dragPoint2 = new Point(dragPoint1.X + 50, dragPoint1.Y + 50);
@@ -56,13 +64,25 @@ namespace RichCanvas.UITests.Tests
             var container = RichItemsControl.Items[0];
             container.RichItemContainerData.Top.Should().Be(dragPoint3.Y - 1);
             container.RichItemContainerData.Left.Should().Be(dragPoint3.X - 1);
+            if (canSelectMultipleItems)
+            {
+                Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
+            }
+            Window.ToggleButton(AutomationIds.RealTimeDraggingToggleButtonId);
         }
 
+        [TestCase(true)]
+        [TestCase(false)]
         [Test]
-        public void DragContainer_WithRealTimeDraggingDisabled_ShouldNotUpdateTopLeftPositionWhileDragging()
+        public void DragContainer_WithRealTimeDraggingDisabled_ShouldNotUpdateTopLeftPositionWhileDragging(bool canSelectMultipleItems)
         {
             // arrange
             Window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);
+            if (canSelectMultipleItems)
+            {
+                Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
+            }
+
             var pointOnRectangle = new Point((int)DrawingStateDataMocks.DrawnRectangleMock.Left + 1, (int)DrawingStateDataMocks.DrawnRectangleMock.Top + 1);
             var dragPoint1 = new Point(pointOnRectangle.X + 50, pointOnRectangle.Y + 50);
             var dragPoint2 = new Point(dragPoint1.X + 50, dragPoint1.Y + 50);
@@ -99,13 +119,24 @@ namespace RichCanvas.UITests.Tests
                 container.RichItemContainerData.Top.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Top);
                 container.RichItemContainerData.Left.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Left);
             }
+            if (canSelectMultipleItems)
+            {
+                Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
+            }
         }
 
+        [TestCase(true)]
+        [TestCase(false)]
         [Test]
-        public void DragContainer_WithRealTimeDraggingDisabled_ShouldUpdateTopLeftPositionWhenDragHasFinished()
+        public void DragContainer_WithRealTimeDraggingDisabled_ShouldUpdateTopLeftPositionWhenDragHasFinished(bool canSelectMultipleItems)
         {
             // arrange
             Window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);
+            if (canSelectMultipleItems)
+            {
+                Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
+            }
+
             var pointOnRectangle = new Point((int)DrawingStateDataMocks.DrawnRectangleMock.Left + 1, (int)DrawingStateDataMocks.DrawnRectangleMock.Top + 1);
             var endDraggingPoint = new Point(pointOnRectangle.X + 100, pointOnRectangle.Y + 100);
             var canvasPointOnRectangle = pointOnRectangle.ToCanvasDrawingPoint();
@@ -113,11 +144,16 @@ namespace RichCanvas.UITests.Tests
 
             // act
             Input.WithGesture(RichCanvasGestures.Drag).Drag(canvasPointOnRectangle, canvasEndDraggingPoint);
+            Wait.UntilInputIsProcessed();
 
             // assert
             var container = RichItemsControl.Items[0];
             container.RichItemContainerData.Top.Should().Be(endDraggingPoint.Y - 1);
             container.RichItemContainerData.Left.Should().Be(endDraggingPoint.X - 1);
+            if (canSelectMultipleItems)
+            {
+                Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
+            }
         }
     }
 }

@@ -7,13 +7,12 @@ namespace RichCanvas.States.ContainerStates
 {
     public class SingleDraggingStrategy : DraggingStrategy
     {
-        public SingleDraggingStrategy(RichItemsControl parent) : base(parent)
+        public SingleDraggingStrategy(RichItemContainer container) : base(container)
         {
         }
 
         public override void OnItemsDragDelta(Point offsetPoint)
         {
-            var container = Parent.SingleSelectedContainer;
 
             if (Parent.ItemsHost.HasTouchedNegativeLimit(offsetPoint))
             {
@@ -25,48 +24,47 @@ namespace RichCanvas.States.ContainerStates
                 return;
             }
 
-            TranslateTransform? translateTransform = container.TranslateTransform;
+            TranslateTransform? translateTransform = Container.TranslateTransform;
 
             if (translateTransform != null)
             {
-                if (container.Host.RealTimeDraggingEnabled)
+                if (Container.Host.RealTimeDraggingEnabled)
                 {
-                    container.Top += offsetPoint.Y;
-                    container.Left += offsetPoint.X;
+                    Container.Top += offsetPoint.Y;
+                    Container.Left += offsetPoint.X;
                 }
                 else
                 {
                     translateTransform.X += offsetPoint.X;
                     translateTransform.Y += offsetPoint.Y;
-                    container.CalculateBoundingBox();
-                    container.OnPreviewLocationChanged(new Point(container.Left + translateTransform.X, container.Top + translateTransform.Y));
+                    Container.CalculateBoundingBox();
+                    Container.OnPreviewLocationChanged(new Point(Container.Left + translateTransform.X, Container.Top + translateTransform.Y));
                 }
             }
         }
 
         public override void OnItemsDragCompleted()
         {
-            var container = Parent.SingleSelectedContainer;
-            TranslateTransform? translateTransform = container.TranslateTransform;
+            TranslateTransform? translateTransform = Container.TranslateTransform;
 
             if (translateTransform != null)
             {
-                container.Left += translateTransform.X;
-                container.Top += translateTransform.Y;
+                Container.Left += translateTransform.X;
+                Container.Top += translateTransform.Y;
                 translateTransform.X = 0;
                 translateTransform.Y = 0;
             }
 
             // Correct the final position
-            if (container.Host.EnableSnapping)
+            if (Container.Host.EnableSnapping)
             {
-                container.Left = Math.Round(container.Left / container.Host.GridSpacing) * container.Host.GridSpacing;
-                container.Top = Math.Round(container.Top / container.Host.GridSpacing) * container.Host.GridSpacing;
+                Container.Left = Math.Round(Container.Left / Container.Host.GridSpacing) * Container.Host.GridSpacing;
+                Container.Top = Math.Round(Container.Top / Container.Host.GridSpacing) * Container.Host.GridSpacing;
             }
 
-            if (!container.Host.RealTimeDraggingEnabled)
+            if (!Container.Host.RealTimeDraggingEnabled)
             {
-                container.Host.ScrollContainer?.SetCurrentScroll();
+                Container.Host.ScrollContainer?.SetCurrentScroll();
             }
         }
     }
