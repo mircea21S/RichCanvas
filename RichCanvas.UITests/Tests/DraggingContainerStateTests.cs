@@ -167,7 +167,6 @@ namespace RichCanvas.UITests.Tests
                 Window.ToggleButton(AutomationIds.RealTimeDraggingToggleButtonId);
             }
             Window.InvokeButton(AutomationIds.AddTestSingleSelectionItemsButtonId);
-            var containers = SingleSelectionStateDataMocks.SingleSelectionItems;
 
             // act & assert
             var (startPoint0, endPoint0) = GetDragPointsForContainer(0);
@@ -203,7 +202,6 @@ namespace RichCanvas.UITests.Tests
             }
             Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
             Window.InvokeButton(AutomationIds.AddTestSingleSelectionItemsButtonId);
-            var containers = SingleSelectionStateDataMocks.SingleSelectionItems;
 
             // act & assert
             var (startPoint0, endPoint0) = GetDragPointsForContainer(0);

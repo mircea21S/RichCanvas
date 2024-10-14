@@ -1113,7 +1113,6 @@ namespace RichCanvas
             }
         }
 
-        //TODO: test this method when Dragging
         public void UpdateSingleSelectedItem(RichItemContainer selectedContainer)
         {
             if (SelectedItem == null)
@@ -1125,7 +1124,6 @@ namespace RichCanvas
                 SelectedItem = null;
                 selectedContainer.IsSelected = true;
             }
-            //SingleSelectedContainer = selectedContainer;
         }
 
         #endregion

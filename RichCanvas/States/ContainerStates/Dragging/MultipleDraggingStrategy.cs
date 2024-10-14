@@ -79,6 +79,7 @@ namespace RichCanvas.States.ContainerStates
                     }
                 }
 
+                // TODO: check this
                 //if (!container.Host.RealTimeDraggingEnabled)
                 //{
                 //    if (container == container.Host.ItemsHost?.BottomElement)
