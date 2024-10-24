@@ -73,10 +73,7 @@ namespace RichCanvas.States
             }
         }
 
-        public override void HandleAutoPanning(Point mousePosition, bool heightChanged = false)
-        {
-            Parent.SelectionRectangle = SelectionHelper.DrawSelectionRectangle(mousePosition, _selectionRectangleInitialPosition);
-        }
+        public override void HandleAutoPanning(MouseEventArgs e) => HandleMouseMove(e);
 
         protected void SelectItems()
         {
