@@ -838,14 +838,7 @@ namespace RichCanvas
 
         #region Properties Callbacks
 
-        private static void OnPanGestureChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            RichCanvasGestures.Pan = (InputGesture)e.NewValue;
-        }
-
         private static void OnDisableCacheChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).SetCachingMode((bool)e.NewValue);
-
-        private static void OnOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).OverrideTranslate((Point)e.NewValue);
 
         private static void OnDisableScrollChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).OnDisableScrollChanged((bool)e.NewValue);
 
@@ -1136,8 +1129,8 @@ namespace RichCanvas
             var host = (RichItemsControl)d;
             var translate = (Point)e.NewValue;
 
-            host.TranslateTransform.X = translate.X;
-            host.TranslateTransform.Y = translate.Y;
+            host.TranslateTransform.X = -translate.X;
+            host.TranslateTransform.Y = -translate.Y;
         }
 
         private void RaiseScrollingEvent(object context)
@@ -1163,16 +1156,6 @@ namespace RichCanvas
                 {
                     _mainPanel.CacheMode = null;
                 }
-            }
-        }
-
-        private void OverrideTranslate(Point newValue)
-        {
-            if (!_fromEvent)
-            {
-                TranslateTransform.X = newValue.X;
-                TranslateTransform.Y = newValue.Y;
-                ScrollContainer?.SetCurrentScroll();
             }
         }
 

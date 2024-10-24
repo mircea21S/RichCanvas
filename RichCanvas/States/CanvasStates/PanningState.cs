@@ -26,7 +26,7 @@ namespace RichCanvas.States
                 var delta = currentPosition - _initialPosition;
 
                 Parent.ScrollContainer.Scroll((Point)delta);
-                Parent.ViewportLocation += delta / Parent.Scale;
+                Parent.ViewportLocation += -delta / Parent.Scale;
 
                 _initialPosition = currentPosition;
             }

@@ -466,15 +466,6 @@
 
             </richCanvas:RichItemsControl.Resources>
 
-            <richCanvas:RichItemsControl.PanGesture>
-                <gestures:MouseCustomKeyGesture CustomKeys="A">
-                    <gestures:MouseCustomKeyGesture.MouseGesture>
-                        <MouseGesture MouseAction="LeftClick">
-                        </MouseGesture>
-                    </gestures:MouseCustomKeyGesture.MouseGesture>
-                </gestures:MouseCustomKeyGesture>
-            </richCanvas:RichItemsControl.PanGesture>
-
             <richCanvas:RichItemsControl.ItemContainerStyle>
 
                 <Style TargetType="richCanvas:RichItemContainer">

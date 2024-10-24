@@ -104,6 +104,7 @@
             <TextBlock Text="{Binding MousePosition, ElementName=source, StringFormat='\{0\} mouse position'}"></TextBlock>
             <TextBlock Text="{Binding ItemsSource.Count, ElementName=source, StringFormat='\{0\} items'}"></TextBlock>
             <TextBlock Text="{Binding SelectedItems.Count, ElementName=source, StringFormat='\{0\} selected items'}"></TextBlock>
+            <TextBlock Text="{Binding ViewportLocation, ElementName=source, StringFormat='\{0\} viewport location'}"></TextBlock>
         </StackPanel>
 
         <richCanvas:RichItemsControl Background="AliceBlue"
