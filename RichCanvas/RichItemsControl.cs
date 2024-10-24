@@ -49,9 +49,6 @@ namespace RichCanvas
         #region Properties API
 
         public CanvasState CurrentState => _states.Peek();
-
-        public RichItemContainer? SingleSelectedContainer { get; private set; }
-
         /// <summary>
         /// <see cref="Grid"/> control wrapping the scrolling logic.
         /// </summary>
@@ -567,27 +564,6 @@ namespace RichCanvas
             set => SetValue(HorizontalScrollBarVisibilityProperty, value);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public static DependencyProperty PanGestureProperty = DependencyProperty.Register(nameof(PanGesture), typeof(InputGesture), typeof(RichItemsControl), new FrameworkPropertyMetadata(RichCanvasGestures.Pan, OnPanGestureChanged));
-        public InputGesture PanGesture
-        {
-            get => (InputGesture)GetValue(PanGestureProperty);
-            set => SetValue(PanGestureProperty, value);
-        }
-
-        public static DependencyProperty TranslationProperty = DependencyProperty.Register(nameof(Translation), typeof(Point), typeof(RichItemsControl), new FrameworkPropertyMetadata(new Point(0, 0)));
-        /// <summary>
-        /// Gets or sets whether Auto-Panning is disabled.
-        /// Default is enabled.
-        /// </summary>
-        public Point Translation
-        {
-            get => (Point)GetValue(TranslationProperty);
-            set => SetValue(TranslationProperty, value);
-        }
-
         #endregion
 
         #region Internal Properties
@@ -624,15 +600,7 @@ namespace RichCanvas
 
             _states = new Stack<CanvasState>();
             _states.Push(GetDefaultState());
-
-            TranslateTransform.Changed += TranslateTransform_Changed;
         }
-
-        private void TranslateTransform_Changed(object? sender, EventArgs e)
-        {
-            Translation = new Point(TranslateTransform.X, TranslateTransform.Y);
-        }
-
         #endregion
 
         #region Override Methods
