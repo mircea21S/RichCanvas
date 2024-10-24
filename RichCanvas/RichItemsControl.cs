@@ -1168,8 +1168,8 @@ namespace RichCanvas
             var host = (RichItemsControl)d;
             var translate = (Point)e.NewValue;
 
-            host.TranslateTransform.X += -translate.X;
-            host.TranslateTransform.Y += -translate.Y;
+            host.TranslateTransform.X = translate.X;
+            host.TranslateTransform.Y = translate.Y;
         }
 
         private void RaiseScrollingEvent(object context)
