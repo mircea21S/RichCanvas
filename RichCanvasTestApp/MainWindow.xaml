@@ -329,12 +329,6 @@
                 <TextBlock Text="{Binding Scale, ElementName=source}"
                            HorizontalAlignment="Left"></TextBlock>
             </StackPanel>
-            <StackPanel Orientation="Horizontal"
-                        Grid.Column="4"
-                        Margin="2">
-                <TextBlock Text="Translation: " />
-                <TextBlock Text="{Binding ElementName=source, Path=Translation, StringFormat= '\{0\} (left, top)'}"></TextBlock>
-            </StackPanel>
             <StackPanel>
                 <TextBlock HorizontalAlignment="Left"
                            Text="{Binding SelectedItems.Count, StringFormat= '\{0\} (selected items)'}" />
@@ -471,15 +465,6 @@
                 </DataTemplate>
 
             </richCanvas:RichItemsControl.Resources>
-
-            <richCanvas:RichItemsControl.PanGesture>
-                <gestures:MouseCustomKeyGesture CustomKeys="A">
-                    <gestures:MouseCustomKeyGesture.MouseGesture>
-                        <MouseGesture MouseAction="LeftClick">
-                        </MouseGesture>
-                    </gestures:MouseCustomKeyGesture.MouseGesture>
-                </gestures:MouseCustomKeyGesture>
-            </richCanvas:RichItemsControl.PanGesture>
 
             <richCanvas:RichItemsControl.ItemContainerStyle>
 

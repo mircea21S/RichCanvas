@@ -36,6 +36,13 @@ namespace RichCanvasUITests.App
             set => SetProperty(ref _canSelectMultipleItems, value);
         }
 
+        private bool _realTimeDraggingEnabled;
+        public bool RealTimeDraggingEnabled
+        {
+            get => _realTimeDraggingEnabled;
+            set => SetProperty(ref _realTimeDraggingEnabled, value);
+        }
+
         public SingleSelectionStateViewModel SingleSelectionState { get; }
         public MultipleSelectionStateViewModel MultipleSelectionState { get; }
         public DrawingStateViewModel DrawingState { get; }
