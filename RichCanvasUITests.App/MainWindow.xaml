@@ -81,6 +81,11 @@
                                   IsChecked="{Binding CanSelectMultipleItems, Mode=TwoWay}"
                                   Content="CanSelectMultipleItems">
                     </ToggleButton>
+
+                    <ToggleButton AutomationProperties.AutomationId="{x:Static auto:AutomationIds.RealTimeDraggingToggleButtonId}"
+                                  IsChecked="{Binding RealTimeDraggingEnabled, Mode=TwoWay}"
+                                  Content="RealTimeDragging">
+                    </ToggleButton>
                 </StackPanel>
             </Border>
 
@@ -99,15 +104,16 @@
             <TextBlock Text="{Binding MousePosition, ElementName=source, StringFormat='\{0\} mouse position'}"></TextBlock>
             <TextBlock Text="{Binding ItemsSource.Count, ElementName=source, StringFormat='\{0\} items'}"></TextBlock>
             <TextBlock Text="{Binding SelectedItems.Count, ElementName=source, StringFormat='\{0\} selected items'}"></TextBlock>
+            <TextBlock Text="{Binding ViewportLocation, ElementName=source, StringFormat='\{0\} viewport location'}"></TextBlock>
         </StackPanel>
 
         <richCanvas:RichItemsControl Background="AliceBlue"
                                      ItemsSource="{Binding Items}"
                                      SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                                      SelectedItems="{Binding SelectedItems}"
-                                     RealTimeDraggingEnabled="True"
                                      RealTimeSelectionEnabled="{Binding RealTimeSelectionEnabled}"
                                      CanSelectMultipleItems="{Binding CanSelectMultipleItems}"
+                                     RealTimeDraggingEnabled="{Binding RealTimeDraggingEnabled}"
                                      DrawingEndedCommand="{Binding DrawingState.DrawingEndedCommand}"
                                      Name="source">
             <richCanvas:RichItemsControl.Resources>
@@ -123,7 +129,7 @@
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type models:DrawingEndedRepresentation}">
                     <TextBlock Text="DRAWING ENDED"
-                               AutomationProperties.AutomationId="{x:Static auto:AutomationIds.DrawingEndedTextBoxId}"/>
+                               AutomationProperties.AutomationId="{x:Static auto:AutomationIds.DrawingEndedTextBoxId}" />
                 </DataTemplate>
             </richCanvas:RichItemsControl.Resources>
 

@@ -1,18 +1,20 @@
-﻿using System.Windows.Controls.Primitives;
+﻿using System.Windows;
 
 namespace RichCanvas.States.ContainerStates
 {
     public class DraggingStrategy
     {
-        public RichItemsControl Parent { get; }
+        protected RichItemsControl Parent { get; }
+        protected RichItemContainer Container { get; }
 
-        public DraggingStrategy(RichItemsControl parent)
+        public DraggingStrategy(RichItemContainer container)
         {
-            Parent = parent;
+            Parent = container.Host;
+            Container = container;
         }
 
-        public virtual void OnItemsDragStarted(object sender, DragStartedEventArgs e) { }
-        public virtual void OnItemsDragDelta(object sender, DragDeltaEventArgs e) { }
-        public virtual void OnItemsDragCompleted(object sender, DragCompletedEventArgs e) { }
+        public virtual void OnItemsDragStarted() { }
+        public virtual void OnItemsDragDelta(Point offsetPoint) { }
+        public virtual void OnItemsDragCompleted() { }
     }
 }

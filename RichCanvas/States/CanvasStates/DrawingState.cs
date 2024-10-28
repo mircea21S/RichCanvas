@@ -84,16 +84,11 @@ namespace RichCanvas.States
             _isDrawing = false;
         }
 
-        public override void HandleAutoPanning(Point mousePosition, bool heightChanged = false)
+        public override void HandleAutoPanning(MouseEventArgs e)
         {
-            if (heightChanged)
-            {
-                _currentDrawingContainer.Height = Math.Abs(mousePosition.Y - _currentDrawingContainer.Top);
-            }
-            else
-            {
-                _currentDrawingContainer.Width = Math.Abs(mousePosition.X - _currentDrawingContainer.Left);
-            }
+            var mousePosition = e.GetPosition(Parent.ItemsHost);
+            _currentDrawingContainer.Height = Math.Abs(mousePosition.Y - _currentDrawingContainer.Top);
+            _currentDrawingContainer.Width = Math.Abs(mousePosition.X - _currentDrawingContainer.Left);
         }
 
         private void DrawContainer(Point mousePosition)
