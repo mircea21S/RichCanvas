@@ -53,7 +53,7 @@ namespace RichCanvas.States
         public virtual void HandleKeyUp(KeyEventArgs e) { }
 
         /// <summary>Handles auto panning when mouse is outside the canvas.</summary>
-        public virtual void HandleAutoPanning(Point mousePosition, bool heightChanged = false) { }
+        public virtual void HandleAutoPanning(MouseEventArgs e) { }
 
         /// <summary>Pushes a new state into the stack.</summary>
         /// <param name="state">The new state.</param>

@@ -23,10 +23,10 @@ namespace RichCanvas.States
             if (Parent.IsPanning)
             {
                 var currentPosition = e.GetPosition(Parent.ScrollContainer);
-                var deltaPoint = currentPosition - _initialPosition;
+                var delta = currentPosition - _initialPosition;
 
-                Parent.ScrollContainer.Scroll((Point)deltaPoint);
-                Parent.ViewportLocation = (Point)deltaPoint;
+                Parent.ScrollContainer.Scroll((Point)delta);
+                Parent.ViewportLocation += -delta / Parent.Scale;
 
                 _initialPosition = currentPosition;
             }

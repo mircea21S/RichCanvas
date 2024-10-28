@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Controls.Primitives;
 using System.Windows.Media;
 
 namespace RichCanvas.States.ContainerStates
@@ -12,11 +11,11 @@ namespace RichCanvas.States.ContainerStates
     {
         private readonly List<RichItemContainer> _draggableContainers = new List<RichItemContainer>(16);
 
-        public MultipleDraggingStrategy(RichItemsControl parent) : base(parent)
+        public MultipleDraggingStrategy(RichItemContainer container) : base(container)
         {
         }
 
-        public override void OnItemsDragStarted(object sender, DragStartedEventArgs e)
+        public override void OnItemsDragStarted()
         {
             IList selectedItems = Parent.BaseSelectedItems;
 
@@ -49,14 +48,13 @@ namespace RichCanvas.States.ContainerStates
             }
         }
 
-        public override void OnItemsDragDelta(object sender, DragDeltaEventArgs e)
+        public override void OnItemsDragDelta(Point offsetPoint)
         {
-            var offset = new Point(e.HorizontalChange, e.VerticalChange);
-            if (Parent.ItemsHost.HasTouchedExtentSizeLimit(offset))
+            if (Parent.ItemsHost.HasTouchedExtentSizeLimit(offsetPoint))
             {
                 return;
             }
-            if (Parent.ItemsHost.HasTouchedNegativeLimit(offset))
+            if (Parent.ItemsHost.HasTouchedNegativeLimit(offsetPoint))
             {
                 return;
             }
@@ -67,20 +65,21 @@ namespace RichCanvas.States.ContainerStates
 
                 if (Parent.RealTimeDraggingEnabled)
                 {
-                    container.Top += e.VerticalChange;
-                    container.Left += e.HorizontalChange;
+                    container.Top += offsetPoint.Y;
+                    container.Left += offsetPoint.X;
                 }
                 else
                 {
                     if (translateTransform != null)
                     {
-                        translateTransform.X += e.HorizontalChange;
-                        translateTransform.Y += e.VerticalChange;
+                        translateTransform.X += offsetPoint.X;
+                        translateTransform.Y += offsetPoint.Y;
                         container.CalculateBoundingBox();
                         container.OnPreviewLocationChanged(new Point(container.Left + translateTransform.X, container.Top + translateTransform.Y));
                     }
                 }
 
+                // TODO: check this
                 //if (!container.Host.RealTimeDraggingEnabled)
                 //{
                 //    if (container == container.Host.ItemsHost?.BottomElement)
@@ -107,21 +106,23 @@ namespace RichCanvas.States.ContainerStates
 
         }
 
-        public override void OnItemsDragCompleted(object sender, DragCompletedEventArgs e)
+        public override void OnItemsDragCompleted()
         {
             for (var i = 0; i < _draggableContainers.Count; i++)
             {
                 RichItemContainer container = _draggableContainers[i];
-                //TODO: check this out, use it only when RealTimeDragging not enabled
-                //var translateTransform = container.TranslateTransform;
+                if (!Parent.RealTimeDraggingEnabled)
+                {
+                    var translateTransform = container.TranslateTransform;
 
-                //if (translateTransform != null)
-                //{
-                //    container.Left += translateTransform.X;
-                //    container.Top += translateTransform.Y;
-                //    translateTransform.X = 0;
-                //    translateTransform.Y = 0;
-                //}
+                    if (translateTransform != null)
+                    {
+                        container.Left += translateTransform.X;
+                        container.Top += translateTransform.Y;
+                        translateTransform.X = 0;
+                        translateTransform.Y = 0;
+                    }
+                }
 
                 // Correct the final position
                 if (Parent.EnableSnapping)

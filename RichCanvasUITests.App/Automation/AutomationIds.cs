@@ -14,6 +14,7 @@
 
         public const string AddSelectableItemsButtonId1 = "AddSelectableItems1";
         public const string AddSelectableItemsButtonId2 = "AddSelectableItems2";
+        public const string SelectAllItemsButtonId = "SelectAllItems";
         public const string RealTimeSelectionToggleButtonId = "RealTimeSelectionToggle";
         public const string CanSelectMultipleItemsToggleButtonId = "CanSelectMultipleItemsToggle";
 
@@ -26,5 +27,7 @@
         public const string SelectFirst2ItemsNotSelectedButtonId = "SelectFirst2ItemsNotSelected";
         public const string SelectFirst3ItemsNotSelectedButtonId = "SelectFirst3ItemsNotSelected";
         public const string SelectFirst5ItemsNotSelectedButtonId = "SelectFirst5ItemsNotSelected";
+
+        public const string RealTimeDraggingToggleButtonId = "RealTimeDraggingToggleButton";
     }
 }

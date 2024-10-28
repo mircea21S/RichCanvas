@@ -20,7 +20,7 @@ namespace RichCanvasUITests.App.States
 
         private void AddPositionedRectangle(bool isImmutable)
         {
-            Parent.Items.Add(isImmutable ? DrawingStateDataMocks.ImmutablePositionedRectangleMock : DrawingStateDataMocks.PositionedRectangleMock);
+            Parent.Items.Add(isImmutable ? DrawingStateDataMocks.ImmutablePositionedRectangleMockWithoutSize : DrawingStateDataMocks.PositionedRectangleMockWithoutSize);
         }
 
         private RelayCommand _addDrawnRectangleCommand;
