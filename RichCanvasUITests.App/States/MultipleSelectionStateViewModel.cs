@@ -1,4 +1,5 @@
-﻿using RichCanvasUITests.App.TestMocks;
+﻿using RichCanvasUITests.App;
+using RichCanvasUITests.App.TestMocks;
 using System;
 using System.Linq;
 using System.Windows.Input;
@@ -42,6 +43,17 @@ namespace RichCanvasUITests.App.States
         {
             var toSelect = Parent.Items.Skip(Parent.SelectedItems.Count).Take((int)itemsCount);
             foreach (var item in toSelect)
+            {
+                Parent.SelectedItems.Add(item);
+            }
+        }
+
+        private RelayCommand _selectAllItemsCommand;
+        public ICommand SelectAllItemsCommand => _selectAllItemsCommand ??= new RelayCommand(SelectAllItems);
+
+        private void SelectAllItems()
+        {
+            foreach (var item in Parent.Items)
             {
                 Parent.SelectedItems.Add(item);
             }

@@ -49,5 +49,8 @@
                 CommandParameter="{StaticResource Select5Items}"
                 AutomationProperties.AutomationId="{x:Static auto:AutomationIds.SelectFirst5ItemsNotSelectedButtonId}"
                 Content="Add 5 Selected Item" />
+        <Button Command="{Binding SelectAllItemsCommand}"
+                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.SelectAllItemsButtonId}"
+                Content="Select All Items" />
     </StackPanel>
 </UserControl>

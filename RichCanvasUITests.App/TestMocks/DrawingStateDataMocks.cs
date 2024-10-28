@@ -2,12 +2,12 @@
 {
     public static class DrawingStateDataMocks
     {
-        public static RichItemContainerModel PositionedRectangleMock => new RichItemContainerModel
+        public static RichItemContainerModel PositionedRectangleMockWithoutSize => new RichItemContainerModel
         {
             Top = 100,
             Left = 100
         };
-        public static RichItemContainerModel ImmutablePositionedRectangleMock => new RichItemContainerModel
+        public static RichItemContainerModel ImmutablePositionedRectangleMockWithoutSize => new RichItemContainerModel
         {
             AllowScaleChangeToUpdatePosition = false,
             Top = 300,

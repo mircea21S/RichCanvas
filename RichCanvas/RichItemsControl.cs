@@ -15,7 +15,6 @@ using RichCanvas.Gestures;
 using RichCanvas.CustomEventArgs;
 using System.Windows.Automation.Peers;
 using RichCanvas.Automation;
-using RichCanvas.States.ContainerStates;
 
 namespace RichCanvas
 {
@@ -50,9 +49,6 @@ namespace RichCanvas
         #region Properties API
 
         public CanvasState CurrentState => _states.Peek();
-
-        public RichItemContainer? SingleSelectedContainer { get; private set; }
-
         /// <summary>
         /// <see cref="Grid"/> control wrapping the scrolling logic.
         /// </summary>
@@ -123,18 +119,18 @@ namespace RichCanvas
         }
 
         /// <summary>
-        /// Gets or sets whether Auto-Panning is disabled.
+        /// Gets or sets whether Auto-Panning is enabled.
         /// Default is enabled.
         /// </summary>
-        public static DependencyProperty DisableAutoPanningProperty = DependencyProperty.Register(nameof(DisableAutoPanning), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true, OnDisableAutoPanningChanged));
+        public static DependencyProperty EnableAutoPanningProperty = DependencyProperty.Register(nameof(EnableAutoPanning), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false, OnEnableAutoPanningChanged));
         /// <summary>
-        /// Gets or sets whether Auto-Panning is disabled.
-        /// Default is enabled.
+        /// Gets or sets whether Auto-Panning is enabled.
+        /// Default is disabled.
         /// </summary>
-        public bool DisableAutoPanning
+        public bool EnableAutoPanning
         {
-            get => (bool)GetValue(DisableAutoPanningProperty);
-            set => SetValue(DisableAutoPanningProperty, value);
+            get => (bool)GetValue(EnableAutoPanningProperty);
+            set => SetValue(EnableAutoPanningProperty, value);
         }
 
         /// <summary>
@@ -568,33 +564,10 @@ namespace RichCanvas
             set => SetValue(HorizontalScrollBarVisibilityProperty, value);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public static DependencyProperty PanGestureProperty = DependencyProperty.Register(nameof(PanGesture), typeof(InputGesture), typeof(RichItemsControl), new FrameworkPropertyMetadata(RichCanvasGestures.Pan, OnPanGestureChanged));
-        public InputGesture PanGesture
-        {
-            get => (InputGesture)GetValue(PanGestureProperty);
-            set => SetValue(PanGestureProperty, value);
-        }
-
-        public static DependencyProperty TranslationProperty = DependencyProperty.Register(nameof(Translation), typeof(Point), typeof(RichItemsControl), new FrameworkPropertyMetadata(new Point(0, 0)));
-        /// <summary>
-        /// Gets or sets whether Auto-Panning is disabled.
-        /// Default is enabled.
-        /// </summary>
-        public Point Translation
-        {
-            get => (Point)GetValue(TranslationProperty);
-            set => SetValue(TranslationProperty, value);
-        }
-
         #endregion
 
         #region Internal Properties
 
-        private DraggingStrategy _draggingStrategy;
-        private DraggingStrategy DraggingStrategy => _draggingStrategy ??= CanSelectMultipleItems ? new MultipleDraggingStrategy(this) : new SingleDraggingStrategy(this);
         internal RichCanvas? ItemsHost => _mainPanel;
         internal bool IsPanning { get; set; }
         internal bool IsZooming { get; set; }
@@ -617,10 +590,6 @@ namespace RichCanvas
         /// </summary>
         public RichItemsControl()
         {
-            AddHandler(RichItemContainer.DragStartedEvent, new DragStartedEventHandler(OnItemsDragStarted));
-            AddHandler(RichItemContainer.DragDeltaEvent, new DragDeltaEventHandler(OnItemsDragDelta));
-            AddHandler(RichItemContainer.DragCompletedEvent, new DragCompletedEventHandler(OnItemsDragCompleted));
-
             AppliedTransform = new TransformGroup()
             {
                 Children = new TransformCollection
@@ -631,15 +600,7 @@ namespace RichCanvas
 
             _states = new Stack<CanvasState>();
             _states.Push(GetDefaultState());
-
-            TranslateTransform.Changed += TranslateTransform_Changed;
         }
-
-        private void TranslateTransform_Changed(object? sender, EventArgs e)
-        {
-            Translation = new Point(TranslateTransform.X, TranslateTransform.Y);
-        }
-
         #endregion
 
         #region Override Methods
@@ -877,14 +838,7 @@ namespace RichCanvas
 
         #region Properties Callbacks
 
-        private static void OnPanGestureChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            RichCanvasGestures.Pan = (InputGesture)e.NewValue;
-        }
-
         private static void OnDisableCacheChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).SetCachingMode((bool)e.NewValue);
-
-        private static void OnOffsetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).OverrideTranslate((Point)e.NewValue);
 
         private static void OnDisableScrollChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).OnDisableScrollChanged((bool)e.NewValue);
 
@@ -952,8 +906,8 @@ namespace RichCanvas
             return (double)value < min ? 2d : value;
         }
 
-        private static void OnDisableAutoPanningChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-            => ((RichItemsControl)d).OnDisableAutoPanningChanged((bool)e.NewValue);
+        private static void OnEnableAutoPanningChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+            => ((RichItemsControl)d).OnEnableAutoPanningChanged((bool)e.NewValue);
 
         private static void OnAutoPanTickRateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).UpdateTimerInterval();
 
@@ -1120,7 +1074,6 @@ namespace RichCanvas
             }
         }
 
-        //TODO: test this method when Dragging
         public void UpdateSingleSelectedItem(RichItemContainer selectedContainer)
         {
             if (SelectedItem == null)
@@ -1132,29 +1085,11 @@ namespace RichCanvas
                 SelectedItem = null;
                 selectedContainer.IsSelected = true;
             }
-            SingleSelectedContainer = selectedContainer;
         }
 
         #endregion
 
         #region Handlers And Private Methods
-
-        private void OnItemsDragCompleted(object sender, DragCompletedEventArgs e)
-        {
-            DraggingStrategy.OnItemsDragCompleted(sender, e);
-            IsDragging = false;
-        }
-
-        private void OnItemsDragDelta(object sender, DragDeltaEventArgs e)
-        {
-            DraggingStrategy.OnItemsDragDelta(sender, e);
-        }
-
-        private void OnItemsDragStarted(object sender, DragStartedEventArgs e)
-        {
-            IsDragging = true;
-            DraggingStrategy.OnItemsDragStarted(sender, e);
-        }
 
         private void CanSelectMultipleItemsUpdated(bool value)
         {
@@ -1165,7 +1100,6 @@ namespace RichCanvas
                 {
                     SelectedItem = null;
                 }
-                _draggingStrategy = new MultipleDraggingStrategy(this);
             }
             else
             {
@@ -1178,7 +1112,6 @@ namespace RichCanvas
                 {
                     SelectedItem = SelectedItems?[0];
                 }
-                _draggingStrategy = new SingleDraggingStrategy(this);
             }
         }
 
@@ -1196,8 +1129,8 @@ namespace RichCanvas
             var host = (RichItemsControl)d;
             var translate = (Point)e.NewValue;
 
-            host.TranslateTransform.X += -translate.X;
-            host.TranslateTransform.Y += -translate.Y;
+            host.TranslateTransform.X = -translate.X;
+            host.TranslateTransform.Y = -translate.Y;
         }
 
         private void RaiseScrollingEvent(object context)
@@ -1226,16 +1159,6 @@ namespace RichCanvas
             }
         }
 
-        private void OverrideTranslate(Point newValue)
-        {
-            if (!_fromEvent)
-            {
-                TranslateTransform.X = newValue.X;
-                TranslateTransform.Y = newValue.Y;
-                ScrollContainer?.SetCurrentScroll();
-            }
-        }
-
         private void OverrideScale(double newValue)
         {
             if (!_fromEvent)
@@ -1247,9 +1170,9 @@ namespace RichCanvas
             }
         }
 
-        private void OnDisableAutoPanningChanged(bool shouldDisable)
+        private void OnEnableAutoPanningChanged(bool enableAutoPanning)
         {
-            if (!shouldDisable)
+            if (enableAutoPanning)
             {
                 if (_autoPanTimer == null)
                 {
@@ -1273,46 +1196,32 @@ namespace RichCanvas
             if (IsMouseOver && Mouse.LeftButton == MouseButtonState.Pressed && Mouse.Captured != null && !IsMouseCapturedByScrollBar() && !IsPanning && ScrollContainer != null)
             {
                 var mousePosition = Mouse.GetPosition(ScrollContainer);
-                var transformedPosition = Mouse.GetPosition(ItemsHost);
+                var x = ViewportLocation.X;
+                var y = ViewportLocation.Y;
 
                 if (mousePosition.Y <= 0)
                 {
-                    if (CurrentState is DrawingState)
-                    {
-                        CurrentState?.HandleAutoPanning(transformedPosition, true);
-                    }
-                    ScrollContainer.ScrollVertically(-AutoPanSpeed);
+                    y -= AutoPanSpeed;
                 }
                 else if (mousePosition.Y >= ScrollContainer.ViewportHeight)
                 {
-                    if (CurrentState is DrawingState)
-                    {
-                        CurrentState?.HandleAutoPanning(transformedPosition, true);
-                    }
-                    ScrollContainer.ScrollVertically(AutoPanSpeed);
+                    y += AutoPanSpeed;
                 }
 
                 if (mousePosition.X <= 0)
                 {
-                    if (CurrentState is DrawingState)
-                    {
-                        CurrentState?.HandleAutoPanning(transformedPosition);
-                    }
-                    ScrollContainer.PanHorizontally(-AutoPanSpeed);
+                    x -= AutoPanSpeed;
                 }
                 else if (mousePosition.X >= ScrollContainer.ViewportWidth)
                 {
-                    if (CurrentState is DrawingState)
-                    {
-                        CurrentState?.HandleAutoPanning(transformedPosition);
-                    }
-                    ScrollContainer.PanHorizontally(AutoPanSpeed);
+                    x += AutoPanSpeed;
                 }
 
-                if (IsSelecting)
-                {
-                    CurrentState?.HandleAutoPanning(transformedPosition);
-                }
+                ViewportLocation = new Point(x, y);
+                MousePosition = Mouse.GetPosition(ItemsHost);
+
+                //todo: update scroll when autopan
+                CurrentState?.HandleAutoPanning(new MouseEventArgs(Mouse.PrimaryDevice, 0));
             }
         }
 

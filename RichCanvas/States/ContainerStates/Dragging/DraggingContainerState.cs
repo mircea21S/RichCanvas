@@ -6,6 +6,8 @@ namespace RichCanvas.States.ContainerStates
     public class DraggingContainerState : ContainerState
     {
         private Point _initialPosition;
+        private DraggingStrategy _draggingStrategy;
+        private DraggingStrategy DraggingStrategy => _draggingStrategy ??= Container.Host.CanSelectMultipleItems ? new MultipleDraggingStrategy(Container) : new SingleDraggingStrategy(Container);
 
         public DraggingContainerState(RichItemContainer container) : base(container)
         {
@@ -25,6 +27,8 @@ namespace RichCanvas.States.ContainerStates
                     Container?.Host?.UpdateSingleSelectedItem(Container);
                 }
             }
+            Container.Host.IsDragging = true;
+            DraggingStrategy.OnItemsDragStarted();
             Container?.RaiseDragStartedEvent(_initialPosition);
         }
 
@@ -34,13 +38,18 @@ namespace RichCanvas.States.ContainerStates
             var offset = currentPosition - _initialPosition;
             if (offset.X != 0 || offset.Y != 0)
             {
-                Container?.RaiseDragDeltaEvent(new Point(offset.X, offset.Y));
+                var offsetPoint = new Point(offset.X, offset.Y);
+                DraggingStrategy.OnItemsDragDelta(offsetPoint);
+                Container?.RaiseDragDeltaEvent(offsetPoint);
+
                 _initialPosition = currentPosition;
             }
         }
 
         public override void HandleMouseUp(MouseButtonEventArgs e)
         {
+            DraggingStrategy.OnItemsDragCompleted();
+            Container.Host.IsDragging = false;
             Container.RaiseDragCompletedEvent(e.GetPosition(Container.Host.ItemsHost));
         }
     }
