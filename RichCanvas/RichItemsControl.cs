@@ -24,7 +24,7 @@ namespace RichCanvas
     [TemplatePart(Name = DrawingPanelName, Type = typeof(Panel))]
     [TemplatePart(Name = SelectionRectangleName, Type = typeof(Rectangle))]
     [StyleTypedProperty(Property = nameof(SelectionRectangleStyle), StyleTargetType = typeof(Rectangle))]
-    public class RichItemsControl : MultiSelector
+    public partial class RichItemsControl : MultiSelector
     {
         #region Constants
 
@@ -39,7 +39,6 @@ namespace RichCanvas
         internal readonly ScaleTransform ScaleTransform = new ScaleTransform();
         internal readonly TranslateTransform TranslateTransform = new TranslateTransform();
         private RichCanvas? _mainPanel;
-        private ScrollingGrid? _canvasContainer;
         private DispatcherTimer? _autoPanTimer;
         private bool _fromEvent;
         private Stack<CanvasState> _states;
@@ -49,10 +48,6 @@ namespace RichCanvas
         #region Properties API
 
         public CanvasState CurrentState => _states.Peek();
-        /// <summary>
-        /// <see cref="Grid"/> control wrapping the scrolling logic.
-        /// </summary>
-        public ScrollingGrid? ScrollContainer => _canvasContainer;
 
         /// <summary>
         /// Gets or sets mouse position relative to <see cref="RichItemsControl.ItemsHost"/>.
@@ -535,12 +530,12 @@ namespace RichCanvas
         }
 
         /// <summary>
-        /// Gets or sets whether <see cref="ScrollingGrid.ScrollOwner"/> vertical scrollbar visibility.
+        /// Gets or sets whether <see cref="RichItemsControl.ScrollOwner"/> vertical scrollbar visibility.
         /// Default is <see cref="ScrollBarVisibility.Visible"/>.
         /// </summary>
         public static DependencyProperty VerticalScrollBarVisibilityProperty = DependencyProperty.Register(nameof(VerticalScrollBarVisibility), typeof(ScrollBarVisibility), typeof(RichItemsControl), new FrameworkPropertyMetadata(ScrollBarVisibility.Visible, OnVerticalScrollBarVisiblityChanged));
         /// <summary>
-        /// Gets or sets whether <see cref="ScrollingGrid.ScrollOwner"/> vertical scrollbar visibility.
+        /// Gets or sets whether <see cref="RichItemsControl.ScrollOwner"/> vertical scrollbar visibility.
         /// Default is <see cref="ScrollBarVisibility.Visible"/>.
         /// </summary>
         public ScrollBarVisibility VerticalScrollBarVisibility
@@ -550,12 +545,12 @@ namespace RichCanvas
         }
 
         /// <summary>
-        /// Gets or sets whether <see cref="ScrollingGrid.ScrollOwner"/> horizontal scrollbar visibility.
+        /// Gets or sets whether <see cref="RichItemsControl.ScrollOwner"/> horizontal scrollbar visibility.
         /// Default is <see cref="ScrollBarVisibility.Visible"/>.
         /// </summary>
         public static DependencyProperty HorizontalScrollBarVisibilityProperty = DependencyProperty.Register(nameof(HorizontalScrollBarVisibility), typeof(ScrollBarVisibility), typeof(RichItemsControl), new FrameworkPropertyMetadata(ScrollBarVisibility.Visible, OnHorizontalScrollBarVisiblityChanged));
         /// <summary>
-        /// Gets or sets whether <see cref="ScrollingGrid.ScrollOwner"/> horizontal scrollbar visibility.
+        /// Gets or sets whether <see cref="RichItemsControl.ScrollOwner"/> horizontal scrollbar visibility.
         /// Default is <see cref="ScrollBarVisibility.Visible"/>.
         /// </summary>
         public ScrollBarVisibility HorizontalScrollBarVisibility
@@ -613,9 +608,6 @@ namespace RichCanvas
             _mainPanel = (RichCanvas)GetTemplateChild(DrawingPanelName);
             _mainPanel.ItemsOwner = this;
             SetCachingMode(DisableCache);
-
-            _canvasContainer = (ScrollingGrid)GetTemplateChild(CanvasContainerName);
-            _canvasContainer.Initialize(this);
 
             ScaleTransform.Changed += OnScaleChanged;
         }
@@ -816,7 +808,7 @@ namespace RichCanvas
 
             if (!DisableScroll)
             {
-                ScrollContainer.SetCurrentScroll();
+                SetCurrentScroll();
             }
         }
 
@@ -846,14 +838,14 @@ namespace RichCanvas
         {
             if (!disabled)
             {
-                ScrollContainer?.SetCurrentScroll();
+                SetCurrentScroll();
             }
-            if (ScrollContainer != null && ScrollContainer.ScrollOwner != null)
+            if (ScrollOwner != null)
             {
                 var scrollBarVisibllity = disabled ? ScrollBarVisibility.Hidden : ScrollBarVisibility.Auto;
-                ScrollContainer.ScrollOwner.HorizontalScrollBarVisibility = scrollBarVisibllity;
-                ScrollContainer.ScrollOwner.VerticalScrollBarVisibility = scrollBarVisibllity;
-                ScrollContainer.ScrollOwner.InvalidateScrollInfo();
+                ScrollOwner.HorizontalScrollBarVisibility = scrollBarVisibllity;
+                ScrollOwner.VerticalScrollBarVisibility = scrollBarVisibllity;
+                ScrollOwner.InvalidateScrollInfo();
             }
         }
 
@@ -1166,7 +1158,7 @@ namespace RichCanvas
                 ScaleTransform.ScaleX = newValue;
                 ScaleTransform.ScaleY = newValue;
                 CoerceValue(ScaleProperty);
-                ScrollContainer?.SetCurrentScroll();
+                SetCurrentScroll();
             }
         }
 
@@ -1193,9 +1185,9 @@ namespace RichCanvas
 
         private void HandleAutoPanning(object? sender, EventArgs e)
         {
-            if (IsMouseOver && Mouse.LeftButton == MouseButtonState.Pressed && Mouse.Captured != null && !IsMouseCapturedByScrollBar() && !IsPanning && ScrollContainer != null)
+            if (IsMouseOver && Mouse.LeftButton == MouseButtonState.Pressed && Mouse.Captured != null && !IsMouseCapturedByScrollBar() && !IsPanning)
             {
-                var mousePosition = Mouse.GetPosition(ScrollContainer);
+                var mousePosition = Mouse.GetPosition(this);
                 var x = ViewportLocation.X;
                 var y = ViewportLocation.Y;
 
@@ -1203,7 +1195,7 @@ namespace RichCanvas
                 {
                     y -= AutoPanSpeed;
                 }
-                else if (mousePosition.Y >= ScrollContainer.ViewportHeight)
+                else if (mousePosition.Y >= ViewportHeight)
                 {
                     y += AutoPanSpeed;
                 }
@@ -1212,7 +1204,7 @@ namespace RichCanvas
                 {
                     x -= AutoPanSpeed;
                 }
-                else if (mousePosition.X >= ScrollContainer.ViewportWidth)
+                else if (mousePosition.X >= ViewportWidth)
                 {
                     x += AutoPanSpeed;
                 }
@@ -1251,17 +1243,17 @@ namespace RichCanvas
                 InitializedScrollBarVisiblity = true;
             }
 
-            if (ScrollContainer != null && ScrollContainer.ScrollOwner != null)
+            if (ScrollOwner != null)
             {
                 if (isVertical)
                 {
-                    ScrollContainer.ScrollOwner.VerticalScrollBarVisibility = scrollBarVisibility;
+                    ScrollOwner.VerticalScrollBarVisibility = scrollBarVisibility;
                 }
                 else
                 {
-                    ScrollContainer.ScrollOwner.HorizontalScrollBarVisibility = scrollBarVisibility;
+                    ScrollOwner.HorizontalScrollBarVisibility = scrollBarVisibility;
                 }
-                ScrollContainer.ScrollOwner.InvalidateScrollInfo();
+                ScrollOwner.InvalidateScrollInfo();
             }
         }
         #endregion

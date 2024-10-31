@@ -349,7 +349,6 @@
                                      DisableCache="{Binding DisableCache}"
                                      DisableZoom="{Binding DisableZoom}"
                                      DisableScroll="{Binding DisableScroll}"
-                                     DisableAutoPanning="{Binding DisableAutoPanning}"
                                      MousePosition="{Binding MousePosition, Mode=OneWayToSource}"
                                      Scale="{Binding Scale, Converter={StaticResource StringToFloatConverter}, Mode=TwoWay}"
                                      ScrollFactor="{Binding ScrollFactor, Converter={StaticResource StringToFloatConverter},ConverterParameter=double}"

@@ -64,7 +64,7 @@ namespace RichCanvas.States.ContainerStates
 
             if (!Container.Host.RealTimeDraggingEnabled)
             {
-                Container.Host.ScrollContainer?.SetCurrentScroll();
+                Container.Host.SetCurrentScroll();
             }
         }
     }

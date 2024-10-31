@@ -37,46 +37,33 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:RichItemsControl}">
-                    <Grid Background="{TemplateBinding Background}">
-                        <Grid.Resources>
+                    <Border Background="{TemplateBinding Background}">
+                        <Border.Resources>
                             <DrawingBrush x:Key="GridBrush"
                                           TileMode="Tile"
                                           ViewportUnits="Absolute"
                                           Viewport="{Binding GridSpacing, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource UIntToRect}}"
                                           Transform="{Binding AppliedTransform, RelativeSource={RelativeSource TemplatedParent}}"
                                           Drawing="{Binding GridStyle, RelativeSource={RelativeSource TemplatedParent}}" />
-                        </Grid.Resources>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
+                        </Border.Resources>
 
-                        <ScrollViewer CanContentScroll="True"
-                                      HorizontalScrollBarVisibility="Auto"
-                                      VerticalScrollBarVisibility="Auto"
-                                      Focusable="False">
-                            <local:ScrollingGrid x:Name="CanvasContainer"
-                                               Background="{Binding EnableGrid, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToBackground}, ConverterParameter={StaticResource GridBrush}}">
+                        <Canvas RenderTransform="{Binding AppliedTransform, RelativeSource={RelativeSource TemplatedParent}}"
+                                Background="{Binding EnableGrid, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToBackground}, ConverterParameter={StaticResource GridBrush}}"
+                                x:Name="containerDrawing">
 
-                                <Canvas RenderTransform="{Binding AppliedTransform, RelativeSource={RelativeSource TemplatedParent}}"
-                                        x:Name="containerDrawing">
+                            <local:RichCanvas x:Name="PART_Panel"
+                                              IsItemsHost="True" />
 
-                                    <local:RichCanvas x:Name="PART_Panel"
-                                                      IsItemsHost="True" />
+                            <Rectangle x:Name="PART_SelectionRectangle"
+                                       Visibility="{TemplateBinding IsSelecting, Converter={StaticResource BoolToVisConverter}}"
+                                       Canvas.Top="{Binding SelectionRectangle.Y, RelativeSource={RelativeSource TemplatedParent}}"
+                                       Canvas.Left="{Binding SelectionRectangle.X, RelativeSource={RelativeSource TemplatedParent}}"
+                                       Width="{Binding SelectionRectangle.Width, RelativeSource={RelativeSource TemplatedParent}}"
+                                       Height="{Binding SelectionRectangle.Height, RelativeSource={RelativeSource TemplatedParent}}"
+                                       Style="{TemplateBinding SelectionRectangleStyle}" />
 
-                                    <Rectangle x:Name="PART_SelectionRectangle"
-                                               Visibility="{TemplateBinding IsSelecting, Converter={StaticResource BoolToVisConverter}}"
-                                               Canvas.Top="{Binding SelectionRectangle.Y, RelativeSource={RelativeSource TemplatedParent}}"
-                                               Canvas.Left="{Binding SelectionRectangle.X, RelativeSource={RelativeSource TemplatedParent}}"
-                                               Width="{Binding SelectionRectangle.Width, RelativeSource={RelativeSource TemplatedParent}}"
-                                               Height="{Binding SelectionRectangle.Height, RelativeSource={RelativeSource TemplatedParent}}"
-                                               Style="{TemplateBinding SelectionRectangleStyle}" />
-
-                                </Canvas>
-
-                            </local:ScrollingGrid>
-                        </ScrollViewer>
-                    </Grid>
-
+                        </Canvas>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
