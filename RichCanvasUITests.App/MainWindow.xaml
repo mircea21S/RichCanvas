@@ -107,64 +107,66 @@
             <TextBlock Text="{Binding ViewportLocation, ElementName=source, StringFormat='\{0\} viewport location'}"></TextBlock>
         </StackPanel>
 
-        <richCanvas:RichItemsControl Background="AliceBlue"
-                                     ItemsSource="{Binding Items}"
-                                     SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
-                                     SelectedItems="{Binding SelectedItems}"
-                                     RealTimeSelectionEnabled="{Binding RealTimeSelectionEnabled}"
-                                     CanSelectMultipleItems="{Binding CanSelectMultipleItems}"
-                                     RealTimeDraggingEnabled="{Binding RealTimeDraggingEnabled}"
-                                     DrawingEndedCommand="{Binding DrawingState.DrawingEndedCommand}"
-                                     Name="source">
-            <richCanvas:RichItemsControl.Resources>
-                <DataTemplate DataType="{x:Type local:RichItemContainerModel}">
-                    <Rectangle Fill="Red"></Rectangle>
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type models:Line}">
-                    <Line  Stroke="Red"
-                           StrokeThickness="3"
-                           X2="{Binding Width}"
-                           Y2="{Binding Height}">
-                    </Line>
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type models:DrawingEndedRepresentation}">
-                    <TextBlock Text="DRAWING ENDED"
-                               AutomationProperties.AutomationId="{x:Static auto:AutomationIds.DrawingEndedTextBoxId}" />
-                </DataTemplate>
-            </richCanvas:RichItemsControl.Resources>
+        <ScrollViewer CanContentScroll="True">
+            <richCanvas:RichItemsControl Background="AliceBlue"
+                                         ItemsSource="{Binding Items}"
+                                         SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                                         SelectedItems="{Binding SelectedItems}"
+                                         RealTimeSelectionEnabled="{Binding RealTimeSelectionEnabled}"
+                                         CanSelectMultipleItems="{Binding CanSelectMultipleItems}"
+                                         RealTimeDraggingEnabled="{Binding RealTimeDraggingEnabled}"
+                                         DrawingEndedCommand="{Binding DrawingState.DrawingEndedCommand}"
+                                         Name="source">
+                <richCanvas:RichItemsControl.Resources>
+                    <DataTemplate DataType="{x:Type local:RichItemContainerModel}">
+                        <Rectangle Fill="Red"></Rectangle>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type models:Line}">
+                        <Line  Stroke="Red"
+                               StrokeThickness="3"
+                               X2="{Binding Width}"
+                               Y2="{Binding Height}">
+                        </Line>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type models:DrawingEndedRepresentation}">
+                        <TextBlock Text="DRAWING ENDED"
+                                   AutomationProperties.AutomationId="{x:Static auto:AutomationIds.DrawingEndedTextBoxId}" />
+                    </DataTemplate>
+                </richCanvas:RichItemsControl.Resources>
 
-            <richCanvas:RichItemsControl.ItemContainerStyle>
-                <Style TargetType="richCanvas:RichItemContainer">
-                    <EventSetter Event="Selected"
-                                 Handler="RichItemContainer_Selected" />
-                    <EventSetter Event="Unselected"
-                                 Handler="RichItemContainer_Unselected" />
+                <richCanvas:RichItemsControl.ItemContainerStyle>
+                    <Style TargetType="richCanvas:RichItemContainer">
+                        <EventSetter Event="Selected"
+                                     Handler="RichItemContainer_Selected" />
+                        <EventSetter Event="Unselected"
+                                     Handler="RichItemContainer_Unselected" />
 
-                    <Setter Property="Top"
-                            Value="{Binding Top, Mode=TwoWay}" />
+                        <Setter Property="Top"
+                                Value="{Binding Top, Mode=TwoWay}" />
 
-                    <Setter Property="Left"
-                            Value="{Binding Left, Mode=TwoWay}" />
+                        <Setter Property="Left"
+                                Value="{Binding Left, Mode=TwoWay}" />
 
-                    <Setter Property="Width"
-                            Value="{Binding Width, Mode=TwoWay}" />
+                        <Setter Property="Width"
+                                Value="{Binding Width, Mode=TwoWay}" />
 
-                    <Setter Property="Height"
-                            Value="{Binding Height, Mode=TwoWay}" />
+                        <Setter Property="Height"
+                                Value="{Binding Height, Mode=TwoWay}" />
 
-                    <Setter Property="AllowScaleChangeToUpdatePosition"
-                            Value="{Binding AllowScaleChangeToUpdatePosition}" />
+                        <Setter Property="AllowScaleChangeToUpdatePosition"
+                                Value="{Binding AllowScaleChangeToUpdatePosition}" />
 
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected"
-                                 Value="True">
-                            <Setter Property="Opacity"
-                                    Value="0.6" />
-                        </Trigger>
-                    </Style.Triggers>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected"
+                                     Value="True">
+                                <Setter Property="Opacity"
+                                        Value="0.6" />
+                            </Trigger>
+                        </Style.Triggers>
 
-                </Style>
-            </richCanvas:RichItemsControl.ItemContainerStyle>
-        </richCanvas:RichItemsControl>
+                    </Style>
+                </richCanvas:RichItemsControl.ItemContainerStyle>
+            </richCanvas:RichItemsControl>
+        </ScrollViewer>
     </Grid>
 </Window>

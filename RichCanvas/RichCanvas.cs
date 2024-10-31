@@ -73,7 +73,7 @@ namespace RichCanvas
                 }
             }
 
-            ItemsOwner?.ScrollContainer?.SetCurrentScroll();
+            ItemsOwner?.SetCurrentScroll();
             return arrangeSize;
         }
     }
