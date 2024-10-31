@@ -108,7 +108,9 @@
             <TextBlock Text="{Binding ViewportSize, ElementName=source, StringFormat='\{0\} viewport size'}"></TextBlock>
         </StackPanel>
 
-        <ScrollViewer CanContentScroll="True">
+        <ScrollViewer CanContentScroll="True"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Auto">
             <richCanvas:RichItemsControl Background="AliceBlue"
                                          ItemsSource="{Binding Items}"
                                          SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
