@@ -50,41 +50,16 @@ namespace RichCanvas
         public double ViewportWidth => ViewportSize.Width;
 
         /// <inheritdoc/>
-        public void LineDown()
-        {
-            if (!IsZooming)
-            {
-                ViewportLocation += new Vector(0, ScrollFactor);
-            }
-        }
+        public void LineDown() => ViewportLocation += new Vector(0, ScrollFactor);
 
         /// <inheritdoc/>
-        public void LineLeft()
-        {
-            if (!IsZooming)
-            {
-                ViewportLocation -= new Vector(ScrollFactor, 0);
-
-            }
-        }
+        public void LineLeft() => ViewportLocation -= new Vector(ScrollFactor, 0);
 
         /// <inheritdoc/>
-        public void LineRight()
-        {
-            if (!IsZooming)
-            {
-                ViewportLocation += new Vector(ScrollFactor, 0);
-            }
-        }
+        public void LineRight() => ViewportLocation += new Vector(ScrollFactor, 0);
 
         /// <inheritdoc/>
-        public void LineUp()
-        {
-            if (!IsZooming)
-            {
-                ViewportLocation -= new Vector(0, ScrollFactor);
-            }
-        }
+        public void LineUp() => ViewportLocation -= new Vector(0, ScrollFactor);
 
         /// <inheritdoc/>
         public Rect MakeVisible(Visual visual, Rect rectangle)
@@ -109,91 +84,32 @@ namespace RichCanvas
         }
 
         /// <inheritdoc/>
-        public void MouseWheelDown()
-        {
-            if (!IsZooming)
-            {
-                LineDown();
-            }
-        }
+        public void MouseWheelDown() => LineDown();
 
         /// <inheritdoc/>
-        public void MouseWheelLeft()
-        {
-            if (!IsZooming)
-            {
-                LineLeft();
-            }
-        }
+        public void MouseWheelLeft() => LineLeft();
 
         /// <inheritdoc/>
-        public void MouseWheelRight()
-        {
-            if (!IsZooming)
-            {
-                LineRight();
-            }
-        }
+        public void MouseWheelRight() => LineRight();
 
         /// <inheritdoc/>
-        public void MouseWheelUp()
-        {
-            if (!IsZooming)
-            {
-                LineUp();
-            }
-        }
+        public void MouseWheelUp() => LineUp();
 
         /// <inheritdoc/>
         public void PageDown()
-        {
-            if (!IsZooming)
-            {
-                ViewportLocation = new Point(ViewportLocation.X, ViewportLocation.Y + ViewportSize.Height);
-            }
-        }
+            => ViewportLocation = new Point(ViewportLocation.X, ViewportLocation.Y + ViewportSize.Height);
 
         /// <inheritdoc/>
         public void PageLeft()
-        {
-            if (!IsZooming)
-            {
-                ViewportLocation = new Point(ViewportLocation.X - ViewportSize.Width, ViewportLocation.Y);
-            }
-        }
+            => ViewportLocation = new Point(ViewportLocation.X - ViewportSize.Width, ViewportLocation.Y);
 
         /// <inheritdoc/>
         public void PageRight()
-        {
-            if (!IsZooming)
-            {
-                ViewportLocation = new Point(ViewportLocation.X + ViewportSize.Width, ViewportLocation.Y);
-            }
-        }
+            => ViewportLocation = new Point(ViewportLocation.X + ViewportSize.Width, ViewportLocation.Y);
 
         /// <inheritdoc/>
         public void PageUp()
-        {
-            if (!IsZooming)
-            {
-                ViewportLocation = new Point(ViewportLocation.X, ViewportLocation.Y - ViewportSize.Height);
-            }
-        }
-
-        private void UpdateScrollbars()
-        {
-            var extent = ItemsHost.Extent;
-            extent.Union(new Rect(ViewportLocation, ViewportSize));
-
-            _extent.Height = extent.Height;
-            _extent.Width = extent.Width;
-
-            var scrollOffset = ViewportLocation - ItemsHost.Extent.Location;
-
-            _offset.X = Math.Max(0, scrollOffset.X);
-            _offset.Y = Math.Max(0, scrollOffset.Y);
-            ScrollOwner.InvalidateScrollInfo();
-        }
+            => ViewportLocation = new Point(ViewportLocation.X, ViewportLocation.Y - ViewportSize.Height);
 
         /// <inheritdoc/>
         public void SetHorizontalOffset(double offset)
@@ -205,6 +121,23 @@ namespace RichCanvas
         {
         }
 
+        private void UpdateScrollbars()
+        {
+            if (ScrollOwner != null)
+            {
+                var extent = ItemsHost.Extent;
+                extent.Union(new Rect(ViewportLocation, ViewportSize));
+
+                _extent.Height = extent.Height;
+                _extent.Width = extent.Width;
+
+                var scrollOffset = ViewportLocation - ItemsHost.Extent.Location;
+
+                _offset.X = Math.Max(0, scrollOffset.X);
+                _offset.Y = Math.Max(0, scrollOffset.Y);
+                ScrollOwner.InvalidateScrollInfo();
+            }
+        }
         #endregion
     }
 }
