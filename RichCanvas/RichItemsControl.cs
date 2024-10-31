@@ -529,7 +529,6 @@ namespace RichCanvas
         internal RichCanvas? ItemsHost => _mainPanel;
         internal bool IsPanning { get; set; }
         internal bool IsZooming { get; set; }
-        internal bool InitializedScrollBarVisiblity { get; private set; }
         internal IList BaseSelectedItems => base.SelectedItems;
         internal List<int> CurrentDrawingIndexes { get; } = [];
 
@@ -804,23 +803,6 @@ namespace RichCanvas
         #region Properties Callbacks
 
         private static void OnDisableCacheChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).SetCachingMode((bool)e.NewValue);
-
-        private static void OnDisableScrollChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).OnDisableScrollChanged((bool)e.NewValue);
-
-        private void OnDisableScrollChanged(bool disabled)
-        {
-            //if (!disabled)
-            //{
-            //    SetCurrentScroll();
-            //}
-            if (ScrollOwner != null)
-            {
-                var scrollBarVisibllity = disabled ? ScrollBarVisibility.Hidden : ScrollBarVisibility.Auto;
-                ScrollOwner.HorizontalScrollBarVisibility = scrollBarVisibllity;
-                ScrollOwner.VerticalScrollBarVisibility = scrollBarVisibllity;
-                ScrollOwner.InvalidateScrollInfo();
-            }
-        }
 
         private static object ConstarainScaleToRange(DependencyObject d, object value)
         {
