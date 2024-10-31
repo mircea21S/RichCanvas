@@ -10,8 +10,14 @@ namespace RichCanvas
     public class RichCanvas : Panel
     {
         internal RichItemsControl? ItemsOwner { get; set; }
+        public static readonly DependencyProperty ExtentProperty = DependencyProperty.Register(nameof(Extent), typeof(Rect), typeof(RichCanvas), new FrameworkPropertyMetadata(Rect.Empty));
+
         /// <summary>The area covered by the children of this panel.</summary>
-        public Rect Extent { get; set; }
+        public Rect Extent
+        {
+            get => (Rect)GetValue(ExtentProperty);
+            set => SetValue(ExtentProperty, value);
+        }
 
         /// <inheritdoc/>
         protected override Size MeasureOverride(Size constraint)
@@ -58,7 +64,6 @@ namespace RichCanvas
                 ? new Rect(0, 0, 0, 0)
                 : new Rect(minX, minY, maxX - minX, maxY - minY);
 
-            //ItemsOwner?.SetCurrentScroll();
             return arrangeSize;
         }
     }

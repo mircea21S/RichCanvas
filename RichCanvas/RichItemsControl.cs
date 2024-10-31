@@ -522,6 +522,16 @@ namespace RichCanvas
             get => (Size)GetValue(ViewportSizeProperty);
             set => SetValue(ViewportSizeProperty, value);
         }
+
+        public static readonly DependencyProperty ItemsExtentProperty = DependencyProperty.Register(nameof(ItemsExtent), typeof(Rect), typeof(RichItemsControl), new FrameworkPropertyMetadata(Rect.Empty, OnItemsExtentChanged));
+        /// <summary>
+        /// The area covered by the <see cref="RichItemContainer"/>s.
+        /// </summary>
+        public Rect ItemsExtent
+        {
+            get => (Rect)GetValue(ItemsExtentProperty);
+            set => SetValue(ItemsExtentProperty, value);
+        }
         #endregion
 
         #region Internal Properties
@@ -866,6 +876,11 @@ namespace RichCanvas
 
         private static void OnCanSelectMultipleItemsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).CanSelectMultipleItemsUpdated((bool)e.NewValue);
 
+        private static void OnItemsExtentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var editor = (RichItemsControl)d;
+            editor.UpdateScrollbars();
+        }
         #endregion
 
         #region Selection
@@ -1075,12 +1090,6 @@ namespace RichCanvas
             host.TranslateTransform.X = -translate.X;
             host.TranslateTransform.Y = -translate.Y;
             host.UpdateScrollbars();
-        }
-
-        private void RaiseScrollingEvent(object context)
-        {
-            RoutedEventArgs newEventArgs = new RoutedEventArgs(ScrollingEvent, context);
-            RaiseEvent(newEventArgs);
         }
 
         private void SetCachingMode(bool disable)

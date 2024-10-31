@@ -144,7 +144,8 @@ namespace RichCanvas
 
         private void UpdateScrollbars()
         {
-            if (ScrollOwner != null)
+            // setting the ViewportLocation when manually scrolling triggers the ViewportUpdatedEvent which in turn calls this method, hence the !_isScrolling check
+            if (ScrollOwner != null && !_isScrolling)
             {
                 var extent = ItemsHost.Extent;
                 extent.Union(new Rect(ViewportLocation, ViewportSize));
