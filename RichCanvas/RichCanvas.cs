@@ -10,10 +10,8 @@ namespace RichCanvas
     public class RichCanvas : Panel
     {
         internal RichItemsControl? ItemsOwner { get; set; }
-        internal RichItemContainer? BottomElement { get; set; }
-        internal RichItemContainer? RightElement { get; set; }
-        internal RichItemContainer? TopElement { get; set; }
-        internal RichItemContainer? LeftElement { get; set; }
+        /// <summary>The area covered by the children of this panel.</summary>
+        public Rect Extent { get; set; }
 
         /// <inheritdoc/>
         protected override Size MeasureOverride(Size constraint)
@@ -53,27 +51,14 @@ namespace RichCanvas
                         minY = Math.Min(minY, container.BoundingBox.Top);
                         maxX = Math.Max(maxX, container.BoundingBox.Right);
                         maxY = Math.Max(maxY, container.BoundingBox.Bottom);
-                        if (container.BoundingBox.Bottom >= maxY)
-                        {
-                            BottomElement = container;
-                        }
-                        if (container.BoundingBox.Right >= maxX)
-                        {
-                            RightElement = container;
-                        }
-                        if (container.BoundingBox.Top <= minY)
-                        {
-                            TopElement = container;
-                        }
-                        if (container.BoundingBox.Left <= minX)
-                        {
-                            LeftElement = container;
-                        }
                     }
                 }
             }
+            Extent = minX == double.MaxValue
+                ? new Rect(0, 0, 0, 0)
+                : new Rect(minX, minY, maxX - minX, maxY - minY);
 
-            ItemsOwner?.SetCurrentScroll();
+            //ItemsOwner?.SetCurrentScroll();
             return arrangeSize;
         }
     }
