@@ -15,8 +15,8 @@ namespace RichCanvas
 
         private Vector _offset;
         private Size _extent;
-        private Point _viewportBottomRightInitial;
-        private Point _viewportTopLeftInitial = new Point(0, 0);
+        private Point? _viewportLocationBeforeScrolling;
+        private bool _isScrolling;
 
         #endregion
 
@@ -114,11 +114,32 @@ namespace RichCanvas
         /// <inheritdoc/>
         public void SetHorizontalOffset(double offset)
         {
+            _offset.X = offset;
+            UpdateViewportLocationOnScroll();
         }
 
         /// <inheritdoc/>
         public void SetVerticalOffset(double offset)
         {
+            _offset.Y = offset;
+            UpdateViewportLocationOnScroll();
+        }
+
+        private void UpdateViewportLocationOnScroll()
+        {
+            if (!_viewportLocationBeforeScrolling.HasValue)
+            {
+                _viewportLocationBeforeScrolling = ViewportLocation;
+            }
+
+            _isScrolling = true;
+
+            double locationX = Math.Min(ItemsHost.Extent.Left, _viewportLocationBeforeScrolling.Value.X) + HorizontalOffset;
+            double locationY = Math.Min(ItemsHost.Extent.Top, _viewportLocationBeforeScrolling.Value.Y) + VerticalOffset;
+            ViewportLocation = new Point(locationX, locationY);
+
+            ScrollOwner?.InvalidateScrollInfo();
+            _isScrolling = false;
         }
 
         private void UpdateScrollbars()
