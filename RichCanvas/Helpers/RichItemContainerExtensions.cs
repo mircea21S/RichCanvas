@@ -16,7 +16,7 @@ namespace RichCanvas.Helpers
             // stop dragging if the container inside the selection is the bottom or right limit
             var containerBottomValue = container.BoundingBox.Bottom + offset.Y;
             return offset.Y > 0 && container.IsSelected
-                && IsLimitTouched(host.ScrollContainer.BottomLimit, containerBottomValue);
+                && IsLimitTouched(host.BottomLimit, containerBottomValue);
         }
 
         public static bool HasTouchedRightLimit(this RichItemContainer container, Point offset)
@@ -29,7 +29,7 @@ namespace RichCanvas.Helpers
 
             var containerRightValue = container.BoundingBox.Right + offset.X;
             return offset.X > 0 && container.IsSelected
-                && IsLimitTouched(host.ScrollContainer.RightLimit, containerRightValue);
+                && IsLimitTouched(host.RightLimit, containerRightValue);
         }
 
         public static bool HasTouchedBottomExtentSizeLimit(this RichItemContainer container, Point offset)
@@ -40,7 +40,7 @@ namespace RichCanvas.Helpers
                 return false;
             }
 
-            var extentLimit = host.ScrollContainer.BottomLimit + host.ExtentSize.Height;
+            var extentLimit = host.BottomLimit + host.ExtentSize.Height;
             var containerBottomValue = container.BoundingBox.Bottom + offset.Y;
             return offset.Y > 0 && container.IsSelected && IsLimitTouched(extentLimit, containerBottomValue);
         }
@@ -53,7 +53,7 @@ namespace RichCanvas.Helpers
                 return false;
             }
 
-            var extentLimit = Math.Abs(host.ScrollContainer.TopLimit - host.ExtentSize.Height);
+            var extentLimit = Math.Abs(host.TopLimit - host.ExtentSize.Height);
             var containerTopValue = Math.Abs(container.BoundingBox.Top + offset.Y);
             return offset.Y < 0 && container.IsSelected && IsLimitTouched(extentLimit, containerTopValue);
         }
@@ -66,7 +66,7 @@ namespace RichCanvas.Helpers
                 return false;
             }
 
-            var extentLimit = Math.Abs(host.ScrollContainer.LeftLimit - host.ExtentSize.Width);
+            var extentLimit = Math.Abs(host.LeftLimit - host.ExtentSize.Width);
             var containerLeftValue = Math.Abs(container.BoundingBox.Left + offset.X);
             return offset.X < 0 && container.IsSelected && IsLimitTouched(extentLimit, containerLeftValue);
         }
@@ -79,7 +79,7 @@ namespace RichCanvas.Helpers
                 return false;
             }
 
-            var extentLimit = host.ScrollContainer.RightLimit + host.ExtentSize.Width;
+            var extentLimit = host.RightLimit + host.ExtentSize.Width;
             var containerRightValue = container.BoundingBox.Right + offset.X;
             return offset.X > 0 && container.IsSelected && IsLimitTouched(extentLimit, containerRightValue);
         }

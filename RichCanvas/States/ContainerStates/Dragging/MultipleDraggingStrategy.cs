@@ -44,7 +44,7 @@ namespace RichCanvas.States.ContainerStates
                 }
 
                 Parent.ItemsHost?.InvalidateArrange();
-                Parent.ScrollContainer?.SetCurrentScroll();
+                Parent?.SetCurrentScroll();
             }
         }
 
