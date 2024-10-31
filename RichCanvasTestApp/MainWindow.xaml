@@ -360,7 +360,6 @@
                                      SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                                      RealTimeDraggingEnabled="True"
                                      RealTimeSelectionEnabled="False"
-                                     VerticalScrollBarVisibility="{Binding VerticalScrollBarVisibility}"
                                      CanSelectMultipleItems="False">
             <!--TranslateOffset="{Binding TranslateOffset, Mode=TwoWay}"-->
 
