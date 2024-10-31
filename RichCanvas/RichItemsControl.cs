@@ -30,7 +30,6 @@ namespace RichCanvas
 
         private const string DrawingPanelName = "PART_Panel";
         private const string SelectionRectangleName = "PART_SelectionRectangle";
-        private const string CanvasContainerName = "CanvasContainer";
 
         #endregion
 
@@ -529,36 +528,15 @@ namespace RichCanvas
             set => SetValue(SelectionEnabledProperty, value);
         }
 
+        public static readonly DependencyProperty ViewportSizeProperty = DependencyProperty.Register(nameof(ViewportSize), typeof(Size), typeof(RichItemsControl), new FrameworkPropertyMetadata(Size.Empty));
         /// <summary>
-        /// Gets or sets whether <see cref="RichItemsControl.ScrollOwner"/> vertical scrollbar visibility.
-        /// Default is <see cref="ScrollBarVisibility.Visible"/>.
+        /// Gets the size of the viewport.
         /// </summary>
-        public static DependencyProperty VerticalScrollBarVisibilityProperty = DependencyProperty.Register(nameof(VerticalScrollBarVisibility), typeof(ScrollBarVisibility), typeof(RichItemsControl), new FrameworkPropertyMetadata(ScrollBarVisibility.Visible, OnVerticalScrollBarVisiblityChanged));
-        /// <summary>
-        /// Gets or sets whether <see cref="RichItemsControl.ScrollOwner"/> vertical scrollbar visibility.
-        /// Default is <see cref="ScrollBarVisibility.Visible"/>.
-        /// </summary>
-        public ScrollBarVisibility VerticalScrollBarVisibility
+        public Size ViewportSize
         {
-            get => (ScrollBarVisibility)GetValue(VerticalScrollBarVisibilityProperty);
-            set => SetValue(VerticalScrollBarVisibilityProperty, value);
+            get => (Size)GetValue(ViewportSizeProperty);
+            set => SetValue(ViewportSizeProperty, value);
         }
-
-        /// <summary>
-        /// Gets or sets whether <see cref="RichItemsControl.ScrollOwner"/> horizontal scrollbar visibility.
-        /// Default is <see cref="ScrollBarVisibility.Visible"/>.
-        /// </summary>
-        public static DependencyProperty HorizontalScrollBarVisibilityProperty = DependencyProperty.Register(nameof(HorizontalScrollBarVisibility), typeof(ScrollBarVisibility), typeof(RichItemsControl), new FrameworkPropertyMetadata(ScrollBarVisibility.Visible, OnHorizontalScrollBarVisiblityChanged));
-        /// <summary>
-        /// Gets or sets whether <see cref="RichItemsControl.ScrollOwner"/> horizontal scrollbar visibility.
-        /// Default is <see cref="ScrollBarVisibility.Visible"/>.
-        /// </summary>
-        public ScrollBarVisibility HorizontalScrollBarVisibility
-        {
-            get => (ScrollBarVisibility)GetValue(HorizontalScrollBarVisibilityProperty);
-            set => SetValue(HorizontalScrollBarVisibilityProperty, value);
-        }
-
         #endregion
 
         #region Internal Properties
@@ -739,6 +717,16 @@ namespace RichCanvas
             // Replace event not implemented because the index doesn't change
         }
 
+        /// <inheritdoc />
+        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+        {
+            base.OnRenderSizeChanged(sizeInfo);
+
+            ViewportSize = new Size(ActualWidth / Scale, ActualHeight / Scale);
+
+            UpdateScrollbars();
+        }
+
         #endregion
 
         #region Public Api
@@ -806,10 +794,10 @@ namespace RichCanvas
                 TranslateTransform.Y = mousePosition.Y - originY * ScaleTransform.ScaleY;
             }
 
-            if (!DisableScroll)
-            {
-                SetCurrentScroll();
-            }
+            //if (!DisableScroll)
+            //{
+            //    SetCurrentScroll();
+            //}
         }
 
         public void ZoomIn()
@@ -836,10 +824,10 @@ namespace RichCanvas
 
         private void OnDisableScrollChanged(bool disabled)
         {
-            if (!disabled)
-            {
-                SetCurrentScroll();
-            }
+            //if (!disabled)
+            //{
+            //    SetCurrentScroll();
+            //}
             if (ScrollOwner != null)
             {
                 var scrollBarVisibllity = disabled ? ScrollBarVisibility.Hidden : ScrollBarVisibility.Auto;
@@ -910,10 +898,6 @@ namespace RichCanvas
             => (double)value == 0 ? 1.1d : value;
 
         private static void OnCanSelectMultipleItemsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).CanSelectMultipleItemsUpdated((bool)e.NewValue);
-
-        private static void OnVerticalScrollBarVisiblityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).OnScrollBarVisiblityChanged((ScrollBarVisibility)e.NewValue, true);
-
-        private static void OnHorizontalScrollBarVisiblityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).OnScrollBarVisiblityChanged((ScrollBarVisibility)e.NewValue);
 
         #endregion
 
@@ -1123,6 +1107,7 @@ namespace RichCanvas
 
             host.TranslateTransform.X = -translate.X;
             host.TranslateTransform.Y = -translate.Y;
+            host.UpdateScrollbars();
         }
 
         private void RaiseScrollingEvent(object context)
@@ -1158,7 +1143,7 @@ namespace RichCanvas
                 ScaleTransform.ScaleX = newValue;
                 ScaleTransform.ScaleY = newValue;
                 CoerceValue(ScaleProperty);
-                SetCurrentScroll();
+                //SetCurrentScroll();
             }
         }
 
@@ -1234,27 +1219,6 @@ namespace RichCanvas
         {
             RoutedEventArgs newEventArgs = new RoutedEventArgs(DrawingEndedEvent, new DrawEndedEventArgs(context, mousePosition));
             RaiseEvent(newEventArgs);
-        }
-
-        internal void OnScrollBarVisiblityChanged(ScrollBarVisibility scrollBarVisibility, bool isVertical = false, bool initalized = false)
-        {
-            if (initalized)
-            {
-                InitializedScrollBarVisiblity = true;
-            }
-
-            if (ScrollOwner != null)
-            {
-                if (isVertical)
-                {
-                    ScrollOwner.VerticalScrollBarVisibility = scrollBarVisibility;
-                }
-                else
-                {
-                    ScrollOwner.HorizontalScrollBarVisibility = scrollBarVisibility;
-                }
-                ScrollOwner.InvalidateScrollInfo();
-            }
         }
         #endregion
     }

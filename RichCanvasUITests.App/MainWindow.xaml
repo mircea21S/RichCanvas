@@ -105,6 +105,7 @@
             <TextBlock Text="{Binding ItemsSource.Count, ElementName=source, StringFormat='\{0\} items'}"></TextBlock>
             <TextBlock Text="{Binding SelectedItems.Count, ElementName=source, StringFormat='\{0\} selected items'}"></TextBlock>
             <TextBlock Text="{Binding ViewportLocation, ElementName=source, StringFormat='\{0\} viewport location'}"></TextBlock>
+            <TextBlock Text="{Binding ViewportSize, ElementName=source, StringFormat='\{0\} viewport size'}"></TextBlock>
         </StackPanel>
 
         <ScrollViewer CanContentScroll="True">
