@@ -10,7 +10,7 @@ namespace RichCanvas
     /// <summary>
     /// Grid defining scrolling functionalty
     /// </summary>
-    public class ScrollingGrid : Grid, IScrollInfo
+    public partial class RichItemsControl : IScrollInfo
     {
         #region Private Fields
 

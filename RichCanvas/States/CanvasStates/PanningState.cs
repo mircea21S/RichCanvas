@@ -13,7 +13,7 @@ namespace RichCanvas.States
 
         public override void Enter()
         {
-            _initialPosition = Mouse.GetPosition(Parent.ScrollContainer);
+            _initialPosition = Mouse.GetPosition(Parent);
             Parent.IsPanning = true;
             Parent.Cursor = Cursors.Hand;
         }
@@ -22,10 +22,10 @@ namespace RichCanvas.States
         {
             if (Parent.IsPanning)
             {
-                var currentPosition = e.GetPosition(Parent.ScrollContainer);
+                var currentPosition = e.GetPosition(Parent);
                 var delta = currentPosition - _initialPosition;
 
-                Parent.ScrollContainer.Scroll((Point)delta);
+                Parent.Scroll((Point)delta);
                 Parent.ViewportLocation += -delta / Parent.Scale;
 
                 _initialPosition = currentPosition;
