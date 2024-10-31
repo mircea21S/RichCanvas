@@ -269,21 +269,6 @@ namespace RichCanvas
         }
 
         /// <summary>
-        /// Gets or sets whether scrolling operation is disabled.
-        /// Default is enabled.f
-        /// </summary>
-        public static DependencyProperty DisableScrollProperty = DependencyProperty.Register(nameof(DisableScroll), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false, OnDisableScrollChanged));
-        /// <summary>
-        /// Gets or sets whether scrolling operation is disabled.
-        /// Default is enabled.f
-        /// </summary>
-        public bool DisableScroll
-        {
-            get => (bool)GetValue(DisableScrollProperty);
-            set => SetValue(DisableScrollProperty, value);
-        }
-
-        /// <summary>
         /// Gets or sets whether zooming operation is disabled.
         /// Default is enabled.
         /// </summary>

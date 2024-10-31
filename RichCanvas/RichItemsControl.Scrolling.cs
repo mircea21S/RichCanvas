@@ -52,7 +52,7 @@ namespace RichCanvas
         /// <inheritdoc/>
         public void LineDown()
         {
-            if (!IsZooming && !DisableScroll)
+            if (!IsZooming)
             {
                 ViewportLocation += new Vector(0, ScrollFactor);
             }
@@ -61,7 +61,7 @@ namespace RichCanvas
         /// <inheritdoc/>
         public void LineLeft()
         {
-            if (!IsZooming && !DisableScroll)
+            if (!IsZooming)
             {
                 ViewportLocation -= new Vector(ScrollFactor, 0);
 
@@ -71,7 +71,7 @@ namespace RichCanvas
         /// <inheritdoc/>
         public void LineRight()
         {
-            if (!IsZooming && !DisableScroll)
+            if (!IsZooming)
             {
                 ViewportLocation += new Vector(ScrollFactor, 0);
             }
@@ -80,7 +80,7 @@ namespace RichCanvas
         /// <inheritdoc/>
         public void LineUp()
         {
-            if (!IsZooming && !DisableScroll)
+            if (!IsZooming)
             {
                 ViewportLocation -= new Vector(0, ScrollFactor);
             }
@@ -111,7 +111,7 @@ namespace RichCanvas
         /// <inheritdoc/>
         public void MouseWheelDown()
         {
-            if (!IsZooming && !DisableScroll)
+            if (!IsZooming)
             {
                 LineDown();
             }
@@ -120,7 +120,7 @@ namespace RichCanvas
         /// <inheritdoc/>
         public void MouseWheelLeft()
         {
-            if (!IsZooming && !DisableScroll)
+            if (!IsZooming)
             {
                 LineLeft();
             }
@@ -129,7 +129,7 @@ namespace RichCanvas
         /// <inheritdoc/>
         public void MouseWheelRight()
         {
-            if (!IsZooming && !DisableScroll)
+            if (!IsZooming)
             {
                 LineRight();
             }
@@ -138,7 +138,7 @@ namespace RichCanvas
         /// <inheritdoc/>
         public void MouseWheelUp()
         {
-            if (!IsZooming && !DisableScroll)
+            if (!IsZooming)
             {
                 LineUp();
             }
@@ -147,7 +147,7 @@ namespace RichCanvas
         /// <inheritdoc/>
         public void PageDown()
         {
-            if (!IsZooming && !DisableScroll)
+            if (!IsZooming)
             {
                 ViewportLocation = new Point(ViewportLocation.X, ViewportLocation.Y + ViewportSize.Height);
             }
@@ -156,7 +156,7 @@ namespace RichCanvas
         /// <inheritdoc/>
         public void PageLeft()
         {
-            if (!IsZooming && !DisableScroll)
+            if (!IsZooming)
             {
                 ViewportLocation = new Point(ViewportLocation.X - ViewportSize.Width, ViewportLocation.Y);
             }
@@ -165,7 +165,7 @@ namespace RichCanvas
         /// <inheritdoc/>
         public void PageRight()
         {
-            if (!IsZooming && !DisableScroll)
+            if (!IsZooming)
             {
                 ViewportLocation = new Point(ViewportLocation.X + ViewportSize.Width, ViewportLocation.Y);
             }
@@ -174,7 +174,7 @@ namespace RichCanvas
         /// <inheritdoc/>
         public void PageUp()
         {
-            if (!IsZooming && !DisableScroll)
+            if (!IsZooming)
             {
                 ViewportLocation = new Point(ViewportLocation.X, ViewportLocation.Y - ViewportSize.Height);
             }
