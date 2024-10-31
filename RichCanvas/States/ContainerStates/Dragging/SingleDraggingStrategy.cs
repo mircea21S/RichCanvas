@@ -61,11 +61,6 @@ namespace RichCanvas.States.ContainerStates
                 Container.Left = Math.Round(Container.Left / Container.Host.GridSpacing) * Container.Host.GridSpacing;
                 Container.Top = Math.Round(Container.Top / Container.Host.GridSpacing) * Container.Host.GridSpacing;
             }
-
-            if (!Container.Host.RealTimeDraggingEnabled)
-            {
-                //Container.Host.SetCurrentScroll();
-            }
         }
     }
 }

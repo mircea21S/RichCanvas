@@ -52,7 +52,8 @@
                                 x:Name="containerDrawing">
 
                             <local:RichCanvas x:Name="PART_Panel"
-                                              IsItemsHost="True" />
+                                              IsItemsHost="True"
+                                              Extent="{Binding ItemsExtent, Mode=OneWayToSource, RelativeSource={RelativeSource TemplatedParent}}" />
 
                             <Rectangle x:Name="PART_SelectionRectangle"
                                        Visibility="{TemplateBinding IsSelecting, Converter={StaticResource BoolToVisConverter}}"
