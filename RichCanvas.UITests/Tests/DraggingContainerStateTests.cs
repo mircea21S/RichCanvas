@@ -9,6 +9,7 @@ using System.Drawing;
 
 namespace RichCanvas.UITests.Tests
 {
+    [TestFixture]
     public class DraggingContainerStateTests : RichCanvasTestAppTest
     {
         [TestCase(true)]

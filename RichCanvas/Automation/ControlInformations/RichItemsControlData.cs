@@ -1,13 +1,14 @@
-﻿using RichCanvas.States;
-using System.Windows.Input;
+﻿using System.Windows;
 
 namespace RichCanvas.Automation.ControlInformations
 {
     public class RichItemsControlData
     {
-        public CanvasState CurrentState { get; internal set; }
-        public double TranslateTransformX { get; internal set; }
-        public double TranslateTransformY { get; internal set; }
-        public InputGesture DrawingGesture { get; internal set; }
+        public double TranslateTransformX { get; set; }
+        public double TranslateTransformY { get; set; }
+        public Rect ItemsExtent { get; set; }
+        public double ScrollFactor { get; set; }
+        public Point ViewportLocation { get; set; }
+        public Size ViewportSize { get; set; }
     }
 }
