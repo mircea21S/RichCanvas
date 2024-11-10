@@ -1,4 +1,5 @@
-﻿using RichCanvasUITests.App.States;
+﻿using RichCanvasUITests.App;
+using RichCanvasUITests.App.States;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows.Input;
@@ -22,6 +23,9 @@ namespace RichCanvasUITests.App
         private RelayCommand _switchItemsPositionCommand;
         public ICommand SwitchItemsPositionCommand => _switchItemsPositionCommand ??= new RelayCommand(SwitchItemsPosition);
 
+        private RelayCommand _resetViewportLocation;
+        public ICommand ResetViewportLocation => _resetViewportLocation ??= new RelayCommand(PerformResetViewportLocation);
+
         private bool _realTimeSelectionEnabled;
         public bool RealTimeSelectionEnabled
         {
@@ -41,6 +45,13 @@ namespace RichCanvasUITests.App
         {
             get => _realTimeDraggingEnabled;
             set => SetProperty(ref _realTimeDraggingEnabled, value);
+        }
+
+        private System.Windows.Point _viewportLocation;
+        public System.Windows.Point ViewportLocation
+        {
+            get => _viewportLocation;
+            set => SetProperty(ref _viewportLocation, value);
         }
 
         public SingleSelectionStateViewModel SingleSelectionState { get; }
@@ -77,6 +88,11 @@ namespace RichCanvasUITests.App
         {
             // changable method to test stuff
             Items[0] = Items[1];
+        }
+
+        private void PerformResetViewportLocation()
+        {
+            ViewportLocation = new System.Windows.Point(0, 0);
         }
     }
 }

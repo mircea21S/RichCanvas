@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using FlaUI.Core.AutomationElements;
+using NUnit.Framework;
 using System.Drawing;
 
 namespace RichCanvas.UITests.Tests
