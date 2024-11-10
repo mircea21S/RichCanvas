@@ -29,5 +29,7 @@
         public const string SelectFirst5ItemsNotSelectedButtonId = "SelectFirst5ItemsNotSelected";
 
         public const string RealTimeDraggingToggleButtonId = "RealTimeDraggingToggleButton";
+        public const string ResetViewportLocationButtonId = "ResetViewportLocationButton";
+        public const string ViewportLocationTextBlockId = "ViewportLocationTextBlock";
     }
 }

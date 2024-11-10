@@ -53,6 +53,7 @@ namespace RichCanvas
                     {
                         container.CalculateBoundingBox();
 
+
                         minX = Math.Min(minX, container.BoundingBox.Left);
                         minY = Math.Min(minY, container.BoundingBox.Top);
                         maxX = Math.Max(maxX, container.BoundingBox.Right);
@@ -61,7 +62,7 @@ namespace RichCanvas
                 }
             }
             Extent = minX == double.MaxValue
-                ? new Rect(0, 0, 0, 0)
+                ? Rect.Empty
                 : new Rect(minX, minY, maxX - minX, maxY - minY);
 
             return arrangeSize;

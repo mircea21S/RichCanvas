@@ -4,6 +4,7 @@ using System.Windows.Input;
 using MouseButton = FlaUI.Core.Input.MouseButton;
 using System.Drawing;
 using System;
+using RichCanvas.UITests.Tests;
 
 namespace RichCanvas.UITests.Helpers
 {
@@ -24,6 +25,26 @@ namespace RichCanvas.UITests.Helpers
                 return new KeyGestureHandler(keyGesture);
             }
             return null;
+        }
+
+        internal static void MouseWheelScroll(ScrollingMode scrollingMode)
+        {
+            if (scrollingMode == ScrollingMode.Up)
+            {
+                FlaUI.Core.Input.Mouse.Scroll(1);
+            }
+            else if (scrollingMode == ScrollingMode.Down)
+            {
+                FlaUI.Core.Input.Mouse.Scroll(-1);
+            }
+            else if (scrollingMode == ScrollingMode.Right)
+            {
+                FlaUI.Core.Input.Mouse.HorizontalScroll(1);
+            }
+            else
+            {
+                FlaUI.Core.Input.Mouse.HorizontalScroll(-1);
+            }
         }
 
         internal static VirtualKeyShort ToVirtualKeyShort(this Key key) => key switch
