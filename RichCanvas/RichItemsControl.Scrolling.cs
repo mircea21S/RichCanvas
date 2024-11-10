@@ -22,6 +22,7 @@ namespace RichCanvas
 
         #region IScrollInfo
 
+        internal IScrollInfo ScrollInfo => this;
         /// <inheritdoc/>
         public bool CanHorizontallyScroll { get; set; }
 
@@ -134,12 +135,30 @@ namespace RichCanvas
 
             _isScrolling = true;
 
-            double locationX = Math.Min(ItemsHost.Extent.Left, _viewportLocationBeforeScrolling.Value.X) + HorizontalOffset;
-            double locationY = Math.Min(ItemsHost.Extent.Top, _viewportLocationBeforeScrolling.Value.Y) + VerticalOffset;
+            double locationX = Math.Min(ItemsExtent.Left, _viewportLocationBeforeScrolling.Value.X) + HorizontalOffset;
+            double locationY = Math.Min(ItemsExtent.Top, _viewportLocationBeforeScrolling.Value.Y) + VerticalOffset;
             ViewportLocation = new Point(locationX, locationY);
-
+            EnsureExtentIsUpdated();
             ScrollOwner?.InvalidateScrollInfo();
             _isScrolling = false;
+        }
+
+        private void EnsureExtentIsUpdated()
+        {
+            var extentWithItems = ItemsExtent;
+            extentWithItems.Union(new Rect(ViewportLocation, ViewportSize));
+
+            var scrollOffset = ViewportLocation - ItemsExtent.Location;
+
+            if (_extent.Height + Math.Max(0, scrollOffset.Y) <= extentWithItems.Height)
+            {
+                _extent.Height = extentWithItems.Height;
+            }
+
+            if (_extent.Width + Math.Max(0, scrollOffset.X) <= extentWithItems.Width)
+            {
+                _extent.Width = extentWithItems.Width;
+            }
         }
 
         private void UpdateScrollbars()
@@ -147,13 +166,15 @@ namespace RichCanvas
             // setting the ViewportLocation when manually scrolling triggers the ViewportUpdatedEvent which in turn calls this method, hence the !_isScrolling check
             if (ScrollOwner != null && !_isScrolling)
             {
-                var extent = ItemsHost.Extent;
+                _viewportLocationBeforeScrolling = null;
+
+                var extent = ItemsExtent;
                 extent.Union(new Rect(ViewportLocation, ViewportSize));
 
                 _extent.Height = extent.Height;
                 _extent.Width = extent.Width;
 
-                var scrollOffset = ViewportLocation - ItemsHost.Extent.Location;
+                var scrollOffset = ViewportLocation - ItemsExtent.Location;
 
                 _offset.X = Math.Max(0, scrollOffset.X);
                 _offset.Y = Math.Max(0, scrollOffset.Y);

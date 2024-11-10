@@ -104,8 +104,19 @@
             <TextBlock Text="{Binding MousePosition, ElementName=source, StringFormat='\{0\} mouse position'}"></TextBlock>
             <TextBlock Text="{Binding ItemsSource.Count, ElementName=source, StringFormat='\{0\} items'}"></TextBlock>
             <TextBlock Text="{Binding SelectedItems.Count, ElementName=source, StringFormat='\{0\} selected items'}"></TextBlock>
-            <TextBlock Text="{Binding ViewportLocation, ElementName=source, StringFormat='\{0\} viewport location'}"></TextBlock>
+            <TextBlock Text="{Binding ViewportLocation, StringFormat='\{0\} viewport location'}"
+                       AutomationProperties.AutomationId="{x:Static auto:AutomationIds.ViewportLocationTextBlockId}"></TextBlock>
             <TextBlock Text="{Binding ViewportSize, ElementName=source, StringFormat='\{0\} viewport size'}"></TextBlock>
+
+            <Border BorderThickness="1"
+                    BorderBrush="Black"
+                    Margin="2">
+                <StackPanel>
+                    <Button AutomationProperties.AutomationId="{x:Static auto:AutomationIds.ResetViewportLocationButtonId}"
+                            Content="Reset Viewport Location"
+                            Command="{Binding ResetViewportLocation}" />
+                </StackPanel>
+            </Border>
         </StackPanel>
 
         <ScrollViewer CanContentScroll="True"
@@ -119,6 +130,8 @@
                                          CanSelectMultipleItems="{Binding CanSelectMultipleItems}"
                                          RealTimeDraggingEnabled="{Binding RealTimeDraggingEnabled}"
                                          DrawingEndedCommand="{Binding DrawingState.DrawingEndedCommand}"
+                                         ViewportLocation="{Binding ViewportLocation, Mode=TwoWay}"
+                                         ScrollFactor="100"
                                          Name="source">
                 <richCanvas:RichItemsControl.Resources>
                     <DataTemplate DataType="{x:Type local:RichItemContainerModel}">
@@ -139,10 +152,6 @@
 
                 <richCanvas:RichItemsControl.ItemContainerStyle>
                     <Style TargetType="richCanvas:RichItemContainer">
-                        <EventSetter Event="Selected"
-                                     Handler="RichItemContainer_Selected" />
-                        <EventSetter Event="Unselected"
-                                     Handler="RichItemContainer_Unselected" />
 
                         <Setter Property="Top"
                                 Value="{Binding Top, Mode=TwoWay}" />

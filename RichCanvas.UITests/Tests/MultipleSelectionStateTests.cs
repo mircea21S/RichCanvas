@@ -1,15 +1,14 @@
-﻿using FlaUI.Core.Input;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NUnit.Framework;
 using RichCanvas.Gestures;
 using RichCanvas.UITests.Helpers;
 using RichCanvasUITests.App.Automation;
 using RichCanvasUITests.App.TestMocks;
-using System;
 using System.Drawing;
 
 namespace RichCanvas.UITests.Tests
 {
+    [TestFixture]
     public class MultipleSelectionStateTests : RichCanvasTestAppTest
     {
         private bool ReleaseRealTimeSelection { get; set; }

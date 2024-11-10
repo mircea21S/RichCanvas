@@ -10,7 +10,6 @@ using RichCanvasUITests.App;
 using RichCanvasUITests.App.Automation;
 using RichCanvasUITests.App.Models;
 using RichCanvasUITests.App.TestMocks;
-using System.Linq;
 using Point = System.Drawing.Point;
 
 namespace RichCanvas.UITests.Tests
