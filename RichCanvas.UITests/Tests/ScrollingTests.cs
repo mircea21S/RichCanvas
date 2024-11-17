@@ -199,7 +199,6 @@ namespace RichCanvas.UITests.Tests
         {
             // arrange
             Window.InvokeButton(AutomationIds.AddSelectableItemsButtonId2);
-            ArrangeUIHorizontallyToShowScrollbars(scrollingMode);
             ArrangeUIVerticallyToShowScrollbars(scrollingMode);
             VerticalScrollBar verticalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(FlaUI.Core.Definitions.ControlType.ScrollBar)).AsVerticalScrollBar();
             var verticalScrollbarBoundingRectangle = verticalScrollBar.BoundingRectangle.Location;
@@ -225,6 +224,44 @@ namespace RichCanvas.UITests.Tests
             else
             {
                 RichItemsControl.RichItemsControlData.ViewportLocation.Y.Should().Be(-(ViewportSize.Height - RichItemsControl.RichItemsControlData.ItemsExtent.Bottom));
+            }
+            Mouse.Up();
+            Mouse.Position = ViewportCenter;
+        }
+
+        // scrollbar dragging here means actually putting the mouse over the scrollbar then dragging it (not using automation patterns)
+        [TestCase(ScrollingMode.Left)]
+        [TestCase(ScrollingMode.Right)]
+        [Test]
+        public void ScrollingHorizontallyByScrollbarDraggingToMaximum_WithItemsInsideViewportSizeAndVisibleScrollbar_ShouldMoveAllItemsInViewport(ScrollingMode scrollingMode)
+        {
+            // arrange
+            Window.InvokeButton(AutomationIds.AddSelectableItemsButtonId2);
+            ArrangeUIHorizontallyToShowScrollbars(scrollingMode);
+            HorizontalScrollBar horizontalScrollbar = Window.FindFirstDescendant(x => x.ByControlType(FlaUI.Core.Definitions.ControlType.ScrollBar)).AsHorizontalScrollBar();
+            var horizontalScrollbarBoundingRectangle = horizontalScrollbar.BoundingRectangle.Location;
+            var horizontalScrollbarLocation = new System.Drawing.Point((int)ViewportSize.Width / 2, horizontalScrollbarBoundingRectangle.Y + 2);
+
+            // act
+            Mouse.Position = horizontalScrollbarLocation;
+            Mouse.Down();
+            if (scrollingMode == ScrollingMode.Left)
+            {
+                Mouse.Position = new System.Drawing.Point(horizontalScrollbarLocation.X - 1000, horizontalScrollbarLocation.Y);
+            }
+            else
+            {
+                Mouse.Position = new System.Drawing.Point(horizontalScrollbarLocation.X + 1000, horizontalScrollbarLocation.Y);
+            }
+
+            // assert
+            if (scrollingMode == ScrollingMode.Left)
+            {
+                RichItemsControl.RichItemsControlData.ViewportLocation.X.Should().Be(RichItemsControl.RichItemsControlData.ItemsExtent.Left);
+            }
+            else
+            {
+                RichItemsControl.RichItemsControlData.ViewportLocation.X.Should().Be(-(ViewportSize.Width - RichItemsControl.RichItemsControlData.ItemsExtent.Right));
             }
             Mouse.Up();
             Mouse.Position = ViewportCenter;
