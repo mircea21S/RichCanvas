@@ -22,7 +22,8 @@ namespace RichCanvas.Automation
             ItemsExtent = OwnerItemsControl.ItemsExtent,
             ScrollFactor = OwnerItemsControl.ScrollFactor,
             ViewportLocation = OwnerItemsControl.ViewportLocation,
-            ViewportSize = OwnerItemsControl.ViewportSize
+            ViewportSize = OwnerItemsControl.ViewportSize,
+            ViewportExtent = new System.Windows.Size(OwnerItemsControl.ScrollInfo.ExtentWidth, OwnerItemsControl.ScrollInfo.ExtentHeight)
         });
 
         public bool HorizontallyScrollable => true;

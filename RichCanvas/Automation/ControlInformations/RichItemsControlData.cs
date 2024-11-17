@@ -10,5 +10,6 @@ namespace RichCanvas.Automation.ControlInformations
         public double ScrollFactor { get; set; }
         public Point ViewportLocation { get; set; }
         public Size ViewportSize { get; set; }
+        public Size ViewportExtent { get; set; }
     }
 }
