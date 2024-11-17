@@ -6,11 +6,11 @@ namespace RichCanvasUITests.App
     public class RelayCommand<T> : ICommand
     {
         private readonly Action<T> _execute;
-        private readonly Func<T, bool> _canExecute;
+        private readonly Func<bool> _canExecute;
 
         public event EventHandler CanExecuteChanged;
 
-        public RelayCommand(Action<T> execute, Func<T, bool> canExecute)
+        public RelayCommand(Action<T> execute, Func<bool> canExecute)
         {
             _execute = execute;
             _canExecute = canExecute;
@@ -20,20 +20,12 @@ namespace RichCanvasUITests.App
             _execute = execute;
         }
 
-        public bool CanExecute(object parameter)
-        {
-            var condition = _canExecute?.Invoke((T)parameter);
-            if (condition.HasValue)
-            {
-                return condition.Value;
-            }
-            return true;
-        }
+        public bool CanExecute(object parameter) => _canExecute?.Invoke() ?? true;
 
-        public void Execute(object parameter)
-        {
-            _execute?.Invoke((T)parameter);
-        }
+        public void Execute(object parameter) => _execute?.Invoke((T)parameter);
+
+        public void RaiseCanExecuteChanged()
+           => CanExecuteChanged?.Invoke(this, new EventArgs());
     }
     public class RelayCommand : ICommand
     {
@@ -41,6 +33,7 @@ namespace RichCanvasUITests.App
         private readonly Action _execute;
 
         public event EventHandler CanExecuteChanged;
+
         public RelayCommand(Action execute, Func<bool> canExecute = default)
         {
             _canExecute = canExecute;
@@ -55,10 +48,7 @@ namespace RichCanvasUITests.App
         {
             _execute?.Invoke();
         }
-
         public void RaiseCanExecuteChanged()
-        {
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
-        }
+           => CanExecuteChanged?.Invoke(this, new EventArgs());
     }
 }

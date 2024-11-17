@@ -27,6 +27,13 @@ namespace RichCanvas.UITests
             Wait.UntilInputIsProcessed();
         }
 
+        internal static void ToggleCheckbox(this Window window, string buttonAutomationId)
+        {
+            var toggleButton = window.FindFirstDescendant(d => d.ByAutomationId(buttonAutomationId));
+            toggleButton.AsCheckBox()?.Toggle();
+            Wait.UntilInputIsProcessed();
+        }
+
         internal static void ClearAllItems(this Window window)
         {
             var button = window.FindFirstDescendant(d => d.ByAutomationId(AutomationIds.ClearItemsButtonId));

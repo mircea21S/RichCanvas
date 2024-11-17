@@ -42,7 +42,7 @@ namespace RichCanvas.UITests.Tests
             // arrange
             Window.InvokeButton(AutomationIds.AddSelectableItemsButtonId2);
             ArrangeUIHorizontallyToShowScrollbars(scrollingMode);
-            var initialViewportLocation = RichItemsControl.RichItemsControlData.ViewportLocation;
+            var initialViewportLocation = ViewportLocation;
 
             // act
             if (scrollingMethod == ScrollingMethod.MouseWheel)
@@ -57,14 +57,14 @@ namespace RichCanvas.UITests.Tests
             {
                 // arrange the UI so scrollbars are visible and can be used for scrolling
                 ArrangeUIVerticallyToShowScrollbars(scrollingMode);
-                initialViewportLocation = RichItemsControl.RichItemsControlData.ViewportLocation;
+                initialViewportLocation = ViewportLocation;
                 RichItemsControl.ScrollByScrollbarsDragging(scrollingMode);
             }
             else if (scrollingMethod == ScrollingMethod.ThumbButton)
             {
                 // arrange the UI so arrow thumbs are visible and can be used for scrolling
                 ArrangeUIVerticallyToShowScrollbars(scrollingMode);
-                initialViewportLocation = RichItemsControl.RichItemsControlData.ViewportLocation;
+                initialViewportLocation = ViewportLocation;
                 RichItemsControl.ScrollByArrowKeyOrButton(scrollingMode);
             }
 
@@ -111,9 +111,8 @@ namespace RichCanvas.UITests.Tests
             }
 
             // assert
-            var viewportLocation = RichItemsControl.RichItemsControlData.ViewportLocation;
             var itemsExtent = RichItemsControl.RichItemsControlData.ItemsExtent;
-            var scrollOffset = viewportLocation - itemsExtent.Location;
+            var scrollOffset = ViewportLocation - itemsExtent.Location;
             if (scrollingMode == ScrollingMode.Down)
             {
                 RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().Be(Math.Max(0, scrollOffset.Y));
@@ -164,7 +163,7 @@ namespace RichCanvas.UITests.Tests
 
             // assert
             var extent = RichItemsControl.RichItemsControlData.ItemsExtent;
-            extent.Union(new Rect(RichItemsControl.RichItemsControlData.ViewportLocation, RichItemsControl.RichItemsControlData.ViewportSize));
+            extent.Union(new Rect(ViewportLocation, ViewportSize));
 
             if (scrollingMode == ScrollingMode.Up)
             {
@@ -204,10 +203,9 @@ namespace RichCanvas.UITests.Tests
             ArrangeUIVerticallyToShowScrollbars(scrollingMode);
             VerticalScrollBar verticalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(FlaUI.Core.Definitions.ControlType.ScrollBar)).AsVerticalScrollBar();
             var verticalScrollbarBoundingRectangle = verticalScrollBar.BoundingRectangle.Location;
-            var verticalScrollbarLocation = new System.Drawing.Point(verticalScrollbarBoundingRectangle.X + 2, (int)RichItemsControl.RichItemsControlData.ViewportSize.Height / 2);
+            var verticalScrollbarLocation = new System.Drawing.Point(verticalScrollbarBoundingRectangle.X + 2, (int)ViewportSize.Height / 2);
 
             // act
-            Point startDraggingLocation = RichItemsControl.RichItemsControlData.ViewportLocation;
             Mouse.Position = verticalScrollbarLocation;
             Mouse.Down();
             if (scrollingMode == ScrollingMode.Down)
@@ -218,7 +216,6 @@ namespace RichCanvas.UITests.Tests
             {
                 Mouse.Position = new System.Drawing.Point(verticalScrollbarLocation.X, verticalScrollbarLocation.Y + 1000);
             }
-            Wait.UntilInputIsProcessed(TimeSpan.FromSeconds(3));
 
             // assert
             if (scrollingMode == ScrollingMode.Down)
@@ -227,15 +224,17 @@ namespace RichCanvas.UITests.Tests
             }
             else
             {
-                RichItemsControl.RichItemsControlData.ViewportLocation.Y.Should().Be(RichItemsControl.RichItemsControlData.ItemsExtent.Bottom);
+                RichItemsControl.RichItemsControlData.ViewportLocation.Y.Should().Be(-(ViewportSize.Height - RichItemsControl.RichItemsControlData.ItemsExtent.Bottom));
             }
+            Mouse.Up();
+            Mouse.Position = ViewportCenter;
         }
 
         private void ArrangeUIVerticallyToShowScrollbars(ScrollingMode scrollingMode)
         {
             while (scrollingMode == ScrollingMode.Down
-                    ? RichItemsControl.RichItemsControlData.ItemsExtent.Top > RichItemsControl.RichItemsControlData.ViewportLocation.Y
-                    : scrollingMode == ScrollingMode.Up && RichItemsControl.RichItemsControlData.ItemsExtent.Height < RichItemsControl.RichItemsControlData.ViewportSize.Height + RichItemsControl.RichItemsControlData.ViewportLocation.Y)
+                    ? RichItemsControl.RichItemsControlData.ItemsExtent.Top > ViewportLocation.Y
+                    : scrollingMode == ScrollingMode.Up && RichItemsControl.RichItemsControlData.ItemsExtent.Height < ViewportSize.Height + ViewportLocation.Y)
             {
                 Input.MouseWheelScroll(scrollingMode);
             }
@@ -249,35 +248,34 @@ namespace RichCanvas.UITests.Tests
             }
             else if (scrollingMode == ScrollingMode.Right)
             {
-                RichItemsControl.SetScrollPercent(-(RichItemsControl.RichItemsControlData.ViewportSize.Width - RichItemsControl.RichItemsControlData.ItemsExtent.Right) - 10, 0);
+                RichItemsControl.SetScrollPercent(-(ViewportSize.Width - RichItemsControl.RichItemsControlData.ItemsExtent.Right) - 10, 0);
             }
         }
 
         private void AssertViewportLocationModified(ScrollingMode scrollingMode, ScrollingMethod scrollingMethod, Point initialViewportLocation)
         {
-            var viewportLocation = RichItemsControl.RichItemsControlData.ViewportLocation;
             var scrollFactor = GetScrollFactor(scrollingMode, scrollingMethod);
             if (scrollingMode == ScrollingMode.Up)
             {
-                viewportLocation.Y.Should().Be(initialViewportLocation.Y - scrollFactor);
+                ViewportLocation.Y.Should().Be(initialViewportLocation.Y - scrollFactor);
             }
             else if (scrollingMode == ScrollingMode.Down)
             {
-                viewportLocation.Y.Should().Be(initialViewportLocation.Y + scrollFactor);
+                ViewportLocation.Y.Should().Be(initialViewportLocation.Y + scrollFactor);
             }
             else if (scrollingMode == ScrollingMode.Left)
             {
-                viewportLocation.X.Should().Be(initialViewportLocation.X + scrollFactor);
+                ViewportLocation.X.Should().Be(initialViewportLocation.X + scrollFactor);
             }
             else
             {
-                viewportLocation.X.Should().Be(initialViewportLocation.X - scrollFactor);
+                ViewportLocation.X.Should().Be(initialViewportLocation.X - scrollFactor);
             }
         }
 
         private double GetScrollFactor(ScrollingMode scrollingMode, ScrollingMethod scrollingMethod)
         {
-            var pageScrollFactor = scrollingMode == ScrollingMode.Up || scrollingMode == ScrollingMode.Down ? RichItemsControl.RichItemsControlData.ViewportSize.Height : RichItemsControl.RichItemsControlData.ViewportSize.Width;
+            var pageScrollFactor = scrollingMode == ScrollingMode.Up || scrollingMode == ScrollingMode.Down ? ViewportSize.Height : ViewportSize.Width;
             var scrollFactor = scrollingMethod == ScrollingMethod.Page
                 ? pageScrollFactor
                 : scrollingMethod == ScrollingMethod.Scrollbar
