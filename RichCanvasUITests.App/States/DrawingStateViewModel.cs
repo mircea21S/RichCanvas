@@ -6,9 +6,16 @@ using System.Windows.Input;
 
 namespace RichCanvasUITests.App.States
 {
-    public class DrawingStateViewModel
+    public class DrawingStateViewModel : ObservableObject
     {
         public MainWindowViewModel Parent { get; }
+
+        private bool _shoudlExecuteDrawingEndedCommand = true;
+        public bool ShouldExecuteDrawingEndedCommand
+        {
+            get => _shoudlExecuteDrawingEndedCommand;
+            set => SetProperty(ref _shoudlExecuteDrawingEndedCommand, value);
+        }
 
         public DrawingStateViewModel(MainWindowViewModel parent)
         {
@@ -47,7 +54,7 @@ namespace RichCanvasUITests.App.States
         }
 
         private RelayCommand<Point> _drawingEndedCommand;
-        public ICommand DrawingEndedCommand => _drawingEndedCommand ??= new RelayCommand<Point>(DrawingEnded);
+        public ICommand DrawingEndedCommand => _drawingEndedCommand ??= new RelayCommand<Point>(DrawingEnded, () => ShouldExecuteDrawingEndedCommand);
 
         private void DrawingEnded(Point mousePositon)
         {

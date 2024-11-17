@@ -22,6 +22,7 @@ namespace RichCanvas.UITests.Tests
         {
             // arrange
             var endingPointLine = PointUtilities.GetEndingPoint(ViewportCenter, 50, 50);
+            Window.ToggleCheckbox(AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId);
 
             // act
             // add not drawn rectangle
@@ -38,6 +39,7 @@ namespace RichCanvas.UITests.Tests
             // assert
             RichItemsControl.Items.Length.Should().Be(1);
             itemDrawn.RichItemContainerData.DataContextType.Should().Be(typeof(Line));
+            Window.ToggleCheckbox(AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId);
         }
 
         [Test]
@@ -167,6 +169,7 @@ namespace RichCanvas.UITests.Tests
         public void DragMouseToDraw_WhenAddingEmptyContainer_ContainerSizeIsTheDraggedSizeAndPositionIsRelativeToScaleTransform(int rectanglesCount, HorizontalDirection horizontalDirection, VerticalDirection verticalDirection)
         {
             // arrange
+            Window.ToggleCheckbox(AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId);
             var rectangleWidth = 50;
             var rectangleHeight = 50;
 
@@ -213,6 +216,7 @@ namespace RichCanvas.UITests.Tests
                     item.RichItemContainerData.ScaleY.Should().Be(verticalDirection == VerticalDirection.TopToBottom ? 1 : -1);
                 }
             }
+            Window.ToggleCheckbox(AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId);
         }
 
         [Test]

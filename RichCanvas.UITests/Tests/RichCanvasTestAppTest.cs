@@ -1,6 +1,6 @@
 ﻿using FlaUI.Core.AutomationElements;
 using NUnit.Framework;
-using System.Drawing;
+using System.Windows;
 
 namespace RichCanvas.UITests.Tests
 {
@@ -12,8 +12,9 @@ namespace RichCanvas.UITests.Tests
         public const double RichCanvasDemoTitleBarHeight = 23;
 
         protected RichItemsControlAutomation RichItemsControl => Window.FindFirstDescendant(d => d.ByAutomationId("source")).AsRichItemsControlAutomation();
-        protected Size DemoControlSize => new Size(1187, 800);
-        protected Point ViewportCenter => new Point(DemoControlSize.Width / 2, DemoControlSize.Height / 2);
+        protected Size ViewportSize => RichItemsControl?.RichItemsControlData?.ViewportSize ?? new Size(1187, 800);
+        protected System.Drawing.Point ViewportCenter => new System.Drawing.Point((int)ViewportSize.Width / 2, (int)ViewportSize.Height / 2);
+        protected Point ViewportLocation => RichItemsControl?.RichItemsControlData?.ViewportLocation ?? new Point(0, 0);
         protected bool ShouldRestartApplication { get; set; }
         protected bool IgnoreItemsClearOnTearDown { get; set; }
 
