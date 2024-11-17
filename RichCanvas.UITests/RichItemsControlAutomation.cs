@@ -1,6 +1,7 @@
 ﻿using FlaUI.Core;
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Definitions;
+using FlaUI.Core.Patterns;
 using RichCanvas.Automation;
 using RichCanvas.Automation.ControlInformations;
 using RichCanvas.UITests.Tests;
@@ -67,6 +68,8 @@ namespace RichCanvas.UITests
         }
 
         public RichItemsControlData RichItemsControlData => Patterns.Value.Pattern.Value.Value.AsRichItemsControlData();
+
+        public IScrollPattern ScrollInfo => Patterns.Scroll.PatternOrDefault;
 
         public RichItemsControlAutomation(FrameworkAutomationElementBase frameworkAutomationElement) : base(frameworkAutomationElement)
         {
