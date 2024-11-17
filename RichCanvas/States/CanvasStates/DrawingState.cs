@@ -78,7 +78,10 @@ namespace RichCanvas.States
 
             var mousePosition = e.GetPosition(Parent.ItemsHost);
             Parent.RaiseDrawEndedEvent(_currentDrawingContainer.DataContext, mousePosition);
-            Parent.DrawingEndedCommand?.Execute(mousePosition);
+            if (Parent.DrawingEndedCommand?.CanExecute(mousePosition) ?? false)
+            {
+                Parent.DrawingEndedCommand?.Execute(mousePosition);
+            }
 
             Parent.ItemsHost?.InvalidateMeasure();
             _isDrawing = false;

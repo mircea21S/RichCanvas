@@ -12,12 +12,12 @@
              d:DesignHeight="450"
              d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=vm:DrawingStateViewModel}">
-    
+
     <UserControl.Resources>
         <s:Boolean x:Key="FalseValue">False</s:Boolean>
         <s:Boolean x:Key="TrueValue">True</s:Boolean>
     </UserControl.Resources>
-    
+
     <StackPanel>
         <Button Command="{Binding AddPositionedRectangleCommand}"
                 CommandParameter="{StaticResource FalseValue}"
@@ -56,5 +56,9 @@
                 CommandParameter="{x:Type models:Line}"
                 AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddEmptyLineButtonId}"
                 Content="Add Empty Line"></Button>
+
+        <CheckBox IsChecked="{Binding ShouldExecuteDrawingEndedCommand, Mode=TwoWay}"
+                  Content="Execute Drawing Ended Command"
+                  AutomationProperties.AutomationId="{x:Static auto:AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId}" />
     </StackPanel>
 </UserControl>

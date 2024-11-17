@@ -11,6 +11,7 @@
         public const string RemoveFirstItemButtonId = "RemoveFirstItem";
         public const string AddEmptyLineButtonId = "AddEmptyLine";
         public const string DrawingEndedTextBoxId = "DrawingEndedTextBox";
+        public const string ShouldExecuteDrawingEndedCommandCheckboxId = "ShouldExecuteDrawingEndedCommandCheckbox";
 
         public const string AddSelectableItemsButtonId1 = "AddSelectableItems1";
         public const string AddSelectableItemsButtonId2 = "AddSelectableItems2";
