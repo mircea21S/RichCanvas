@@ -304,7 +304,6 @@ namespace RichCanvas
 
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
-
             // Release the mouse capture if all the mouse buttons are released
             if (IsMouseCaptured && e.RightButton == MouseButtonState.Released && e.LeftButton == MouseButtonState.Released && e.MiddleButton == MouseButtonState.Released)
             {

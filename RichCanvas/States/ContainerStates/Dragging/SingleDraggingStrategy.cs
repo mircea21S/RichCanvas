@@ -1,5 +1,4 @@
-﻿using RichCanvas.Helpers;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Media;
 
@@ -13,17 +12,6 @@ namespace RichCanvas.States.ContainerStates
 
         public override void OnItemsDragDelta(Point offsetPoint)
         {
-
-            if (Parent.ItemsHost.HasTouchedNegativeLimit(offsetPoint))
-            {
-                return;
-            }
-
-            if (Parent.ItemsHost.HasTouchedExtentSizeLimit(offsetPoint))
-            {
-                return;
-            }
-
             TranslateTransform? translateTransform = Container.TranslateTransform;
 
             if (translateTransform != null)
