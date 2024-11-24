@@ -49,14 +49,6 @@ namespace RichCanvas.States.ContainerStates
 
         public override void OnItemsDragDelta(Point offsetPoint)
         {
-            if (Parent.ItemsHost.HasTouchedExtentSizeLimit(offsetPoint))
-            {
-                return;
-            }
-            if (Parent.ItemsHost.HasTouchedNegativeLimit(offsetPoint))
-            {
-                return;
-            }
             for (int i = 0; i < _draggableContainers.Count; i++)
             {
                 RichItemContainer container = _draggableContainers[i];
