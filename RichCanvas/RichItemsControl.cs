@@ -454,36 +454,6 @@ namespace RichCanvas
         }
 
         /// <summary>
-        /// Gets or sets scroll Extent maximum size. Controls maximum offset of scroll.
-        /// Default is <see cref="Size.Empty"/>.
-        /// </summary>
-        public static DependencyProperty ExtentSizeProperty = DependencyProperty.Register(nameof(ExtentSize), typeof(Size), typeof(RichItemsControl), new FrameworkPropertyMetadata(Size.Empty));
-        /// <summary>
-        /// Gets or sets scroll Extent maximum size. Controls maximum offset of scroll.
-        /// Default is <see cref="Size.Empty"/>.
-        /// </summary>
-        public Size ExtentSize
-        {
-            get => (Size)GetValue(ExtentSizeProperty);
-            set => SetValue(ExtentSizeProperty, value);
-        }
-
-        /// <summary>
-        /// Gets or sets whether <see cref="RichCanvas"/> has negative scrolling and panning.
-        /// Default is <see langword="true"/>.
-        /// </summary>
-        public static DependencyProperty EnableNegativeScrollingProperty = DependencyProperty.Register(nameof(EnableNegativeScrolling), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true));
-        /// <summary>
-        /// Gets or sets whether <see cref="RichCanvas"/> has negative scrolling and panning.
-        /// Default is <see langword="true"/>.
-        /// </summary>
-        public bool EnableNegativeScrolling
-        {
-            get => (bool)GetValue(EnableNegativeScrollingProperty);
-            set => SetValue(EnableNegativeScrollingProperty, value);
-        }
-
-        /// <summary>
         /// Gets or sets whether you can select multiple elements or not.
         /// Default is <see langword="true"/>.
         /// </summary>
@@ -609,12 +579,6 @@ namespace RichCanvas
                 IsZooming = true;
                 ZoomAtPosition(position, e.Delta, ScaleFactor);
 
-                //TODO: test this maybe add UnitTests
-                if (_mainPanel.HasTouchedExtentSizeLimit(position) || _mainPanel.HasTouchedNegativeLimit(position))
-                {
-                    ZoomAtPosition(position, -e.Delta, ScaleFactor);
-                }
-
                 IsZooming = false;
                 // handle the event so it won't trigger scrolling
                 e.Handled = true;
@@ -717,7 +681,6 @@ namespace RichCanvas
             base.OnRenderSizeChanged(sizeInfo);
 
             ViewportSize = new Size(ActualWidth / Scale, ActualHeight / Scale);
-
             UpdateScrollbars();
         }
 

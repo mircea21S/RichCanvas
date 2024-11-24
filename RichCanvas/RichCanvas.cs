@@ -53,7 +53,6 @@ namespace RichCanvas
                     {
                         container.CalculateBoundingBox();
 
-
                         minX = Math.Min(minX, container.BoundingBox.Left);
                         minY = Math.Min(minY, container.BoundingBox.Top);
                         maxX = Math.Max(maxX, container.BoundingBox.Right);
