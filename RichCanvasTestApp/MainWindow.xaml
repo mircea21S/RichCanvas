@@ -345,7 +345,6 @@
                                      GridStyle="{StaticResource GridStyle}"
                                      Background="AliceBlue"
                                      GridSpacing="{Binding GridSpacing, Converter={StaticResource StringToFloatConverter}}"
-                                     Scrolling="OnScrolling"
                                      DisableCache="{Binding DisableCache}"
                                      DisableZoom="{Binding DisableZoom}"
                                      MousePosition="{Binding MousePosition, Mode=OneWayToSource}"

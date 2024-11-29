@@ -366,19 +366,6 @@ namespace RichCanvas
         }
 
         /// <summary>
-        /// Occurs whenever <see cref="RichItemsControl.TranslateTransform"/> changes.
-        /// </summary>
-        public static readonly RoutedEvent ScrollingEvent = EventManager.RegisterRoutedEvent(nameof(Scrolling), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(RichItemsControl));
-        /// <summary>
-        /// Occurs whenever <see cref="RichItemsControl.TranslateTransform"/> changes.
-        /// </summary>
-        public event RoutedEventHandler Scrolling
-        {
-            add { AddHandler(ScrollingEvent, value); }
-            remove { RemoveHandler(ScrollingEvent, value); }
-        }
-
-        /// <summary>
         /// Gets or sets whether caching is disabled.
         /// Default is <see langword="true"/>.
         /// </summary>
