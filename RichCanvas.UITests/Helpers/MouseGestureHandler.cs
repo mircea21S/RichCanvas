@@ -1,5 +1,8 @@
 ﻿using FlaUI.Core.Input;
+using RichCanvas.UITests.Tests;
 using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
 
 namespace RichCanvas.UITests.Helpers
@@ -43,24 +46,25 @@ namespace RichCanvas.UITests.Helpers
             Keyboard.Release(pressedKey);
         }
 
-        internal override void DefferedDrag(Point startPoint, Point[] pointSteps, Action<Point> assertStepAction)
+        internal override void DefferedDrag(Point startPoint, GeneratorData data, Action<Point, int> assertStepAction)
         {
             var mouseButton = _mouseGesture.MouseAction.ToMouseButton();
             var pressedKey = _mouseGesture.Modifiers.ToVirtualKeyShort();
 
-            Keyboard.Press(pressedKey);
+            List<Point> stepPoints = PointsGenerator.GenerateFrom(data);
 
+            Keyboard.Press(pressedKey);
             Mouse.Position = startPoint;
             Mouse.Down(mouseButton);
 
-            foreach (Point stepPoint in pointSteps)
+            for (int i = 0; i < stepPoints.Count; i++)
             {
-                Mouse.Position = stepPoint;
-                assertStepAction?.Invoke(stepPoint);
+                Mouse.Position = stepPoints[i];
+                var offsetFromStart = data.OffsetBetweenPoints * (i + 1);
+                assertStepAction?.Invoke(stepPoints[i], offsetFromStart);
             }
 
             Mouse.Up(mouseButton);
-
             Keyboard.Release(pressedKey);
         }
 
