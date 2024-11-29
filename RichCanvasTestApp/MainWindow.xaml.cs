@@ -1,5 +1,4 @@
-﻿using RichCanvasTestApp.Helpers;
-using System.Windows;
+﻿using System.Windows;
 
 namespace RichCanvasTestApp
 {
@@ -12,11 +11,5 @@ namespace RichCanvasTestApp
         {
             InitializeComponent();
         }
-
-        private void OnScrolling(object sender, RoutedEventArgs e)
-        {
-            AttachedAdorner.OnScrolling();
-        }
-
     }
 }
