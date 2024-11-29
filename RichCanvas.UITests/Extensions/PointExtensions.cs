@@ -33,5 +33,7 @@ namespace RichCanvas.UITests
         internal static Point AsFlaUIFixedPoint(this Point point) => new Point(point.X * 2, point.Y * 2);
 
         internal static Point AsDrawingPoint(this System.Windows.Point windowsPoint) => new Point((int)windowsPoint.X, (int)windowsPoint.Y);
+        internal static System.Windows.Point AsWindowsPoint(this Point drawingPoint) => new System.Windows.Point(drawingPoint.X, drawingPoint.Y);
+        internal static Point OffsetNew(this Point drawingPoint, Point offset) => new Point(drawingPoint.X + offset.X, drawingPoint.Y + offset.Y);
     }
 }

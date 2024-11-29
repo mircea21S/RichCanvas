@@ -27,17 +27,17 @@ namespace RichCanvas.UITests.Helpers
             return null;
         }
 
-        internal static void MouseWheelScroll(ScrollingMode scrollingMode)
+        internal static void MouseWheelScroll(Direction scrollingMode)
         {
-            if (scrollingMode == ScrollingMode.Up)
+            if (scrollingMode == Direction.Up)
             {
                 FlaUI.Core.Input.Mouse.Scroll(1);
             }
-            else if (scrollingMode == ScrollingMode.Down)
+            else if (scrollingMode == Direction.Down)
             {
                 FlaUI.Core.Input.Mouse.Scroll(-1);
             }
-            else if (scrollingMode == ScrollingMode.Right)
+            else if (scrollingMode == Direction.Right)
             {
                 FlaUI.Core.Input.Mouse.HorizontalScroll(1);
             }
@@ -73,5 +73,6 @@ namespace RichCanvas.UITests.Helpers
         internal abstract void Drag(Point startPoint, Point endPoint);
         internal abstract void Click(Point point);
         internal abstract void DefferedDrag(Point startPoint, params (Point Position, Action StepAction)[] dragStepPoints);
+        internal virtual void DefferedDrag(Point startPoint, Point[] stepPoints, Action<Point> assertStepAction) { }
     }
 }
