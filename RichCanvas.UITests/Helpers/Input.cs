@@ -73,6 +73,6 @@ namespace RichCanvas.UITests.Helpers
         internal abstract void Drag(Point startPoint, Point endPoint);
         internal abstract void Click(Point point);
         internal abstract void DefferedDrag(Point startPoint, params (Point Position, Action StepAction)[] dragStepPoints);
-        internal virtual void DefferedDrag(Point startPoint, Point[] stepPoints, Action<Point> assertStepAction) { }
+        internal virtual void DefferedDrag(Point startPoint, GeneratorData data, Action<Point, int> assertStepAction) { }
     }
 }

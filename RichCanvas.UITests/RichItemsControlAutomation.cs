@@ -169,71 +169,36 @@ namespace RichCanvas.UITests
         {
             var containerLocation = richItemContainer.BoundingRectangle.Location;
             var currentItemBounds = richItemContainer.BoundingRectangle;
-            var offset = new Point(0, 0);
-            Point draggingEndPoint;
-            if (direction == Direction.Left)
+            var offset = direction == Direction.Left ? new Point(1, 0) : new Point(0, 0);
+            Point draggingEndPoint = direction switch
             {
-                offset = new Point(1, 0);
-                draggingEndPoint = new Point(ViewportLocation.X - offsetDistance, containerLocation.Y);
-            }
-            else if (direction == Direction.Right)
-            {
-                draggingEndPoint = new Point(ViewportSize.Width - currentItemBounds.Width + offsetDistance, containerLocation.Y);
-            }
-            else if (direction == Direction.Up)
-            {
-                draggingEndPoint = new Point(containerLocation.X, ViewportLocation.Y - offsetDistance);
-            }
-            else
-            {
-                draggingEndPoint = new Point(containerLocation.X, ViewportSize.Height - currentItemBounds.Height + offsetDistance);
-            }
+                Direction.Left => new Point(ViewportLocation.X - offsetDistance, containerLocation.Y),
+                Direction.Right => new Point(ViewportSize.Width - currentItemBounds.Width + offsetDistance, containerLocation.Y),
+                Direction.Up => new Point(containerLocation.X, ViewportLocation.Y - offsetDistance),
+                Direction.Down => new Point(containerLocation.X, ViewportSize.Height - currentItemBounds.Height + offsetDistance),
+                _ => throw new NotImplementedException(),
+            };
 
             containerLocation.Offset(offset);
             Input.WithGesture(RichCanvasGestures.Drag).Drag(containerLocation, draggingEndPoint.ToCanvasDrawingPoint());
         }
 
-        public void DefferedDragContainerOutsideViewportWithOffset(RichItemContainerAutomation richItemContainer, Direction direction, int offsetDistance, Action<Point> assertStepAction)
+        public void DefferedDragContainerOutsideViewportWithOffset(RichItemContainerAutomation richItemContainer, Direction direction, int offsetBetweenPoints, Action<Point, int> assertStepAction)
         {
-            var containerLocation = richItemContainer.BoundingRectangle.Location;
             var currentItemBounds = richItemContainer.BoundingRectangle;
-            var offset = new Point(0, 0);
-            Point draggingEndPoint;
-            var stepPoints = new List<Point>(3);
+            var containerLocation = currentItemBounds.Location;
 
-            //TODO: implement a way to assert each step point diff and changes
-            if (direction == Direction.Left)
+            Point firstDraggingPoint = direction switch
             {
-                offset = new Point(1, 0);
-                draggingEndPoint = new Point(ViewportLocation.X - offsetDistance, containerLocation.Y);
-                stepPoints.Add(draggingEndPoint);
-                stepPoints.Add(stepPoints[0].OffsetNew(new Point(-offsetDistance, 0)));
-                stepPoints.Add(stepPoints[1].OffsetNew(new Point(-offsetDistance, 0)));
-            }
-            else if (direction == Direction.Right)
-            {
-                draggingEndPoint = new Point(ViewportSize.Width - currentItemBounds.Width + offsetDistance, containerLocation.Y);
-                stepPoints.Add(draggingEndPoint);
-                stepPoints.Add(draggingEndPoint.OffsetNew(new Point(1, 0)));
-                stepPoints.Add(draggingEndPoint.OffsetNew(new Point(2, 0)));
-            }
-            else if (direction == Direction.Up)
-            {
-                draggingEndPoint = new Point(containerLocation.X, ViewportLocation.Y - offsetDistance);
-                stepPoints.Add(draggingEndPoint);
-                stepPoints.Add(draggingEndPoint.OffsetNew(new Point(0, -1)));
-                stepPoints.Add(draggingEndPoint.OffsetNew(new Point(0, -2)));
-            }
-            else
-            {
-                draggingEndPoint = new Point(containerLocation.X, ViewportSize.Height - currentItemBounds.Height + offsetDistance);
-                stepPoints.Add(draggingEndPoint);
-                stepPoints.Add(draggingEndPoint.OffsetNew(new Point(0, 1)));
-                stepPoints.Add(draggingEndPoint.OffsetNew(new Point(0, 2)));
-            }
-            draggingEndPoint = draggingEndPoint.ToCanvasDrawingPoint();
-            containerLocation.Offset(offset);
-            Input.WithGesture(RichCanvasGestures.Drag).DefferedDrag(containerLocation, [.. stepPoints], assertStepAction);
+                Direction.Left => new Point(ViewportLocation.X - offsetBetweenPoints, containerLocation.Y),
+                Direction.Right => new Point(ViewportSize.Width - currentItemBounds.Width + offsetBetweenPoints, containerLocation.Y),
+                Direction.Up => new Point(containerLocation.X, ViewportLocation.Y - offsetBetweenPoints),
+                Direction.Down => new Point(containerLocation.X, ViewportSize.Height - currentItemBounds.Height + offsetBetweenPoints),
+                _ => throw new NotImplementedException(),
+            };
+
+            var data = new GeneratorData(3, direction, firstDraggingPoint.ToCanvasDrawingPoint(), offsetBetweenPoints);
+            Input.WithGesture(RichCanvasGestures.Drag).DefferedDrag(containerLocation, data, assertStepAction);
         }
     }
 }
