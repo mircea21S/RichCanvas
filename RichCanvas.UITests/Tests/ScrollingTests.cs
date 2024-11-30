@@ -5,6 +5,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using RichCanvas.UITests.Helpers;
 using RichCanvasUITests.App.Automation;
+using RichCanvasUITests.App.TestMocks;
 using System;
 using System.Windows;
 
@@ -269,62 +270,72 @@ namespace RichCanvas.UITests.Tests
 
         // Left direction not excluded here as I can offset the starting point, because I am scrolling only once
         // scrolling multiple times would require offseting multiple times, meaning mouse up and down which will stop and restart dragging each time
-        [TestCase(Direction.Up)]
-        [TestCase(Direction.Down)]
-        [TestCase(Direction.Left)]
-        [TestCase(Direction.Right)]
+        [TestCase(Direction.Up, 1)]
+        [TestCase(Direction.Down, 1)]
+        [TestCase(Direction.Left, 1)]
+        [TestCase(Direction.Right, 1)]
+        [TestCase(Direction.Up, 5)]
+        [TestCase(Direction.Down, 5)]
+        [TestCase(Direction.Left, 5)]
+        [TestCase(Direction.Right, 5)]
+        [TestCase(Direction.Up, 10)]
+        [TestCase(Direction.Down, 10)]
+        [TestCase(Direction.Left, 10)]
+        [TestCase(Direction.Right, 10)]
         [Test]
-        public void SingleDraggingItemOutsideViewport_WithRealTimeDraggingDisable_ShouldUpdateScrollOnMouseUp(Direction draggingDirection)
+        public void SingleDraggingItemOutsideViewport_WithRealTimeDraggingDisable_ShouldUpdateScrollOnMouseUp(Direction draggingDirection, int outsideDistance)
         {
             // arrange
             Window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);
-            // distance to move the container outside
-            const int OUTSIDE_DISTANCE = 1;
 
             // act
-            RichItemsControl.DragContainerOutsideViewportWithOffset(RichItemsControl.Items[0], draggingDirection, OUTSIDE_DISTANCE);
+            RichItemsControl.DragContainerOutsideViewportWithOffset(RichItemsControl.Items[0], draggingDirection, outsideDistance);
 
             // assert
             if (draggingDirection == Direction.Up)
             {
-                RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().Be(OUTSIDE_DISTANCE);
-                RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().Be(ViewportSize.Height + OUTSIDE_DISTANCE);
+                RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().Be(outsideDistance);
+                RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().Be(ViewportSize.Height + outsideDistance);
             }
             if (draggingDirection == Direction.Down)
             {
                 RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().Be(0);
-                RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().Be(ViewportSize.Height + OUTSIDE_DISTANCE);
+                RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().Be(ViewportSize.Height + outsideDistance);
             }
             if (draggingDirection == Direction.Left)
             {
-                RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(OUTSIDE_DISTANCE);
-                RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().Be(ViewportSize.Width + OUTSIDE_DISTANCE);
+                RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(outsideDistance);
+                RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().Be(ViewportSize.Width + outsideDistance);
             }
             if (draggingDirection == Direction.Right)
             {
                 RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(0);
-                RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().Be(ViewportSize.Width + OUTSIDE_DISTANCE);
+                RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().Be(ViewportSize.Width + outsideDistance);
             }
         }
 
         // exclude Left direction as full screen window is used and there's no space left
-        // on the left side of the screen to drag
-        [TestCase(Direction.Up)]
-        [TestCase(Direction.Down)]
-        [TestCase(Direction.Right)]
+        // on the left side of the screen to drag the mouse
+        [TestCase(Direction.Up, 1)]
+        [TestCase(Direction.Down, 1)]
+        [TestCase(Direction.Right, 1)]
+        [TestCase(Direction.Up, 5)]
+        [TestCase(Direction.Down, 5)]
+        [TestCase(Direction.Right, 5)]
+        [TestCase(Direction.Up, 10)]
+        [TestCase(Direction.Down, 10)]
+        [TestCase(Direction.Right, 10)]
         [Test]
-        public void SingleDraggingItemOutsideViewport_WithRealTimeDraggingDisable_ShouldNotUpdateScrollOnMouseMove(Direction draggingDirection)
+        public void SingleDraggingItemOutsideViewport_WithRealTimeDraggingDisable_ShouldNotUpdateScrollOnMouseMove(Direction draggingDirection, int offsetDistance)
         {
             // arrange
             Window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);
-            // distance to move the container outside
-            const int OUTSIDE_DISTANCE = 1;
 
             // act
-            RichItemsControl.DefferedDragContainerOutsideViewportWithOffset(RichItemsControl.Items[0], draggingDirection, OUTSIDE_DISTANCE, AssertScrollModification);
+            RichItemsControl.DefferedDragContainerOutsideViewportWithOffset(RichItemsControl.Items[0], draggingDirection, offsetDistance, AssertScrollModification);
 
             // assert
-            void AssertScrollModification(System.Drawing.Point stepPoint, int offsetOnStep)
+            void AssertScrollModification(System.Drawing.Point _, int offsetOnStep)
             {
                 if (draggingDirection == Direction.Up)
                 {
@@ -346,24 +357,28 @@ namespace RichCanvas.UITests.Tests
 
 
         // exclude Left direction as full screen window is used and there's no space left
-        // on the left side of the screen to drag
-        [TestCase(Direction.Up)]
-        [TestCase(Direction.Down)]
-        [TestCase(Direction.Right)]
+        // on the left side of the screen to drag the mouse
+        [TestCase(Direction.Up, 1)]
+        [TestCase(Direction.Down, 1)]
+        [TestCase(Direction.Right, 1)]
+        [TestCase(Direction.Up, 5)]
+        [TestCase(Direction.Down, 5)]
+        [TestCase(Direction.Right, 5)]
+        [TestCase(Direction.Up, 7)] // dragging up has the same problem and can't go on a higher value due to full screen
+        [TestCase(Direction.Down, 7)]
+        [TestCase(Direction.Right, 7)]
         [Test]
-        public void SingleDraggingItemOutsideViewport_WithRealTimeDraggingEnable_ShouldUpdateScrollOnMouseMove(Direction draggingDirection)
+        public void SingleDraggingItemOutsideViewport_WithRealTimeDraggingEnable_ShouldUpdateScrollOnMouseMove(Direction draggingDirection, int offsetDistance)
         {
             // arrange
             Window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);
             Window.ToggleButton(AutomationIds.RealTimeDraggingToggleButtonId);
-            // distance to move the container outside
-            const int OUTSIDE_DISTANCE = 1;
 
             // act
-            RichItemsControl.DefferedDragContainerOutsideViewportWithOffset(RichItemsControl.Items[0], draggingDirection, OUTSIDE_DISTANCE, AssertScrollModification);
+            RichItemsControl.DefferedDragContainerOutsideViewportWithOffset(RichItemsControl.Items[0], draggingDirection, offsetDistance, AssertScrollModification);
 
             // assert
-            void AssertScrollModification(System.Drawing.Point stepPoint, int offsetOnStep)
+            void AssertScrollModification(System.Drawing.Point _, int offsetOnStep)
             {
                 if (draggingDirection == Direction.Up)
                 {
@@ -381,6 +396,99 @@ namespace RichCanvas.UITests.Tests
                     RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().Be(ViewportSize.Width + offsetOnStep);
                 }
             }
+            Window.ToggleButton(AutomationIds.RealTimeDraggingToggleButtonId);
+        }
+
+        [TestCase(Direction.Up)]
+        [TestCase(Direction.Down)]
+        [TestCase(Direction.Left)]
+        [TestCase(Direction.Right)]
+        [Test]
+        public void MultipleDraggingItemsOutsideViewport_WithRealTimeDraggingDisabled_ShouldUpdateScrollOnMouseUp(Direction draggingDirection)
+        {
+            // arrange
+            Window.InvokeButton(AutomationIds.AddSelectableItemsButtonId2);
+            Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
+
+            // act
+            Window.InvokeButton(AutomationIds.SelectAllItemsButtonId);
+            RichItemsControl.DragCurrentSelectionOutsideViewport(RichItemsControl.Items[1], draggingDirection);
+
+            // assert
+            var expectedScrollOffset = ViewportLocation - RichItemsControl.RichItemsControlData.ItemsExtent.Location;
+            var expectedExtent = RichItemsControl.RichItemsControlData.ItemsExtent;
+            expectedExtent.Union(new Rect(ViewportLocation, ViewportSize));
+
+            RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().Be(expectedScrollOffset.Y < 0 ? 0 : expectedScrollOffset.Y);
+            RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(expectedScrollOffset.X < 0 ? 0 : expectedScrollOffset.X);
+            RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().Be(expectedExtent.Height);
+            RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().Be(expectedExtent.Width);
+
+            Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
+        }
+
+        [TestCase(Direction.Up)]
+        [TestCase(Direction.Down)]
+        [TestCase(Direction.Left)]
+        [TestCase(Direction.Right)]
+        [Test]
+        public void MultipleDraggingItemsOutsideViewport_WithRealTimeDraggingDisabled_ShouldNotUpdateScrollOnMouseMove(Direction draggingDirection)
+        {
+            // arrange
+            Window.InvokeButton(AutomationIds.AddSelectableItemsButtonId2);
+            Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
+
+            // act
+            Window.InvokeButton(AutomationIds.SelectAllItemsButtonId);
+            RichItemsControl.DefferedDragCurrentSelectionOutsideViewport(RichItemsControl.Items[1], draggingDirection, AssertScrollModification);
+
+            // assert
+            void AssertScrollModification(System.Drawing.Point _, int offsetOnStep)
+            {
+                RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().Be(0);
+                RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(0);
+                RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().Be(ViewportSize.Height);
+                RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().Be(ViewportSize.Width);
+            }
+
+            Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
+        }
+
+        [TestCase(Direction.Up, 1)]
+        [TestCase(Direction.Down, 1)]
+        [TestCase(Direction.Right, 1)]
+        [TestCase(Direction.Up, 5)]
+        [TestCase(Direction.Down, 5)]
+        [TestCase(Direction.Right, 5)]
+        [TestCase(Direction.Up, 7)]
+        [TestCase(Direction.Down, 7)]
+        [TestCase(Direction.Right, 7)]
+        [Test]
+        public void MultipleDraggingItemsOutsideViewport_WithRealTimeDraggingEnabled_ShouldUpdateScrollOnMouseMove(Direction draggingDirection, int offsetBetweenSteps)
+        {
+            // arrange
+            Window.InvokeButton(AutomationIds.AddSelectableItemsButtonId2);
+            Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
+            Window.ToggleButton(AutomationIds.RealTimeDraggingToggleButtonId);
+
+            // act
+            Window.InvokeButton(AutomationIds.SelectAllItemsButtonId);
+            RichItemsControl.DefferedDragCurrentSelectionOutsideViewport(RichItemsControl.Items[1], draggingDirection, AssertScrollModification, offsetBetweenSteps);
+
+            // assert
+            void AssertScrollModification(System.Drawing.Point _, int offsetOnStep)
+            {
+                var expectedScrollOffset = ViewportLocation - RichItemsControl.RichItemsControlData.ItemsExtent.Location;
+                var expectedExtent = RichItemsControl.RichItemsControlData.ItemsExtent;
+                expectedExtent.Union(new Rect(ViewportLocation, ViewportSize));
+
+                RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().Be(expectedScrollOffset.Y < 0 ? 0 : expectedScrollOffset.Y);
+                RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(expectedScrollOffset.X < 0 ? 0 : expectedScrollOffset.X);
+                RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().Be(expectedExtent.Height);
+                RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().Be(expectedExtent.Width);
+            }
+
+            Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
             Window.ToggleButton(AutomationIds.RealTimeDraggingToggleButtonId);
         }
 
