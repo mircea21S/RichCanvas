@@ -1,13 +1,15 @@
 ﻿using FlaUI.Core.AutomationElements;
 using FlaUI.Core.AutomationElements.Scrolling;
+using FlaUI.Core.Definitions;
 using FlaUI.Core.Input;
 using FluentAssertions;
 using NUnit.Framework;
 using RichCanvas.UITests.Helpers;
 using RichCanvasUITests.App.Automation;
-using RichCanvasUITests.App.TestMocks;
 using System;
+using System.Linq;
 using System.Windows;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace RichCanvas.UITests.Tests
 {
@@ -570,6 +572,36 @@ namespace RichCanvas.UITests.Tests
             RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().Be(expectedExtent.Width);
 
             Window.ToggleCheckbox(AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId);
+        }
+
+        [Test]
+        public void ResizeViewportWithItems_ToHideOrIntersectWithThem_ShouldUpdateScroll()
+        {
+            // arrange
+            Window.InvokeButton(AutomationIds.AddSelectableItemsButtonId2);
+            var lowestItemTop = RichItemsControl.Items.Max(i => i.RichItemContainerData.Top);
+            var lowestItemRight = RichItemsControl.Items.Max(i => i.RichItemContainerData.Left + i.ActualWidth);
+
+            // act
+            // resize by dragging the title bar
+            Mouse.Click(new System.Drawing.Point((int)ViewportSize.Width / 2, -5));
+            Mouse.Drag(new System.Drawing.Point((int)ViewportSize.Width / 2, -5), new System.Drawing.Point((int)ViewportSize.Width / 2, 0));
+            Wait.UntilInputIsProcessed();
+            if (Window.Patterns.Transform.TryGetPattern(out var transformPattern))
+            {
+                transformPattern.Resize(lowestItemTop, lowestItemRight);
+            }
+
+            // assert
+            var offset = ViewportLocation - RichItemsControl.RichItemsControlData.ItemsExtent.Location;
+            var expectedExtent = RichItemsControl.RichItemsControlData.ItemsExtent;
+            expectedExtent.Union(new Rect(ViewportLocation, ViewportSize));
+            RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().Be(Math.Max(0, offset.Y));
+            RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(Math.Max(0, offset.X));
+            RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().Be(expectedExtent.Height);
+            RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().Be(expectedExtent.Width);
+
+            Window.Patterns.Window.Pattern.SetWindowVisualState(WindowVisualState.Maximized);
         }
 
         private void ArrangeUIVerticallyToShowScrollbars(Direction scrollingMode)
