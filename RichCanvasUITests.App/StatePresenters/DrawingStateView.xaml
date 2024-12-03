@@ -60,5 +60,22 @@
         <CheckBox IsChecked="{Binding ShouldExecuteDrawingEndedCommand, Mode=TwoWay}"
                   Content="Execute Drawing Ended Command"
                   AutomationProperties.AutomationId="{x:Static auto:AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId}" />
+
+        <Button Command="{Binding AddItemOutsideViewportCommand}"
+                CommandParameter="{x:Static vm:Direction.Top}"
+                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddItemTopOutsideViewportButtonId}"
+                Content="Add Item Top Outside Viewport"></Button>
+        <Button Command="{Binding AddItemOutsideViewportCommand}"
+                CommandParameter="{x:Static vm:Direction.Left}"
+                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddItemLeftOutsideViewportButtonId}"
+                Content="Add Item Left Outside Viewport"></Button>
+        <Button Command="{Binding AddItemOutsideViewportCommand}"
+                CommandParameter="{x:Static vm:Direction.Bottom}"
+                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddItemBottomOutsideViewportButtonId}"
+                Content="Add Item Bottom Outside Viewport"></Button>
+        <Button Command="{Binding AddItemOutsideViewportCommand}"
+                CommandParameter="{x:Static vm:Direction.Right}"
+                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddItemRightOutsideViewportButtonId}"
+                Content="Add Item Right Outside Viewport"></Button>
     </StackPanel>
 </UserControl>

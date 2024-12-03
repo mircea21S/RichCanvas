@@ -12,6 +12,10 @@
         public const string AddEmptyLineButtonId = "AddEmptyLine";
         public const string DrawingEndedTextBoxId = "DrawingEndedTextBox";
         public const string ShouldExecuteDrawingEndedCommandCheckboxId = "ShouldExecuteDrawingEndedCommandCheckbox";
+        public const string AddItemTopOutsideViewportButtonId = "AddItemTopOutsideViewportButton";
+        public const string AddItemLeftOutsideViewportButtonId = "AddItemLeftOutsideViewportButton";
+        public const string AddItemBottomOutsideViewportButtonId = "AddItemBottomOutsideViewportButton";
+        public const string AddItemRightOutsideViewportButtonId = "AddItemRightOutsideViewportButton";
 
         public const string AddSelectableItemsButtonId1 = "AddSelectableItems1";
         public const string AddSelectableItemsButtonId2 = "AddSelectableItems2";

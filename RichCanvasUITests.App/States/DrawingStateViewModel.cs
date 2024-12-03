@@ -66,5 +66,59 @@ namespace RichCanvasUITests.App.States
                 Height = 100
             });
         }
+
+        private RelayCommand<Direction> _addItemOutsideViewportCommand;
+        public ICommand AddItemOutsideViewportCommand => _addItemOutsideViewportCommand ??= new RelayCommand<Direction>(AddItemOutsideViewport);
+
+        private void AddItemOutsideViewport(Direction direction)
+        {
+            switch (direction)
+            {
+                case Direction.Top:
+                    Parent.Items.Add(new RichItemContainerModel
+                    {
+                        Top = Parent.ViewportLocation.Y - 100,
+                        Left = Parent.ViewportLocation.X + 10,
+                        Width = 100,
+                        Height = 100
+                    });
+                    break;
+                case Direction.Left:
+                    Parent.Items.Add(new RichItemContainerModel
+                    {
+                        Top = Parent.ViewportLocation.Y + 100,
+                        Left = Parent.ViewportLocation.X - 100,
+                        Width = 100,
+                        Height = 100
+                    });
+                    break;
+                case Direction.Bottom:
+                    Parent.Items.Add(new RichItemContainerModel
+                    {
+                        Top = Parent.ViewportSize.Height,
+                        Left = Parent.ViewportLocation.X + 10,
+                        Width = 100,
+                        Height = 100
+                    });
+                    break;
+                case Direction.Right:
+                    Parent.Items.Add(new RichItemContainerModel
+                    {
+                        Top = Parent.ViewportLocation.Y + 10,
+                        Left = Parent.ViewportSize.Width,
+                        Width = 100,
+                        Height = 100
+                    });
+                    break;
+            }
+        }
+    }
+
+    public enum Direction
+    {
+        Top,
+        Left,
+        Right,
+        Bottom
     }
 }
