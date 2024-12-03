@@ -11,9 +11,7 @@
         xmlns:statePresenters="clr-namespace:RichCanvasUITests.App.StatePresenters"
         mc:Ignorable="d"
         Title="MainWindow"
-        Height="450"
-        WindowState="Maximized"
-        Width="800">
+        WindowState="Maximized">
     <Window.DataContext>
         <local:MainWindowViewModel />
     </Window.DataContext>
