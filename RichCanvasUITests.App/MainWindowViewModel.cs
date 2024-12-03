@@ -54,6 +54,13 @@ namespace RichCanvasUITests.App
             set => SetProperty(ref _viewportLocation, value);
         }
 
+        private System.Windows.Size _viewportSize;
+        public System.Windows.Size ViewportSize
+        {
+            get => _viewportSize;
+            set => SetProperty(ref _viewportSize, value);
+        }
+
         public SingleSelectionStateViewModel SingleSelectionState { get; }
         public MultipleSelectionStateViewModel MultipleSelectionState { get; }
         public DrawingStateViewModel DrawingState { get; }
