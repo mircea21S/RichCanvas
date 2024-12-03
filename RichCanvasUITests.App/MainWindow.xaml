@@ -106,7 +106,7 @@
             <TextBlock Text="{Binding SelectedItems.Count, ElementName=source, StringFormat='\{0\} selected items'}"></TextBlock>
             <TextBlock Text="{Binding ViewportLocation, StringFormat='\{0\} viewport location'}"
                        AutomationProperties.AutomationId="{x:Static auto:AutomationIds.ViewportLocationTextBlockId}"></TextBlock>
-            <TextBlock Text="{Binding ViewportSize, ElementName=source, StringFormat='\{0\} viewport size'}"></TextBlock>
+            <TextBlock Text="{Binding ViewportSize, StringFormat='\{0\} viewport size'}"></TextBlock>
 
             <Border BorderThickness="1"
                     BorderBrush="Black"
@@ -131,6 +131,7 @@
                                          RealTimeDraggingEnabled="{Binding RealTimeDraggingEnabled}"
                                          DrawingEndedCommand="{Binding DrawingState.DrawingEndedCommand}"
                                          ViewportLocation="{Binding ViewportLocation, Mode=TwoWay}"
+                                         ViewportSize="{Binding ViewportSize, Mode=OneWayToSource}"
                                          ScrollFactor="100"
                                          Name="source">
                 <richCanvas:RichItemsControl.Resources>
