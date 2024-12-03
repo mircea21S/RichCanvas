@@ -7,6 +7,7 @@ using RichCanvas.Automation.ControlInformations;
 using RichCanvas.Gestures;
 using RichCanvas.UITests.Helpers;
 using RichCanvas.UITests.Tests;
+using RichCanvasUITests.App.Automation;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -76,6 +77,8 @@ namespace RichCanvas.UITests
         public RichItemsControlData RichItemsControlData => Patterns.Value.Pattern.Value.Value.AsRichItemsControlData();
 
         public IScrollPattern ScrollInfo => Patterns.Scroll.PatternOrDefault;
+
+        public Window ParentWindow { get; internal set; }
 
         public RichItemsControlAutomation(FrameworkAutomationElementBase frameworkAutomationElement) : base(frameworkAutomationElement)
         {
@@ -199,5 +202,20 @@ namespace RichCanvas.UITests
 
         public void DefferedDragCurrentSelectionOutsideViewport(RichItemContainerAutomation fromContainer, Direction direction, Action<Point, int> assertStepAction, int stepOffset = 0)
             => DefferedDragContainerOutsideViewportWithOffset(fromContainer, direction, stepOffset, assertStepAction);
+
+        internal void DrawEmptyContainer(Direction direction, int offset, Action assertCallbackAction)
+        {
+            ParentWindow.InvokeButton(AutomationIds.AddEmptyRectangleButtonId);
+            var viewportCenter = new Point(ViewportSize.Width / 2, ViewportSize.Height / 2);
+            Point draggingEndPoint = direction switch
+            {
+                Direction.Left => new Point(ViewportLocation.X - offset, viewportCenter.Y),
+                Direction.Right => new Point(ViewportSize.Width + offset, viewportCenter.Y),
+                Direction.Up => new Point(viewportCenter.X, ViewportLocation.Y - offset),
+                Direction.Down => new Point(viewportCenter.X, ViewportSize.Height + offset),
+                _ => throw new NotImplementedException(),
+            };
+            Input.WithGesture(RichCanvasGestures.Drawing).DefferedDrag(viewportCenter, (draggingEndPoint.ToCanvasDrawingPoint(), assertCallbackAction));
+        }
     }
 }

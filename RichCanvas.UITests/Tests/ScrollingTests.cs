@@ -492,6 +492,86 @@ namespace RichCanvas.UITests.Tests
             Window.ToggleButton(AutomationIds.RealTimeDraggingToggleButtonId);
         }
 
+        [TestCase(Direction.Up, 1)]
+        [TestCase(Direction.Down, 1)]
+        [TestCase(Direction.Right, 1)]
+        [TestCase(Direction.Up, 5)]
+        [TestCase(Direction.Down, 5)]
+        [TestCase(Direction.Right, 5)]
+        [TestCase(Direction.Up, 7)]
+        [TestCase(Direction.Down, 7)]
+        [TestCase(Direction.Right, 7)]
+        [Test]
+        public void DrawingContainerOutsideViewport_ShouldUpdateScrollOnMouseMove(Direction direction, int offset)
+        {
+            // arrange
+            Window.ToggleCheckbox(AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId);
+
+            // act
+            RichItemsControl.DrawEmptyContainer(direction, offset, AssertOnMouseMove);
+
+            // assert
+            void AssertOnMouseMove()
+            {
+                if (direction == Direction.Up)
+                {
+                    RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().Be(offset);
+                    RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().Be(ViewportSize.Height + offset);
+                }
+                if (direction == Direction.Down)
+                {
+                    RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().Be(0);
+                    RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().Be(ViewportSize.Height + offset);
+                }
+                if (direction == Direction.Right)
+                {
+                    RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(0);
+                    RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().Be(ViewportSize.Width + offset);
+                }
+            }
+            Window.ToggleCheckbox(AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId);
+        }
+
+        [TestCase(Direction.Up)]
+        [TestCase(Direction.Down)]
+        [TestCase(Direction.Left)]
+        [TestCase(Direction.Right)]
+        [Test]
+        public void AddDrawnContainerOutsideViewport_ShouldUpdateScroll(Direction direction)
+        {
+            // arrange
+            Window.ToggleCheckbox(AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId);
+
+            // act
+            switch (direction)
+            {
+                case Direction.Up:
+                    Window.InvokeButton(AutomationIds.AddItemTopOutsideViewportButtonId);
+                    break;
+                case Direction.Down:
+                    Window.InvokeButton(AutomationIds.AddItemBottomOutsideViewportButtonId);
+                    break;
+                case Direction.Left:
+                    Window.InvokeButton(AutomationIds.AddItemLeftOutsideViewportButtonId);
+                    break;
+                case Direction.Right:
+                    Window.InvokeButton(AutomationIds.AddItemRightOutsideViewportButtonId);
+                    break;
+            }
+
+            // assert
+            var addedItemLocation = new Point(RichItemsControl.Items[0].RichItemContainerData.Left, RichItemsControl.Items[0].RichItemContainerData.Top);
+            var offset = ViewportLocation - addedItemLocation;
+            var expectedExtent = RichItemsControl.RichItemsControlData.ItemsExtent;
+            expectedExtent.Union(new Rect(ViewportLocation, ViewportSize));
+            RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().Be(Math.Max(0, offset.Y));
+            RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(Math.Max(0, offset.X));
+            RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().Be(expectedExtent.Height);
+            RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().Be(expectedExtent.Width);
+
+            Window.ToggleCheckbox(AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId);
+        }
+
         private void ArrangeUIVerticallyToShowScrollbars(Direction scrollingMode)
         {
             while (scrollingMode == Direction.Down
