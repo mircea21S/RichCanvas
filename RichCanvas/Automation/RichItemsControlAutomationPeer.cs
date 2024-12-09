@@ -6,8 +6,10 @@ using System.Windows.Automation.Provider;
 
 namespace RichCanvas.Automation
 {
-    public class RichItemsControlAutomationPeer : SelectorAutomationPeer, IValueProvider, IScrollProvider
-    //ITransformProvider
+    public class RichItemsControlAutomationPeer : SelectorAutomationPeer, 
+        IValueProvider, 
+        IScrollProvider
+        //ITransformProvider
     {
         protected RichItemsControl OwnerItemsControl => (RichItemsControl)Owner;
 

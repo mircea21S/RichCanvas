@@ -1,4 +1,5 @@
 ﻿using FlaUI.Core.Input;
+using FlaUI.Core.WindowsAPI;
 using RichCanvas.Gestures;
 using System;
 using System.Drawing;
@@ -29,7 +30,7 @@ namespace RichCanvas.UITests.Helpers
 
         internal override void Drag(Point startPoint, Point endPoint)
         {
-            var key = _mouseKeyGesture.Keys[0].ToVirtualKeyShort();
+            VirtualKeyShort key = _mouseKeyGesture.Keys?[0].ToVirtualKeyShort() ?? _mouseKeyGesture.KeyGestures?[0].Key.ToVirtualKeyShort() ?? default;
             var mouseGesture = _mouseKeyGesture.MouseGesture;
 
             Keyboard.Press(key);
