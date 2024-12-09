@@ -35,6 +35,7 @@
 
         public const string RealTimeDraggingToggleButtonId = "RealTimeDraggingToggleButton";
         public const string ResetViewportLocationButtonId = "ResetViewportLocationButton";
+        public const string SetViewportLocationValueButtonId = "SetViewportLocationValueButton";
         public const string ViewportLocationTextBlockId = "ViewportLocationTextBlock";
     }
 }

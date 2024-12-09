@@ -113,6 +113,9 @@
                     <Button AutomationProperties.AutomationId="{x:Static auto:AutomationIds.ResetViewportLocationButtonId}"
                             Content="Reset Viewport Location"
                             Command="{Binding ResetViewportLocation}" />
+                    <Button AutomationProperties.AutomationId="{x:Static auto:AutomationIds.SetViewportLocationValueButtonId}"
+                            Content="Set Viewport Location Value"
+                            Command="{Binding SetViewportLocationValue}" />
                 </StackPanel>
             </Border>
         </StackPanel>
