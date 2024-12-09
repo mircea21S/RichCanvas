@@ -11,7 +11,7 @@ namespace RichCanvas.UITests.Helpers
     internal static class Input
     {
         internal static GestureHandler WithGesture(InputGesture gesture)
-        {
+         {
             if (gesture is MouseKeyGesture mouseKeyGesture)
             {
                 return new MouseKeyGestureHandler(mouseKeyGesture);
@@ -50,6 +50,7 @@ namespace RichCanvas.UITests.Helpers
         internal static VirtualKeyShort ToVirtualKeyShort(this Key key) => key switch
         {
             Key.Q => VirtualKeyShort.KEY_Q,
+            Key.Space => VirtualKeyShort.SPACE,
             _ => throw new MissingMemberException("Key not mapped")
         };
         internal static MouseButton ToMouseButton(this MouseAction mouseAction) => mouseAction switch

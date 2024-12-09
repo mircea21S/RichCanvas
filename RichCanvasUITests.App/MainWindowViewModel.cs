@@ -1,5 +1,6 @@
 ﻿using RichCanvasUITests.App;
 using RichCanvasUITests.App.States;
+using RichCanvasUITests.App.TestMocks;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows.Input;
@@ -25,6 +26,9 @@ namespace RichCanvasUITests.App
 
         private RelayCommand _resetViewportLocation;
         public ICommand ResetViewportLocation => _resetViewportLocation ??= new RelayCommand(PerformResetViewportLocation);
+
+        private RelayCommand _setViewportLocationValue;
+        public ICommand SetViewportLocationValue => _setViewportLocationValue ??= new RelayCommand(PerformSetViewportLocationValue);
 
         private bool _realTimeSelectionEnabled;
         public bool RealTimeSelectionEnabled
@@ -100,6 +104,11 @@ namespace RichCanvasUITests.App
         private void PerformResetViewportLocation()
         {
             ViewportLocation = new System.Windows.Point(0, 0);
+        }
+
+        private void PerformSetViewportLocationValue()
+        {
+            ViewportLocation = PanningStateDataMocks.ViewportLocationMockValue;
         }
     }
 }
