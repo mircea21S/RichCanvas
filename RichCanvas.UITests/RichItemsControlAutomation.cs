@@ -217,5 +217,12 @@ namespace RichCanvas.UITests
             };
             Input.WithGesture(RichCanvasGestures.Drawing).DefferedDrag(viewportCenter, (draggingEndPoint.ToCanvasDrawingPoint(), assertCallbackAction));
         }
+
+        internal void Pan(Point fromPoint, Point toPoint)
+        {
+            Input.WithGesture(RichCanvasGestures.Pan).Drag(fromPoint, toPoint);
+        }
+
+        internal void ResetViewportLocation() => ParentWindow.InvokeButton(AutomationIds.ResetViewportLocationButtonId);
     }
 }

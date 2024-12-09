@@ -79,6 +79,7 @@
     <Compile Include="States\SingleSelectionStateViewModel.cs" />
     <Compile Include="TestMocks\DrawingStateDataMocks.cs" />
     <Compile Include="TestMocks\MultipleSelectionStateDataMocks.cs" />
+    <Compile Include="TestMocks\PanningStateDataMocks.cs" />
     <Compile Include="TestMocks\SingleSelectionStateDataMocks.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
