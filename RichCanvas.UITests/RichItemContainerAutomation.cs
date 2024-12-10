@@ -14,6 +14,5 @@ namespace RichCanvas.UITests
         {
             TypeNameHandling = TypeNameHandling.All
         });
-
     }
 }
