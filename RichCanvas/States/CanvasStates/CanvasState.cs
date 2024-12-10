@@ -61,5 +61,17 @@ namespace RichCanvas.States
 
         /// <summary>Pops the current state from the stack.</summary>
         public virtual void PopState() => Parent.PopState();
+
+        /// <summary>
+        /// Called by <see cref="RichItemsControl.OnPreviewMouseDown(MouseButtonEventArgs)"/> to check if any state has priority over other controls handling MouseDown event.
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="matchingState"></param>
+        /// <returns></returns>
+        public virtual bool MatchesPreviewMouseDownState(MouseButtonEventArgs e, out CanvasState? matchingState)
+        {
+            matchingState = null;
+            return false;
+        }
     }
 }

@@ -573,6 +573,19 @@ namespace RichCanvas
         }
 
         /// <inheritdoc/>
+        protected override void OnPreviewMouseDown(MouseButtonEventArgs e)
+        {
+            if ((Mouse.Captured == null || IsMouseCaptured) && e.HasAnyButtonPressed())
+            {
+                if (CurrentState.MatchesPreviewMouseDownState(e, out CanvasState? matchingState))
+                {
+                    CaptureMouse();
+                    PushState(matchingState!);
+                }
+            }
+        }
+
+        /// <inheritdoc/>
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             if ((Mouse.Captured == null || IsMouseCaptured) && e.HasAnyButtonPressed())
