@@ -12,6 +12,8 @@
         public const string AddEmptyLineButtonId = "AddEmptyLine";
         public const string DrawingEndedTextBoxId = "DrawingEndedTextBox";
         public const string ShouldExecuteDrawingEndedCommandCheckboxId = "ShouldExecuteDrawingEndedCommandCheckbox";
+        public const string RichItemContainerAngleTextBoxId = "RichItemContainerAngleTextBox";
+
         public const string AddItemTopOutsideViewportButtonId = "AddItemTopOutsideViewportButton";
         public const string AddItemLeftOutsideViewportButtonId = "AddItemLeftOutsideViewportButton";
         public const string AddItemBottomOutsideViewportButtonId = "AddItemBottomOutsideViewportButton";

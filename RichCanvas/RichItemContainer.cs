@@ -135,13 +135,10 @@ namespace RichCanvas
         /// Apply transforms on <see cref="RichItemContainer"/>
         /// </summary>
         public static DependencyProperty ApplyTransformProperty = DependencyProperty.RegisterAttached("ApplyTransform", typeof(Transform), typeof(RichItemContainer), new FrameworkPropertyMetadata(default(Transform), OnApplyTransformChanged));
-
         public static void SetApplyTransform(UIElement element, Transform value) => element.SetValue(ApplyTransformProperty, value);
-
         public static Transform GetApplyTransform(UIElement element) => (Transform)element.GetValue(ApplyTransformProperty);
 
         public static readonly RoutedEvent SelectedEvent = Selector.SelectedEvent.AddOwner(typeof(RichItemContainer));
-
         /// <summary>
         /// Occurs when this <see cref="ItemContainer"/> is selected.
         /// </summary>
@@ -210,7 +207,6 @@ namespace RichCanvas
             add => AddHandler(DragCompletedEvent, value);
             remove => RemoveHandler(DragCompletedEvent, value);
         }
-
         #endregion
 
         static RichItemContainer()
@@ -229,17 +225,6 @@ namespace RichCanvas
         /// </summary>
         public RichItemsControl? Host => _host ??= ItemsControl.ItemsControlFromItemContainer(this) as RichItemsControl;
 
-        /// <summary>
-        /// The Top position based on current <see cref="Scale"/>
-        /// </summary>
-        public double TransformedTop => ScaleTransform != null ? (ScaleTransform.ScaleY < 0 ? Top - Height : Top) : 0;
-
-        /// <summary>
-        /// The Left position based on current <see cref="Scale"/>
-        /// </summary>
-        public double TransformedLeft => ScaleTransform != null ? (ScaleTransform.ScaleX < 0 ? Left - Width : Left) : 0;
-
-        internal bool IsDrawn { get; set; }
         internal bool TopPropertyInitalized { get; private set; }
         internal bool LeftPropertyInitialized { get; private set; }
 
