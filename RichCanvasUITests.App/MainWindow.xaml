@@ -96,6 +96,8 @@
                     <TextBlock Text="{Binding SelectedItem.Width, StringFormat='\{0\} width'}" />
                     <TextBlock Text="{Binding SelectedItem.Top, StringFormat='\{0\} top'}" />
                     <TextBlock Text="{Binding SelectedItem.Left, StringFormat='\{0\} left'}" />
+                    <TextBox Text="{Binding SelectedItem.Angle, Mode=TwoWay}"
+                             AutomationProperties.AutomationId="{x:Static auto:AutomationIds.RichItemContainerAngleTextBoxId}"></TextBox>
                 </StackPanel>
             </Border>
 
@@ -137,7 +139,21 @@
                                          Name="source">
                 <richCanvas:RichItemsControl.Resources>
                     <DataTemplate DataType="{x:Type local:RichItemContainerModel}">
-                        <Rectangle Fill="Red"></Rectangle>
+                        <Rectangle Fill="Red">
+                            <Rectangle.Style>
+                                <Style>
+                                    <Setter Property="richCanvas:RichItemContainer.ApplyTransform">
+                                        <Setter.Value>
+                                            <TransformGroup>
+                                                <RotateTransform Angle="{Binding Angle}" />
+                                                <ScaleTransform />
+                                                <TranslateTransform />
+                                            </TransformGroup>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Rectangle.Style>
+                        </Rectangle>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type models:Line}">
                         <Line  Stroke="Red"

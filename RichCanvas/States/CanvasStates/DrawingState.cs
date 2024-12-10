@@ -26,7 +26,6 @@ namespace RichCanvas.States
             var container = (RichItemContainer)Parent.ItemContainerGenerator.ContainerFromIndex(currentDrawingContainerIndex);
             if (container.IsValid())
             {
-                container.IsDrawn = true;
                 drawingContainersIndexes.RemoveAt(0);
                 return;
             }

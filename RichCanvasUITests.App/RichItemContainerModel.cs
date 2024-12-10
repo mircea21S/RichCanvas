@@ -39,6 +39,13 @@ namespace RichCanvasUITests.App
             set => SetProperty(ref _allowScaleChangeToUpdatePosition, value);
         }
 
+        private double _angle;
+        public double Angle
+        {
+            get => _angle;
+            set => SetProperty(ref _angle, value);
+        }
+
         public Rect BoundingBox => new(Left, Top, Width, Height);
 
         public Point Center => new((Width / 2) + Left, (Height / 2) + Top);
