@@ -35,7 +35,17 @@ namespace RichCanvas.States
                     PushState(new SingleSelectionState(Parent));
                 }
             }
+        }
 
+        public override bool MatchesPreviewMouseDownState(MouseButtonEventArgs e, out CanvasState? matchingState)
+        {
+            if (RichCanvasGestures.Pan.Matches(e.Source, e))
+            {
+                matchingState = new PanningState(Parent);
+                return true;
+            }
+            matchingState = null;
+            return false;
         }
     }
 }

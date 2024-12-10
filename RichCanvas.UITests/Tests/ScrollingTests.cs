@@ -604,6 +604,54 @@ namespace RichCanvas.UITests.Tests
             Window.Patterns.Window.Pattern.SetWindowVisualState(WindowVisualState.Maximized);
         }
 
+        [TestCase(Direction.Left, 5)]
+        [TestCase(Direction.Up, 5)]
+        [TestCase(Direction.Down, 5)]
+        [TestCase(Direction.Right, 5)]
+
+        [TestCase(Direction.Left, 7)]
+        [TestCase(Direction.Up, 7)]
+        [TestCase(Direction.Down, 7)]
+        [TestCase(Direction.Right, 7)]
+
+        [TestCase(Direction.Left, 1)]
+        [TestCase(Direction.Up, 1)]
+        [TestCase(Direction.Down, 1)]
+        [TestCase(Direction.Right, 1)]
+        [Test]
+        public void PanningRichCanvasWithElementInDirection_ToMoveElementOutsideViewport_ShouldUpdateScroll(Direction direction, int outsideDistance)
+        {
+            // arrange
+            Window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);
+            RichItemsControl.Focus();
+
+            // act
+            RichItemsControl.PanItemOutsideViewport(RichItemsControl.Items[0], direction, outsideDistance);
+
+            // assert
+            if (direction == Direction.Up)
+            {
+                RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().Be(outsideDistance);
+                RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().Be(ViewportSize.Height + outsideDistance);
+            }
+            if (direction == Direction.Down)
+            {
+                RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().Be(0);
+                RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().Be(ViewportSize.Height + outsideDistance);
+            }
+            if (direction == Direction.Right)
+            {
+                RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(0);
+                RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().Be(ViewportSize.Width + outsideDistance);
+            }
+            if (direction == Direction.Left)
+            {
+                RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(outsideDistance);
+                RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().Be(ViewportSize.Width + outsideDistance);
+            }
+            RichItemsControl.ResetViewportLocation();
+        }
+
         private void ArrangeUIVerticallyToShowScrollbars(Direction scrollingMode)
         {
             while (scrollingMode == Direction.Down
