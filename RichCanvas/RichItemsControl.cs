@@ -455,21 +455,6 @@ namespace RichCanvas
             set => SetValue(CanSelectMultipleItemsProperty, value);
         }
 
-        /// <summary>
-        /// Gets or sets whether <see cref="RichCanvas"/> has selection enabled.
-        /// Default is <see langword="true"/>.
-        /// </summary>
-        public static DependencyProperty SelectionEnabledProperty = DependencyProperty.Register(nameof(SelectionEnabled), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true));
-        /// <summary>
-        /// Gets or sets whether <see cref="RichCanvas"/> has selection enabled.
-        /// Default is <see langword="true"/>.
-        /// </summary>
-        public bool SelectionEnabled
-        {
-            get => (bool)GetValue(SelectionEnabledProperty);
-            set => SetValue(SelectionEnabledProperty, value);
-        }
-
         public static readonly DependencyProperty ViewportSizeProperty = DependencyProperty.Register(nameof(ViewportSize), typeof(Size), typeof(RichItemsControl), new FrameworkPropertyMetadata(Size.Empty));
         /// <summary>
         /// Gets the size of the viewport.
