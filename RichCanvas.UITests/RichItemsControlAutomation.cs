@@ -224,5 +224,26 @@ namespace RichCanvas.UITests
         }
 
         internal void ResetViewportLocation() => ParentWindow.InvokeButton(AutomationIds.ResetViewportLocationButtonId);
+
+        internal void PanItemOutsideViewport(RichItemContainerAutomation itemContainer, Direction direction, int outsideDistance)
+        {
+            Point panningStartPoint = direction switch
+            {
+                Direction.Right => new Point(itemContainer.BoundingRectangle.Right, itemContainer.BoundingRectangle.Top),
+                Direction.Left => new Point(itemContainer.BoundingRectangle.Right, itemContainer.BoundingRectangle.Top),
+                Direction.Up => new Point(itemContainer.BoundingRectangle.Left, itemContainer.BoundingRectangle.Top),
+                Direction.Down => new Point(itemContainer.BoundingRectangle.Left, itemContainer.BoundingRectangle.Bottom),
+                _ => throw new NotImplementedException()
+            };
+            Point outsideViewportPoint = direction switch
+            {
+                Direction.Right => new Point(ViewportSize.Width + outsideDistance, itemContainer.BoundingRectangle.Top),
+                Direction.Left => new Point(itemContainer.BoundingRectangle.Left - ViewportLocation.X - outsideDistance, itemContainer.BoundingRectangle.Top),
+                Direction.Up => new Point(itemContainer.BoundingRectangle.Left, ViewportLocation.Y - outsideDistance),
+                Direction.Down => new Point(itemContainer.BoundingRectangle.Left, ViewportSize.Height + outsideDistance),
+                _ => throw new NotImplementedException()
+            };
+            Pan(panningStartPoint, outsideViewportPoint.ToCanvasDrawingPoint());
+        }
     }
 }
