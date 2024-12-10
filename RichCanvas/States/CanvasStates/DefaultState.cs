@@ -24,7 +24,7 @@ namespace RichCanvas.States
             {
                 PushState(new PanningState(Parent));
             }
-            else if (RichCanvasGestures.Select.Matches(e.Source, e) && Parent.SelectionEnabled)
+            else if (RichCanvasGestures.Select.Matches(e.Source, e))
             {
                 if (Parent.CanSelectMultipleItems)
                 {
