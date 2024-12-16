@@ -11,7 +11,6 @@ using System.Collections.Specialized;
 using System.Collections;
 using System.Collections.Generic;
 using RichCanvas.States;
-using RichCanvas.Gestures;
 using RichCanvas.CustomEventArgs;
 using System.Windows.Automation.Peers;
 using RichCanvas.Automation;
@@ -254,81 +253,6 @@ namespace RichCanvas
         }
 
         /// <summary>
-        /// Gets or sets the factor used to change <see cref="RichItemsControl.ScaleTransform"/> on zoom.
-        /// Default is 1.1d.
-        /// </summary>
-        public static DependencyProperty ScaleFactorProperty = DependencyProperty.Register(nameof(ScaleFactor), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(1.1d, null, CoerceScaleFactor));
-        /// <summary>
-        /// Gets or sets the factor used to change <see cref="RichItemsControl.ScaleTransform"/> on zoom.
-        /// Default is 1.1d.
-        /// </summary>
-        public double ScaleFactor
-        {
-            get => (double)GetValue(ScaleFactorProperty);
-            set => SetValue(ScaleFactorProperty, value);
-        }
-
-        /// <summary>
-        /// Gets or sets whether zooming operation is disabled.
-        /// Default is enabled.
-        /// </summary>
-        public static DependencyProperty DisableZoomProperty = DependencyProperty.Register(nameof(DisableZoom), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
-        /// <summary>
-        /// Gets or sets whether zooming operation is disabled.
-        /// Default is enabled.
-        /// </summary>
-        public bool DisableZoom
-        {
-            get => (bool)GetValue(DisableZoomProperty);
-            set => SetValue(DisableZoomProperty, value);
-        }
-
-        /// <summary>
-        /// Gets or sets maximum scale for <see cref="RichItemsControl.ScaleTransform"/>.
-        /// Default is 2.
-        /// </summary>
-        public static DependencyProperty MaxScaleProperty = DependencyProperty.Register(nameof(MaxScale), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(2d, OnMaxScaleChanged, CoerceMaxScale));
-        /// <summary>
-        /// Gets or sets maximum scale for <see cref="RichItemsControl.ScaleTransform"/>.
-        /// Default is 2.
-        /// </summary>
-        public double MaxScale
-        {
-            get => (double)GetValue(MaxScaleProperty);
-            set => SetValue(MaxScaleProperty, value);
-        }
-
-        /// <summary>
-        /// Gets or sets minimum scale for <see cref="RichItemsControl.ScaleTransform"/>.
-        /// Default is 0.1d.
-        /// </summary>
-        public static DependencyProperty MinScaleProperty = DependencyProperty.Register(nameof(MinScale), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(0.1d, OnMinimumScaleChanged, CoerceMinimumScale));
-        /// <summary>
-        /// Gets or sets minimum scale for <see cref="RichItemsControl.ScaleTransform"/>.
-        /// Default is 0.1d.
-        /// </summary>
-        public double MinScale
-        {
-            get => (double)GetValue(MinScaleProperty);
-            set => SetValue(MinScaleProperty, value);
-        }
-
-        /// <summary>
-        /// Gets or sets the current <see cref="RichItemsControl.ScaleTransform"/> value.
-        /// Default is 1.
-        /// </summary>
-        public static DependencyProperty ScaleProperty = DependencyProperty.Register(nameof(Scale), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(1d, OnScaleChanged, ConstarainScaleToRange));
-        /// <summary>
-        /// Gets or sets the current <see cref="RichItemsControl.ScaleTransform"/> value.
-        /// Default is 1.
-        /// </summary>
-        public double Scale
-        {
-            get => (double)GetValue(ScaleProperty);
-            set => SetValue(ScaleProperty, value);
-        }
-
-        /// <summary>
         /// Gets or sets the items in the <see cref="RichItemsControl"/> that are selected.
         /// </summary>
         public static DependencyProperty SelectedItemsProperty = DependencyProperty.Register(nameof(SelectedItems), typeof(IList), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(IList), OnSelectedItemsSourceChanged));
@@ -522,8 +446,6 @@ namespace RichCanvas
             _mainPanel = (RichCanvas)GetTemplateChild(DrawingPanelName);
             _mainPanel.ItemsOwner = this;
             SetCachingMode(DisableCache);
-
-            ScaleTransform.Changed += OnScaleChanged;
         }
 
         /// <inheritdoc/>
@@ -541,21 +463,6 @@ namespace RichCanvas
                 Children = new TransformCollection([new ScaleTransform(), new TranslateTransform()])
             }
         };
-
-        /// <inheritdoc/>
-        protected override void OnPreviewMouseWheel(MouseWheelEventArgs e)
-        {
-            if (RichCanvasGestures.Zoom == Keyboard.Modifiers)
-            {
-                var position = e.GetPosition(this);
-                IsZooming = true;
-                ZoomAtPosition(position, e.Delta, ScaleFactor);
-
-                IsZooming = false;
-                // handle the event so it won't trigger scrolling
-                e.Handled = true;
-            }
-        }
 
         /// <inheritdoc/>
         protected override void OnPreviewMouseDown(MouseButtonEventArgs e)
@@ -665,7 +572,7 @@ namespace RichCanvas
         {
             base.OnRenderSizeChanged(sizeInfo);
 
-            ViewportSize = new Size(ActualWidth / Scale, ActualHeight / Scale);
+            ViewportSize = new Size(ActualWidth / ViewportZoom, ActualHeight / ViewportZoom);
             UpdateScrollbars();
         }
 
@@ -690,126 +597,11 @@ namespace RichCanvas
             }
         }
 
-        public void ZoomAtPosition(Point mousePosition, double delta, double? factor)
-        {
-            var previousScaleX = ScaleTransform.ScaleX;
-            var previousScaleY = ScaleTransform.ScaleY;
-            var originX = (mousePosition.X - TranslateTransform.X) / ScaleTransform.ScaleX;
-            var originY = (mousePosition.Y - TranslateTransform.Y) / ScaleTransform.ScaleY;
-
-            if (delta > 0 && factor.HasValue)
-            {
-                var zoom = ScaleTransform.ScaleX * factor.Value;
-                ScaleTransform.ScaleX = zoom;
-                ScaleTransform.ScaleY = zoom;
-            }
-            else if (delta < 0 && factor.HasValue)
-            {
-                var zoom = ScaleTransform.ScaleX / factor.Value;
-                ScaleTransform.ScaleX = zoom;
-                ScaleTransform.ScaleY = zoom;
-            }
-
-            if (ScaleTransform.ScaleX <= MinScale)
-            {
-                ScaleTransform.ScaleX = MinScale;
-            }
-            if (ScaleTransform.ScaleY <= MinScale)
-            {
-                ScaleTransform.ScaleY = MinScale;
-            }
-            if (ScaleTransform.ScaleX >= MaxScale)
-            {
-                ScaleTransform.ScaleX = MaxScale;
-            }
-            if (ScaleTransform.ScaleY >= MaxScale)
-            {
-                ScaleTransform.ScaleY = MaxScale;
-            }
-
-            if (previousScaleX != ScaleTransform.ScaleX)
-            {
-                TranslateTransform.X = mousePosition.X - originX * ScaleTransform.ScaleX;
-            }
-            if (previousScaleY != ScaleTransform.ScaleY)
-            {
-                TranslateTransform.Y = mousePosition.Y - originY * ScaleTransform.ScaleY;
-            }
-
-            //if (!DisableScroll)
-            //{
-            //    SetCurrentScroll();
-            //}
-        }
-
-        public void ZoomIn()
-        {
-            // delta isn't used as we have the ScaleFactor
-            // it's used just to define the direction of zoom
-            var delta = Math.Pow(2.0, 120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine);
-            ZoomAtPosition(MousePosition, delta, ScaleFactor);
-        }
-
-        public void ZoomOut()
-        {
-            var delta = Math.Pow(2.0, 120.0 / 3.0 / Mouse.MouseWheelDeltaForOneLine);
-            ZoomAtPosition(MousePosition, -delta, ScaleFactor);
-        }
-
         #endregion
 
         #region Properties Callbacks
 
         private static void OnDisableCacheChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).SetCachingMode((bool)e.NewValue);
-
-        private static object ConstarainScaleToRange(DependencyObject d, object value)
-        {
-            var itemsControl = (RichItemsControl)d;
-
-            if (itemsControl.DisableZoom)
-            {
-                return itemsControl.Scale;
-            }
-
-            double num = (double)value;
-            double minimum = itemsControl.MinScale;
-            if (num < minimum)
-            {
-                return minimum;
-            }
-
-            double maximum = itemsControl.MaxScale;
-            if (num > maximum)
-            {
-                return maximum;
-            }
-
-            return value;
-        }
-        private static void OnScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).OverrideScale((double)e.NewValue);
-
-        private static object CoerceMinimumScale(DependencyObject d, object value)
-            => (double)value > 0 ? value : 0.1;
-
-        private static void OnMinimumScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var zoom = (RichItemsControl)d;
-            zoom.CoerceValue(MaxScaleProperty);
-        }
-
-        private static void OnMaxScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var zoom = (RichItemsControl)d;
-            zoom.CoerceValue(MinScaleProperty);
-        }
-
-        private static object CoerceMaxScale(DependencyObject d, object value)
-        {
-            var zoom = (RichItemsControl)d;
-            var min = zoom.MinScale;
-
-            return (double)value < min ? 2d : value;
-        }
 
         private static void OnEnableAutoPanningChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
             => ((RichItemsControl)d).OnEnableAutoPanningChanged((bool)e.NewValue);
@@ -818,9 +610,6 @@ namespace RichCanvas
 
         private static object CoerceScrollFactor(DependencyObject d, object value)
             => (double)value == 0 ? 10d : value;
-
-        private static object CoerceScaleFactor(DependencyObject d, object value)
-            => (double)value == 0 ? 1.1d : value;
 
         private static void OnCanSelectMultipleItemsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).CanSelectMultipleItemsUpdated((bool)e.NewValue);
 
@@ -1021,22 +810,14 @@ namespace RichCanvas
             }
         }
 
-        private void OnScaleChanged(object? sender, EventArgs e)
-        {
-            _fromEvent = true;
-            Scale = ScaleTransform.ScaleX;
-            RoutedEventArgs newEventArgs = new RoutedEventArgs(ZoomingEvent, new Point(ScaleTransform.ScaleX, ScaleTransform.ScaleY));
-            RaiseEvent(newEventArgs);
-            _fromEvent = false;
-        }
-
         private static void OnViewportLocationChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var host = (RichItemsControl)d;
             var translate = (Point)e.NewValue;
 
-            host.TranslateTransform.X = -translate.X;
-            host.TranslateTransform.Y = -translate.Y;
+            host.TranslateTransform.X = -translate.X * host.ViewportZoom;
+            host.TranslateTransform.Y = -translate.Y * host.ViewportZoom;
+
             host.UpdateScrollbars();
         }
 
@@ -1050,24 +831,13 @@ namespace RichCanvas
                     {
                         EnableClearType = false,
                         SnapsToDevicePixels = false,
-                        RenderAtScale = Scale
+                        RenderAtScale = ViewportZoom
                     };
                 }
                 else
                 {
                     _mainPanel.CacheMode = null;
                 }
-            }
-        }
-
-        private void OverrideScale(double newValue)
-        {
-            if (!_fromEvent)
-            {
-                ScaleTransform.ScaleX = newValue;
-                ScaleTransform.ScaleY = newValue;
-                CoerceValue(ScaleProperty);
-                //SetCurrentScroll();
             }
         }
 

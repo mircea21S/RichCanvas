@@ -348,7 +348,7 @@
                                      DisableCache="{Binding DisableCache}"
                                      DisableZoom="{Binding DisableZoom}"
                                      MousePosition="{Binding MousePosition, Mode=OneWayToSource}"
-                                     Scale="{Binding Scale, Converter={StaticResource StringToFloatConverter}, Mode=TwoWay}"
+                                     ViewportZoom="{Binding Scale, Converter={StaticResource StringToFloatConverter}, Mode=TwoWay}"
                                      ScrollFactor="{Binding ScrollFactor, Converter={StaticResource StringToFloatConverter},ConverterParameter=double}"
                                      ScaleFactor="{Binding ZoomFactor, Converter={StaticResource StringToFloatConverter},ConverterParameter=double}"
                                      MinScale="{Binding MinScale, Converter={StaticResource StringToFloatConverter},ConverterParameter=double}"
