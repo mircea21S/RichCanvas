@@ -27,6 +27,10 @@
     </Window.Resources>
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="auto" />
@@ -198,5 +202,11 @@
                 </richCanvas:RichItemsControl.ItemContainerStyle>
             </richCanvas:RichItemsControl>
         </ScrollViewer>
+
+        <StatusBar Grid.Row="1">
+            <StatusBarItem>
+                <TextBlock Text="{Binding ElementName=source, Path=ViewportZoom, StringFormat='\{0\} zoom'}" />
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>

@@ -172,7 +172,7 @@ namespace RichCanvasTestApp.Adorners
         public override GeneralTransform GetDesiredTransform(GeneralTransform transform)
         {
             // invert scale to get correct HorizontalChange and VerticalChange
-            var invertedScale = new ScaleTransform(1 / ItemContainer.Scale.X / ItemContainer.Host.Scale, 1 / ItemContainer.Scale.Y / ItemContainer.Host.Scale);
+            var invertedScale = new ScaleTransform(1 / ItemContainer.Scale.X / ItemContainer.Host.ViewportZoom, 1 / ItemContainer.Scale.Y / ItemContainer.Host.ViewportZoom);
 
             foreach (Thumb thumb in _visualCollection.OfType<Thumb>())
             {

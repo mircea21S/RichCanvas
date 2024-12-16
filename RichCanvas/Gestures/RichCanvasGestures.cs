@@ -11,6 +11,6 @@ namespace RichCanvas.Gestures
         public static InputGesture ZoomOut { get; set; } = new KeyGesture(Key.OemMinus, ModifierKeys.Control);
         public static InputGesture Pan { get; set; } = new MouseKeyGesture(new MouseGesture(MouseAction.LeftClick), new KeyGesture(Key.Space));
         //TODO: add a bool DP to change from wheel zoom to a state with a custom gesture
-        public static ModifierKeys Zoom { get; set; } = ModifierKeys.Control;
+        public static ModifierKeys ZoomModifierKey { get; set; } = ModifierKeys.Control;
     }
 }
