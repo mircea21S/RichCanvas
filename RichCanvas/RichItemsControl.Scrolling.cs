@@ -71,7 +71,7 @@ namespace RichCanvas
                 var viewportCenter = new Vector(ViewportWidth / 2, ViewportHeight / 2);
                 if (ScrollOwner != null)
                 {
-                    var relativePoint = (Point)(containerLocation * Scale - viewportCenter);
+                    var relativePoint = (Point)(containerLocation * ViewportZoom - viewportCenter);
                     if (TranslateTransform != null)
                     {
                         TranslateTransform.X = -relativePoint.X;
