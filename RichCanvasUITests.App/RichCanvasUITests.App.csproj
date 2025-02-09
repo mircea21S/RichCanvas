@@ -61,6 +61,7 @@
     </ApplicationDefinition>
     <Compile Include="Automation\AutomationIds.cs" />
     <Compile Include="Converters\PointToStringConverter.cs" />
+    <Compile Include="Converters\StringToDoubleConverter.cs" />
     <Compile Include="Models\DrawingEndedRepresentation.cs" />
     <Compile Include="Models\Line.cs" />
     <Compile Include="RelayCommand.cs" />
@@ -74,9 +75,13 @@
     <Compile Include="StatePresenters\SingleSelectionStateView.xaml.cs">
       <DependentUpon>SingleSelectionStateView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="StatePresenters\ZoomingView.xaml.cs">
+      <DependentUpon>ZoomingView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="States\DrawingStateViewModel.cs" />
     <Compile Include="States\MultipleSelectionStateViewModel.cs" />
     <Compile Include="States\SingleSelectionStateViewModel.cs" />
+    <Compile Include="States\ZoomingViewModel.cs" />
     <Compile Include="TestMocks\DrawingStateDataMocks.cs" />
     <Compile Include="TestMocks\MultipleSelectionStateDataMocks.cs" />
     <Compile Include="TestMocks\PanningStateDataMocks.cs" />
@@ -102,6 +107,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="StatePresenters\SingleSelectionStateView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StatePresenters\ZoomingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

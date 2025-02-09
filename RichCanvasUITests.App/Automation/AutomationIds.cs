@@ -39,5 +39,12 @@
         public const string ResetViewportLocationButtonId = "ResetViewportLocationButton";
         public const string SetViewportLocationValueButtonId = "SetViewportLocationValueButton";
         public const string ViewportLocationTextBlockId = "ViewportLocationTextBlock";
+
+        public const string ResetViewportZoomButtonId = "ResetViewportZoomButton";
+
+        public const string ScaleFactorTextBoxId = "ScaleFactorTextBox";
+        public const string MinScaleTextBoxId = "MinScaleTextBox";
+        public const string MaxScaleTextBoxId = "MaxScaleTextBox";
+        public const string ViewportZoomTextBoxId = "ViewportZoomTextBox";
     }
 }

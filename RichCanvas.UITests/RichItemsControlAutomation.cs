@@ -15,7 +15,7 @@ using System.Linq;
 
 namespace RichCanvas.UITests
 {
-    public class RichItemsControlAutomation : AutomationElement
+    public partial class RichItemsControlAutomation : AutomationElement
     {
         public Point ViewportLocation => RichItemsControlData.ViewportLocation.AsDrawingPoint();
         public Size ViewportSize => new Size((int)RichItemsControlData.ViewportSize.Width, (int)RichItemsControlData.ViewportSize.Height);
@@ -203,7 +203,7 @@ namespace RichCanvas.UITests
         public void DefferedDragCurrentSelectionOutsideViewport(RichItemContainerAutomation fromContainer, Direction direction, Action<Point, int> assertStepAction, int stepOffset = 0)
             => DefferedDragContainerOutsideViewportWithOffset(fromContainer, direction, stepOffset, assertStepAction);
 
-        internal void DrawEmptyContainer(Direction direction, int offset, Action assertCallbackAction)
+        public void DrawEmptyContainer(Direction direction, int offset, Action assertCallbackAction)
         {
             ParentWindow.InvokeButton(AutomationIds.AddEmptyRectangleButtonId);
             var viewportCenter = new Point(ViewportSize.Width / 2, ViewportSize.Height / 2);
@@ -218,14 +218,14 @@ namespace RichCanvas.UITests
             Input.WithGesture(RichCanvasGestures.Drawing).DefferedDrag(viewportCenter, (draggingEndPoint.ToCanvasDrawingPoint(), assertCallbackAction));
         }
 
-        internal void Pan(Point fromPoint, Point toPoint)
+        public void Pan(Point fromPoint, Point toPoint)
         {
             Input.WithGesture(RichCanvasGestures.Pan).Drag(fromPoint, toPoint);
         }
 
-        internal void ResetViewportLocation() => ParentWindow.InvokeButton(AutomationIds.ResetViewportLocationButtonId);
+        public void ResetViewportLocation() => ParentWindow.InvokeButton(AutomationIds.ResetViewportLocationButtonId);
 
-        internal void PanItemOutsideViewport(RichItemContainerAutomation itemContainer, Direction direction, int outsideDistance)
+        public void PanItemOutsideViewport(RichItemContainerAutomation itemContainer, Direction direction, int outsideDistance)
         {
             Point panningStartPoint = direction switch
             {
