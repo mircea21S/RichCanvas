@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="RichCanvasUITests.App.StatePresenters.ZoomingStateView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:RichCanvasUITests.App.States"
+             xmlns:converters="clr-namespace:RichCanvasUITests.App.Converters"
+             xmlns:auto="clr-namespace:RichCanvasUITests.App.Automation"
+             mc:Ignorable="d"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=vm:ZoomingViewModel}">
+    <UserControl.Resources>
+        <converters:StringToDoubleConverter x:Key="StringToDoubleConverterKey" />
+    </UserControl.Resources>
+
+    <Grid>
+        <Expander IsExpanded="True">
+            <Expander.Header>
+                <TextBlock Text="Zooming State Tests" />
+            </Expander.Header>
+            <Expander.Content>
+                <StackPanel>
+                    <TextBox Text="{Binding MaxScale, Mode=TwoWay, Converter={StaticResource StringToDoubleConverterKey}}"
+                             AutomationProperties.AutomationId="{x:Static auto:AutomationIds.MaxScaleTextBoxId}">
+                    </TextBox>
+                    <TextBox Text="{Binding MinScale, Mode=TwoWay, Converter={StaticResource StringToDoubleConverterKey}}"
+                             AutomationProperties.AutomationId="{x:Static auto:AutomationIds.MinScaleTextBoxId}">
+                    </TextBox>
+                    <TextBox Text="{Binding ScaleFactor, Mode=TwoWay, Converter={StaticResource StringToDoubleConverterKey}}"
+                             AutomationProperties.AutomationId="{x:Static auto:AutomationIds.ScaleFactorTextBoxId}">
+                    </TextBox>
+                    <TextBox Text="{Binding ViewportZoom, Mode=TwoWay, Converter={StaticResource StringToDoubleConverterKey}}"
+                             AutomationProperties.AutomationId="{x:Static auto:AutomationIds.ViewportZoomTextBoxId}">
+                    </TextBox>
+                </StackPanel>
+            </Expander.Content>
+        </Expander>
+    </Grid>
+</UserControl>

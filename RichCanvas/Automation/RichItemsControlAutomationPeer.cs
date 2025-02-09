@@ -6,10 +6,10 @@ using System.Windows.Automation.Provider;
 
 namespace RichCanvas.Automation
 {
-    public class RichItemsControlAutomationPeer : SelectorAutomationPeer, 
-        IValueProvider, 
+    public class RichItemsControlAutomationPeer : SelectorAutomationPeer,
+        IValueProvider,
         IScrollProvider
-        //ITransformProvider
+    //ITransformProvider
     {
         protected RichItemsControl OwnerItemsControl => (RichItemsControl)Owner;
 
@@ -25,7 +25,12 @@ namespace RichCanvas.Automation
             ScrollFactor = OwnerItemsControl.ScrollFactor,
             ViewportLocation = OwnerItemsControl.ViewportLocation,
             ViewportSize = OwnerItemsControl.ViewportSize,
-            ViewportExtent = new System.Windows.Size(OwnerItemsControl.ScrollInfo.ExtentWidth, OwnerItemsControl.ScrollInfo.ExtentHeight)
+            ViewportExtent = new System.Windows.Size(OwnerItemsControl.ScrollInfo.ExtentWidth, OwnerItemsControl.ScrollInfo.ExtentHeight),
+            ViewportZoom = OwnerItemsControl.ViewportZoom,
+            ScaleFactor = OwnerItemsControl.ScaleFactor,
+            MousePosition = OwnerItemsControl.MousePosition,
+            MaxZoom = OwnerItemsControl.MaxScale,
+            MinZoom = OwnerItemsControl.MinScale
         });
 
         public bool HorizontallyScrollable => true;
