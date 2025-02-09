@@ -1,5 +1,4 @@
-﻿using RichCanvasUITests.App;
-using RichCanvasUITests.App.States;
+﻿using RichCanvasUITests.App.States;
 using RichCanvasUITests.App.TestMocks;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -29,6 +28,9 @@ namespace RichCanvasUITests.App
 
         private RelayCommand _setViewportLocationValue;
         public ICommand SetViewportLocationValue => _setViewportLocationValue ??= new RelayCommand(PerformSetViewportLocationValue);
+
+        private RelayCommand _resetViewportZoomCommand;
+        public ICommand ResetViewportZoomCommand => _resetViewportZoomCommand ??= new RelayCommand(ResetViewportZoom);
 
         private bool _realTimeSelectionEnabled;
         public bool RealTimeSelectionEnabled
@@ -69,6 +71,8 @@ namespace RichCanvasUITests.App
         public MultipleSelectionStateViewModel MultipleSelectionState { get; }
         public DrawingStateViewModel DrawingState { get; }
 
+        public ZoomingViewModel ZoomingViewModel { get; }
+
         public MainWindowViewModel()
         {
             Items = [];
@@ -76,6 +80,7 @@ namespace RichCanvasUITests.App
             SingleSelectionState = new SingleSelectionStateViewModel(this);
             MultipleSelectionState = new MultipleSelectionStateViewModel(this);
             DrawingState = new DrawingStateViewModel(this);
+            ZoomingViewModel = new ZoomingViewModel();
         }
 
         private void ClearAllItems()
@@ -109,6 +114,12 @@ namespace RichCanvasUITests.App
         private void PerformSetViewportLocationValue()
         {
             ViewportLocation = PanningStateDataMocks.ViewportLocationMockValue;
+        }
+
+        private void ResetViewportZoom()
+        {
+            ZoomingViewModel.ViewportZoom = 1;
+            ViewportLocation = new System.Windows.Point(0, 0);
         }
     }
 }

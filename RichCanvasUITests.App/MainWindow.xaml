@@ -39,17 +39,17 @@
         <StackPanel Grid.Column="1"
                     Width="150">
 
-            <TextBlock Text="Drawing State Tests" />
             <statePresenters:DrawingStateView DataContext="{Binding DrawingState}" />
-            <Separator />
+            <Separator HorizontalAlignment="Stretch" />
 
-            <TextBlock Text="Multiple Selection State Tests" />
             <statePresenters:MultipleSelectionStateView DataContext="{Binding MultipleSelectionState}" />
-            <Separator />
+            <Separator HorizontalAlignment="Stretch" />
 
-            <TextBlock Text="Single Selection State Tests" />
             <statePresenters:SingleSelectionStateView DataContext="{Binding SingleSelectionState}" />
-            <Separator />
+            <Separator HorizontalAlignment="Stretch" />
+
+            <statePresenters:ZoomingStateView DataContext="{Binding ZoomingViewModel}" />
+            <Separator HorizontalAlignment="Stretch" />
 
             <Button Command="{Binding UpdateItemsSourceCommand}"
                     CommandParameter="{x:Static scs:NotifyCollectionChangedAction.Move}"
@@ -122,6 +122,9 @@
                     <Button AutomationProperties.AutomationId="{x:Static auto:AutomationIds.SetViewportLocationValueButtonId}"
                             Content="Set Viewport Location Value"
                             Command="{Binding SetViewportLocationValue}" />
+                    <Button AutomationProperties.AutomationId="{x:Static auto:AutomationIds.ResetViewportZoomButtonId}"
+                            Content="Reset Viewport Zoom"
+                            Command="{Binding ResetViewportZoomCommand}" />
                 </StackPanel>
             </Border>
         </StackPanel>
@@ -139,7 +142,11 @@
                                          DrawingEndedCommand="{Binding DrawingState.DrawingEndedCommand}"
                                          ViewportLocation="{Binding ViewportLocation, Mode=TwoWay}"
                                          ViewportSize="{Binding ViewportSize, Mode=OneWayToSource}"
+                                         ViewportZoom="{Binding ZoomingViewModel.ViewportZoom, Mode=TwoWay}"
                                          ScrollFactor="100"
+                                         MinScale="{Binding ZoomingViewModel.MinScale, Mode=TwoWay}"
+                                         MaxScale="{Binding ZoomingViewModel.MaxScale, Mode=TwoWay}"
+                                         ScaleFactor="{Binding ZoomingViewModel.ScaleFactor, Mode=TwoWay}"
                                          Name="source">
                 <richCanvas:RichItemsControl.Resources>
                     <DataTemplate DataType="{x:Type local:RichItemContainerModel}">
