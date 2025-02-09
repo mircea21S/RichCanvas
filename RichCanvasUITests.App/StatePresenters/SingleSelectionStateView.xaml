@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:RichCanvasUITests.App.StatePresenters"
              xmlns:vm="clr-namespace:RichCanvasUITests.App.States"
              xmlns:auto="clr-namespace:RichCanvasUITests.App.Automation"
              xmlns:s="clr-namespace:System;assembly=mscorlib"
@@ -18,24 +17,31 @@
         <s:Int64 x:Key="3">2</s:Int64>
     </UserControl.Resources>
 
-    <StackPanel>
-        <Button Command="{Binding AddSingleSelectionItemsForTest}"
-                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddTestSingleSelectionItemsButtonId}"
-                Content="Add Single Selection Test Items" />
+    <Expander IsExpanded="True">
+        <Expander.Header>
+            <TextBlock Text="Single Selection State Tests" />
+        </Expander.Header>
+        <Expander.Content>
+            <StackPanel>
+                <Button Command="{Binding AddSingleSelectionItemsForTest}"
+                        AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddTestSingleSelectionItemsButtonId}"
+                        Content="Add Single Selection Test Items" />
 
-        <Button Command="{Binding SetSelectedItemCommand}"
-                CommandParameter="{StaticResource 1}"
-                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.SetSingleSelectedItemButtonId1}"
-                Content="Set Selected Item 1" />
+                <Button Command="{Binding SetSelectedItemCommand}"
+                        CommandParameter="{StaticResource 1}"
+                        AutomationProperties.AutomationId="{x:Static auto:AutomationIds.SetSingleSelectedItemButtonId1}"
+                        Content="Set Selected Item 1" />
 
-        <Button Command="{Binding SetSelectedItemCommand}"
-                CommandParameter="{StaticResource 2}"
-                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.SetSingleSelectedItemButtonId2}"
-                Content="Set Selected Item 2" />
+                <Button Command="{Binding SetSelectedItemCommand}"
+                        CommandParameter="{StaticResource 2}"
+                        AutomationProperties.AutomationId="{x:Static auto:AutomationIds.SetSingleSelectedItemButtonId2}"
+                        Content="Set Selected Item 2" />
 
-        <Button Command="{Binding SetSelectedItemCommand}"
-                CommandParameter="{StaticResource 3}"
-                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.SetSingleSelectedItemButtonId3}"
-                Content="Set Selected Item 3" />
-    </StackPanel>
+                <Button Command="{Binding SetSelectedItemCommand}"
+                        CommandParameter="{StaticResource 3}"
+                        AutomationProperties.AutomationId="{x:Static auto:AutomationIds.SetSingleSelectedItemButtonId3}"
+                        Content="Set Selected Item 3" />
+            </StackPanel>
+        </Expander.Content>
+    </Expander>
 </UserControl>

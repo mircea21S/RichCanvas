@@ -18,64 +18,71 @@
         <s:Boolean x:Key="TrueValue">True</s:Boolean>
     </UserControl.Resources>
 
-    <StackPanel>
-        <Button Command="{Binding AddPositionedRectangleCommand}"
-                CommandParameter="{StaticResource FalseValue}"
-                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddPositionedRectangleButtonId}">
-            <Button.Content>
-                <TextBlock TextWrapping="Wrap"
-                           TextAlignment="Center">
-                    Add positioned Rectangle
-                </TextBlock>
-            </Button.Content>
-        </Button>
+    <Expander IsExpanded="True">
+        <Expander.Header>
+            <TextBlock Text="Drawing State Tests" />
+        </Expander.Header>
+        <Expander.Content>
+            <StackPanel>
+                <Button Command="{Binding AddPositionedRectangleCommand}"
+                        CommandParameter="{StaticResource FalseValue}"
+                        AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddPositionedRectangleButtonId}">
+                    <Button.Content>
+                        <TextBlock TextWrapping="Wrap"
+                                   TextAlignment="Center">
+                            Add positioned Rectangle
+                        </TextBlock>
+                    </Button.Content>
+                </Button>
 
-        <Button Command="{Binding AddPositionedRectangleCommand}"
-                CommandParameter="{StaticResource TrueValue}"
-                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddImmutablePositionedRectangleButtonId}">
-            <Button.Content>
-                <TextBlock TextWrapping="Wrap"
-                           TextAlignment="Center">
-                    Add immutable pos. Rectangle
-                </TextBlock>
-            </Button.Content>
-        </Button>
+                <Button Command="{Binding AddPositionedRectangleCommand}"
+                        CommandParameter="{StaticResource TrueValue}"
+                        AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddImmutablePositionedRectangleButtonId}">
+                    <Button.Content>
+                        <TextBlock TextWrapping="Wrap"
+                                   TextAlignment="Center">
+                            Add immutable pos. Rectangle
+                        </TextBlock>
+                    </Button.Content>
+                </Button>
 
-        <Button Command="{Binding AddDrawnRectangleCommand}"
-                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddDrawnRectangleButtonId}"
-                Content="Add drawn rectangle">
-        </Button>
+                <Button Command="{Binding AddDrawnRectangleCommand}"
+                        AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddDrawnRectangleButtonId}"
+                        Content="Add drawn rectangle">
+                </Button>
 
-        <Button Command="{Binding AddEmptyItemCommand}"
-                CommandParameter="{x:Type local:RichItemContainerModel}"
-                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddEmptyRectangleButtonId}"
-                Content="Add empty rectangle">
-        </Button>
+                <Button Command="{Binding AddEmptyItemCommand}"
+                        CommandParameter="{x:Type local:RichItemContainerModel}"
+                        AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddEmptyRectangleButtonId}"
+                        Content="Add empty rectangle">
+                </Button>
 
-        <Button Command="{Binding AddEmptyItemCommand}"
-                CommandParameter="{x:Type models:Line}"
-                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddEmptyLineButtonId}"
-                Content="Add Empty Line"></Button>
+                <Button Command="{Binding AddEmptyItemCommand}"
+                        CommandParameter="{x:Type models:Line}"
+                        AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddEmptyLineButtonId}"
+                        Content="Add Empty Line"></Button>
 
-        <CheckBox IsChecked="{Binding ShouldExecuteDrawingEndedCommand, Mode=TwoWay}"
-                  Content="Execute Drawing Ended Command"
-                  AutomationProperties.AutomationId="{x:Static auto:AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId}" />
+                <CheckBox IsChecked="{Binding ShouldExecuteDrawingEndedCommand, Mode=TwoWay}"
+                          Content="Execute Drawing Ended Command"
+                          AutomationProperties.AutomationId="{x:Static auto:AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId}" />
 
-        <Button Command="{Binding AddItemOutsideViewportCommand}"
-                CommandParameter="{x:Static vm:Direction.Top}"
-                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddItemTopOutsideViewportButtonId}"
-                Content="Add Item Top Outside Viewport"></Button>
-        <Button Command="{Binding AddItemOutsideViewportCommand}"
-                CommandParameter="{x:Static vm:Direction.Left}"
-                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddItemLeftOutsideViewportButtonId}"
-                Content="Add Item Left Outside Viewport"></Button>
-        <Button Command="{Binding AddItemOutsideViewportCommand}"
-                CommandParameter="{x:Static vm:Direction.Bottom}"
-                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddItemBottomOutsideViewportButtonId}"
-                Content="Add Item Bottom Outside Viewport"></Button>
-        <Button Command="{Binding AddItemOutsideViewportCommand}"
-                CommandParameter="{x:Static vm:Direction.Right}"
-                AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddItemRightOutsideViewportButtonId}"
-                Content="Add Item Right Outside Viewport"></Button>
-    </StackPanel>
+                <Button Command="{Binding AddItemOutsideViewportCommand}"
+                        CommandParameter="{x:Static vm:Direction.Top}"
+                        AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddItemTopOutsideViewportButtonId}"
+                        Content="Add Item Top Outside Viewport"></Button>
+                <Button Command="{Binding AddItemOutsideViewportCommand}"
+                        CommandParameter="{x:Static vm:Direction.Left}"
+                        AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddItemLeftOutsideViewportButtonId}"
+                        Content="Add Item Left Outside Viewport"></Button>
+                <Button Command="{Binding AddItemOutsideViewportCommand}"
+                        CommandParameter="{x:Static vm:Direction.Bottom}"
+                        AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddItemBottomOutsideViewportButtonId}"
+                        Content="Add Item Bottom Outside Viewport"></Button>
+                <Button Command="{Binding AddItemOutsideViewportCommand}"
+                        CommandParameter="{x:Static vm:Direction.Right}"
+                        AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddItemRightOutsideViewportButtonId}"
+                        Content="Add Item Right Outside Viewport"></Button>
+            </StackPanel>
+        </Expander.Content>
+    </Expander>
 </UserControl>
