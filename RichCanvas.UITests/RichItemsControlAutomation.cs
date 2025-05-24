@@ -18,7 +18,9 @@ namespace RichCanvas.UITests
     public partial class RichItemsControlAutomation : AutomationElement
     {
         public Point ViewportLocation => RichItemsControlData.ViewportLocation.AsDrawingPoint();
-        public Size ViewportSize => new Size((int)RichItemsControlData.ViewportSize.Width, (int)RichItemsControlData.ViewportSize.Height);
+
+        public Size ViewportSizeInteger => new Size((int)RichItemsControlData.ViewportSize.Width, (int)RichItemsControlData.ViewportSize.Height);
+
         public RichItemContainerAutomation[] Items
         {
             get
@@ -161,17 +163,17 @@ namespace RichCanvas.UITests
             }
         }
 
-        public void DragContainerOutsideViewportWithOffset(RichItemContainerAutomation richItemContainer, Direction direction, int offsetDistance)
+        public void DragContainerOutsideViewportWithOffset(RichItemContainerAutomation richItemContainer, Direction direction, int offsetDistance, System.Windows.Size visualViewportSize)
         {
             var containerLocation = richItemContainer.BoundingRectangle.Location;
             var currentItemBounds = richItemContainer.BoundingRectangle;
             var offset = direction == Direction.Left ? new Point(offsetDistance, 0) : new Point(0, 0);
             Point draggingEndPoint = direction switch
             {
-                Direction.Left => new Point(ViewportLocation.X - offsetDistance, containerLocation.Y),
-                Direction.Right => new Point(ViewportSize.Width - currentItemBounds.Width + offsetDistance, containerLocation.Y),
-                Direction.Up => new Point(containerLocation.X, ViewportLocation.Y - offsetDistance),
-                Direction.Down => new Point(containerLocation.X, ViewportSize.Height - currentItemBounds.Height + offsetDistance),
+                Direction.Left => new Point(-offsetDistance, containerLocation.Y),
+                Direction.Right => new Point((int)visualViewportSize.Width - currentItemBounds.Width + offsetDistance, containerLocation.Y),
+                Direction.Up => new Point(containerLocation.X, -offsetDistance),
+                Direction.Down => new Point(containerLocation.X, (int)visualViewportSize.Height - currentItemBounds.Height + offsetDistance),
                 _ => throw new NotImplementedException(),
             };
 
@@ -179,17 +181,21 @@ namespace RichCanvas.UITests
             Input.WithGesture(RichCanvasGestures.Drag).Drag(containerLocation, draggingEndPoint.ToCanvasDrawingPoint());
         }
 
-        public void DefferedDragContainerOutsideViewportWithOffset(RichItemContainerAutomation richItemContainer, Direction direction, int offsetBetweenPoints, Action<Point, int> assertStepAction)
+        public void DefferedDragContainerOutsideViewportWithOffset(RichItemContainerAutomation richItemContainer,
+            Direction direction,
+            int offsetBetweenPoints,
+            Action<Point, int> assertStepAction,
+            System.Windows.Size visualViewportSize)
         {
             var currentItemBounds = richItemContainer.BoundingRectangle;
             var containerLocation = currentItemBounds.Location;
 
             Point firstDraggingPoint = direction switch
             {
-                Direction.Left => new Point(ViewportLocation.X - offsetBetweenPoints, containerLocation.Y),
-                Direction.Right => new Point(ViewportSize.Width - currentItemBounds.Width + offsetBetweenPoints, containerLocation.Y),
-                Direction.Up => new Point(containerLocation.X, ViewportLocation.Y - offsetBetweenPoints),
-                Direction.Down => new Point(containerLocation.X, ViewportSize.Height - currentItemBounds.Height + offsetBetweenPoints),
+                Direction.Left => new Point(-offsetBetweenPoints, containerLocation.Y),
+                Direction.Right => new Point((int)visualViewportSize.Width - currentItemBounds.Width + offsetBetweenPoints, containerLocation.Y),
+                Direction.Up => new Point(containerLocation.X, -offsetBetweenPoints),
+                Direction.Down => new Point(containerLocation.X, (int)visualViewportSize.Height - currentItemBounds.Height + offsetBetweenPoints),
                 _ => throw new NotImplementedException(),
             };
 
@@ -197,22 +203,26 @@ namespace RichCanvas.UITests
             Input.WithGesture(RichCanvasGestures.Drag).DefferedDrag(containerLocation, data, assertStepAction);
         }
 
-        public void DragCurrentSelectionOutsideViewport(RichItemContainerAutomation fromContainer, Direction direction)
-            => DragContainerOutsideViewportWithOffset(fromContainer, direction, 0);
+        public void DragCurrentSelectionOutsideViewport(RichItemContainerAutomation fromContainer, Direction direction, System.Windows.Size visualViewportSize)
+            => DragContainerOutsideViewportWithOffset(fromContainer, direction, 0, visualViewportSize);
 
-        public void DefferedDragCurrentSelectionOutsideViewport(RichItemContainerAutomation fromContainer, Direction direction, Action<Point, int> assertStepAction, int stepOffset = 0)
-            => DefferedDragContainerOutsideViewportWithOffset(fromContainer, direction, stepOffset, assertStepAction);
+        public void DefferedDragCurrentSelectionOutsideViewport(RichItemContainerAutomation fromContainer,
+            Direction direction,
+            Action<Point, int> assertStepAction,
+            System.Windows.Size visualViewportSize,
+            int stepOffset = 0)
+            => DefferedDragContainerOutsideViewportWithOffset(fromContainer, direction, stepOffset, assertStepAction, visualViewportSize);
 
-        public void DrawEmptyContainer(Direction direction, int offset, Action assertCallbackAction)
+        public void DrawEmptyContainer(System.Windows.Size visualViewportSize, Direction direction, int offset, Action assertCallbackAction)
         {
             ParentWindow.InvokeButton(AutomationIds.AddEmptyRectangleButtonId);
-            var viewportCenter = new Point(ViewportSize.Width / 2, ViewportSize.Height / 2);
+            var viewportCenter = new Point((int)visualViewportSize.Width / 2, (int)visualViewportSize.Height / 2);
             Point draggingEndPoint = direction switch
             {
-                Direction.Left => new Point(ViewportLocation.X - offset, viewportCenter.Y),
-                Direction.Right => new Point(ViewportSize.Width + offset, viewportCenter.Y),
-                Direction.Up => new Point(viewportCenter.X, ViewportLocation.Y - offset),
-                Direction.Down => new Point(viewportCenter.X, ViewportSize.Height + offset),
+                Direction.Left => new Point(-offset, viewportCenter.Y),
+                Direction.Right => new Point((int)visualViewportSize.Width + offset, viewportCenter.Y),
+                Direction.Up => new Point(viewportCenter.X, -offset),
+                Direction.Down => new Point(viewportCenter.X, (int)visualViewportSize.Height + offset),
                 _ => throw new NotImplementedException(),
             };
             Input.WithGesture(RichCanvasGestures.Drawing).DefferedDrag(viewportCenter, (draggingEndPoint.ToCanvasDrawingPoint(), assertCallbackAction));
@@ -225,7 +235,7 @@ namespace RichCanvas.UITests
 
         public void ResetViewportLocation() => ParentWindow.InvokeButton(AutomationIds.ResetViewportLocationButtonId);
 
-        public void PanItemOutsideViewport(RichItemContainerAutomation itemContainer, Direction direction, int outsideDistance)
+        public void PanItemOutsideViewport(RichItemContainerAutomation itemContainer, Direction direction, int outsideDistance, System.Windows.Size visualViewportSize)
         {
             Point panningStartPoint = direction switch
             {
@@ -237,10 +247,10 @@ namespace RichCanvas.UITests
             };
             Point outsideViewportPoint = direction switch
             {
-                Direction.Right => new Point(ViewportSize.Width + outsideDistance, itemContainer.BoundingRectangle.Top),
-                Direction.Left => new Point(itemContainer.BoundingRectangle.Left - ViewportLocation.X - outsideDistance, itemContainer.BoundingRectangle.Top),
-                Direction.Up => new Point(itemContainer.BoundingRectangle.Left, ViewportLocation.Y - outsideDistance),
-                Direction.Down => new Point(itemContainer.BoundingRectangle.Left, ViewportSize.Height + outsideDistance),
+                Direction.Right => new Point((int)visualViewportSize.Width + outsideDistance, itemContainer.BoundingRectangle.Top),
+                Direction.Left => new Point(itemContainer.BoundingRectangle.Left - outsideDistance, itemContainer.BoundingRectangle.Top),
+                Direction.Up => new Point(itemContainer.BoundingRectangle.Left, -outsideDistance),
+                Direction.Down => new Point(itemContainer.BoundingRectangle.Left, (int)visualViewportSize.Height + outsideDistance),
                 _ => throw new NotImplementedException()
             };
             Pan(panningStartPoint, outsideViewportPoint.ToCanvasDrawingPoint());
