@@ -1,4 +1,5 @@
-﻿using FlaUI.Core.Input;
+﻿using FlaUI.Core.AutomationElements;
+using FlaUI.Core.Input;
 using RichCanvas.Gestures;
 using RichCanvas.UITests.Helpers;
 using RichCanvasUITests.App.Automation;
@@ -27,5 +28,23 @@ namespace RichCanvas.UITests
         }
 
         public void ResetZoom() => ParentWindow.InvokeButton(AutomationIds.ResetViewportZoomButtonId);
+
+        public void Zoom(bool zoomIn)
+        {
+            if (zoomIn)
+            {
+                ZoomIn();
+            }
+            else
+            {
+                ZoomOut();
+            }
+        }
+
+        public void SetViewportZoom(double zoomValue)
+        {
+            var viewportZoomTextBox = ParentWindow.FindFirstDescendant(d => d.ByAutomationId(AutomationIds.ViewportZoomTextBoxId)).AsTextBox();
+            viewportZoomTextBox.Patterns.Value.Pattern.SetValue(zoomValue.ToString());
+        }
     }
 }

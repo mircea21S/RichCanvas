@@ -11,8 +11,12 @@ namespace RichCanvas.UITests.Tests
         /// </summary>
         public const double RichCanvasDemoTitleBarHeight = 23;
 
+        private readonly Size _visualViewportSize;
+
         protected RichItemsControlAutomation RichItemsControl => Window.FindFirstDescendant(d => d.ByAutomationId("source")).AsRichItemsControlAutomation(Window);
         protected Size ViewportSize => RichItemsControl?.RichItemsControlData?.ViewportSize ?? new Size(1187, 800);
+        protected Size VisualViewportSize => _visualViewportSize;
+        protected System.Drawing.Point VisualViewportCenter => new System.Drawing.Point((int)VisualViewportSize.Width / 2, (int)VisualViewportSize.Height / 2);
         protected System.Drawing.Point ViewportCenter => new System.Drawing.Point((int)ViewportSize.Width / 2, (int)ViewportSize.Height / 2);
         protected Point ViewportLocation => RichItemsControl?.RichItemsControlData?.ViewportLocation ?? new Point(0, 0);
         protected bool ShouldRestartApplication { get; set; }
@@ -20,6 +24,7 @@ namespace RichCanvas.UITests.Tests
 
         public RichCanvasTestAppTest()
         {
+            _visualViewportSize = new Size(RichItemsControl.RichItemsControlData.ViewportSize.Width, RichItemsControl.RichItemsControlData.ViewportSize.Height);
         }
 
         [SetUp]
