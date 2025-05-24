@@ -29,7 +29,7 @@ namespace RichCanvas.UITests.Tests.Zooming
             Mouse.Position = desiredMousePosition;
 
             // act
-            Zoom(zoomIn);
+            RichItemsControl.Zoom(zoomIn);
 
             // assert
             Mouse.Position.Should().Be(desiredMousePosition);
@@ -44,7 +44,7 @@ namespace RichCanvas.UITests.Tests.Zooming
             var initialZoom = RichItemsControl.ViewportZoom;
 
             // act
-            Zoom(zoomIn);
+            RichItemsControl.Zoom(zoomIn);
 
             // assert
             double expectedViewportZoom = zoomIn
@@ -78,7 +78,7 @@ namespace RichCanvas.UITests.Tests.Zooming
             var mousePositionBeforeZooming = RichItemsControl.RichItemsControlData.MousePosition;
 
             // act
-            Zoom(zoomIn);
+            RichItemsControl.Zoom(zoomIn);
 
             // assert
             var mousePositionAfterZooming = RichItemsControl.RichItemsControlData.MousePosition;
@@ -99,7 +99,7 @@ namespace RichCanvas.UITests.Tests.Zooming
             var zoomBefore = RichItemsControl.ViewportZoom;
 
             // act
-            Zoom(zoomIn);
+            RichItemsControl.Zoom(zoomIn);
 
             // assert
             if (zoomIn)
@@ -124,7 +124,7 @@ namespace RichCanvas.UITests.Tests.Zooming
             // Zoom in even though the max zoom is reached (that's why we add 4) just for test purposes
             for (int i = 0; i < noOfZoomsUntilMax + 4; i++)
             {
-                Zoom(true);
+                RichItemsControl.Zoom(true);
             }
 
             // assert
@@ -143,7 +143,7 @@ namespace RichCanvas.UITests.Tests.Zooming
             // Zoom out even though the max zoom is reached (that's why we add 4) just for test purposes
             for (int i = 0; i < noOfZoomsUntilMax + 4; i++)
             {
-                Zoom(false);
+                RichItemsControl.Zoom(false);
             }
 
             // assert
@@ -159,48 +159,44 @@ namespace RichCanvas.UITests.Tests.Zooming
 
             // act
             Mouse.Position = canvasTopLeftCorner;
-            Zoom(false);
-            Zoom(true);
-            Zoom(true);
-            Zoom(true);
-            Zoom(false);
-            Zoom(false);
-            Zoom(false);
+            RichItemsControl.Zoom(false);
+            RichItemsControl.Zoom(true);
+            RichItemsControl.Zoom(true);
+            RichItemsControl.Zoom(true);
+            RichItemsControl.Zoom(false);
+            RichItemsControl.Zoom(false);
+            RichItemsControl.Zoom(false);
 
             // assert
             RichItemsControl.RichItemsControlData.MousePosition.Should().Be(RichItemsControl.ViewportLocation.AsWindowsPoint());
         }
 
-        [TestCase("2")]
-        [TestCase("3")]
-        [TestCase("1.4")]
-        [TestCase("1.2")]
-        [TestCase("0.553")]
-        [TestCase("0.1")]
-        [TestCase("0.8")]
-        [TestCase("0.02")]
+        [TestCase(2)]
+        [TestCase(3)]
+        [TestCase(1.4)]
+        [TestCase(1.2)]
+        [TestCase(0.553)]
+        [TestCase(0.1)]
+        [TestCase(0.8)]
+        [TestCase(0.02)]
         [Test]
-        public void RichCanvas_WhenViewportZoomIsSetThroughBinding_ShouldUpdateZoom(string viewportZoomValue)
+        public void RichCanvas_WhenViewportZoomIsSetThroughBinding_ShouldUpdateZoom(double viewportZoomValue)
         {
-            // arrange
-            var viewportZoomTextBox = Window.FindFirstDescendant(d => d.ByAutomationId(AutomationIds.ViewportZoomTextBoxId)).AsTextBox();
-
-            // act
-            viewportZoomTextBox.Patterns.Value.Pattern.SetValue(viewportZoomValue);
+            // arrange & act
+            RichItemsControl.SetViewportZoom(viewportZoomValue);
             // lose focus to trigger the binding
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.TAB);
 
             // assert
-            var setZoomValue = double.Parse(viewportZoomValue);
-            if (setZoomValue > RichItemsControl.RichItemsControlData.MaxZoom)
+            if (viewportZoomValue > RichItemsControl.RichItemsControlData.MaxZoom)
             {
-                setZoomValue = RichItemsControl.RichItemsControlData.MaxZoom;
+                viewportZoomValue = RichItemsControl.RichItemsControlData.MaxZoom;
             }
-            else if (setZoomValue < RichItemsControl.RichItemsControlData.MinZoom)
+            else if (viewportZoomValue < RichItemsControl.RichItemsControlData.MinZoom)
             {
-                setZoomValue = RichItemsControl.RichItemsControlData.MinZoom;
+                viewportZoomValue = RichItemsControl.RichItemsControlData.MinZoom;
             }
-            RichItemsControl.ViewportZoom.Should().Be(setZoomValue);
+            RichItemsControl.ViewportZoom.Should().Be(viewportZoomValue);
         }
 
         [Test]
@@ -213,7 +209,7 @@ namespace RichCanvas.UITests.Tests.Zooming
             // act
             for (int i = 0; i < 4; i++)
             {
-                Zoom(true);
+                RichItemsControl.Zoom(true);
             }
 
             // assert
@@ -236,13 +232,13 @@ namespace RichCanvas.UITests.Tests.Zooming
             Mouse.Position = new Point(203, 303).ToCanvasDrawingPoint();
             for (int i = 0; i < 6; i++)
             {
-                Zoom(true);
+                RichItemsControl.Zoom(true);
             }
 
             // act
             for (int i = 0; i < 3; i++)
             {
-                Zoom(false);
+                RichItemsControl.Zoom(false);
             }
 
             // assert
@@ -255,18 +251,6 @@ namespace RichCanvas.UITests.Tests.Zooming
             RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().BeApproximately(expectedScrollOffset.X < 0 ? 0 : expectedScrollOffset.X, doubleTolerance);
             RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().BeApproximately(expectedExtent.Height, doubleTolerance);
             RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().BeApproximately(expectedExtent.Width, doubleTolerance);
-        }
-
-        private void Zoom(bool zoomIn)
-        {
-            if (zoomIn)
-            {
-                RichItemsControl.ZoomIn();
-            }
-            else
-            {
-                RichItemsControl.ZoomOut();
-            }
         }
     }
 }

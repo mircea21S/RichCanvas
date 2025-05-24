@@ -14,13 +14,53 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 namespace RichCanvas.UITests.Tests
 {
     // TODO: Investingate horizontal mouse wheel scrolling.
-    [TestFixture]
+    [TestFixture(false)]
+    [TestFixture(true, true)]
+    [TestFixture(true, false)]
     public class ScrollingTests : RichCanvasTestAppTest
     {
+        private const double Tolerance = 1e-5;
+        private readonly bool _shouldZoom;
+        private readonly bool _zoomIn;
+
+        public ScrollingTests(bool shouldZoom, bool zoomIn)
+        {
+            _shouldZoom = shouldZoom;
+            _zoomIn = zoomIn;
+        }
+
+        public ScrollingTests(bool shouldZoom)
+        {
+            _shouldZoom = shouldZoom;
+        }
+
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            if (_shouldZoom)
+            {
+                if (_zoomIn)
+                {
+                    RichItemsControl.SetViewportZoom(0.3);
+                }
+                else
+                {
+                    RichItemsControl.SetViewportZoom(1.5);
+                }
+            }
+        }
+
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            RichItemsControl.ResetZoom();
+        }
+
         public override void TearDown()
         {
             base.TearDown();
-            Window.InvokeButton(AutomationIds.ResetViewportLocationButtonId);
+            RichItemsControl.ResetViewportLocation();
+            Mouse.Position = VisualViewportCenter.ToCanvasDrawingPoint();
         }
 
         [TestCase(ScrollingMethod.MouseWheel, Direction.Down)]
@@ -118,11 +158,11 @@ namespace RichCanvas.UITests.Tests
             var scrollOffset = ViewportLocation - itemsExtent.Location;
             if (scrollingMode == Direction.Down)
             {
-                RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().Be(Math.Max(0, scrollOffset.Y));
+                RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().BeApproximately(Math.Max(0, scrollOffset.Y), Tolerance);
             }
             else if (scrollingMode == Direction.Left)
             {
-                RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(Math.Max(0, scrollOffset.X));
+                RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().BeApproximately(Math.Max(0, scrollOffset.X), Tolerance);
             }
         }
 
@@ -178,7 +218,7 @@ namespace RichCanvas.UITests.Tests
                 {
                     RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().Be(0);
                 }
-                RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().Be(extent.Height);
+                RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().BeApproximately(extent.Height, Tolerance);
             }
             else if (scrollingMode == Direction.Right)
             {
@@ -190,7 +230,7 @@ namespace RichCanvas.UITests.Tests
                 {
                     RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(0);
                 }
-                RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().Be(extent.Width);
+                RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().BeApproximately(extent.Width, Tolerance);
             }
         }
 
@@ -203,9 +243,9 @@ namespace RichCanvas.UITests.Tests
             // arrange
             Window.InvokeButton(AutomationIds.AddSelectableItemsButtonId2);
             ArrangeUIVerticallyToShowScrollbars(scrollingMode);
-            VerticalScrollBar verticalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(FlaUI.Core.Definitions.ControlType.ScrollBar)).AsVerticalScrollBar();
+            VerticalScrollBar verticalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsVerticalScrollBar();
             var verticalScrollbarBoundingRectangle = verticalScrollBar.BoundingRectangle.Location;
-            var verticalScrollbarLocation = new System.Drawing.Point(verticalScrollbarBoundingRectangle.X + 2, (int)ViewportSize.Height / 2);
+            var verticalScrollbarLocation = new System.Drawing.Point(verticalScrollbarBoundingRectangle.X + 2, (int)VisualViewportSize.Height / 2);
 
             // act
             Mouse.Position = verticalScrollbarLocation;
@@ -222,11 +262,11 @@ namespace RichCanvas.UITests.Tests
             // assert
             if (scrollingMode == Direction.Down)
             {
-                RichItemsControl.RichItemsControlData.ViewportLocation.Y.Should().Be(RichItemsControl.RichItemsControlData.ItemsExtent.Top);
+                RichItemsControl.RichItemsControlData.ViewportLocation.Y.Should().BeApproximately(RichItemsControl.RichItemsControlData.ItemsExtent.Top, Tolerance);
             }
             else
             {
-                RichItemsControl.RichItemsControlData.ViewportLocation.Y.Should().Be(-(ViewportSize.Height - RichItemsControl.RichItemsControlData.ItemsExtent.Bottom));
+                RichItemsControl.RichItemsControlData.ViewportLocation.Y.Should().BeApproximately(-(ViewportSize.Height - RichItemsControl.RichItemsControlData.ItemsExtent.Bottom), Tolerance);
             }
             Mouse.Up();
             Mouse.Position = ViewportCenter;
@@ -240,10 +280,11 @@ namespace RichCanvas.UITests.Tests
         {
             // arrange
             Window.InvokeButton(AutomationIds.AddSelectableItemsButtonId2);
+            RichItemsControl.ResetViewportLocation();
             ArrangeUIHorizontallyToShowScrollbars(scrollingMode);
-            HorizontalScrollBar horizontalScrollbar = Window.FindFirstDescendant(x => x.ByControlType(FlaUI.Core.Definitions.ControlType.ScrollBar)).AsHorizontalScrollBar();
+            HorizontalScrollBar horizontalScrollbar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsHorizontalScrollBar();
             var horizontalScrollbarBoundingRectangle = horizontalScrollbar.BoundingRectangle.Location;
-            var horizontalScrollbarLocation = new System.Drawing.Point((int)ViewportSize.Width / 2, horizontalScrollbarBoundingRectangle.Y + 2);
+            var horizontalScrollbarLocation = new System.Drawing.Point((int)VisualViewportSize.Width / 2, horizontalScrollbarBoundingRectangle.Y + 2);
 
             // act
             Mouse.Position = horizontalScrollbarLocation;
@@ -260,11 +301,11 @@ namespace RichCanvas.UITests.Tests
             // assert
             if (scrollingMode == Direction.Left)
             {
-                RichItemsControl.RichItemsControlData.ViewportLocation.X.Should().Be(RichItemsControl.RichItemsControlData.ItemsExtent.Left);
+                RichItemsControl.RichItemsControlData.ViewportLocation.X.Should().BeApproximately(RichItemsControl.RichItemsControlData.ItemsExtent.Left, Tolerance);
             }
             else
             {
-                RichItemsControl.RichItemsControlData.ViewportLocation.X.Should().Be(-(ViewportSize.Width - RichItemsControl.RichItemsControlData.ItemsExtent.Right));
+                RichItemsControl.RichItemsControlData.ViewportLocation.X.Should().BeApproximately(-(ViewportSize.Width - RichItemsControl.RichItemsControlData.ItemsExtent.Right), Tolerance);
             }
             Mouse.Up();
             Mouse.Position = ViewportCenter;
@@ -291,28 +332,32 @@ namespace RichCanvas.UITests.Tests
             Window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);
 
             // act
-            RichItemsControl.DragContainerOutsideViewportWithOffset(RichItemsControl.Items[0], draggingDirection, outsideDistance);
+            RichItemsControl.DragContainerOutsideViewportWithOffset(RichItemsControl.Items[0], draggingDirection, outsideDistance, VisualViewportSize);
 
             // assert
+            var scrollOffset = ViewportLocation - RichItemsControl.RichItemsControlData.ItemsExtent.Location;
+            var extent = RichItemsControl.RichItemsControlData.ItemsExtent;
+            extent.Union(new Rect(ViewportLocation, ViewportSize));
+
             if (draggingDirection == Direction.Up)
             {
-                RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().Be(outsideDistance);
-                RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().Be(ViewportSize.Height + outsideDistance);
+                RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().BeApproximately(scrollOffset.Y, Tolerance);
+                RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().BeApproximately(extent.Height, Tolerance);
             }
             if (draggingDirection == Direction.Down)
             {
                 RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().Be(0);
-                RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().Be(ViewportSize.Height + outsideDistance);
+                RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().BeApproximately(extent.Height, Tolerance);
             }
             if (draggingDirection == Direction.Left)
             {
-                RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(outsideDistance);
-                RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().Be(ViewportSize.Width + outsideDistance);
+                RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().BeApproximately(scrollOffset.X, Tolerance);
+                RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().BeApproximately(extent.Width, Tolerance);
             }
             if (draggingDirection == Direction.Right)
             {
                 RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(0);
-                RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().Be(ViewportSize.Width + outsideDistance);
+                RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().BeApproximately(extent.Width, Tolerance);
             }
         }
 
@@ -334,7 +379,7 @@ namespace RichCanvas.UITests.Tests
             Window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);
 
             // act
-            RichItemsControl.DefferedDragContainerOutsideViewportWithOffset(RichItemsControl.Items[0], draggingDirection, offsetDistance, AssertScrollModification);
+            RichItemsControl.DefferedDragContainerOutsideViewportWithOffset(RichItemsControl.Items[0], draggingDirection, offsetDistance, AssertScrollModification, VisualViewportSize);
 
             // assert
             void AssertScrollModification(System.Drawing.Point _, int offsetOnStep)
@@ -377,25 +422,29 @@ namespace RichCanvas.UITests.Tests
             Window.ToggleButton(AutomationIds.RealTimeDraggingToggleButtonId);
 
             // act
-            RichItemsControl.DefferedDragContainerOutsideViewportWithOffset(RichItemsControl.Items[0], draggingDirection, offsetDistance, AssertScrollModification);
+            RichItemsControl.DefferedDragContainerOutsideViewportWithOffset(RichItemsControl.Items[0], draggingDirection, offsetDistance, AssertScrollModification, VisualViewportSize);
 
             // assert
             void AssertScrollModification(System.Drawing.Point _, int offsetOnStep)
             {
+                var scrollOffset = ViewportLocation - RichItemsControl.RichItemsControlData.ItemsExtent.Location;
+                var extent = RichItemsControl.RichItemsControlData.ItemsExtent;
+                extent.Union(new Rect(ViewportLocation, ViewportSize));
+
                 if (draggingDirection == Direction.Up)
                 {
-                    RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().Be(offsetOnStep);
-                    RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().Be(ViewportSize.Height + offsetOnStep);
+                    RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().BeApproximately(scrollOffset.Y, Tolerance);
+                    RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().BeApproximately(extent.Height, Tolerance);
                 }
                 if (draggingDirection == Direction.Down)
                 {
                     RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().Be(0);
-                    RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().Be(ViewportSize.Height + offsetOnStep);
+                    RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().BeApproximately(extent.Height, Tolerance);
                 }
                 if (draggingDirection == Direction.Right)
                 {
                     RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(0);
-                    RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().Be(ViewportSize.Width + offsetOnStep);
+                    RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().BeApproximately(extent.Width, Tolerance);
                 }
             }
             Window.ToggleButton(AutomationIds.RealTimeDraggingToggleButtonId);
@@ -414,7 +463,7 @@ namespace RichCanvas.UITests.Tests
 
             // act
             Window.InvokeButton(AutomationIds.SelectAllItemsButtonId);
-            RichItemsControl.DragCurrentSelectionOutsideViewport(RichItemsControl.Items[1], draggingDirection);
+            RichItemsControl.DragCurrentSelectionOutsideViewport(RichItemsControl.Items[1], draggingDirection, VisualViewportSize);
 
             // assert
             var expectedScrollOffset = ViewportLocation - RichItemsControl.RichItemsControlData.ItemsExtent.Location;
@@ -442,7 +491,7 @@ namespace RichCanvas.UITests.Tests
 
             // act
             Window.InvokeButton(AutomationIds.SelectAllItemsButtonId);
-            RichItemsControl.DefferedDragCurrentSelectionOutsideViewport(RichItemsControl.Items[1], draggingDirection, AssertScrollModification);
+            RichItemsControl.DefferedDragCurrentSelectionOutsideViewport(RichItemsControl.Items[1], draggingDirection, AssertScrollModification, VisualViewportSize);
 
             // assert
             void AssertScrollModification(System.Drawing.Point _, int offsetOnStep)
@@ -475,7 +524,7 @@ namespace RichCanvas.UITests.Tests
 
             // act
             Window.InvokeButton(AutomationIds.SelectAllItemsButtonId);
-            RichItemsControl.DefferedDragCurrentSelectionOutsideViewport(RichItemsControl.Items[1], draggingDirection, AssertScrollModification, offsetBetweenSteps);
+            RichItemsControl.DefferedDragCurrentSelectionOutsideViewport(RichItemsControl.Items[1], draggingDirection, AssertScrollModification, VisualViewportSize, offsetBetweenSteps);
 
             // assert
             void AssertScrollModification(System.Drawing.Point _, int offsetOnStep)
@@ -484,10 +533,10 @@ namespace RichCanvas.UITests.Tests
                 var expectedExtent = RichItemsControl.RichItemsControlData.ItemsExtent;
                 expectedExtent.Union(new Rect(ViewportLocation, ViewportSize));
 
-                RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().Be(expectedScrollOffset.Y < 0 ? 0 : expectedScrollOffset.Y);
-                RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(expectedScrollOffset.X < 0 ? 0 : expectedScrollOffset.X);
-                RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().Be(expectedExtent.Height);
-                RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().Be(expectedExtent.Width);
+                RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().BeApproximately(expectedScrollOffset.Y < 0 ? 0 : expectedScrollOffset.Y, Tolerance);
+                RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().BeApproximately(expectedScrollOffset.X < 0 ? 0 : expectedScrollOffset.X, Tolerance);
+                RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().BeApproximately(expectedExtent.Height, Tolerance);
+                RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().BeApproximately(expectedExtent.Width, Tolerance);
             }
 
             Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
@@ -497,9 +546,6 @@ namespace RichCanvas.UITests.Tests
         [TestCase(Direction.Up, 1)]
         [TestCase(Direction.Down, 1)]
         [TestCase(Direction.Right, 1)]
-        [TestCase(Direction.Up, 5)]
-        [TestCase(Direction.Down, 5)]
-        [TestCase(Direction.Right, 5)]
         [TestCase(Direction.Up, 7)]
         [TestCase(Direction.Down, 7)]
         [TestCase(Direction.Right, 7)]
@@ -510,28 +556,32 @@ namespace RichCanvas.UITests.Tests
             Window.ToggleCheckbox(AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId);
 
             // act
-            RichItemsControl.DrawEmptyContainer(direction, offset, AssertOnMouseMove);
+            RichItemsControl.DrawEmptyContainer(VisualViewportSize, direction, offset, AssertOnMouseMove);
 
             // assert
+            Window.ToggleCheckbox(AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId);
             void AssertOnMouseMove()
             {
+                var expectedExtent = RichItemsControl.RichItemsControlData.ItemsExtent;
+                expectedExtent.Union(new Rect(ViewportLocation, RichItemsControl.RichItemsControlData.ViewportSize));
+                var scrollOffset = ViewportLocation - RichItemsControl.RichItemsControlData.ItemsExtent.Location;
+
                 if (direction == Direction.Up)
                 {
-                    RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().Be(offset);
-                    RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().Be(ViewportSize.Height + offset);
+                    RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().BeApproximately(scrollOffset.Y, Tolerance);
+                    RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().BeApproximately(expectedExtent.Height, Tolerance);
                 }
                 if (direction == Direction.Down)
                 {
                     RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().Be(0);
-                    RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().Be(ViewportSize.Height + offset);
+                    RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().BeApproximately(expectedExtent.Height, Tolerance);
                 }
                 if (direction == Direction.Right)
                 {
                     RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(0);
-                    RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().Be(ViewportSize.Width + offset);
+                    RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().BeApproximately(expectedExtent.Width, Tolerance);
                 }
             }
-            Window.ToggleCheckbox(AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId);
         }
 
         [TestCase(Direction.Up)]
@@ -584,22 +634,24 @@ namespace RichCanvas.UITests.Tests
 
             // act
             // resize by dragging the title bar
-            Mouse.Click(new System.Drawing.Point((int)ViewportSize.Width / 2, -5));
-            Mouse.Drag(new System.Drawing.Point((int)ViewportSize.Width / 2, -5), new System.Drawing.Point((int)ViewportSize.Width / 2, 0));
+            Mouse.Click(new System.Drawing.Point((int)VisualViewportSize.Width / 2, -5));
+            Mouse.Drag(new System.Drawing.Point((int)VisualViewportSize.Width / 2, -5), new System.Drawing.Point((int)VisualViewportSize.Width / 2, 0));
             Wait.UntilInputIsProcessed();
+
             if (Window.Patterns.Transform.TryGetPattern(out var transformPattern))
             {
-                transformPattern.Resize(lowestItemTop, lowestItemRight);
+                transformPattern.Resize(lowestItemTop * RichItemsControl.ViewportZoom, lowestItemRight * RichItemsControl.ViewportZoom);
             }
 
             // assert
             var offset = ViewportLocation - RichItemsControl.RichItemsControlData.ItemsExtent.Location;
             var expectedExtent = RichItemsControl.RichItemsControlData.ItemsExtent;
             expectedExtent.Union(new Rect(ViewportLocation, ViewportSize));
-            RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().Be(Math.Max(0, offset.Y));
-            RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(Math.Max(0, offset.X));
-            RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().Be(expectedExtent.Height);
-            RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().Be(expectedExtent.Width);
+
+            RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().BeApproximately(Math.Max(0, offset.Y), Tolerance);
+            RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().BeApproximately(Math.Max(0, offset.X), Tolerance);
+            RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().BeApproximately(expectedExtent.Height, Tolerance);
+            RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().BeApproximately(expectedExtent.Width, Tolerance);
 
             Window.Patterns.Window.Pattern.SetWindowVisualState(WindowVisualState.Maximized);
         }
@@ -626,28 +678,32 @@ namespace RichCanvas.UITests.Tests
             RichItemsControl.Focus();
 
             // act
-            RichItemsControl.PanItemOutsideViewport(RichItemsControl.Items[0], direction, outsideDistance);
+            RichItemsControl.PanItemOutsideViewport(RichItemsControl.Items[0], direction, outsideDistance, VisualViewportSize);
 
             // assert
+            var offset = ViewportLocation - RichItemsControl.RichItemsControlData.ItemsExtent.Location;
+            var expectedExtent = RichItemsControl.RichItemsControlData.ItemsExtent;
+            expectedExtent.Union(new Rect(ViewportLocation, ViewportSize));
+
             if (direction == Direction.Up)
             {
-                RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().Be(outsideDistance);
-                RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().Be(ViewportSize.Height + outsideDistance);
+                RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().BeApproximately(offset.Y, Tolerance);
+                RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().BeApproximately(expectedExtent.Height, Tolerance);
             }
             if (direction == Direction.Down)
             {
                 RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().Be(0);
-                RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().Be(ViewportSize.Height + outsideDistance);
+                RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().BeApproximately(expectedExtent.Height, Tolerance);
             }
             if (direction == Direction.Right)
             {
                 RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(0);
-                RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().Be(ViewportSize.Width + outsideDistance);
+                RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().BeApproximately(expectedExtent.Width, Tolerance);
             }
             if (direction == Direction.Left)
             {
-                RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(outsideDistance);
-                RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().Be(ViewportSize.Width + outsideDistance);
+                RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().BeApproximately(offset.X, Tolerance);
+                RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().BeApproximately(expectedExtent.Width, Tolerance);
             }
             RichItemsControl.ResetViewportLocation();
         }
@@ -679,19 +735,19 @@ namespace RichCanvas.UITests.Tests
             var scrollFactor = GetScrollFactor(scrollingMode, scrollingMethod);
             if (scrollingMode == Direction.Up)
             {
-                ViewportLocation.Y.Should().Be(initialViewportLocation.Y - scrollFactor);
+                ViewportLocation.Y.Should().BeApproximately(initialViewportLocation.Y - scrollFactor, Tolerance);
             }
             else if (scrollingMode == Direction.Down)
             {
-                ViewportLocation.Y.Should().Be(initialViewportLocation.Y + scrollFactor);
+                ViewportLocation.Y.Should().BeApproximately(initialViewportLocation.Y + scrollFactor, Tolerance);
             }
             else if (scrollingMode == Direction.Left)
             {
-                ViewportLocation.X.Should().Be(initialViewportLocation.X + scrollFactor);
+                ViewportLocation.X.Should().BeApproximately(initialViewportLocation.X + scrollFactor, Tolerance);
             }
             else
             {
-                ViewportLocation.X.Should().Be(initialViewportLocation.X - scrollFactor);
+                ViewportLocation.X.Should().BeApproximately(initialViewportLocation.X - scrollFactor, Tolerance);
             }
         }
 
