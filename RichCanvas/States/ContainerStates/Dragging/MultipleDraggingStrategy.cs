@@ -116,7 +116,7 @@ namespace RichCanvas.States.ContainerStates
                 }
 
                 // Correct the final position
-                if (Parent.EnableSnapping)
+                if (Parent.EnableGrid && Parent.EnableSnapping)
                 {
                     container.Left = Math.Round(container.Left / container.Host.GridSpacing) * container.Host.GridSpacing;
                     container.Top = Math.Round(container.Top / container.Host.GridSpacing) * container.Host.GridSpacing;
