@@ -116,6 +116,10 @@
                     BorderBrush="Black"
                     Margin="2">
                 <StackPanel>
+                    <CheckBox IsChecked="{Binding EnableGrid}"
+                              Content="Enable Grid" />
+                    <CheckBox IsChecked="{Binding EnableSnapping}"
+                              Content="Enable Snapping" />
                     <Button AutomationProperties.AutomationId="{x:Static auto:AutomationIds.ResetViewportLocationButtonId}"
                             Content="Reset Viewport Location"
                             Command="{Binding ResetViewportLocation}" />
@@ -147,6 +151,8 @@
                                          MinScale="{Binding ZoomingViewModel.MinScale, Mode=TwoWay}"
                                          MaxScale="{Binding ZoomingViewModel.MaxScale, Mode=TwoWay}"
                                          ScaleFactor="{Binding ZoomingViewModel.ScaleFactor, Mode=TwoWay}"
+                                         EnableGrid="{Binding EnableGrid, Mode=TwoWay}"
+                                         EnableSnapping="{Binding EnableSnapping, Mode=TwoWay}"
                                          Name="source">
                 <richCanvas:RichItemsControl.Resources>
                     <DataTemplate DataType="{x:Type local:RichItemContainerModel}">
