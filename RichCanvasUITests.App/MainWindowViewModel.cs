@@ -67,6 +67,20 @@ namespace RichCanvasUITests.App
             set => SetProperty(ref _viewportSize, value);
         }
 
+        private bool _enableGrid;
+        public bool EnableGrid
+        {
+            get => _enableGrid;
+            set => SetProperty(ref _enableGrid, value);
+        }
+
+        private bool _enableSnapping;
+        public bool EnableSnapping
+        {
+            get => _enableSnapping;
+            set => SetProperty(ref _enableSnapping, value);
+        }
+
         public SingleSelectionStateViewModel SingleSelectionState { get; }
         public MultipleSelectionStateViewModel MultipleSelectionState { get; }
         public DrawingStateViewModel DrawingState { get; }
