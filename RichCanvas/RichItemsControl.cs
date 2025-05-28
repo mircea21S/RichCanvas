@@ -891,7 +891,6 @@ namespace RichCanvas
                 ViewportLocation = new Point(x, y);
                 MousePosition = Mouse.GetPosition(ItemsHost);
 
-                //todo: update scroll when autopan
                 CurrentState?.HandleAutoPanning(new MouseEventArgs(Mouse.PrimaryDevice, 0));
             }
         }

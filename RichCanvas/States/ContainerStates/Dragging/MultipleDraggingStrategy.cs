@@ -69,30 +69,6 @@ namespace RichCanvas.States.ContainerStates
                         container.OnPreviewLocationChanged(new Point(container.Left + translateTransform.X, container.Top + translateTransform.Y));
                     }
                 }
-
-                // TODO: check this
-                //if (!container.Host.RealTimeDraggingEnabled)
-                //{
-                //    if (container == container.Host.ItemsHost?.BottomElement)
-                //    {
-                //        container.Host.ItemsHost.BottomElement = container;
-                //    }
-
-                //    if (container == container.Host.ItemsHost?.RightElement)
-                //    {
-                //        container.Host.ItemsHost.RightElement = container;
-                //    }
-
-                //    if (container == container.Host.ItemsHost?.TopElement)
-                //    {
-                //        container.Host.ItemsHost.TopElement = container;
-                //    }
-
-                //    if (container == container.Host.ItemsHost?.LeftElement)
-                //    {
-                //        container.Host.ItemsHost.LeftElement = container;
-                //    }
-                //}
             }
 
         }
