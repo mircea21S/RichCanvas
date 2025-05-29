@@ -4,5 +4,6 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/RichCanvas;component/Styles/RichItemsControlStyle.xaml"></ResourceDictionary>
         <ResourceDictionary Source="pack://application:,,,/RichCanvas;component/Styles/RichItemContainerStyle.xaml"></ResourceDictionary>
+        <ResourceDictionary Source="pack://application:,,,/RichCanvas;component/Styles/Converters.xaml"></ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
