@@ -159,7 +159,7 @@ namespace RichCanvas
         /// Gets or sets grid drawing viewport size.
         /// Default is 10.
         /// </summary>
-        public static DependencyProperty GridSpacingProperty = DependencyProperty.Register(nameof(GridSpacing), typeof(float), typeof(RichItemsControl), new FrameworkPropertyMetadata(10f));
+        public static DependencyProperty GridSpacingProperty = DependencyProperty.Register(nameof(GridSpacing), typeof(float), typeof(RichItemsControl), new FrameworkPropertyMetadata(20f));
         /// <summary>
         /// Gets or sets grid drawing viewport size.
         /// Default is 10.

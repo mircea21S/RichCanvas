@@ -8,6 +8,7 @@
         xmlns:auto="clr-namespace:RichCanvasUITests.App.Automation"
         xmlns:models="clr-namespace:RichCanvasUITests.App.Models"
         xmlns:richCanvas="clr-namespace:RichCanvas;assembly=RichCanvas"
+        xmlns:richCanvasConverters="clr-namespace:RichCanvas.Converters;assembly=RichCanvas"
         xmlns:statePresenters="clr-namespace:RichCanvasUITests.App.StatePresenters"
         mc:Ignorable="d"
         Title="MainWindow"
@@ -24,6 +25,16 @@
             <Setter Property="Margin"
                     Value="5,5,5,5" />
         </Style>
+        <GeometryDrawing x:Key="RectangleGridGeometry">
+            <GeometryDrawing.Pen>
+                <Pen Brush="DodgerBlue"
+                     Thickness="0.3" />
+            </GeometryDrawing.Pen>
+            <GeometryDrawing.Geometry>
+                <RectangleGeometry Rect="0,0,10,10" />
+            </GeometryDrawing.Geometry>
+        </GeometryDrawing>
+        <richCanvasConverters:UIntToRectConverter x:Key="UIntToRectConverter" />
     </Window.Resources>
 
     <Grid>
@@ -116,8 +127,7 @@
                     BorderBrush="Black"
                     Margin="2">
                 <StackPanel>
-                    <CheckBox IsChecked="{Binding EnableGrid}"
-                              Content="Enable Grid" />
+                    <TextBox Text="{Binding GridSpacing}" />
                     <CheckBox IsChecked="{Binding EnableSnapping}"
                               Content="Enable Snapping" />
                     <Button AutomationProperties.AutomationId="{x:Static auto:AutomationIds.ResetViewportLocationButtonId}"
@@ -136,8 +146,7 @@
         <ScrollViewer CanContentScroll="True"
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Auto">
-            <richCanvas:RichItemsControl Background="AliceBlue"
-                                         ItemsSource="{Binding Items}"
+            <richCanvas:RichItemsControl ItemsSource="{Binding Items}"
                                          SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                                          SelectedItems="{Binding SelectedItems}"
                                          RealTimeSelectionEnabled="{Binding RealTimeSelectionEnabled}"
@@ -152,7 +161,15 @@
                                          MaxScale="{Binding ZoomingViewModel.MaxScale, Mode=TwoWay}"
                                          ScaleFactor="{Binding ZoomingViewModel.ScaleFactor, Mode=TwoWay}"
                                          EnableSnapping="{Binding EnableSnapping, Mode=TwoWay}"
+                                         GridSpacing="{Binding GridSpacing, Mode=TwoWay}"
                                          Name="source">
+                <richCanvas:RichItemsControl.Background>
+                    <DrawingBrush TileMode="Tile"
+                                  ViewportUnits="Absolute"
+                                  Viewport="{Binding GridSpacing, ElementName=source, Converter={StaticResource UIntToRectConverter}}"
+                                  Transform="{Binding AppliedTransform, ElementName=source}"
+                                  Drawing="{StaticResource RectangleGridGeometry}" />
+                </richCanvas:RichItemsControl.Background>
                 <richCanvas:RichItemsControl.Resources>
                     <DataTemplate DataType="{x:Type local:RichItemContainerModel}">
                         <Rectangle Fill="Red">

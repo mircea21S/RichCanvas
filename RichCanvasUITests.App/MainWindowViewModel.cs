@@ -67,11 +67,11 @@ namespace RichCanvasUITests.App
             set => SetProperty(ref _viewportSize, value);
         }
 
-        private bool _enableGrid;
-        public bool EnableGrid
+        private int _gridSpacing = 20;
+        public int GridSpacing
         {
-            get => _enableGrid;
-            set => SetProperty(ref _enableGrid, value);
+            get => _gridSpacing;
+            set => SetProperty(ref _gridSpacing, value);
         }
 
         private bool _enableSnapping;
