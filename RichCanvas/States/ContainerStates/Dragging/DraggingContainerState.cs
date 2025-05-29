@@ -15,7 +15,7 @@ namespace RichCanvas.States.ContainerStates
 
         public override void Enter()
         {
-            _initialPosition = Mouse.GetPosition(Container?.Host?.ItemsHost);
+            _initialPosition = Mouse.GetPosition(Container.Host.ItemsHost);
             if (Container.IsSelectable)
             {
                 if (Container.Host.CanSelectMultipleItems)
@@ -24,23 +24,23 @@ namespace RichCanvas.States.ContainerStates
                 }
                 else
                 {
-                    Container?.Host?.UpdateSingleSelectedItem(Container);
+                    Container.Host.UpdateSingleSelectedItem(Container);
                 }
             }
             Container.Host.IsDragging = true;
             DraggingStrategy.OnItemsDragStarted();
-            Container?.RaiseDragStartedEvent(_initialPosition);
+            Container.RaiseDragStartedEvent(_initialPosition);
         }
 
         public override void HandleMouseMove(MouseEventArgs e)
         {
-            var currentPosition = e.GetPosition(Container?.Host?.ItemsHost);
+            var currentPosition = e.GetPosition(Container.Host.ItemsHost);
             var offset = currentPosition - _initialPosition;
             if (offset.X != 0 || offset.Y != 0)
             {
                 var offsetPoint = new Point(offset.X, offset.Y);
                 DraggingStrategy.OnItemsDragDelta(offsetPoint);
-                Container?.RaiseDragDeltaEvent(offsetPoint);
+                Container.RaiseDragDeltaEvent(offsetPoint);
 
                 _initialPosition = currentPosition;
             }

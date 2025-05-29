@@ -1,5 +1,6 @@
 ﻿using RichCanvas.Helpers;
 using RichCanvas.States.ContainerStates;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -23,7 +24,6 @@ namespace RichCanvas
     public class RichItemContainer : ContentControl
     {
         private const string ContentPresenterName = "PART_ContentPresenter";
-        private RichItemsControl? _host;
         private Stack<ContainerState> _states;
 
         public const double DefaultWidth = 1d;
@@ -220,10 +220,12 @@ namespace RichCanvas
         public Rect BoundingBox { get; private set; }
 
         public ContainerState CurrentState => _states.Peek();
+
+        private RichItemsControl? _host;
         /// <summary>
         /// The <see cref="RichItemsControl"/> that owns this <see cref="RichItemContainer"/>.
         /// </summary>
-        public RichItemsControl? Host => _host ??= ItemsControl.ItemsControlFromItemContainer(this) as RichItemsControl;
+        public RichItemsControl Host => _host ??= (RichItemsControl)ItemsControl.ItemsControlFromItemContainer(this);
 
         internal bool TopPropertyInitalized { get; private set; }
         internal bool LeftPropertyInitialized { get; private set; }
@@ -256,7 +258,7 @@ namespace RichCanvas
         /// </summary>
         public void CalculateBoundingBox()
         {
-            var transform = TransformToVisual(Host?.ItemsHost);
+            var transform = TransformToVisual(Host.ItemsHost);
             if (double.IsNaN(Width) || double.IsNaN(Height))
             {
                 var actualBounds = transform.TransformBounds(new Rect(0, 0, ActualWidth, ActualHeight));
@@ -376,13 +378,13 @@ namespace RichCanvas
             }
             RaiseEvent(new RoutedEventArgs(TopChangedEvent, Top));
             RaiseEvent(new RoutedEventArgs(LeftChangedEvent, Left));
-            Host?.ItemsHost?.InvalidateArrange();
+            Host.ItemsHost.InvalidateArrange();
         }
 
         private void OnSelectedChanged(bool value)
         {
             // Raise event after the selection operation ended
-            if ((!Host?.IsSelecting ?? false) || (Host?.RealTimeSelectionEnabled ?? false))
+            if (!Host.IsSelecting || Host.RealTimeSelectionEnabled)
             {
                 // Add to base SelectedItems
                 RaiseEvent(new RoutedEventArgs(value ? SelectedEvent : UnselectedEvent, this));
@@ -395,7 +397,7 @@ namespace RichCanvas
             if (IsValid())
             {
                 // Invalidate arrange to calculate correct BoundingBox
-                Host?.ItemsHost?.InvalidateArrange();
+                Host.ItemsHost.InvalidateArrange();
             }
         }
 

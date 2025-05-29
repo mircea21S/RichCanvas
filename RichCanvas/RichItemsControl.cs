@@ -36,8 +36,8 @@ namespace RichCanvas
 
         internal readonly ScaleTransform ScaleTransform = new ScaleTransform();
         internal readonly TranslateTransform TranslateTransform = new TranslateTransform();
-        private RichCanvas? _mainPanel;
-        private DispatcherTimer? _autoPanTimer;
+        private RichCanvas _mainPanel;
+        private DispatcherTimer _autoPanTimer;
         private Stack<CanvasState> _states;
 
         #endregion
@@ -373,7 +373,7 @@ namespace RichCanvas
 
         #region Internal Properties
 
-        internal RichCanvas? ItemsHost => _mainPanel;
+        internal RichCanvas ItemsHost => _mainPanel;
         internal bool IsPanning { get; set; }
         internal bool IsZooming { get; set; }
         internal IList BaseSelectedItems => base.SelectedItems;
@@ -504,8 +504,8 @@ namespace RichCanvas
                 CurrentDrawingIndexes.Clear();
                 if (CanSelectMultipleItems)
                 {
-                    base.SelectedItems?.Clear();
-                    SelectedItems?.Clear();
+                    base.SelectedItems.Clear();
+                    SelectedItems.Clear();
                 }
                 else
                 {
@@ -862,7 +862,7 @@ namespace RichCanvas
                 ViewportLocation = new Point(x, y);
                 MousePosition = Mouse.GetPosition(ItemsHost);
 
-                CurrentState?.HandleAutoPanning(new MouseEventArgs(Mouse.PrimaryDevice, 0));
+                CurrentState.HandleAutoPanning(new MouseEventArgs(Mouse.PrimaryDevice, 0));
             }
         }
 
