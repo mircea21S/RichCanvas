@@ -38,7 +38,6 @@ namespace RichCanvas
         internal readonly TranslateTransform TranslateTransform = new TranslateTransform();
         private RichCanvas? _mainPanel;
         private DispatcherTimer? _autoPanTimer;
-        private bool _fromEvent;
         private Stack<CanvasState> _states;
 
         #endregion
@@ -157,21 +156,6 @@ namespace RichCanvas
         }
 
         /// <summary>
-        /// Gets or sets whether Grid Drawing is enabled on <see cref="RichItemsControl.ItemsHost"/> background.
-        /// Default is disabled.
-        /// </summary>
-        public static DependencyProperty EnableGridProperty = DependencyProperty.Register(nameof(EnableGrid), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
-        /// <summary>
-        /// Gets or sets whether Grid Drawing is enabled on <see cref="RichItemsControl.ItemsHost"/> background.
-        /// Default is disabled.
-        /// </summary>
-        public bool EnableGrid
-        {
-            get => (bool)GetValue(EnableGridProperty);
-            set => SetValue(EnableGridProperty, value);
-        }
-
-        /// <summary>
         /// Gets or sets grid drawing viewport size.
         /// Default is 10.
         /// </summary>
@@ -209,19 +193,6 @@ namespace RichCanvas
         {
             get => (bool)GetValue(EnableSnappingProperty);
             set => SetValue(EnableSnappingProperty, value);
-        }
-
-        /// <summary>
-        /// Gets or sets the background grid style.
-        /// </summary>
-        public static DependencyProperty GridStyleProperty = DependencyProperty.Register(nameof(GridStyle), typeof(Drawing), typeof(RichItemsControl));
-        /// <summary>
-        /// Gets or sets the background grid style.
-        /// </summary>
-        public Drawing GridStyle
-        {
-            get => (Drawing)GetValue(GridStyleProperty);
-            set => SetValue(GridStyleProperty, value);
         }
 
         /// <summary>
