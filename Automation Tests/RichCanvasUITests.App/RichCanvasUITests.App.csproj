@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AEFA33F4-C688-4E12-B9D7-04FE100E5CF3}</ProjectGuid>
+    <ProjectGuid>{D14A9E09-16C8-45D1-B43E-CD8107C3D03B}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>RichCanvasUITests.App</RootNamespace>
     <AssemblyName>RichCanvasUITests.App</AssemblyName>
@@ -144,7 +144,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RichCanvas\RichCanvas.csproj">
+    <ProjectReference Include="..\..\RichCanvas\RichCanvas.csproj">
       <Project>{490c2a94-4c73-4b94-a041-080a41664e3e}</Project>
       <Name>RichCanvas</Name>
     </ProjectReference>
