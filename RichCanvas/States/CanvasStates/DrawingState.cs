@@ -69,7 +69,7 @@ namespace RichCanvas.States
             {
                 UpdateItemPositionByScale();
             }
-            if (Parent.EnableGrid && Parent.EnableSnapping)
+            if (Parent.EnableSnapping)
             {
                 SnapToGrid();
             }

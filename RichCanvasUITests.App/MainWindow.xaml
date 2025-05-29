@@ -151,7 +151,6 @@
                                          MinScale="{Binding ZoomingViewModel.MinScale, Mode=TwoWay}"
                                          MaxScale="{Binding ZoomingViewModel.MaxScale, Mode=TwoWay}"
                                          ScaleFactor="{Binding ZoomingViewModel.ScaleFactor, Mode=TwoWay}"
-                                         EnableGrid="{Binding EnableGrid, Mode=TwoWay}"
                                          EnableSnapping="{Binding EnableSnapping, Mode=TwoWay}"
                                          Name="source">
                 <richCanvas:RichItemsControl.Resources>
