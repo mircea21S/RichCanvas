@@ -43,7 +43,7 @@ namespace RichCanvas.States.ContainerStates
                     }
                 }
 
-                Parent.ItemsHost?.InvalidateArrange();
+                Parent.ItemsHost.InvalidateArrange();
             }
         }
 
