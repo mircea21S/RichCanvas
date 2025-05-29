@@ -17,38 +17,19 @@
         </Setter>
     </Style>
 
-    <GeometryDrawing x:Key="GridStyle"
-                     Geometry="M0,0 L0,1 0.03,1 0.03,0.03 1,0.03 1,0 Z"
-                     Brush="Red" />
-
     <Style TargetType="{x:Type local:RichItemsControl}">
         <Style.Resources>
             <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
-            <converters:BoolToGeometryConverter x:Key="BoolToBackground" />
-            <converters:UIntToRectConverter x:Key="UIntToRect" />
         </Style.Resources>
 
         <Setter Property="SelectionRectangleStyle"
                 Value="{StaticResource SelectionRectangleStyle}" />
 
-        <Setter Property="GridStyle"
-                Value="{StaticResource GridStyle}" />
-
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:RichItemsControl}">
                     <Border Background="{TemplateBinding Background}">
-                        <Border.Resources>
-                            <DrawingBrush x:Key="GridBrush"
-                                          TileMode="Tile"
-                                          ViewportUnits="Absolute"
-                                          Viewport="{Binding GridSpacing, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource UIntToRect}}"
-                                          Transform="{Binding AppliedTransform, RelativeSource={RelativeSource TemplatedParent}}"
-                                          Drawing="{Binding GridStyle, RelativeSource={RelativeSource TemplatedParent}}" />
-                        </Border.Resources>
-
                         <Canvas RenderTransform="{Binding AppliedTransform, RelativeSource={RelativeSource TemplatedParent}}"
-                                Background="{Binding EnableGrid, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BoolToBackground}, ConverterParameter={StaticResource GridBrush}}"
                                 x:Name="containerDrawing">
 
                             <local:RichCanvas x:Name="PART_Panel"
