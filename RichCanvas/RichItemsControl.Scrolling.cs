@@ -39,7 +39,7 @@ namespace RichCanvas
         public double HorizontalOffset => _offset.X;
 
         /// <inheritdoc/>
-        public ScrollViewer? ScrollOwner { get; set; }
+        public ScrollViewer ScrollOwner { get; set; }
 
         /// <inheritdoc/>
         public double VerticalOffset => _offset.Y;
@@ -69,19 +69,16 @@ namespace RichCanvas
             {
                 var containerLocation = new Vector(container.Left, container.Top);
                 var viewportCenter = new Vector(ViewportWidth / 2, ViewportHeight / 2);
-                if (ScrollOwner != null)
+                var relativePoint = (Point)(containerLocation * ViewportZoom - viewportCenter);
+                if (TranslateTransform != null)
                 {
-                    var relativePoint = (Point)(containerLocation * ViewportZoom - viewportCenter);
-                    if (TranslateTransform != null)
-                    {
-                        TranslateTransform.X = -relativePoint.X;
-                        TranslateTransform.Y = -relativePoint.Y;
-                    }
-                    container.ShouldBringIntoView = false;
-                    return new Rect(ScrollOwner.RenderSize);
+                    TranslateTransform.X = -relativePoint.X;
+                    TranslateTransform.Y = -relativePoint.Y;
                 }
+                container.ShouldBringIntoView = false;
+                return new Rect(ScrollOwner.RenderSize);
             }
-            return new Rect(ScrollOwner?.RenderSize ?? Size.Empty);
+            return new Rect(ScrollOwner.RenderSize);
         }
 
         /// <inheritdoc/>
@@ -139,7 +136,7 @@ namespace RichCanvas
             double locationY = Math.Min(ItemsExtent.Top, _viewportLocationBeforeScrolling.Value.Y) + VerticalOffset;
             ViewportLocation = new Point(locationX, locationY);
             EnsureExtentIsUpdated();
-            ScrollOwner?.InvalidateScrollInfo();
+            ScrollOwner.InvalidateScrollInfo();
             _isScrolling = false;
         }
 
@@ -164,7 +161,7 @@ namespace RichCanvas
         private void UpdateScrollbars()
         {
             // setting the ViewportLocation when manually scrolling triggers the ViewportUpdatedEvent which in turn calls this method, hence the !_isScrolling check
-            if (ScrollOwner != null && !_isScrolling)
+            if (!_isScrolling)
             {
                 _viewportLocationBeforeScrolling = null;
 

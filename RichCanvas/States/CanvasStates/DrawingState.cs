@@ -7,7 +7,7 @@ namespace RichCanvas.States
 {
     public class DrawingState : CanvasState
     {
-        private RichItemContainer? _currentDrawingContainer;
+        private RichItemContainer _currentDrawingContainer;
         private bool _isDrawing;
 
         public DrawingState(RichItemsControl parent) : base(parent)
@@ -73,7 +73,7 @@ namespace RichCanvas.States
             {
                 SnapToGrid();
             }
-            _currentDrawingContainer.Scale = new Point(_currentDrawingContainer.ScaleTransform.ScaleX, _currentDrawingContainer.ScaleTransform.ScaleY);
+            _currentDrawingContainer.Scale = new Point(_currentDrawingContainer.ScaleTransform?.ScaleX ?? 1, _currentDrawingContainer.ScaleTransform?.ScaleY ?? 1);
 
             var mousePosition = e.GetPosition(Parent.ItemsHost);
             Parent.RaiseDrawEndedEvent(_currentDrawingContainer.DataContext, mousePosition);

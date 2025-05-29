@@ -9,9 +9,14 @@ namespace RichCanvas
     /// </summary>
     public class RichCanvas : Panel
     {
-        internal RichItemsControl? ItemsOwner { get; set; }
-        public static readonly DependencyProperty ExtentProperty = DependencyProperty.Register(nameof(Extent), typeof(Rect), typeof(RichCanvas), new FrameworkPropertyMetadata(Rect.Empty));
+        private RichItemsControl? _itemsOwner;
+        internal RichItemsControl ItemsOwner
+        {
+            get => _itemsOwner ?? throw new InvalidOperationException("RichCanvas not initialized");
+            set => _itemsOwner = value;
+        }
 
+        public static readonly DependencyProperty ExtentProperty = DependencyProperty.Register(nameof(Extent), typeof(Rect), typeof(RichCanvas), new FrameworkPropertyMetadata(Rect.Empty));
         /// <summary>The area covered by the children of this panel.</summary>
         public Rect Extent
         {
@@ -27,9 +32,9 @@ namespace RichCanvas
                 return default;
             }
 
-            foreach (UIElement child in InternalChildren)
+            for (int i = 0; i < InternalChildren.Count; i++)
             {
-                var container = (RichItemContainer)child;
+                var container = (RichItemContainer)InternalChildren[i];
                 container.Measure(constraint);
             }
 
@@ -43,8 +48,9 @@ namespace RichCanvas
             double minY = double.MaxValue;
             double maxX = double.MinValue;
             double maxY = double.MinValue;
-            foreach (UIElement child in InternalChildren)
+            for (int i = 0; i < InternalChildren.Count; i++)
             {
+                UIElement child = InternalChildren[i];
                 if (child is RichItemContainer container)
                 {
                     child.Arrange(new Rect(new Point(container.Left, container.Top), child.DesiredSize));
