@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json;
-using RichCanvas.Automation.ControlInformations;
-using System.Windows.Automation;
+﻿using System.Windows.Automation;
 using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
+
+using Newtonsoft.Json;
+
+using RichCanvas.Automation.ControlInformations;
 
 namespace RichCanvas.Automation
 {

@@ -142,10 +142,10 @@ namespace RichCanvas
 
         private void EnsureExtentIsUpdated()
         {
-            var extentWithItems = ItemsExtent;
+            Rect extentWithItems = ItemsExtent;
             extentWithItems.Union(new Rect(ViewportLocation, ViewportSize));
 
-            var scrollOffset = ViewportLocation - ItemsExtent.Location;
+            Vector scrollOffset = ViewportLocation - ItemsExtent.Location;
 
             if (_extent.Height + Math.Max(0, scrollOffset.Y) <= extentWithItems.Height)
             {
@@ -165,13 +165,13 @@ namespace RichCanvas
             {
                 _viewportLocationBeforeScrolling = null;
 
-                var extent = ItemsExtent;
+                Rect extent = ItemsExtent;
                 extent.Union(new Rect(ViewportLocation, ViewportSize));
 
                 _extent.Height = extent.Height;
                 _extent.Width = extent.Width;
 
-                var scrollOffset = ViewportLocation - ItemsExtent.Location;
+                Vector scrollOffset = ViewportLocation - ItemsExtent.Location;
 
                 _offset.X = Math.Max(0, scrollOffset.X);
                 _offset.Y = Math.Max(0, scrollOffset.Y);

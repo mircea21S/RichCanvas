@@ -22,8 +22,8 @@ namespace RichCanvas.States
         {
             if (Parent.IsPanning)
             {
-                var currentPosition = e.GetPosition(Parent);
-                var delta = currentPosition - _initialPosition;
+                Point currentPosition = e.GetPosition(Parent);
+                Vector delta = currentPosition - _initialPosition;
 
                 Parent.ViewportLocation -= delta / Parent.ViewportZoom;
 

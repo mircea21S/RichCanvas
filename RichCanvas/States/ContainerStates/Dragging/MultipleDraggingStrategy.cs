@@ -1,5 +1,4 @@
-﻿using RichCanvas.Helpers;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows;
@@ -34,7 +33,7 @@ namespace RichCanvas.States.ContainerStates
                 }
 
                 // Cache selected containers
-                for (var i = 0; i < selectedItems.Count; i++)
+                for (int i = 0; i < selectedItems.Count; i++)
                 {
                     var container = (RichItemContainer)Parent.ItemContainerGenerator.ContainerFromItem(selectedItems[i]);
                     if (container.IsDraggable)
@@ -75,12 +74,12 @@ namespace RichCanvas.States.ContainerStates
 
         public override void OnItemsDragCompleted()
         {
-            for (var i = 0; i < _draggableContainers.Count; i++)
+            for (int i = 0; i < _draggableContainers.Count; i++)
             {
                 RichItemContainer container = _draggableContainers[i];
                 if (!Parent.RealTimeDraggingEnabled)
                 {
-                    var translateTransform = container.TranslateTransform;
+                    TranslateTransform? translateTransform = container.TranslateTransform;
 
                     if (translateTransform != null)
                     {

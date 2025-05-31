@@ -1,5 +1,6 @@
-﻿using RichCanvas.Gestures;
-using System.Windows.Input;
+﻿using System.Windows.Input;
+
+using RichCanvas.Gestures;
 
 namespace RichCanvas.States.ContainerStates
 {
