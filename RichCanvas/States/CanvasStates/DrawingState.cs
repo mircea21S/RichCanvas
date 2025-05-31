@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -16,14 +17,14 @@ namespace RichCanvas.States
 
         public override void Enter()
         {
-            var drawingContainersIndexes = Parent.CurrentDrawingIndexes;
+            List<int> drawingContainersIndexes = Parent.CurrentDrawingIndexes;
             if (drawingContainersIndexes.Count == 0)
             {
                 return;
             }
 
-            var currentDrawingContainerIndex = drawingContainersIndexes[0];
-            var container = (RichItemContainer)Parent.ItemContainerGenerator.ContainerFromIndex(currentDrawingContainerIndex);
+            int currentDrawingContainerIndex = drawingContainersIndexes[0];
+            RichItemContainer container = (RichItemContainer)Parent.ItemContainerGenerator.ContainerFromIndex(currentDrawingContainerIndex);
             if (container.IsValid())
             {
                 drawingContainersIndexes.RemoveAt(0);
@@ -33,7 +34,7 @@ namespace RichCanvas.States
             _currentDrawingContainer = container;
             _isDrawing = true;
 
-            var mousePosition = Mouse.GetPosition(Parent.ItemsHost);
+            Point mousePosition = Mouse.GetPosition(Parent.ItemsHost);
             if (!_currentDrawingContainer.TopPropertyInitalized)
             {
                 _currentDrawingContainer.Top = mousePosition.Y;
@@ -54,7 +55,7 @@ namespace RichCanvas.States
                 return;
             }
 
-            var mousePosition = e.GetPosition(Parent.ItemsHost);
+            Point mousePosition = e.GetPosition(Parent.ItemsHost);
             DrawContainer(mousePosition);
         }
 
@@ -75,7 +76,7 @@ namespace RichCanvas.States
             }
             _currentDrawingContainer.Scale = new Point(_currentDrawingContainer.ScaleTransform?.ScaleX ?? 1, _currentDrawingContainer.ScaleTransform?.ScaleY ?? 1);
 
-            var mousePosition = e.GetPosition(Parent.ItemsHost);
+            Point mousePosition = e.GetPosition(Parent.ItemsHost);
             Parent.RaiseDrawEndedEvent(_currentDrawingContainer.DataContext, mousePosition);
             if (Parent.DrawingEndedCommand?.CanExecute(mousePosition) ?? false)
             {
@@ -88,7 +89,7 @@ namespace RichCanvas.States
 
         public override void HandleAutoPanning(MouseEventArgs e)
         {
-            var mousePosition = e.GetPosition(Parent.ItemsHost);
+            Point mousePosition = e.GetPosition(Parent.ItemsHost);
             _currentDrawingContainer.Height = Math.Abs(mousePosition.Y - _currentDrawingContainer.Top);
             _currentDrawingContainer.Width = Math.Abs(mousePosition.X - _currentDrawingContainer.Left);
         }

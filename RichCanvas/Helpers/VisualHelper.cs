@@ -22,7 +22,7 @@ namespace RichCanvas.Helpers
                 return container;
             }
 
-            var parent = VisualTreeHelper.GetParent(d);
+            DependencyObject? parent = VisualTreeHelper.GetParent(d);
             while (parent is not RichItemContainer && parent != null)
             {
                 parent = VisualTreeHelper.GetParent(parent);
@@ -41,7 +41,7 @@ namespace RichCanvas.Helpers
             {
                 if (reference != null)
                 {
-                    var parent = VisualTreeHelper.GetParent(reference);
+                    DependencyObject parent = VisualTreeHelper.GetParent(reference);
                     if (parent is ScrollViewer)
                     {
                         return false;
