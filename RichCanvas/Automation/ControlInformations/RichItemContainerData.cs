@@ -4,7 +4,7 @@ namespace RichCanvas.Automation.ControlInformations
 {
     public class RichItemContainerData
     {
-        public Type DataContextType { get; set; }
+        public Type? DataContextType { get; set; }
         public double Top { get; set; }
         public double Left { get; set; }
         public bool IsSelected { get; set; }

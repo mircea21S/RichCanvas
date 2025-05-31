@@ -1,6 +1,7 @@
-﻿using RichCanvas.Gestures;
-using System;
+﻿using System;
 using System.Windows.Input;
+
+using RichCanvas.Gestures;
 
 namespace RichCanvas
 {

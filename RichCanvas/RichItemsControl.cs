@@ -1,19 +1,20 @@
-﻿using RichCanvas.Helpers;
-using System;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using System.Windows.Controls.Primitives;
-using System.Collections.Specialized;
-using System.Collections;
-using System.Collections.Generic;
-using RichCanvas.States;
-using RichCanvas.CustomEventArgs;
-using System.Windows.Automation.Peers;
+
 using RichCanvas.Automation;
+using RichCanvas.CustomEventArgs;
+using RichCanvas.Helpers;
+using RichCanvas.States;
 
 namespace RichCanvas
 {
@@ -531,7 +532,7 @@ namespace RichCanvas
             }
             else if (e.Action == NotifyCollectionChangedAction.Move)
             {
-                var oldValue = CurrentDrawingIndexes[e.OldStartingIndex];
+                int oldValue = CurrentDrawingIndexes[e.OldStartingIndex];
                 CurrentDrawingIndexes.Remove(oldValue);
                 CurrentDrawingIndexes.Insert(e.NewStartingIndex, oldValue);
             }
@@ -603,7 +604,7 @@ namespace RichCanvas
                 if (selected != null)
                 {
                     IList added = e.AddedItems;
-                    for (var i = 0; i < added.Count; i++)
+                    for (int i = 0; i < added.Count; i++)
                     {
                         // Ensure no duplicates are added
                         if (!selected.Contains(added[i]))
@@ -613,7 +614,7 @@ namespace RichCanvas
                     }
 
                     IList removed = e.RemovedItems;
-                    for (var i = 0; i < removed.Count; i++)
+                    for (int i = 0; i < removed.Count; i++)
                     {
                         selected.Remove(removed[i]);
                     }
@@ -656,7 +657,7 @@ namespace RichCanvas
                     var geometryHitTestResult = (GeometryHitTestResult)result;
                     if (geometryHitTestResult.IntersectionDetail != IntersectionDetail.Empty)
                     {
-                        var container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
+                        RichItemContainer container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
                         intersectedElements.Add(container.DataContext);
                     }
                     return HitTestResultBehavior.Continue;
@@ -688,7 +689,7 @@ namespace RichCanvas
                 selectedItems.Clear();
                 if (newValue != null)
                 {
-                    for (var i = 0; i < newValue.Count; i++)
+                    for (int i = 0; i < newValue.Count; i++)
                     {
                         selectedItems.Add(newValue[i]);
                     }
@@ -715,7 +716,7 @@ namespace RichCanvas
                         if (newItems != null)
                         {
                             IList selectedItems = base.SelectedItems;
-                            for (var i = 0; i < newItems.Count; i++)
+                            for (int i = 0; i < newItems.Count; i++)
                             {
                                 selectedItems.Add(newItems[i]);
                             }
@@ -730,7 +731,7 @@ namespace RichCanvas
                         if (oldItems != null)
                         {
                             IList selectedItems = base.SelectedItems;
-                            for (var i = 0; i < oldItems.Count; i++)
+                            for (int i = 0; i < oldItems.Count; i++)
                             {
                                 selectedItems.Remove(oldItems[i]);
                             }
@@ -837,9 +838,9 @@ namespace RichCanvas
         {
             if (IsMouseOver && Mouse.LeftButton == MouseButtonState.Pressed && Mouse.Captured != null && !IsMouseCapturedByScrollBar() && !IsPanning)
             {
-                var mousePosition = Mouse.GetPosition(this);
-                var x = ViewportLocation.X;
-                var y = ViewportLocation.Y;
+                Point mousePosition = Mouse.GetPosition(this);
+                double x = ViewportLocation.X;
+                double y = ViewportLocation.Y;
 
                 if (mousePosition.Y <= 0)
                 {
@@ -881,7 +882,7 @@ namespace RichCanvas
 
         internal void RaiseDrawEndedEvent(object context, Point mousePosition)
         {
-            RoutedEventArgs newEventArgs = new RoutedEventArgs(DrawingEndedEvent, new DrawEndedEventArgs(context, mousePosition));
+            var newEventArgs = new RoutedEventArgs(DrawingEndedEvent, new DrawEndedEventArgs(context, mousePosition));
             RaiseEvent(newEventArgs);
         }
         #endregion

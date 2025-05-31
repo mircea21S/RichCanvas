@@ -1,8 +1,9 @@
-﻿using RichCanvas.Gestures;
+﻿using System.Windows;
+using System.Windows.Input;
+
+using RichCanvas.Gestures;
 using RichCanvas.Helpers;
 using RichCanvas.States.CanvasStates;
-using System.Windows;
-using System.Windows.Input;
 
 namespace RichCanvas.States
 {

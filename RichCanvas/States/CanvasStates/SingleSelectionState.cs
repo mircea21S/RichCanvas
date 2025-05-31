@@ -1,9 +1,10 @@
-﻿using System.Windows.Input;
+﻿using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
-using RichCanvas.Helpers;
-using System.Collections.Generic;
+
 using RichCanvas.Gestures;
+using RichCanvas.Helpers;
 
 namespace RichCanvas.States.CanvasStates
 {
@@ -83,7 +84,7 @@ namespace RichCanvas.States.CanvasStates
                 _selectedContainers.Clear();
             }
 
-            RectangleGeometry geom = new RectangleGeometry(Parent.SelectionRectangle);
+            var geom = new RectangleGeometry(Parent.SelectionRectangle);
 
             VisualTreeHelper.HitTest(Parent.ItemsHost, null,
                 new HitTestResultCallback(OnHitTestResultCallback),
@@ -120,7 +121,7 @@ namespace RichCanvas.States.CanvasStates
             var geometryHitTestResult = (GeometryHitTestResult)result;
             if (geometryHitTestResult.VisualHit.DependencyObjectType.SystemType != typeof(RichItemContainer) && geometryHitTestResult.IntersectionDetail != IntersectionDetail.Empty)
             {
-                var container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
+                RichItemContainer container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
                 if (container != null && container.IsSelectable)
                 {
                     // first element of this list is the last added item in the ItemsSource

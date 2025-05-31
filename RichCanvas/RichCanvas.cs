@@ -34,7 +34,7 @@ namespace RichCanvas
 
             for (int i = 0; i < InternalChildren.Count; i++)
             {
-                var container = (RichItemContainer)InternalChildren[i];
+                RichItemContainer container = (RichItemContainer)InternalChildren[i];
                 container.Measure(constraint);
             }
 

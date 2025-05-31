@@ -1,8 +1,9 @@
-﻿using RichCanvas.Gestures;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+
+using RichCanvas.Gestures;
 
 namespace RichCanvas
 {
@@ -58,7 +59,7 @@ namespace RichCanvas
         private static object CoerceMaxScale(DependencyObject d, object value)
         {
             var zoom = (RichItemsControl)d;
-            var min = zoom.MinScale;
+            double min = zoom.MinScale;
 
             return (double)value < min ? 2d : value;
         }
@@ -143,9 +144,9 @@ namespace RichCanvas
         {
             if (RichCanvasGestures.ZoomModifierKey == Keyboard.Modifiers)
             {
-                var position = e.GetPosition(ItemsHost);
+                Point position = e.GetPosition(ItemsHost);
                 IsZooming = true;
-                var scaleFactor = e.Delta > 0 ? ScaleFactor : 1 / ScaleFactor;
+                double scaleFactor = e.Delta > 0 ? ScaleFactor : 1 / ScaleFactor;
                 ZoomAtPosition(position, scaleFactor);
                 IsZooming = false;
                 // handle the event so it won't trigger scrolling
@@ -157,19 +158,19 @@ namespace RichCanvas
         {
             if (!DisableZoom)
             {
-                var previouslyTransformedMousePosition = AppliedTransform.Transform(mousePosition);
+                Point previouslyTransformedMousePosition = AppliedTransform.Transform(mousePosition);
 
-                var previousZoom = ViewportZoom;
+                double previousZoom = ViewportZoom;
                 ViewportZoom *= delta;
 
                 if (Math.Abs(previousZoom - ViewportZoom) > 0.001)
                 {
-                    var transformedMousePositionAfterScaling = AppliedTransform.Transform(mousePosition);
+                    Point transformedMousePositionAfterScaling = AppliedTransform.Transform(mousePosition);
 
-                    var translationAdjustment = previouslyTransformedMousePosition - transformedMousePositionAfterScaling;
-                    var newTranslation = new Point(TranslateTransform.X, TranslateTransform.Y) + translationAdjustment;
+                    Vector translationAdjustment = previouslyTransformedMousePosition - transformedMousePositionAfterScaling;
+                    Point newTranslation = new Point(TranslateTransform.X, TranslateTransform.Y) + translationAdjustment;
 
-                    var viewportLocation = (new Vector(0, 0) - (Vector)newTranslation) / ViewportZoom;
+                    Vector viewportLocation = (new Vector(0, 0) - (Vector)newTranslation) / ViewportZoom;
 
                     ViewportLocation = (Point)viewportLocation;
                 }
@@ -184,7 +185,7 @@ namespace RichCanvas
         {
             ScaleTransform.ScaleX = zoom;
             ScaleTransform.ScaleY = zoom;
-            RoutedEventArgs zoomEventArgs = new RoutedEventArgs(ZoomingEvent, new Point(ScaleTransform.ScaleX, ScaleTransform.ScaleY));
+            var zoomEventArgs = new RoutedEventArgs(ZoomingEvent, new Point(ScaleTransform.ScaleX, ScaleTransform.ScaleY));
             RaiseEvent(zoomEventArgs);
 
             ViewportSize = new Size(ActualWidth / ViewportZoom, ActualHeight / ViewportZoom);

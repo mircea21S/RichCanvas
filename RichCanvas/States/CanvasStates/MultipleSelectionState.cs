@@ -1,8 +1,9 @@
-﻿using RichCanvas.Gestures;
-using RichCanvas.Helpers;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+
+using RichCanvas.Gestures;
+using RichCanvas.Helpers;
 
 namespace RichCanvas.States
 {
@@ -78,7 +79,7 @@ namespace RichCanvas.States
         protected void SelectItems()
         {
             Parent.UnselectAll();
-            RectangleGeometry geom = new RectangleGeometry(Parent.SelectionRectangle);
+            var geom = new RectangleGeometry(Parent.SelectionRectangle);
 
             Parent.BeginSelectionTransaction();
 
@@ -94,7 +95,7 @@ namespace RichCanvas.States
             var geometryHitTestResult = (GeometryHitTestResult)result;
             if (geometryHitTestResult.VisualHit.DependencyObjectType.SystemType != typeof(RichItemContainer) && geometryHitTestResult.IntersectionDetail != IntersectionDetail.Empty)
             {
-                var container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
+                RichItemContainer container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
                 if (container != null && container.IsSelectable)
                 {
                     Parent.BaseSelectedItems.Add(container.DataContext);

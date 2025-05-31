@@ -12,7 +12,7 @@ namespace RichCanvas.States
         /// Constructs a new <see cref="CanvasState "/>.
         /// </summary>
         /// <param name="parent">The owner of the state.</param>
-        public CanvasState( RichItemsControl parent )
+        public CanvasState(RichItemsControl parent)
         {
             Parent = parent;
         }
@@ -37,26 +37,26 @@ namespace RichCanvas.States
         public virtual void Exit() { }
 
         /// <inheritdoc cref="RichItemsControl.OnMouseDown(MouseButtonEventArgs)"/>
-        public virtual void HandleMouseDown( MouseButtonEventArgs e ) { }
+        public virtual void HandleMouseDown(MouseButtonEventArgs e) { }
 
         /// <inheritdoc cref="RichItemsControl.OnMouseMove(MouseEventArgs)"/>
-        public virtual void HandleMouseMove( MouseEventArgs e ) { }
+        public virtual void HandleMouseMove(MouseEventArgs e) { }
 
         /// <inheritdoc cref="RichItemsControl.OnMouseUp(MouseButtonEventArgs)"/>
-        public virtual void HandleMouseUp( MouseButtonEventArgs e ) { }
+        public virtual void HandleMouseUp(MouseButtonEventArgs e) { }
 
         /// <inheritdoc cref="RichItemsControl.OnKeyDown(KeyEventArgs)"/>
-        public virtual void HandleKeyDown( KeyEventArgs e ) { }
+        public virtual void HandleKeyDown(KeyEventArgs e) { }
 
         /// <inheritdoc cref="RichItemsControl.OnKeyUp(KeyEventArgs)"/>
-        public virtual void HandleKeyUp( KeyEventArgs e ) { }
+        public virtual void HandleKeyUp(KeyEventArgs e) { }
 
         /// <summary>Handles auto panning when mouse is outside the canvas.</summary>
-        public virtual void HandleAutoPanning( MouseEventArgs e ) { }
+        public virtual void HandleAutoPanning(MouseEventArgs e) { }
 
         /// <summary>Pushes a new state into the stack.</summary>
         /// <param name="state">The new state.</param>
-        public virtual void PushState( CanvasState state ) => Parent.PushState(state);
+        public virtual void PushState(CanvasState state) => Parent.PushState(state);
 
         /// <summary>Pops the current state from the stack.</summary>
         public virtual void PopState() => Parent.PopState();
@@ -67,7 +67,7 @@ namespace RichCanvas.States
         /// <param name="e"></param>
         /// <param name="matchingState"></param>
         /// <returns></returns>
-        public virtual bool MatchesPreviewMouseDownState( MouseButtonEventArgs e, out CanvasState? matchingState )
+        public virtual bool MatchesPreviewMouseDownState(MouseButtonEventArgs e, out CanvasState? matchingState)
         {
             matchingState = null;
             return false;
