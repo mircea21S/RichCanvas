@@ -1,13 +1,13 @@
-﻿using RichCanvas.Helpers;
-using RichCanvas.States.ContainerStates;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+
+using RichCanvas.Helpers;
+using RichCanvas.States.ContainerStates;
 
 namespace RichCanvas
 {
@@ -258,14 +258,14 @@ namespace RichCanvas
         /// </summary>
         public void CalculateBoundingBox()
         {
-            var transform = TransformToVisual(Host.ItemsHost);
+            GeneralTransform transform = TransformToVisual(Host.ItemsHost);
             if (double.IsNaN(Width) || double.IsNaN(Height))
             {
-                var actualBounds = transform.TransformBounds(new Rect(0, 0, ActualWidth, ActualHeight));
+                Rect actualBounds = transform.TransformBounds(new Rect(0, 0, ActualWidth, ActualHeight));
                 BoundingBox = actualBounds;
                 return;
             }
-            var bounds = transform.TransformBounds(new Rect(0, 0, Width, Height));
+            Rect bounds = transform.TransformBounds(new Rect(0, 0, Width, Height));
             BoundingBox = bounds;
         }
 

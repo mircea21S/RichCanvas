@@ -56,7 +56,7 @@ namespace RichCanvas.Gestures
     {
         public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
         {
-            var key = (string)value;
+            string key = (string)value;
             Enum.TryParse(key, out Key enumKey);
             return new[] { enumKey };
         }
