@@ -15,16 +15,6 @@ tab_width = 4
 end_of_line = crlf
 insert_final_newline = false
 
-#### .NET Code Actions ####
-
-# Type members
-dotnet_hide_advanced_members = false
-dotnet_member_insertion_location = with_other_members_of_the_same_kind
-dotnet_property_generation_behavior = prefer_throwing_properties
-
-# Symbol search
-dotnet_search_reference_assemblies = true
-
 #### .NET Coding Conventions ####
 
 # Organize usings
@@ -221,6 +211,14 @@ dotnet_naming_rule.private_or_internal_field_should_be_begins_with__.severity = 
 dotnet_naming_rule.private_or_internal_field_should_be_begins_with__.symbols = private_or_internal_field
 dotnet_naming_rule.private_or_internal_field_should_be_begins_with__.style = begins_with__
 
+dotnet_naming_rule.private_or_internal_static_field_should_be_begins_with__.severity = warning
+dotnet_naming_rule.private_or_internal_static_field_should_be_begins_with__.symbols = private_or_internal_static_field
+dotnet_naming_rule.private_or_internal_static_field_should_be_begins_with__.style = begins_with__
+
+dotnet_naming_rule.non_public_constant_fields_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.non_public_constant_fields_should_be_pascal_case.symbols = non_public_constant_fields
+dotnet_naming_rule.non_public_constant_fields_should_be_pascal_case.style = pascal_case
+
 # Symbol specifications
 
 dotnet_naming_symbols.interface.applicable_kinds = interface
@@ -231,6 +229,10 @@ dotnet_naming_symbols.private_or_internal_field.applicable_kinds = field
 dotnet_naming_symbols.private_or_internal_field.applicable_accessibilities = internal, private, private_protected
 dotnet_naming_symbols.private_or_internal_field.required_modifiers = 
 
+dotnet_naming_symbols.private_or_internal_static_field.applicable_kinds = field
+dotnet_naming_symbols.private_or_internal_static_field.applicable_accessibilities = internal, private, private_protected
+dotnet_naming_symbols.private_or_internal_static_field.required_modifiers = static
+
 dotnet_naming_symbols.types.applicable_kinds = class, struct, interface, enum
 dotnet_naming_symbols.types.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
 dotnet_naming_symbols.types.required_modifiers = 
@@ -238,6 +240,10 @@ dotnet_naming_symbols.types.required_modifiers =
 dotnet_naming_symbols.non_field_members.applicable_kinds = property, event, method
 dotnet_naming_symbols.non_field_members.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
 dotnet_naming_symbols.non_field_members.required_modifiers = 
+
+dotnet_naming_symbols.non_public_constant_fields.applicable_kinds = field
+dotnet_naming_symbols.non_public_constant_fields.applicable_accessibilities = *
+dotnet_naming_symbols.non_public_constant_fields.required_modifiers = const
 
 # Naming styles
 
