@@ -31,7 +31,7 @@ namespace RichCanvas
         private const string DrawingPanelName = "PART_Panel";
         private const string SelectionRectangleName = "PART_SelectionRectangle";
 
-        #endregion
+        #endregion Constants
 
         #region Private Fields
 
@@ -41,7 +41,7 @@ namespace RichCanvas
         private DispatcherTimer _autoPanTimer;
         private Stack<CanvasState> _states;
 
-        #endregion
+        #endregion Private Fields
 
         #region Properties API
 
@@ -51,6 +51,7 @@ namespace RichCanvas
         /// Gets or sets mouse position relative to <see cref="RichItemsControl.ItemsHost"/>.
         /// </summary>
         public static DependencyProperty MousePositionProperty = DependencyProperty.Register(nameof(MousePosition), typeof(Point), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(Point)));
+
         /// <summary>
         /// Gets or sets mouse position relative to <see cref="RichItemsControl.ItemsHost"/>.
         /// </summary>
@@ -64,10 +65,12 @@ namespace RichCanvas
         /// Get only key of <see cref="SelectionRectangleProperty"/>.
         /// </summary>
         protected static readonly DependencyPropertyKey SelectionRectanglePropertyKey = DependencyProperty.RegisterReadOnly(nameof(SelectionRectangle), typeof(Rect), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(Rect)));
+
         /// <summary>
         /// Gets the selection area as <see cref="Rect"/>.
         /// </summary>
         public static readonly DependencyProperty SelectionRectangleProperty = SelectionRectanglePropertyKey.DependencyProperty;
+
         /// <summary>
         /// Gets the selection area as <see cref="Rect"/>.
         /// </summary>
@@ -81,10 +84,12 @@ namespace RichCanvas
         /// Get only key of <see cref="IsSelectingProperty"/>
         /// </summary>
         protected static readonly DependencyPropertyKey IsSelectingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsSelecting), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
+
         /// <summary>
         /// Gets whether the operation in progress is selection.
         /// </summary>
         public static readonly DependencyProperty IsSelectingProperty = IsSelectingPropertyKey.DependencyProperty;
+
         /// <summary>
         /// Gets whether the operation in progress is selection.
         /// </summary>
@@ -98,10 +103,12 @@ namespace RichCanvas
         /// Get only key of <see cref="AppliedTransformProperty"/>.
         /// </summary>
         protected static readonly DependencyPropertyKey AppliedTransformPropertyKey = DependencyProperty.RegisterReadOnly(nameof(AppliedTransform), typeof(TransformGroup), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(TransformGroup)));
+
         /// <summary>
         /// Gets the transform that is applied to all child controls.
         /// </summary>
         public static DependencyProperty AppliedTransformProperty = AppliedTransformPropertyKey.DependencyProperty;
+
         /// <summary>
         /// Gets the transform that is applied to all child controls.
         /// </summary>
@@ -116,6 +123,7 @@ namespace RichCanvas
         /// Default is enabled.
         /// </summary>
         public static DependencyProperty EnableAutoPanningProperty = DependencyProperty.Register(nameof(EnableAutoPanning), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false, OnEnableAutoPanningChanged));
+
         /// <summary>
         /// Gets or sets whether Auto-Panning is enabled.
         /// Default is disabled.
@@ -131,6 +139,7 @@ namespace RichCanvas
         /// Default is 1.
         /// </summary>
         public static DependencyProperty AutoPanTickRateProperty = DependencyProperty.Register(nameof(AutoPanTickRate), typeof(float), typeof(RichItemsControl), new FrameworkPropertyMetadata(1f, OnAutoPanTickRateChanged));
+
         /// <summary>
         /// Gets or sets <see cref="DispatcherTimer"/> interval value.
         /// Default is 1.
@@ -146,6 +155,7 @@ namespace RichCanvas
         /// Default is 1.
         /// </summary>
         public static DependencyProperty AutoPanSpeedProperty = DependencyProperty.Register(nameof(AutoPanSpeed), typeof(float), typeof(RichItemsControl), new FrameworkPropertyMetadata(1f));
+
         /// <summary>
         /// Gets or sets the <see cref="RichItemsControl.ItemsHost"/> translate speed.
         /// Default is 1.
@@ -161,6 +171,7 @@ namespace RichCanvas
         /// Default is 10.
         /// </summary>
         public static DependencyProperty GridSpacingProperty = DependencyProperty.Register(nameof(GridSpacing), typeof(float), typeof(RichItemsControl), new FrameworkPropertyMetadata(20f));
+
         /// <summary>
         /// Gets or sets grid drawing viewport size.
         /// Default is 10.
@@ -172,6 +183,7 @@ namespace RichCanvas
         }
 
         public static DependencyProperty ViewportLocationProperty = DependencyProperty.Register(nameof(ViewportLocation), typeof(Point), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(Point), OnViewportLocationChanged));
+
         /// <summary>
         /// Gets current viewport rectangle.
         /// </summary>
@@ -186,6 +198,7 @@ namespace RichCanvas
         /// Default is disabled.
         /// </summary>
         public static DependencyProperty EnableSnappingProperty = DependencyProperty.Register(nameof(EnableSnapping), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
+
         /// <summary>
         /// Gets or sets whether grid snap correction on <see cref="RichItemContainer"/> is applied.
         /// Default is disabled.
@@ -200,6 +213,7 @@ namespace RichCanvas
         /// Gets or sets selection <see cref="Rectangle"/> style.
         /// </summary>
         public static DependencyProperty SelectionRectangleStyleProperty = DependencyProperty.Register(nameof(SelectionRectangleStyle), typeof(Style), typeof(RichItemsControl));
+
         /// <summary>
         /// Gets or sets selection <see cref="Rectangle"/> style.
         /// </summary>
@@ -214,6 +228,7 @@ namespace RichCanvas
         /// Default is 10.
         /// </summary>
         public static DependencyProperty ScrollFactorProperty = DependencyProperty.Register(nameof(ScrollFactor), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(10d, null, CoerceScrollFactor));
+
         /// <summary>
         /// Gets or sets the scrolling factor applied when scrolling.
         /// Default is 10.
@@ -228,6 +243,7 @@ namespace RichCanvas
         /// Gets or sets the items in the <see cref="RichItemsControl"/> that are selected.
         /// </summary>
         public static DependencyProperty SelectedItemsProperty = DependencyProperty.Register(nameof(SelectedItems), typeof(IList), typeof(RichItemsControl), new FrameworkPropertyMetadata(default(IList), OnSelectedItemsSourceChanged));
+
         /// <summary>
         /// Gets or sets the items in the <see cref="RichItemsControl"/> that are selected.
         /// </summary>
@@ -241,6 +257,7 @@ namespace RichCanvas
         /// Occurs whenever <see cref="RichItemsControl.OnMouseLeftButtonUp(MouseButtonEventArgs)"/> is triggered and the drawing operation finished.
         /// </summary>
         public static readonly RoutedEvent DrawingEndedEvent = EventManager.RegisterRoutedEvent(nameof(DrawingEnded), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(RichItemsControl));
+
         /// <summary>
         /// Occurs whenever <see cref="RichItemsControl.OnMouseLeftButtonUp(MouseButtonEventArgs)"/> is triggered and the drawing operation finished.
         /// </summary>
@@ -251,6 +268,7 @@ namespace RichCanvas
         }
 
         public static readonly DependencyProperty DrawingEndedCommandProperty = DependencyProperty.Register(nameof(DrawingEndedCommand), typeof(ICommand), typeof(RichItemsControl));
+
         /// <summary>
         /// Invoked when drawing opertation is completed. <br />
         /// Parameter is <see cref="Point"/>, representing the mouse position when drawing has finished.
@@ -266,6 +284,7 @@ namespace RichCanvas
         /// Default is <see langword="true"/>.
         /// </summary>
         public static DependencyProperty DisableCacheProperty = DependencyProperty.Register(nameof(DisableCache), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true, OnDisableCacheChanged));
+
         /// <summary>
         /// Gets or sets whether caching is disabled.
         /// Default is <see langword="true"/>.
@@ -280,10 +299,12 @@ namespace RichCanvas
         /// Get only key of <see cref="IsDraggingProperty"/>
         /// </summary>
         protected static readonly DependencyPropertyKey IsDraggingPropertyKey = DependencyProperty.RegisterReadOnly(nameof(IsDragging), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
+
         /// <summary>
         /// Gets whether the operation in progress is dragging.
         /// </summary>
         public static readonly DependencyProperty IsDraggingProperty = IsDraggingPropertyKey.DependencyProperty;
+
         /// <summary>
         /// Gets whether the operation in progress is dragging.
         /// </summary>
@@ -297,6 +318,7 @@ namespace RichCanvas
         /// Occurs whenever <see cref="RichItemsControl.ScaleTransform"/> changes.
         /// </summary>
         public static readonly RoutedEvent ZoomingEvent = EventManager.RegisterRoutedEvent(nameof(Zooming), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(RichItemsControl));
+
         /// <summary>
         /// Occurs whenever <see cref="RichItemsControl.ScaleTransform"/> changes.
         /// </summary>
@@ -311,6 +333,7 @@ namespace RichCanvas
         /// Default is <see langword="false"/>.
         /// </summary>
         public static DependencyProperty RealTimeSelectionEnabledProperty = DependencyProperty.Register(nameof(RealTimeSelectionEnabled), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
+
         /// <summary>
         /// Gets or sets whether real-time selection is enabled.
         /// Default is <see langword="false"/>.
@@ -326,6 +349,7 @@ namespace RichCanvas
         /// Default is <see langword="false"/>.
         /// </summary>
         public static DependencyProperty RealTimeDraggingEnabledProperty = DependencyProperty.Register(nameof(RealTimeDraggingEnabled), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
+
         /// <summary>
         /// Gets or sets whether real-time selection is enabled.
         /// Default is <see langword="false"/>.
@@ -341,6 +365,7 @@ namespace RichCanvas
         /// Default is <see langword="true"/>.
         /// </summary>
         public static DependencyProperty CanSelectMultipleItemsProperty = DependencyProperty.Register(nameof(CanSelectMultipleItems), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(true, OnCanSelectMultipleItemsChanged));
+
         /// <summary>
         /// Gets or sets whether you can select multiple elements or not.
         /// Default is <see langword="true"/>.
@@ -352,6 +377,7 @@ namespace RichCanvas
         }
 
         public static readonly DependencyProperty ViewportSizeProperty = DependencyProperty.Register(nameof(ViewportSize), typeof(Size), typeof(RichItemsControl), new FrameworkPropertyMetadata(Size.Empty));
+
         /// <summary>
         /// Gets the size of the viewport.
         /// </summary>
@@ -362,6 +388,7 @@ namespace RichCanvas
         }
 
         public static readonly DependencyProperty ItemsExtentProperty = DependencyProperty.Register(nameof(ItemsExtent), typeof(Rect), typeof(RichItemsControl), new FrameworkPropertyMetadata(Rect.Empty, OnItemsExtentChanged));
+
         /// <summary>
         /// The area covered by the <see cref="RichItemContainer"/>s.
         /// </summary>
@@ -370,7 +397,8 @@ namespace RichCanvas
             get => (Rect)GetValue(ItemsExtentProperty);
             set => SetValue(ItemsExtentProperty, value);
         }
-        #endregion
+
+        #endregion Properties API
 
         #region Internal Properties
 
@@ -380,7 +408,7 @@ namespace RichCanvas
         internal IList BaseSelectedItems => base.SelectedItems;
         internal List<int> CurrentDrawingIndexes { get; } = [];
 
-        #endregion
+        #endregion Internal Properties
 
         #region Constructors
 
@@ -406,7 +434,8 @@ namespace RichCanvas
             _states = new Stack<CanvasState>();
             _states.Push(GetDefaultState());
         }
-        #endregion
+
+        #endregion Constructors
 
         #region Override Methods
 
@@ -548,7 +577,7 @@ namespace RichCanvas
             UpdateScrollbars();
         }
 
-        #endregion
+        #endregion Override Methods
 
         #region Public Api
 
@@ -569,7 +598,7 @@ namespace RichCanvas
             }
         }
 
-        #endregion
+        #endregion Public Api
 
         #region Properties Callbacks
 
@@ -590,7 +619,8 @@ namespace RichCanvas
             var editor = (RichItemsControl)d;
             editor.UpdateScrollbars();
         }
-        #endregion
+
+        #endregion Properties Callbacks
 
         #region Selection
 
@@ -754,7 +784,7 @@ namespace RichCanvas
             }
         }
 
-        #endregion
+        #endregion Selection
 
         #region Handlers And Private Methods
 
@@ -885,6 +915,7 @@ namespace RichCanvas
             var newEventArgs = new RoutedEventArgs(DrawingEndedEvent, new DrawEndedEventArgs(context, mousePosition));
             RaiseEvent(newEventArgs);
         }
-        #endregion
+
+        #endregion Handlers And Private Methods
     }
 }

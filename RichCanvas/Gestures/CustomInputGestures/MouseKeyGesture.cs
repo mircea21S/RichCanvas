@@ -9,6 +9,7 @@ namespace RichCanvas.Gestures
     public class MouseKeyGesture : InputGesture
     {
         private MouseGesture _mouseGesture;
+
         public MouseGesture MouseGesture
         {
             get => _mouseGesture;
@@ -16,6 +17,7 @@ namespace RichCanvas.Gestures
         }
 
         private KeyGesture[] _keyGestures;
+
         [TypeConverter(typeof(MouseKeyGestureConverter))]
         public KeyGesture[] KeyGestures
         {
@@ -24,6 +26,7 @@ namespace RichCanvas.Gestures
         }
 
         private Key[] _keys;
+
         public Key[] Keys
         {
             get => _keys;
@@ -32,8 +35,8 @@ namespace RichCanvas.Gestures
 
         public MouseKeyGesture()
         {
-
         }
+
         public MouseKeyGesture(MouseGesture mouseGesture, params KeyGesture[] keyGestures)
         {
             _mouseGesture = mouseGesture;
