@@ -13,8 +13,16 @@ namespace RichCanvas.States.ContainerStates
             Container = container;
         }
 
-        public virtual void OnItemsDragStarted() { }
-        public virtual void OnItemsDragDelta(Point offsetPoint) { }
-        public virtual void OnItemsDragCompleted() { }
+        public virtual void OnItemsDragStarted()
+        {
+        }
+
+        public virtual void OnItemsDragDelta(Point offsetPoint)
+        {
+        }
+
+        public virtual void OnItemsDragCompleted()
+        {
+        }
     }
 }

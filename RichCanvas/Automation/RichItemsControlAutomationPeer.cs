@@ -54,7 +54,7 @@ namespace RichCanvas.Automation
         /// <inheritdoc/>
         public void SetValue(string value)
         {
-            //TODO: maybe deserialize a json form a specific types with allowed dependency props 
+            //TODO: maybe deserialize a json form a specific types with allowed dependency props
             //      that are modifiable and serializable
             throw new System.NotSupportedException("This control does not allow setting the value.");
         }

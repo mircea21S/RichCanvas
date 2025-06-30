@@ -69,7 +69,6 @@ namespace RichCanvas.States.ContainerStates
                     }
                 }
             }
-
         }
 
         public override void OnItemsDragCompleted()

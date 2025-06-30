@@ -26,13 +26,14 @@ namespace RichCanvas.Gestures
 
         public MouseCustomKeyGesture()
         {
-
         }
+
         public MouseCustomKeyGesture(MouseGesture mouseGesture, params Key[] customKeys)
         {
             _mouseGesture = mouseGesture;
             _customKeys = customKeys;
         }
+
         public override bool Matches(object targetElement, InputEventArgs inputEventArgs)
         {
             if (_customKeys.All(k => Keyboard.IsKeyDown(k)) && IsMouseGestureMatching(_mouseGesture.MouseAction) && Keyboard.Modifiers == _mouseGesture.Modifiers)
