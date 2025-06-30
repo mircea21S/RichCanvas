@@ -10,6 +10,7 @@ namespace RichCanvas
     public class RichCanvas : Panel
     {
         private RichItemsControl? _itemsOwner;
+
         internal RichItemsControl ItemsOwner
         {
             get => _itemsOwner ?? throw new InvalidOperationException("RichCanvas not initialized");
@@ -17,6 +18,7 @@ namespace RichCanvas
         }
 
         public static readonly DependencyProperty ExtentProperty = DependencyProperty.Register(nameof(Extent), typeof(Rect), typeof(RichCanvas), new FrameworkPropertyMetadata(Rect.Empty));
+
         /// <summary>The area covered by the children of this panel.</summary>
         public Rect Extent
         {

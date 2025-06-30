@@ -13,6 +13,5 @@ namespace RichCanvas.CustomEventArgs
             DataContext = dataContext;
             DrawEndedMousePosition = drawEndedMousePosition;
         }
-
     }
 }

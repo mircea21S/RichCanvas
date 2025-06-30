@@ -18,11 +18,12 @@ namespace RichCanvas
         private Point? _viewportLocationBeforeScrolling;
         private bool _isScrolling;
 
-        #endregion
+        #endregion Private Fields
 
         #region IScrollInfo
 
         internal IScrollInfo ScrollInfo => this;
+
         /// <inheritdoc/>
         public bool CanHorizontallyScroll { get; set; }
 
@@ -178,6 +179,7 @@ namespace RichCanvas
                 ScrollOwner.InvalidateScrollInfo();
             }
         }
-        #endregion
+
+        #endregion IScrollInfo
     }
 }

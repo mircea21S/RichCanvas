@@ -16,6 +16,7 @@ namespace RichCanvas
         /// Default is 1.1d.
         /// </summary>
         public static DependencyProperty ScaleFactorProperty = DependencyProperty.Register(nameof(ScaleFactor), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(1.1d));
+
         /// <summary>
         /// Gets or sets the factor used to change <see cref="ScaleTransform"/> on zoom.
         /// Default is 1.1d.
@@ -31,6 +32,7 @@ namespace RichCanvas
         /// Default is enabled.
         /// </summary>
         public static DependencyProperty DisableZoomProperty = DependencyProperty.Register(nameof(DisableZoom), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
+
         /// <summary>
         /// Gets or sets whether zooming operation is disabled.
         /// Default is enabled.
@@ -46,6 +48,7 @@ namespace RichCanvas
         /// Default is 2.
         /// </summary>
         public static DependencyProperty MaxScaleProperty = DependencyProperty.Register(nameof(MaxScale), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(2d, OnMaxScaleChanged, CoerceMaxScale));
+
         /// <summary>
         /// Gets or sets maximum scale for <see cref="RichItemsControl.ScaleTransform"/>.
         /// Default is 2.
@@ -75,6 +78,7 @@ namespace RichCanvas
         /// Default is 0.1d.
         /// </summary>
         public static DependencyProperty MinScaleProperty = DependencyProperty.Register(nameof(MinScale), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(0.1d, OnMinimumScaleChanged, CoerceMinimumScale));
+
         /// <summary>
         /// Gets or sets minimum scale for <see cref="RichItemsControl.ScaleTransform"/>.
         /// Default is 0.1d.
@@ -100,6 +104,7 @@ namespace RichCanvas
         /// Default is 1.
         /// </summary>
         public static DependencyProperty ViewportZoomProperty = DependencyProperty.Register(nameof(ViewportZoom), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(1d, OnViewportZoomChanged, CoerceViewportZoom));
+
         /// <summary>
         /// Gets or sets the current <see cref="RichItemsControl.ScaleTransform"/> value.
         /// Default is 1.
@@ -137,7 +142,7 @@ namespace RichCanvas
             return value;
         }
 
-        #endregion
+        #endregion Dependency Properties
 
         /// <inheritdoc/>
         protected override void OnPreviewMouseWheel(MouseWheelEventArgs e)
