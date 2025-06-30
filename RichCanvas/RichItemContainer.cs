@@ -35,6 +35,7 @@ namespace RichCanvas
 
         /// <inheritdoc/>
         public static DependencyProperty IsSelectedProperty = Selector.IsSelectedProperty.AddOwner(typeof(RichItemContainer), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnIsSelectedChanged));
+
         /// <summary>
         /// Gets or sets a value that indicates whether this item is selected.
         /// Can only be set if <see cref="IsSelectable"/> is true.
@@ -46,6 +47,7 @@ namespace RichCanvas
         }
 
         public static DependencyProperty TopProperty = DependencyProperty.Register(nameof(Top), typeof(double), typeof(RichItemContainer), new FrameworkPropertyMetadata(OnPositionChanged));
+
         /// <summary>
         /// Gets or sets the Top position of this <see cref="RichItemContainer"/> on <see cref="RichItemsControl.ItemsHost"/>
         /// </summary>
@@ -67,6 +69,7 @@ namespace RichCanvas
         }
 
         public static DependencyProperty IsSelectableProperty = DependencyProperty.Register(nameof(IsSelectable), typeof(bool), typeof(RichItemContainer), new FrameworkPropertyMetadata(true));
+
         /// <summary>
         /// Gets or sets whether this <see cref="RichItemContainer"/> can be selected.
         /// True by default
@@ -78,6 +81,7 @@ namespace RichCanvas
         }
 
         public static DependencyProperty IsDraggableProperty = DependencyProperty.Register(nameof(IsDraggable), typeof(bool), typeof(RichItemContainer), new FrameworkPropertyMetadata(true));
+
         /// <summary>
         /// Gets or sets whether this <see cref="RichItemContainer"/> can be dragged on <see cref="RichItemsControl.ItemsHost"/>
         /// True by default
@@ -88,8 +92,8 @@ namespace RichCanvas
             set => SetValue(IsDraggableProperty, value);
         }
 
-
         public static DependencyProperty HasCustomBehaviorProperty = DependencyProperty.Register(nameof(HasCustomBehavior), typeof(bool), typeof(RichItemContainer), new FrameworkPropertyMetadata(false));
+
         /// <summary>
         /// Gets or sets whether this <see cref="RichItemContainer"/> has custom behavior handled out of dragging
         /// This tells <see cref="RichItemsControl"/> to stop handling mouse interaction when manipulating this <see cref="RichItemContainer"/>
@@ -102,6 +106,7 @@ namespace RichCanvas
         }
 
         public static DependencyProperty ShouldBringIntoViewProperty = DependencyProperty.Register(nameof(ShouldBringIntoView), typeof(bool), typeof(RichItemContainer), new FrameworkPropertyMetadata(false, OnBringIntoViewChanged));
+
         /// <summary>
         /// Gets or sets whether this <see cref="RichItemContainer"/> should be centered inside <see cref="RichItemsControl.ScrollContainer"/> viewport
         /// </summary>
@@ -112,6 +117,7 @@ namespace RichCanvas
         }
 
         public static DependencyProperty ScaleProperty = DependencyProperty.Register(nameof(Scale), typeof(Point), typeof(RichItemContainer), new FrameworkPropertyMetadata(new Point(1, 1), OnScaleChanged));
+
         /// <summary>
         /// Gets or sets this <see cref="RichItemContainer"/> ScaleTransform in order to get direction.
         /// </summary>
@@ -122,6 +128,7 @@ namespace RichCanvas
         }
 
         public static DependencyProperty AllowScaleChangeToUpdatePositionProperty = DependencyProperty.Register(nameof(AllowScaleChangeToUpdatePosition), typeof(bool), typeof(RichItemContainer), new FrameworkPropertyMetadata(true));
+
         /// <summary>
         /// Gets or sets whether this <see cref="RichItemContainer"/> Left and Top can be updated while Drawing if the <see cref="Scale"/> is changed.
         /// </summary>
@@ -135,10 +142,13 @@ namespace RichCanvas
         /// Apply transforms on <see cref="RichItemContainer"/>
         /// </summary>
         public static DependencyProperty ApplyTransformProperty = DependencyProperty.RegisterAttached("ApplyTransform", typeof(Transform), typeof(RichItemContainer), new FrameworkPropertyMetadata(default(Transform), OnApplyTransformChanged));
+
         public static void SetApplyTransform(UIElement element, Transform value) => element.SetValue(ApplyTransformProperty, value);
+
         public static Transform GetApplyTransform(UIElement element) => (Transform)element.GetValue(ApplyTransformProperty);
 
         public static readonly RoutedEvent SelectedEvent = Selector.SelectedEvent.AddOwner(typeof(RichItemContainer));
+
         /// <summary>
         /// Occurs when this <see cref="ItemContainer"/> is selected.
         /// </summary>
@@ -149,6 +159,7 @@ namespace RichCanvas
         }
 
         public static readonly RoutedEvent UnselectedEvent = Selector.UnselectedEvent.AddOwner(typeof(RichItemContainer));
+
         /// <summary>
         /// Occurs when this <see cref="ItemContainer"/> is unselected.
         /// </summary>
@@ -159,6 +170,7 @@ namespace RichCanvas
         }
 
         public static readonly RoutedEvent TopChangedEvent = EventManager.RegisterRoutedEvent(nameof(TopChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(RichItemContainer));
+
         /// <summary>
         /// Occurs whenever <see cref="RichItemContainer.Top"/> changes.
         /// </summary>
@@ -169,6 +181,7 @@ namespace RichCanvas
         }
 
         public static readonly RoutedEvent LeftChangedEvent = EventManager.RegisterRoutedEvent(nameof(LeftChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(RichItemContainer));
+
         /// <summary>
         /// Occurs whenever <see cref="RichItemContainer.Left"/> changes.
         /// </summary>
@@ -179,6 +192,7 @@ namespace RichCanvas
         }
 
         public static readonly RoutedEvent DragStartedEvent = EventManager.RegisterRoutedEvent(nameof(DragStarted), RoutingStrategy.Bubble, typeof(DragStartedEventHandler), typeof(RichItemContainer));
+
         /// <summary>
         /// Occurs when this <see cref="RichItemContainer"/> is the instigator of a drag operation.
         /// </summary>
@@ -189,6 +203,7 @@ namespace RichCanvas
         }
 
         public static readonly RoutedEvent DragDeltaEvent = EventManager.RegisterRoutedEvent(nameof(DragDelta), RoutingStrategy.Bubble, typeof(DragDeltaEventHandler), typeof(RichItemContainer));
+
         /// <summary>
         /// Occurs when this <see cref="RichItemContainer"/> is being dragged.
         /// </summary>
@@ -199,6 +214,7 @@ namespace RichCanvas
         }
 
         public static readonly RoutedEvent DragCompletedEvent = EventManager.RegisterRoutedEvent(nameof(DragCompleted), RoutingStrategy.Bubble, typeof(DragCompletedEventHandler), typeof(RichItemContainer));
+
         /// <summary>
         /// Occurs when this <see cref="RichItemContainer"/> completed the drag operation.
         /// </summary>
@@ -207,7 +223,8 @@ namespace RichCanvas
             add => AddHandler(DragCompletedEvent, value);
             remove => RemoveHandler(DragCompletedEvent, value);
         }
-        #endregion
+
+        #endregion Properties API
 
         static RichItemContainer()
         {
@@ -222,6 +239,7 @@ namespace RichCanvas
         public ContainerState CurrentState => _states.Peek();
 
         private RichItemsControl? _host;
+
         /// <summary>
         /// The <see cref="RichItemsControl"/> that owns this <see cref="RichItemContainer"/>.
         /// </summary>
@@ -326,8 +344,8 @@ namespace RichCanvas
             {
                 RoutedEvent = DragStartedEvent
             });
-
         }
+
         internal void RaiseDragDeltaEvent(Point position)
         {
             RaiseEvent(new DragDeltaEventArgs(position.X, position.Y)
