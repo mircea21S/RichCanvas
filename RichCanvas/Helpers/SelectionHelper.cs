@@ -3,9 +3,9 @@ using System.Windows;
 
 namespace RichCanvas.Helpers
 {
-    public static class SelectionHelper
+    internal static class SelectionHelper
     {
-        public static Rect DrawSelectionRectangle(Point position, Point initialPosition)
+        internal static Rect DrawSelectionRectangle(Point position, Point initialPosition)
         {
             double left = position.X < initialPosition.X ? position.X : initialPosition.X;
             double top = position.Y < initialPosition.Y ? position.Y : initialPosition.Y;
