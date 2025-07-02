@@ -22,12 +22,13 @@ namespace RichCanvas.Helpers
                 return container;
             }
 
-            DependencyObject? parent = VisualTreeHelper.GetParent(d);
+            DependencyObject parent = VisualTreeHelper.GetParent(d);
             while (parent is not RichItemContainer && parent != null)
             {
                 parent = VisualTreeHelper.GetParent(parent);
             }
-            return (RichItemContainer)parent;
+
+            return (RichItemContainer)parent!;
         }
 
         /// <summary>

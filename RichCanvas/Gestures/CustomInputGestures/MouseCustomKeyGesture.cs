@@ -6,7 +6,7 @@ using System.Windows.Input;
 
 namespace RichCanvas.Gestures
 {
-    public class MouseCustomKeyGesture : InputGesture
+    internal class MouseCustomKeyGesture : InputGesture
     {
         private MouseGesture _mouseGesture;
         private Key[] _customKeys = Array.Empty<Key>();
@@ -24,7 +24,7 @@ namespace RichCanvas.Gestures
             set => _mouseGesture = value;
         }
 
-        public MouseCustomKeyGesture()
+        internal MouseCustomKeyGesture()
         {
         }
 
@@ -55,7 +55,7 @@ namespace RichCanvas.Gestures
 
     internal class MouseCustomKeyGestureConverter : TypeConverter
     {
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        public override object ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
         {
             string key = (string)value;
             Enum.TryParse(key, out Key enumKey);

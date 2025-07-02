@@ -136,7 +136,7 @@ namespace RichCanvas
         public static DependencyProperty ShouldBringIntoViewProperty = DependencyProperty.Register(nameof(ShouldBringIntoView), typeof(bool), typeof(RichItemContainer), new FrameworkPropertyMetadata(false, OnBringIntoViewChanged));
 
         /// <summary>
-        /// Gets or sets whether this <see cref="RichItemContainer"/> should be centered inside <see cref="RichItemsControl.ScrollContainer"/> viewport
+        /// Gets or sets whether this <see cref="RichItemContainer"/> should be centered inside <see cref="RichItemsControl"/> viewport.
         /// </summary>
         public bool ShouldBringIntoView
         {
@@ -449,7 +449,7 @@ namespace RichCanvas
 
         private static void OnPositionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemContainer)d).UpdatePosition(e.Property);
 
-        private static void OnApplyTransformChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => (VisualHelper.GetParentContainer(d)).ApplyTransform((Transform)e.NewValue);
+        private static void OnApplyTransformChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => VisualHelper.GetParentContainer(d).ApplyTransform((Transform)e.NewValue);
 
         private static void OnIsSelectedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

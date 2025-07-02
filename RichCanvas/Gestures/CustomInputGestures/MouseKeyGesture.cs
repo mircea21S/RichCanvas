@@ -71,7 +71,7 @@ namespace RichCanvas.Gestures
 
     internal class MouseKeyGestureConverter : TypeConverter
     {
-        public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+        public override object ConvertFrom(ITypeDescriptorContext? context, CultureInfo? culture, object value)
         {
             string key = (string)value;
             Enum.TryParse(key, out Key enumKey);
