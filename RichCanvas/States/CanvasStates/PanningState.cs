@@ -3,14 +3,22 @@ using System.Windows.Input;
 
 namespace RichCanvas.States
 {
+    /// <summary>
+    /// Defines a new state used when panning action happens on <see cref="RichItemsControl"/>.
+    /// </summary>
     public class PanningState : CanvasState
     {
         private Point _initialPosition;
 
+        /// <summary>
+        /// Initializes a new <see cref="PanningState"/>.
+        /// </summary>
+        /// <param name="parent">Owner of the state.</param>
         public PanningState(RichItemsControl parent) : base(parent)
         {
         }
 
+        /// <inheritdoc/>
         public override void Enter()
         {
             _initialPosition = Mouse.GetPosition(Parent);
@@ -18,6 +26,7 @@ namespace RichCanvas.States
             Parent.Cursor = Cursors.Hand;
         }
 
+        /// <inheritdoc/>
         public override void HandleMouseMove(MouseEventArgs e)
         {
             if (Parent.IsPanning)
@@ -31,6 +40,7 @@ namespace RichCanvas.States
             }
         }
 
+        /// <inheritdoc/>
         public override void Exit()
         {
             Parent.IsPanning = false;

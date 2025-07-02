@@ -8,17 +8,25 @@ using RichCanvas.Automation.ControlInformations;
 
 namespace RichCanvas.Automation
 {
+    /// <summary>
+    /// Exposes the <see cref="RichItemsControl"/> to UI Automation project.
+    /// </summary>
     public class RichItemsControlAutomationPeer : SelectorAutomationPeer,
         IValueProvider,
         IScrollProvider
     //ITransformProvider
     {
+        /// <summary>
+        /// Gets the <see cref="RichItemsControl"/> that is associated with this <see cref="RichItemsControlAutomationPeer"/>.
+        /// </summary>
         protected RichItemsControl OwnerItemsControl => (RichItemsControl)Owner;
 
         /// <inheritdoc/>
         public bool IsReadOnly => true;
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets the serialized json value of <see cref="RichItemsControlData"/> containing data about the associated <see cref="RichItemsControl"/>.
+        /// </summary>
         public string Value => JsonConvert.SerializeObject(new RichItemsControlData
         {
             TranslateTransformX = OwnerItemsControl.TranslateTransform.X,
@@ -35,18 +43,44 @@ namespace RichCanvas.Automation
             MinZoom = OwnerItemsControl.MinScale
         });
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// <br/>
+        /// Returns: Always true.
+        /// </summary>
         public bool HorizontallyScrollable => true;
 
+        /// <summary>
+        /// Gets associated <see cref="RichItemsControl.HorizontalOffset"/> value.
+        /// </summary>
         public double HorizontalScrollPercent => OwnerItemsControl.HorizontalOffset;
 
+        /// <summary>
+        /// Gets associated <see cref="RichItemsControl.ViewportSize"/>.Width value.
+        /// </summary>
         public double HorizontalViewSize => OwnerItemsControl.ViewportSize.Width;
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// <br/>
+        /// Returns: Always true.
+        /// </summary>
         public bool VerticallyScrollable => true;
 
+        /// <summary>
+        /// Gets associated <see cref="RichItemsControl.VerticalOffset"/> value.
+        /// </summary>
         public double VerticalScrollPercent => OwnerItemsControl.VerticalOffset;
 
+        /// <summary>
+        /// Gets associated <see cref="RichItemsControl.ViewportSize"/>.Height value.
+        /// </summary>
         public double VerticalViewSize => OwnerItemsControl.ViewportSize.Height;
 
+        /// <summary>
+        /// Initializes a new <see cref="RichItemsControlAutomationPeer"/>.
+        /// </summary>
+        /// <param name="owner"></param>
         public RichItemsControlAutomationPeer(RichItemsControl owner) : base(owner)
         {
         }
@@ -59,6 +93,7 @@ namespace RichCanvas.Automation
             throw new System.NotSupportedException("This control does not allow setting the value.");
         }
 
+        /// <inheritdoc/>
         public override object GetPattern(PatternInterface patternInterface) => patternInterface switch
         {
             PatternInterface.Value => this,
@@ -77,6 +112,11 @@ namespace RichCanvas.Automation
         protected override ItemAutomationPeer CreateItemAutomationPeer(object item)
             => new RichItemContainerAutomationPeer(item, this);
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// <br/>
+        /// Using <see cref="OwnerItemsControl"/> implementation of <see cref="System.Windows.Controls.Primitives.IScrollInfo"/>.
+        /// </summary>
         public void Scroll(ScrollAmount horizontalAmount, ScrollAmount verticalAmount)
         {
             if (verticalAmount == ScrollAmount.SmallIncrement)
@@ -114,6 +154,9 @@ namespace RichCanvas.Automation
             }
         }
 
+        /// <summary>
+        /// Sets the amount of vertical and horizontal offset on the <see cref="OwnerItemsControl"/>.
+        /// </summary>
         public void SetScrollPercent(double horizontalPercent, double verticalPercent)
         {
             OwnerItemsControl.SetVerticalOffset(OwnerItemsControl.VerticalOffset + verticalPercent);

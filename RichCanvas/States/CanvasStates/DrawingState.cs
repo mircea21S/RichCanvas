@@ -6,15 +6,23 @@ using System.Windows.Media;
 
 namespace RichCanvas.States
 {
+    /// <summary>
+    /// Defines a new state used when a drawing action happens on <see cref="RichItemsControl"/>.
+    /// </summary>
     public class DrawingState : CanvasState
     {
         private RichItemContainer _currentDrawingContainer;
         private bool _isDrawing;
 
+        /// <summary>
+        /// Initializes a new <see cref="DrawingState"/>.
+        /// </summary>
+        /// <param name="parent">Owner of the state.</param>
         public DrawingState(RichItemsControl parent) : base(parent)
         {
         }
 
+        /// <inheritdoc/>
         public override void Enter()
         {
             List<int> drawingContainersIndexes = Parent.CurrentDrawingIndexes;
@@ -48,6 +56,7 @@ namespace RichCanvas.States
             drawingContainersIndexes.RemoveAt(0);
         }
 
+        /// <inheritdoc/>
         public override void HandleMouseMove(MouseEventArgs e)
         {
             if (!_isDrawing)
@@ -59,6 +68,7 @@ namespace RichCanvas.States
             DrawContainer(mousePosition);
         }
 
+        /// <inheritdoc/>
         public override void HandleMouseUp(MouseButtonEventArgs e)
         {
             if (!_isDrawing)
@@ -87,6 +97,7 @@ namespace RichCanvas.States
             _isDrawing = false;
         }
 
+        /// <inheritdoc/>
         public override void HandleAutoPanning(MouseEventArgs e)
         {
             Point mousePosition = e.GetPosition(Parent.ItemsHost);

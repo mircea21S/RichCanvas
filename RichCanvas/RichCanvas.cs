@@ -17,6 +17,9 @@ namespace RichCanvas
             set => _itemsOwner = value;
         }
 
+        /// <summary>
+        /// Identifies the <see cref="Extent"/> dependency property.
+        /// </summary>
         public static readonly DependencyProperty ExtentProperty = DependencyProperty.Register(nameof(Extent), typeof(Rect), typeof(RichCanvas), new FrameworkPropertyMetadata(Rect.Empty));
 
         /// <summary>The area covered by the children of this panel.</summary>

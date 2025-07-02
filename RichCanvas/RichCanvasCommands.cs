@@ -5,6 +5,9 @@ using RichCanvas.Gestures;
 
 namespace RichCanvas
 {
+    /// <summary>
+    /// Holds pre-defined <see cref="RichItemsControl"/> routed commands.
+    /// </summary>
     public class RichCanvasCommands
     {
         /// <summary>

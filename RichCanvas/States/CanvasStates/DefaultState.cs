@@ -3,16 +3,25 @@ using System.Windows.Input;
 
 using RichCanvas.Gestures;
 using RichCanvas.Helpers;
-using RichCanvas.States.CanvasStates;
 
 namespace RichCanvas.States
 {
-    internal class DefaultState : CanvasState
+    /// <summary>
+    /// Defines the state called by <see cref="RichItemsControl.GetDefaultState()"/>.
+    /// <br/>
+    /// Note: <i>Used for orchestrating all states interactions with <see cref="RichItemsControl"/>.</i>
+    /// </summary>
+    public class DefaultState : CanvasState
     {
+        /// <summary>
+        /// Initializes a new <see cref="DefaultState"/>.
+        /// </summary>
+        /// <param name="parent">Owner of the state.</param>
         public DefaultState(RichItemsControl parent) : base(parent)
         {
         }
 
+        /// <inheritdoc/>
         public override void HandleMouseDown(MouseButtonEventArgs e)
         {
             if (RichCanvasGestures.Drawing.Matches(e.Source, e)
@@ -38,6 +47,7 @@ namespace RichCanvas.States
             }
         }
 
+        /// <inheritdoc/>
         public override bool MatchesPreviewMouseDownState(MouseButtonEventArgs e, out CanvasState? matchingState)
         {
             if (RichCanvasGestures.Pan.Matches(e.Source, e))

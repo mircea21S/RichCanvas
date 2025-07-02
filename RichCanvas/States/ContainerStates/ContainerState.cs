@@ -2,7 +2,7 @@
 
 namespace RichCanvas.States.ContainerStates
 {
-    /// <summary>The base class for container states.</summary>
+    /// <summary>The base class for <see cref="RichItemContainer"/> states.</summary>
     public abstract class ContainerState
     {
         /// <summary>The owner of the state.</summary>

@@ -15,6 +15,16 @@ tab_width = 4
 end_of_line = crlf
 insert_final_newline = false
 
+#### .NET Code Actions ####
+
+# Type members
+dotnet_hide_advanced_members = false
+dotnet_member_insertion_location = with_other_members_of_the_same_kind
+dotnet_property_generation_behavior = prefer_throwing_properties
+
+# Symbol search
+dotnet_search_reference_assemblies = true
+
 #### .NET Coding Conventions ####
 
 # Organize usings
@@ -124,11 +134,13 @@ csharp_prefer_simple_default_expression = true
 csharp_style_deconstructed_variable_declaration = true
 csharp_style_implicit_object_creation_when_type_is_apparent = true
 csharp_style_inlined_variable_declaration = true
+csharp_style_prefer_implicitly_typed_lambda_expression = true
 csharp_style_prefer_index_operator = true
 csharp_style_prefer_local_over_anonymous_function = true
 csharp_style_prefer_null_check_over_type_check = true
 csharp_style_prefer_range_operator = true
 csharp_style_prefer_tuple_swap = true
+csharp_style_prefer_unbound_generic_type_in_nameof = true
 csharp_style_prefer_utf8_string_literals = true
 csharp_style_throw_expression = true
 csharp_style_unused_value_assignment_preference = discard_variable
@@ -207,17 +219,17 @@ dotnet_naming_rule.non_field_members_should_be_pascal_case.severity = suggestion
 dotnet_naming_rule.non_field_members_should_be_pascal_case.symbols = non_field_members
 dotnet_naming_rule.non_field_members_should_be_pascal_case.style = pascal_case
 
-dotnet_naming_rule.private_or_internal_field_should_be_begins_with__.severity = warning
-dotnet_naming_rule.private_or_internal_field_should_be_begins_with__.symbols = private_or_internal_field
-dotnet_naming_rule.private_or_internal_field_should_be_begins_with__.style = begins_with__
+dotnet_naming_rule.private_field_should_be_begins_with__.severity = warning
+dotnet_naming_rule.private_field_should_be_begins_with__.symbols = private_field
+dotnet_naming_rule.private_field_should_be_begins_with__.style = begins_with__
 
 dotnet_naming_rule.private_or_internal_static_field_should_be_begins_with__.severity = warning
 dotnet_naming_rule.private_or_internal_static_field_should_be_begins_with__.symbols = private_or_internal_static_field
 dotnet_naming_rule.private_or_internal_static_field_should_be_begins_with__.style = begins_with__
 
-dotnet_naming_rule.non_public_constant_fields_should_be_pascal_case.severity = suggestion
-dotnet_naming_rule.non_public_constant_fields_should_be_pascal_case.symbols = non_public_constant_fields
-dotnet_naming_rule.non_public_constant_fields_should_be_pascal_case.style = pascal_case
+dotnet_naming_rule.constant_fields_should_be_pascal_case.severity = suggestion
+dotnet_naming_rule.constant_fields_should_be_pascal_case.symbols = constant_fields
+dotnet_naming_rule.constant_fields_should_be_pascal_case.style = pascal_case
 
 # Symbol specifications
 
@@ -225,9 +237,9 @@ dotnet_naming_symbols.interface.applicable_kinds = interface
 dotnet_naming_symbols.interface.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
 dotnet_naming_symbols.interface.required_modifiers = 
 
-dotnet_naming_symbols.private_or_internal_field.applicable_kinds = field
-dotnet_naming_symbols.private_or_internal_field.applicable_accessibilities = internal, private, private_protected
-dotnet_naming_symbols.private_or_internal_field.required_modifiers = 
+dotnet_naming_symbols.private_field.applicable_kinds = field
+dotnet_naming_symbols.private_field.applicable_accessibilities = private, private_protected
+dotnet_naming_symbols.private_field.required_modifiers = 
 
 dotnet_naming_symbols.private_or_internal_static_field.applicable_kinds = field
 dotnet_naming_symbols.private_or_internal_static_field.applicable_accessibilities = internal, private, private_protected
@@ -241,9 +253,9 @@ dotnet_naming_symbols.non_field_members.applicable_kinds = property, event, meth
 dotnet_naming_symbols.non_field_members.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
 dotnet_naming_symbols.non_field_members.required_modifiers = 
 
-dotnet_naming_symbols.non_public_constant_fields.applicable_kinds = field
-dotnet_naming_symbols.non_public_constant_fields.applicable_accessibilities = *
-dotnet_naming_symbols.non_public_constant_fields.required_modifiers = const
+dotnet_naming_symbols.constant_fields.applicable_kinds = field
+dotnet_naming_symbols.constant_fields.applicable_accessibilities = *
+dotnet_naming_symbols.constant_fields.required_modifiers = const
 
 # Naming styles
 
