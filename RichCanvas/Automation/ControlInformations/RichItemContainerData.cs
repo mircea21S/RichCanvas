@@ -2,13 +2,39 @@
 
 namespace RichCanvas.Automation.ControlInformations
 {
+    /// <summary>
+    /// Data transfer object exposing <see cref="RichItemContainer"/> information to UI Automation proejct.
+    /// </summary>
     public class RichItemContainerData
     {
-        public Type? DataContextType { get; set; }
-        public double Top { get; set; }
-        public double Left { get; set; }
-        public bool IsSelected { get; set; }
-        public double ScaleX { get; set; }
-        public double ScaleY { get; set; }
+        /// <summary>
+        /// Bound <see cref="RichItemContainer"/>.DataContext type.
+        /// </summary>
+        public Type? DataContextType { get; internal set; }
+
+        /// <summary>
+        /// <see cref="RichItemContainer.Top"/> property value.
+        /// </summary>
+        public double Top { get; internal set; }
+
+        /// <summary>
+        /// <see cref="RichItemContainer.Left"/> property value.
+        /// </summary>
+        public double Left { get; internal set; }
+
+        /// <summary>
+        /// <see cref="RichItemContainer.IsSelected"/> property value.
+        /// </summary>
+        public bool IsSelected { get; internal set; }
+
+        /// <summary>
+        /// <see cref="RichItemContainer.Scale"/> property value.
+        /// </summary>
+        public double ScaleX { get; internal set; }
+
+        /// <summary>
+        /// <see cref="RichItemContainer.Scale"/> property value.
+        /// </summary>
+        public double ScaleY { get; internal set; }
     }
 }

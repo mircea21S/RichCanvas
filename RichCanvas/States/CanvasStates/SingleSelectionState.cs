@@ -6,18 +6,26 @@ using System.Windows.Media;
 using RichCanvas.Gestures;
 using RichCanvas.Helpers;
 
-namespace RichCanvas.States.CanvasStates
+namespace RichCanvas.States
 {
+    /// <summary>
+    /// Defines a new state used when single selection action happens on <see cref="RichItemsControl"/>.
+    /// </summary>
     public class SingleSelectionState : CanvasState
     {
         private Point _selectionRectangleInitialPosition;
-        private RichItemContainer _selectedContainer;
+        private RichItemContainer? _selectedContainer;
         private List<RichItemContainer> _selectedContainers = [];
 
+        /// <summary>
+        /// Initializes a new <see cref="SingleSelectionState"/>.
+        /// </summary>
+        /// <param name="parent">Owner of the state.</param>
         public SingleSelectionState(RichItemsControl parent) : base(parent)
         {
         }
 
+        /// <inheritdoc/>
         public override void Enter()
         {
             Parent.SelectionRectangle = new Rect();
@@ -26,11 +34,13 @@ namespace RichCanvas.States.CanvasStates
             Parent.SelectedItem = null;
         }
 
+        /// <inheritdoc/>
         public override void ReEnter()
         {
             SelectItem(Parent.RealTimeSelectionEnabled);
         }
 
+        /// <inheritdoc/>
         public override void HandleKeyDown(KeyEventArgs e)
         {
             if (RichCanvasGestures.Pan.Matches(e.Source, e))
@@ -39,6 +49,7 @@ namespace RichCanvas.States.CanvasStates
             }
         }
 
+        /// <inheritdoc/>
         public override void HandleMouseDown(MouseButtonEventArgs e)
         {
             if (RichCanvasGestures.Pan.Matches(e.Source, e))
@@ -47,6 +58,7 @@ namespace RichCanvas.States.CanvasStates
             }
         }
 
+        /// <inheritdoc/>
         public override void HandleMouseMove(MouseEventArgs e)
         {
             if (!Parent.IsSelecting)
@@ -62,6 +74,7 @@ namespace RichCanvas.States.CanvasStates
             }
         }
 
+        /// <inheritdoc/>
         public override void HandleMouseUp(MouseButtonEventArgs e)
         {
             if (!Parent.IsSelecting)
@@ -75,6 +88,7 @@ namespace RichCanvas.States.CanvasStates
             }
         }
 
+        /// <inheritdoc/>
         public override void HandleAutoPanning(MouseEventArgs e) => HandleMouseMove(e);
 
         private void SelectItem(bool defferedSelection = false)

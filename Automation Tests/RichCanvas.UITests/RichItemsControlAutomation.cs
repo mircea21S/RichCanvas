@@ -2,12 +2,14 @@
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Definitions;
 using FlaUI.Core.Patterns;
-using RichCanvas.Automation;
+
 using RichCanvas.Automation.ControlInformations;
 using RichCanvas.Gestures;
 using RichCanvas.UITests.Helpers;
 using RichCanvas.UITests.Tests;
+
 using RichCanvasUITests.App.Automation;
+
 using System;
 using System.Collections.Generic;
 using System.Drawing;

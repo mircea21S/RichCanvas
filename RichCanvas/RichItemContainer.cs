@@ -26,14 +26,24 @@ namespace RichCanvas
         private const string ContentPresenterName = "PART_ContentPresenter";
         private Stack<ContainerState> _states;
 
+        /// <summary>
+        /// Default fallback value for container width used on drawing if the set value is 0.
+        /// </summary>
         public const double DefaultWidth = 1d;
+
+        /// <summary>
+        /// Default fallback value for container height used on drawing if the set value is 0.
+        /// </summary>
         public const double DefaultHeight = 1d;
+
         internal ScaleTransform? ScaleTransform => RenderTransform is TransformGroup group ? group.Children.OfType<ScaleTransform>().FirstOrDefault() : null;
         internal TranslateTransform? TranslateTransform => RenderTransform is TransformGroup group ? group.Children.OfType<TranslateTransform>().FirstOrDefault() : null;
 
         #region Properties API
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Identifies the <see cref="IsSelected"/> dependency property.
+        /// </summary>
         public static DependencyProperty IsSelectedProperty = Selector.IsSelectedProperty.AddOwner(typeof(RichItemContainer), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnIsSelectedChanged));
 
         /// <summary>
@@ -46,6 +56,9 @@ namespace RichCanvas
             set => SetValue(IsSelectedProperty, value);
         }
 
+        /// <summary>
+        /// Identifies the <see cref="Top"/> dependency property.
+        /// </summary>
         public static DependencyProperty TopProperty = DependencyProperty.Register(nameof(Top), typeof(double), typeof(RichItemContainer), new FrameworkPropertyMetadata(OnPositionChanged));
 
         /// <summary>
@@ -57,6 +70,9 @@ namespace RichCanvas
             set => SetValue(TopProperty, value);
         }
 
+        /// <summary>
+        /// Identifies the <see cref="Left"/> dependency property.
+        /// </summary>
         public static DependencyProperty LeftProperty = DependencyProperty.Register(nameof(Left), typeof(double), typeof(RichItemContainer), new FrameworkPropertyMetadata(OnPositionChanged));
 
         /// <summary>
@@ -68,6 +84,9 @@ namespace RichCanvas
             set => SetValue(LeftProperty, value);
         }
 
+        /// <summary>
+        /// Identifies the <see cref="IsSelectable"/> dependency property.
+        /// </summary>
         public static DependencyProperty IsSelectableProperty = DependencyProperty.Register(nameof(IsSelectable), typeof(bool), typeof(RichItemContainer), new FrameworkPropertyMetadata(true));
 
         /// <summary>
@@ -80,6 +99,9 @@ namespace RichCanvas
             set => SetValue(IsSelectableProperty, value);
         }
 
+        /// <summary>
+        /// Identifies the <see cref="IsDraggable"/> dependency property.
+        /// </summary>
         public static DependencyProperty IsDraggableProperty = DependencyProperty.Register(nameof(IsDraggable), typeof(bool), typeof(RichItemContainer), new FrameworkPropertyMetadata(true));
 
         /// <summary>
@@ -92,6 +114,9 @@ namespace RichCanvas
             set => SetValue(IsDraggableProperty, value);
         }
 
+        /// <summary>
+        /// Identifies the <see cref="HasCustomBehavior"/> dependency property.
+        /// </summary>
         public static DependencyProperty HasCustomBehaviorProperty = DependencyProperty.Register(nameof(HasCustomBehavior), typeof(bool), typeof(RichItemContainer), new FrameworkPropertyMetadata(false));
 
         /// <summary>
@@ -105,6 +130,9 @@ namespace RichCanvas
             set => SetValue(HasCustomBehaviorProperty, value);
         }
 
+        /// <summary>
+        /// Identifies the <see cref="ShouldBringIntoView"/> dependency property.
+        /// </summary>
         public static DependencyProperty ShouldBringIntoViewProperty = DependencyProperty.Register(nameof(ShouldBringIntoView), typeof(bool), typeof(RichItemContainer), new FrameworkPropertyMetadata(false, OnBringIntoViewChanged));
 
         /// <summary>
@@ -116,6 +144,9 @@ namespace RichCanvas
             set => SetValue(ShouldBringIntoViewProperty, value);
         }
 
+        /// <summary>
+        /// Identifies the <see cref="Scale"/> dependency property.
+        /// </summary>
         public static DependencyProperty ScaleProperty = DependencyProperty.Register(nameof(Scale), typeof(Point), typeof(RichItemContainer), new FrameworkPropertyMetadata(new Point(1, 1), OnScaleChanged));
 
         /// <summary>
@@ -127,6 +158,9 @@ namespace RichCanvas
             set => SetValue(ScaleProperty, value);
         }
 
+        /// <summary>
+        /// Identifies the <see cref="AllowScaleChangeToUpdatePosition"/> dependency property.
+        /// </summary>
         public static DependencyProperty AllowScaleChangeToUpdatePositionProperty = DependencyProperty.Register(nameof(AllowScaleChangeToUpdatePosition), typeof(bool), typeof(RichItemContainer), new FrameworkPropertyMetadata(true));
 
         /// <summary>
@@ -143,14 +177,27 @@ namespace RichCanvas
         /// </summary>
         public static DependencyProperty ApplyTransformProperty = DependencyProperty.RegisterAttached("ApplyTransform", typeof(Transform), typeof(RichItemContainer), new FrameworkPropertyMetadata(default(Transform), OnApplyTransformChanged));
 
+        /// <summary>
+        /// Sets a property value that tells what <see cref="Transform"/> should be applied on <see cref="RichItemContainer"/>.RenderTransform property.
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="value"></param>
         public static void SetApplyTransform(UIElement element, Transform value) => element.SetValue(ApplyTransformProperty, value);
 
+        /// <summary>
+        /// Gets the <see cref="RichItemContainer"/>.ApplyTransform attached property value that indicates the current <see cref="RichItemContainer"/>.RenderTransform.
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
         public static Transform GetApplyTransform(UIElement element) => (Transform)element.GetValue(ApplyTransformProperty);
 
+        /// <summary>
+        /// Identifies the <see cref="Selected"/> routed event.
+        /// </summary>
         public static readonly RoutedEvent SelectedEvent = Selector.SelectedEvent.AddOwner(typeof(RichItemContainer));
 
         /// <summary>
-        /// Occurs when this <see cref="ItemContainer"/> is selected.
+        /// Occurs whenever this <see cref="RichItemContainer"/> is selected.
         /// </summary>
         public event RoutedEventHandler Selected
         {
@@ -158,10 +205,13 @@ namespace RichCanvas
             remove => RemoveHandler(SelectedEvent, value);
         }
 
+        /// <summary>
+        /// Identifies the <see cref="Unselected"/> routed event.
+        /// </summary>
         public static readonly RoutedEvent UnselectedEvent = Selector.UnselectedEvent.AddOwner(typeof(RichItemContainer));
 
         /// <summary>
-        /// Occurs when this <see cref="ItemContainer"/> is unselected.
+        /// Occurs when this <see cref="RichItemContainer"/> is unselected.
         /// </summary>
         public event RoutedEventHandler Unselected
         {
@@ -169,10 +219,13 @@ namespace RichCanvas
             remove => RemoveHandler(UnselectedEvent, value);
         }
 
+        /// <summary>
+        /// Identifies the <see cref="TopChanged"/> routed event.
+        /// </summary>
         public static readonly RoutedEvent TopChangedEvent = EventManager.RegisterRoutedEvent(nameof(TopChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(RichItemContainer));
 
         /// <summary>
-        /// Occurs whenever <see cref="RichItemContainer.Top"/> changes.
+        /// Occurs whenever <see cref="Top"/> changes.
         /// </summary>
         public event RoutedEventHandler TopChanged
         {
@@ -180,10 +233,13 @@ namespace RichCanvas
             remove { RemoveHandler(TopChangedEvent, value); }
         }
 
+        /// <summary>
+        /// Identifies the <see cref="LeftChanged"/> routed event.
+        /// </summary>
         public static readonly RoutedEvent LeftChangedEvent = EventManager.RegisterRoutedEvent(nameof(LeftChanged), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(RichItemContainer));
 
         /// <summary>
-        /// Occurs whenever <see cref="RichItemContainer.Left"/> changes.
+        /// Occurs whenever <see cref="Left"/> changes.
         /// </summary>
         public event RoutedEventHandler LeftChanged
         {
@@ -191,6 +247,9 @@ namespace RichCanvas
             remove { RemoveHandler(LeftChangedEvent, value); }
         }
 
+        /// <summary>
+        /// Identifies the <see cref="DragStarted"/> routed event.
+        /// </summary>
         public static readonly RoutedEvent DragStartedEvent = EventManager.RegisterRoutedEvent(nameof(DragStarted), RoutingStrategy.Bubble, typeof(DragStartedEventHandler), typeof(RichItemContainer));
 
         /// <summary>
@@ -202,6 +261,9 @@ namespace RichCanvas
             remove => RemoveHandler(DragStartedEvent, value);
         }
 
+        /// <summary>
+        /// Identifies the <see cref="DragDelta"/> routed event.
+        /// </summary>
         public static readonly RoutedEvent DragDeltaEvent = EventManager.RegisterRoutedEvent(nameof(DragDelta), RoutingStrategy.Bubble, typeof(DragDeltaEventHandler), typeof(RichItemContainer));
 
         /// <summary>
@@ -213,6 +275,9 @@ namespace RichCanvas
             remove => RemoveHandler(DragDeltaEvent, value);
         }
 
+        /// <summary>
+        /// Identifies the <see cref="DragCompleted"/> routed event.
+        /// </summary>
         public static readonly RoutedEvent DragCompletedEvent = EventManager.RegisterRoutedEvent(nameof(DragCompleted), RoutingStrategy.Bubble, typeof(DragCompletedEventHandler), typeof(RichItemContainer));
 
         /// <summary>
@@ -236,6 +301,9 @@ namespace RichCanvas
         /// </summary>
         public Rect BoundingBox { get; private set; }
 
+        /// <summary>
+        /// Current state of <see cref="RichItemContainer"/>.
+        /// </summary>
         public ContainerState CurrentState => _states.Peek();
 
         private RichItemsControl? _host;
@@ -248,27 +316,13 @@ namespace RichCanvas
         internal bool TopPropertyInitalized { get; private set; }
         internal bool LeftPropertyInitialized { get; private set; }
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="RichItemContainer"/> class.
+        /// </summary>
         public RichItemContainer()
         {
             _states = new Stack<ContainerState>();
             _states.Push(GetDefaultState());
-        }
-
-        public void PushState(ContainerState state)
-        {
-            _states.Push(state);
-            state.Enter();
-        }
-
-        public void PopState()
-        {
-            // Never remove the default state
-            if (_states.Count > 1)
-            {
-                ContainerState prev = _states.Pop();
-                prev.Exit();
-                CurrentState.ReEnter();
-            }
         }
 
         /// <summary>
@@ -287,8 +341,15 @@ namespace RichCanvas
             BoundingBox = bounds;
         }
 
+        /// <summary>
+        /// Used to returns the implementation of a <see cref="ContainerState"/> used to orchestrate interactions between all defined states.
+        /// <br/>
+        /// Note: <i>This state is always present on the states stack.</i>
+        /// </summary>
+        /// <returns>A new <see cref="ContainerState"/></returns>
         protected virtual ContainerState GetDefaultState() => new ContainerDefaultState(this);
 
+        /// <inheritdoc/>
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             Focus();
@@ -299,6 +360,7 @@ namespace RichCanvas
             }
         }
 
+        /// <inheritdoc/>
         protected override void OnMouseMove(MouseEventArgs e)
         {
             if (IsMouseCaptured)
@@ -307,6 +369,7 @@ namespace RichCanvas
             }
         }
 
+        /// <inheritdoc/>
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
             // Release the mouse capture if all the mouse buttons are released
@@ -330,6 +393,26 @@ namespace RichCanvas
         protected internal void OnPreviewLocationChanged(Point location)
         {
             PreviewLocationChanged?.Invoke(location);
+        }
+
+        /// <summary>Pushes a new state into the stack.</summary>
+        /// <param name="state">The new state.</param>
+        public void PushState(ContainerState state)
+        {
+            _states.Push(state);
+            state.Enter();
+        }
+
+        /// <summary>Pops the current state from the stack without removing the default one defined by <see cref="GetDefaultState()"/> method.</summary>
+        public void PopState()
+        {
+            // Never remove the default state
+            if (_states.Count > 1)
+            {
+                ContainerState prev = _states.Pop();
+                prev.Exit();
+                CurrentState.ReEnter();
+            }
         }
 
         internal bool IsValid()

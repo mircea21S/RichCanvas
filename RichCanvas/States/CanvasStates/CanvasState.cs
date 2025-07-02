@@ -2,7 +2,7 @@
 
 namespace RichCanvas.States
 {
-    /// <summary>The base class for editor states.</summary>
+    /// <summary>The base class for <see cref="RichItemsControl"/> states.</summary>
     public abstract class CanvasState
     {
         /// <summary>The owner of the state.</summary>

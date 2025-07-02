@@ -6,15 +6,15 @@ using System.Windows.Media;
 
 namespace RichCanvas.States.ContainerStates
 {
-    public class MultipleDraggingStrategy : DraggingStrategy
+    internal class MultipleDraggingStrategy : DraggingStrategy
     {
         private readonly List<RichItemContainer> _draggableContainers = new List<RichItemContainer>(16);
 
-        public MultipleDraggingStrategy(RichItemContainer container) : base(container)
+        internal MultipleDraggingStrategy(RichItemContainer container) : base(container)
         {
         }
 
-        public override void OnItemsDragStarted()
+        internal override void OnItemsDragStarted()
         {
             IList selectedItems = Parent.BaseSelectedItems;
 
@@ -46,7 +46,7 @@ namespace RichCanvas.States.ContainerStates
             }
         }
 
-        public override void OnItemsDragDelta(Point offsetPoint)
+        internal override void OnItemsDragDelta(Point offsetPoint)
         {
             for (int i = 0; i < _draggableContainers.Count; i++)
             {
@@ -71,7 +71,7 @@ namespace RichCanvas.States.ContainerStates
             }
         }
 
-        public override void OnItemsDragCompleted()
+        internal override void OnItemsDragCompleted()
         {
             for (int i = 0; i < _draggableContainers.Count; i++)
             {
