@@ -2,6 +2,9 @@
 
 namespace RichCanvas.Gestures
 {
+    /// <summary>
+    /// Defines a multiple gestures combination that can be used to match an input.
+    /// </summary>
     public class MultiGesture : InputGesture
     {
         private readonly InputGesture[] _gestures;

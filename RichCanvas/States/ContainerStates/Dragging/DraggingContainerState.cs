@@ -3,16 +3,24 @@ using System.Windows.Input;
 
 namespace RichCanvas.States.ContainerStates
 {
+    /// <summary>
+    /// Defines a new state used when dragging action happens on <see cref="RichItemContainer"/>.
+    /// </summary>
     public class DraggingContainerState : ContainerState
     {
         private Point _initialPosition;
-        private DraggingStrategy _draggingStrategy;
+        private DraggingStrategy? _draggingStrategy;
         private DraggingStrategy DraggingStrategy => _draggingStrategy ??= Container.Host.CanSelectMultipleItems ? new MultipleDraggingStrategy(Container) : new SingleDraggingStrategy(Container);
 
+        /// <summary>
+        /// Initializes a new <see cref="DraggingContainerState"/>.
+        /// </summary>
+        /// <param name="container">Owner of the state.</param>
         public DraggingContainerState(RichItemContainer container) : base(container)
         {
         }
 
+        /// <inheritdoc/>
         public override void Enter()
         {
             _initialPosition = Mouse.GetPosition(Container.Host.ItemsHost);
@@ -32,6 +40,7 @@ namespace RichCanvas.States.ContainerStates
             Container.RaiseDragStartedEvent(_initialPosition);
         }
 
+        /// <inheritdoc/>
         public override void HandleMouseMove(MouseEventArgs e)
         {
             Point currentPosition = e.GetPosition(Container.Host.ItemsHost);
@@ -46,6 +55,7 @@ namespace RichCanvas.States.ContainerStates
             }
         }
 
+        /// <inheritdoc/>
         public override void HandleMouseUp(MouseButtonEventArgs e)
         {
             DraggingStrategy.OnItemsDragCompleted();

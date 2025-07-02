@@ -4,13 +4,13 @@ using System.Windows.Media;
 
 namespace RichCanvas.States.ContainerStates
 {
-    public class SingleDraggingStrategy : DraggingStrategy
+    internal class SingleDraggingStrategy : DraggingStrategy
     {
-        public SingleDraggingStrategy(RichItemContainer container) : base(container)
+        internal SingleDraggingStrategy(RichItemContainer container) : base(container)
         {
         }
 
-        public override void OnItemsDragDelta(Point offsetPoint)
+        internal override void OnItemsDragDelta(Point offsetPoint)
         {
             TranslateTransform? translateTransform = Container.TranslateTransform;
 
@@ -31,7 +31,7 @@ namespace RichCanvas.States.ContainerStates
             }
         }
 
-        public override void OnItemsDragCompleted()
+        internal override void OnItemsDragCompleted()
         {
             TranslateTransform? translateTransform = Container.TranslateTransform;
 

@@ -2,26 +2,26 @@
 
 namespace RichCanvas.States.ContainerStates
 {
-    public class DraggingStrategy
+    internal class DraggingStrategy
     {
         protected RichItemsControl Parent { get; }
         protected RichItemContainer Container { get; }
 
-        public DraggingStrategy(RichItemContainer container)
+        internal DraggingStrategy(RichItemContainer container)
         {
             Parent = container.Host;
             Container = container;
         }
 
-        public virtual void OnItemsDragStarted()
+        internal virtual void OnItemsDragStarted()
         {
         }
 
-        public virtual void OnItemsDragDelta(Point offsetPoint)
+        internal virtual void OnItemsDragDelta(Point offsetPoint)
         {
         }
 
-        public virtual void OnItemsDragCompleted()
+        internal virtual void OnItemsDragCompleted()
         {
         }
     }
