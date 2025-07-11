@@ -15,7 +15,7 @@
         </Setter>
     </Style>
 
-    <Style TargetType="{x:Type local:RichItemsControl}">
+    <Style TargetType="{x:Type local:RichCanvas}">
         <Style.Resources>
             <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
         </Style.Resources>
@@ -25,14 +25,14 @@
 
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="{x:Type local:RichItemsControl}">
+                <ControlTemplate TargetType="{x:Type local:RichCanvas}">
                     <Border Background="{TemplateBinding Background}">
                         <Canvas RenderTransform="{Binding AppliedTransform, RelativeSource={RelativeSource TemplatedParent}}"
                                 x:Name="containerDrawing">
 
-                            <local:RichCanvas x:Name="PART_Panel"
-                                              IsItemsHost="True"
-                                              Extent="{Binding ItemsExtent, Mode=OneWayToSource, RelativeSource={RelativeSource TemplatedParent}}" />
+                            <local:RichCanvasPanel x:Name="PART_Panel"
+                                                   IsItemsHost="True"
+                                                   Extent="{Binding ItemsExtent, Mode=OneWayToSource, RelativeSource={RelativeSource TemplatedParent}}" />
 
                             <Rectangle x:Name="PART_SelectionRectangle"
                                        Visibility="{TemplateBinding IsSelecting, Converter={StaticResource BoolToVisConverter}}"
@@ -41,7 +41,6 @@
                                        Width="{Binding SelectionRectangle.Width, RelativeSource={RelativeSource TemplatedParent}}"
                                        Height="{Binding SelectionRectangle.Height, RelativeSource={RelativeSource TemplatedParent}}"
                                        Style="{TemplateBinding SelectionRectangleStyle}" />
-
                         </Canvas>
                     </Border>
                 </ControlTemplate>

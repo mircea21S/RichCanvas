@@ -7,18 +7,18 @@ using System.Windows.Media;
 namespace RichCanvas.States
 {
     /// <summary>
-    /// Defines a new state used when a drawing action happens on <see cref="RichItemsControl"/>.
+    /// Defines a new state used when a drawing action happens on <see cref="RichCanvas"/>.
     /// </summary>
     public class DrawingState : CanvasState
     {
-        private RichItemContainer _currentDrawingContainer;
+        private RichCanvasContainer _currentDrawingContainer;
         private bool _isDrawing;
 
         /// <summary>
         /// Initializes a new <see cref="DrawingState"/>.
         /// </summary>
         /// <param name="parent">Owner of the state.</param>
-        public DrawingState(RichItemsControl parent) : base(parent)
+        public DrawingState(RichCanvas parent) : base(parent)
         {
         }
 
@@ -32,7 +32,7 @@ namespace RichCanvas.States
             }
 
             int currentDrawingContainerIndex = drawingContainersIndexes[0];
-            RichItemContainer container = (RichItemContainer)Parent.ItemContainerGenerator.ContainerFromIndex(currentDrawingContainerIndex);
+            RichCanvasContainer container = (RichCanvasContainer)Parent.ItemContainerGenerator.ContainerFromIndex(currentDrawingContainerIndex);
             if (container.IsValid())
             {
                 drawingContainersIndexes.RemoveAt(0);
@@ -110,8 +110,8 @@ namespace RichCanvas.States
             double width = mousePosition.X - _currentDrawingContainer.Left;
             double height = mousePosition.Y - _currentDrawingContainer.Top;
 
-            _currentDrawingContainer.Width = width == 0 ? RichItemContainer.DefaultWidth : Math.Abs(width);
-            _currentDrawingContainer.Height = height == 0 ? RichItemContainer.DefaultHeight : Math.Abs(height);
+            _currentDrawingContainer.Width = width == 0 ? RichCanvasContainer.DefaultWidth : Math.Abs(width);
+            _currentDrawingContainer.Height = height == 0 ? RichCanvasContainer.DefaultHeight : Math.Abs(height);
 
             ScaleTransform? scaleTransform = _currentDrawingContainer.ScaleTransform;
             if (scaleTransform != null)

@@ -7,9 +7,9 @@ using RichCanvas.Helpers;
 namespace RichCanvas.States
 {
     /// <summary>
-    /// Defines the state called by <see cref="RichItemsControl.GetDefaultState()"/>.
+    /// Defines the state called by <see cref="RichCanvas.GetDefaultState()"/>.
     /// <br/>
-    /// Note: <i>Used for orchestrating all states interactions with <see cref="RichItemsControl"/>.</i>
+    /// Note: <i>Used for orchestrating all states interactions with <see cref="RichCanvas"/>.</i>
     /// </summary>
     public class DefaultState : CanvasState
     {
@@ -17,7 +17,7 @@ namespace RichCanvas.States
         /// Initializes a new <see cref="DefaultState"/>.
         /// </summary>
         /// <param name="parent">Owner of the state.</param>
-        public DefaultState(RichItemsControl parent) : base(parent)
+        public DefaultState(RichCanvas parent) : base(parent)
         {
         }
 

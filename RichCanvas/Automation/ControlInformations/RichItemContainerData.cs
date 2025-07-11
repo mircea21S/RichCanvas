@@ -3,37 +3,37 @@
 namespace RichCanvas.Automation.ControlInformations
 {
     /// <summary>
-    /// Data transfer object exposing <see cref="RichItemContainer"/> information to UI Automation proejct.
+    /// Data transfer object exposing <see cref="RichCanvasContainer"/> information to UI Automation proejct.
     /// </summary>
     public class RichItemContainerData
     {
         /// <summary>
-        /// Bound <see cref="RichItemContainer"/>.DataContext type.
+        /// Bound <see cref="RichCanvasContainer"/>.DataContext type.
         /// </summary>
         public Type? DataContextType { get; internal set; }
 
         /// <summary>
-        /// <see cref="RichItemContainer.Top"/> property value.
+        /// <see cref="RichCanvasContainer.Top"/> property value.
         /// </summary>
         public double Top { get; internal set; }
 
         /// <summary>
-        /// <see cref="RichItemContainer.Left"/> property value.
+        /// <see cref="RichCanvasContainer.Left"/> property value.
         /// </summary>
         public double Left { get; internal set; }
 
         /// <summary>
-        /// <see cref="RichItemContainer.IsSelected"/> property value.
+        /// <see cref="RichCanvasContainer.IsSelected"/> property value.
         /// </summary>
         public bool IsSelected { get; internal set; }
 
         /// <summary>
-        /// <see cref="RichItemContainer.Scale"/> property value.
+        /// <see cref="RichCanvasContainer.Scale"/> property value.
         /// </summary>
         public double ScaleX { get; internal set; }
 
         /// <summary>
-        /// <see cref="RichItemContainer.Scale"/> property value.
+        /// <see cref="RichCanvasContainer.Scale"/> property value.
         /// </summary>
         public double ScaleY { get; internal set; }
     }

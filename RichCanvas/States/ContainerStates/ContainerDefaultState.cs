@@ -5,9 +5,9 @@ using RichCanvas.Gestures;
 namespace RichCanvas.States.ContainerStates
 {
     /// <summary>
-    /// Defines the state called by <see cref="RichItemContainer.GetDefaultState()"/>.
+    /// Defines the state called by <see cref="RichCanvasContainer.GetDefaultState()"/>.
     /// <br/>
-    /// Note: <i>Used for orchestrating all states interactions with <see cref="RichItemContainer"/>.</i>
+    /// Note: <i>Used for orchestrating all states interactions with <see cref="RichCanvasContainer"/>.</i>
     /// </summary>
     public class ContainerDefaultState : ContainerState
     {
@@ -15,7 +15,7 @@ namespace RichCanvas.States.ContainerStates
         /// Initializes a new <see cref="ContainerDefaultState"/>.
         /// </summary>
         /// <param name="container">Owner of the state.</param>
-        public ContainerDefaultState(RichItemContainer container) : base(container)
+        public ContainerDefaultState(RichCanvasContainer container) : base(container)
         {
         }
 

@@ -2,47 +2,47 @@
 
 namespace RichCanvas.States.ContainerStates
 {
-    /// <summary>The base class for <see cref="RichItemContainer"/> states.</summary>
+    /// <summary>The base class for <see cref="RichCanvasContainer"/> states.</summary>
     public abstract class ContainerState
     {
         /// <summary>The owner of the state.</summary>
-        protected RichItemContainer Container { get; }
+        protected RichCanvasContainer Container { get; }
 
         /// <summary>
         /// Constructs a new <see cref="ContainerState "/>.
         /// </summary>
         /// <param name="container">The owner of the state.</param>
-        public ContainerState(RichItemContainer container)
+        public ContainerState(RichCanvasContainer container)
         {
             Container = container;
         }
 
         /// <summary>
-        /// Called whenever <see cref="RichItemContainer.PushState(ContainerState)"/> is called (becomes the <see cref="RichItemContainer.CurrentState"/>).
+        /// Called whenever <see cref="RichCanvasContainer.PushState(ContainerState)"/> is called (becomes the <see cref="RichCanvasContainer.CurrentState"/>).
         /// <br />
         /// Note: <i>Used to initialize the State before any input is processed by it.</i>
         /// </summary>
         public virtual void Enter() { }
 
         /// <summary>
-        /// Called whenever <see cref="RichItemContainer.PopState()"/> is called.
+        /// Called whenever <see cref="RichCanvasContainer.PopState()"/> is called.
         /// <br />
         /// Note: <i>Used whenever a state switch happens in order to update the state which was suspended.</i>
         /// </summary>
         public virtual void ReEnter() { }
 
         /// <summary>
-        /// Called whenever <see cref="RichItemContainer.PopState()"/> is called.
+        /// Called whenever <see cref="RichCanvasContainer.PopState()"/> is called.
         /// </summary>
         public virtual void Exit() { }
 
-        /// <inheritdoc cref="RichItemContainer.OnMouseDown(MouseButtonEventArgs)"/>
+        /// <inheritdoc cref="RichCanvasContainer.OnMouseDown(MouseButtonEventArgs)"/>
         public virtual void HandleMouseDown(MouseButtonEventArgs e) { }
 
-        /// <inheritdoc cref="RichItemContainer.OnMouseMove(MouseEventArgs)"/>
+        /// <inheritdoc cref="RichCanvasContainer.OnMouseMove(MouseEventArgs)"/>
         public virtual void HandleMouseMove(MouseEventArgs e) { }
 
-        /// <inheritdoc cref="RichItemContainer.OnMouseUp(MouseButtonEventArgs)"/>
+        /// <inheritdoc cref="RichCanvasContainer.OnMouseUp(MouseButtonEventArgs)"/>
         public virtual void HandleMouseUp(MouseButtonEventArgs e) { }
 
         /// <summary>Pushes a new state into the stack.</summary>

@@ -8,9 +8,9 @@ namespace RichCanvas.States.ContainerStates
 {
     internal class MultipleDraggingStrategy : DraggingStrategy
     {
-        private readonly List<RichItemContainer> _draggableContainers = new List<RichItemContainer>(16);
+        private readonly List<RichCanvasContainer> _draggableContainers = new List<RichCanvasContainer>(16);
 
-        internal MultipleDraggingStrategy(RichItemContainer container) : base(container)
+        internal MultipleDraggingStrategy(RichCanvasContainer container) : base(container)
         {
         }
 
@@ -35,7 +35,7 @@ namespace RichCanvas.States.ContainerStates
                 // Cache selected containers
                 for (int i = 0; i < selectedItems.Count; i++)
                 {
-                    var container = (RichItemContainer)Parent.ItemContainerGenerator.ContainerFromItem(selectedItems[i]);
+                    var container = (RichCanvasContainer)Parent.ItemContainerGenerator.ContainerFromItem(selectedItems[i]);
                     if (container.IsDraggable)
                     {
                         _draggableContainers.Add(container);
@@ -50,7 +50,7 @@ namespace RichCanvas.States.ContainerStates
         {
             for (int i = 0; i < _draggableContainers.Count; i++)
             {
-                RichItemContainer container = _draggableContainers[i];
+                RichCanvasContainer container = _draggableContainers[i];
                 TranslateTransform? translateTransform = container.TranslateTransform;
 
                 if (Parent.RealTimeDraggingEnabled)
@@ -75,7 +75,7 @@ namespace RichCanvas.States.ContainerStates
         {
             for (int i = 0; i < _draggableContainers.Count; i++)
             {
-                RichItemContainer container = _draggableContainers[i];
+                RichCanvasContainer container = _draggableContainers[i];
                 if (!Parent.RealTimeDraggingEnabled)
                 {
                     TranslateTransform? translateTransform = container.TranslateTransform;

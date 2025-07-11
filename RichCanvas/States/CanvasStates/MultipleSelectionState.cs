@@ -8,7 +8,7 @@ using RichCanvas.Helpers;
 namespace RichCanvas.States
 {
     /// <summary>
-    /// Defines a new state used when selecting multiple items action happens on <see cref="RichItemsControl"/>.
+    /// Defines a new state used when selecting multiple items action happens on <see cref="RichCanvas"/>.
     /// </summary>
     public class MultipleSelectionState : CanvasState
     {
@@ -18,7 +18,7 @@ namespace RichCanvas.States
         /// Initializes a new <see cref="MultipleSelectionState"/>.
         /// </summary>
         /// <param name="parent">Owner of the state.</param>
-        public MultipleSelectionState(RichItemsControl parent) : base(parent)
+        public MultipleSelectionState(RichCanvas parent) : base(parent)
         {
         }
 
@@ -107,9 +107,9 @@ namespace RichCanvas.States
         private HitTestResultBehavior OnHitTestResultCallback(HitTestResult result)
         {
             var geometryHitTestResult = (GeometryHitTestResult)result;
-            if (geometryHitTestResult.VisualHit.DependencyObjectType.SystemType != typeof(RichItemContainer) && geometryHitTestResult.IntersectionDetail != IntersectionDetail.Empty)
+            if (geometryHitTestResult.VisualHit.DependencyObjectType.SystemType != typeof(RichCanvasContainer) && geometryHitTestResult.IntersectionDetail != IntersectionDetail.Empty)
             {
-                RichItemContainer container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
+                RichCanvasContainer container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
                 if (container != null && container.IsSelectable)
                 {
                     Parent.BaseSelectedItems.Add(container.DataContext);
