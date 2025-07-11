@@ -6,7 +6,7 @@ namespace RichCanvas.States.ContainerStates
 {
     internal class SingleDraggingStrategy : DraggingStrategy
     {
-        internal SingleDraggingStrategy(RichItemContainer container) : base(container)
+        internal SingleDraggingStrategy(RichCanvasContainer container) : base(container)
         {
         }
 

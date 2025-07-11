@@ -4,7 +4,7 @@ using System.Windows.Input;
 namespace RichCanvas.States
 {
     /// <summary>
-    /// Defines a new state used when panning action happens on <see cref="RichItemsControl"/>.
+    /// Defines a new state used when panning action happens on <see cref="RichCanvas"/>.
     /// </summary>
     public class PanningState : CanvasState
     {
@@ -14,7 +14,7 @@ namespace RichCanvas.States
         /// Initializes a new <see cref="PanningState"/>.
         /// </summary>
         /// <param name="parent">Owner of the state.</param>
-        public PanningState(RichItemsControl parent) : base(parent)
+        public PanningState(RichCanvas parent) : base(parent)
         {
         }
 

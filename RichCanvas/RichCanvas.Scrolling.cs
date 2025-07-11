@@ -9,7 +9,7 @@ namespace RichCanvas
     /// <summary>
     /// Grid defining scrolling functionalty
     /// </summary>
-    public partial class RichItemsControl : IScrollInfo
+    public partial class RichCanvas : IScrollInfo
     {
         #region Private Fields
 
@@ -66,7 +66,7 @@ namespace RichCanvas
         /// <inheritdoc/>
         public Rect MakeVisible(Visual visual, Rect rectangle)
         {
-            if (visual is RichItemContainer container && container.ShouldBringIntoView)
+            if (visual is RichCanvasContainer container && container.ShouldBringIntoView)
             {
                 var containerLocation = new Vector(container.Left, container.Top);
                 var viewportCenter = new Vector(ViewportWidth / 2, ViewportHeight / 2);

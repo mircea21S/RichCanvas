@@ -4,10 +4,10 @@ namespace RichCanvas.States.ContainerStates
 {
     internal class DraggingStrategy
     {
-        protected RichItemsControl Parent { get; }
-        protected RichItemContainer Container { get; }
+        protected RichCanvas Parent { get; }
+        protected RichCanvasContainer Container { get; }
 
-        internal DraggingStrategy(RichItemContainer container)
+        internal DraggingStrategy(RichCanvasContainer container)
         {
             Parent = container.Host;
             Container = container;

@@ -6,7 +6,7 @@ using RichCanvas.Gestures;
 namespace RichCanvas
 {
     /// <summary>
-    /// Holds pre-defined <see cref="RichItemsControl"/> routed commands.
+    /// Holds pre-defined <see cref="RichCanvas"/> routed commands.
     /// </summary>
     public class RichCanvasCommands
     {
@@ -34,7 +34,7 @@ namespace RichCanvas
 
         private static void OnZoomOut(object sender, ExecutedRoutedEventArgs e)
         {
-            if (sender is RichItemsControl richItemsControl)
+            if (sender is RichCanvas richItemsControl)
             {
                 richItemsControl.ZoomOut();
             }
@@ -42,7 +42,7 @@ namespace RichCanvas
 
         private static void OnZoomIn(object sender, ExecutedRoutedEventArgs e)
         {
-            if (sender is RichItemsControl richItemsControl)
+            if (sender is RichCanvas richItemsControl)
             {
                 richItemsControl.ZoomIn();
             }
