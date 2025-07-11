@@ -142,9 +142,9 @@ namespace RichCanvas.UITests.Tests
         /// <summary>
         /// Test to draw multiple rectangles in specified <paramref name="horizontalDirection"/> and <paramref name="verticalDirection"/> and verify their ActualSize.
         /// <br></br>
-        /// <i>Note: <paramref name="horizontalDirection"/> modifies <see cref="RichItemsControl.ScaleTransform"/>.ScaleX
+        /// <i>Note: <paramref name="horizontalDirection"/> modifies <see cref="RichCanvas.ScaleTransform"/>.ScaleX
         /// <br></br>
-        /// <paramref name="verticalDirection"/> modifies <see cref="RichItemsControl.ScaleTransform"/>.ScaleY 
+        /// <paramref name="verticalDirection"/> modifies <see cref="RichCanvas.ScaleTransform"/>.ScaleY 
         /// </i>
         /// </summary>
         /// <param name="rectanglesCount"></param>

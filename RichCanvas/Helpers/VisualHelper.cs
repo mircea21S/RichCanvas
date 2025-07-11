@@ -11,24 +11,24 @@ namespace RichCanvas.Helpers
     public static class VisualHelper
     {
         /// <summary>
-        /// Gets <see cref="RichItemContainer"/> parent of <paramref name="d"/>
+        /// Gets <see cref="RichCanvasContainer"/> parent of <paramref name="d"/>
         /// </summary>
         /// <param name="d"></param>
         /// <returns></returns>
-        public static RichItemContainer GetParentContainer(DependencyObject d)
+        public static RichCanvasContainer GetParentContainer(DependencyObject d)
         {
-            if (d is RichItemContainer container)
+            if (d is RichCanvasContainer container)
             {
                 return container;
             }
 
             DependencyObject parent = VisualTreeHelper.GetParent(d);
-            while (parent is not RichItemContainer && parent != null)
+            while (parent is not RichCanvasContainer && parent != null)
             {
                 parent = VisualTreeHelper.GetParent(parent);
             }
 
-            return (RichItemContainer)parent!;
+            return (RichCanvasContainer)parent!;
         }
 
         /// <summary>

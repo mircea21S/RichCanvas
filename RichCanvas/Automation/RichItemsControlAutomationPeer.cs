@@ -9,7 +9,7 @@ using RichCanvas.Automation.ControlInformations;
 namespace RichCanvas.Automation
 {
     /// <summary>
-    /// Exposes the <see cref="RichItemsControl"/> to UI Automation project.
+    /// Exposes the <see cref="RichCanvas"/> to UI Automation project.
     /// </summary>
     public class RichItemsControlAutomationPeer : SelectorAutomationPeer,
         IValueProvider,
@@ -17,15 +17,15 @@ namespace RichCanvas.Automation
     //ITransformProvider
     {
         /// <summary>
-        /// Gets the <see cref="RichItemsControl"/> that is associated with this <see cref="RichItemsControlAutomationPeer"/>.
+        /// Gets the <see cref="RichCanvas"/> that is associated with this <see cref="RichItemsControlAutomationPeer"/>.
         /// </summary>
-        protected RichItemsControl OwnerItemsControl => (RichItemsControl)Owner;
+        protected RichCanvas OwnerItemsControl => (RichCanvas)Owner;
 
         /// <inheritdoc/>
         public bool IsReadOnly => true;
 
         /// <summary>
-        /// Gets the serialized json value of <see cref="RichItemsControlData"/> containing data about the associated <see cref="RichItemsControl"/>.
+        /// Gets the serialized json value of <see cref="RichItemsControlData"/> containing data about the associated <see cref="RichCanvas"/>.
         /// </summary>
         public string Value => JsonConvert.SerializeObject(new RichItemsControlData
         {
@@ -51,12 +51,12 @@ namespace RichCanvas.Automation
         public bool HorizontallyScrollable => true;
 
         /// <summary>
-        /// Gets associated <see cref="RichItemsControl.HorizontalOffset"/> value.
+        /// Gets associated <see cref="RichCanvas.HorizontalOffset"/> value.
         /// </summary>
         public double HorizontalScrollPercent => OwnerItemsControl.HorizontalOffset;
 
         /// <summary>
-        /// Gets associated <see cref="RichItemsControl.ViewportSize"/>.Width value.
+        /// Gets associated <see cref="RichCanvas.ViewportSize"/>.Width value.
         /// </summary>
         public double HorizontalViewSize => OwnerItemsControl.ViewportSize.Width;
 
@@ -68,12 +68,12 @@ namespace RichCanvas.Automation
         public bool VerticallyScrollable => true;
 
         /// <summary>
-        /// Gets associated <see cref="RichItemsControl.VerticalOffset"/> value.
+        /// Gets associated <see cref="RichCanvas.VerticalOffset"/> value.
         /// </summary>
         public double VerticalScrollPercent => OwnerItemsControl.VerticalOffset;
 
         /// <summary>
-        /// Gets associated <see cref="RichItemsControl.ViewportSize"/>.Height value.
+        /// Gets associated <see cref="RichCanvas.ViewportSize"/>.Height value.
         /// </summary>
         public double VerticalViewSize => OwnerItemsControl.ViewportSize.Height;
 
@@ -81,7 +81,7 @@ namespace RichCanvas.Automation
         /// Initializes a new <see cref="RichItemsControlAutomationPeer"/>.
         /// </summary>
         /// <param name="owner"></param>
-        public RichItemsControlAutomationPeer(RichItemsControl owner) : base(owner)
+        public RichItemsControlAutomationPeer(RichCanvas owner) : base(owner)
         {
         }
 

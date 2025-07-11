@@ -7,14 +7,14 @@ using RichCanvas.Gestures;
 
 namespace RichCanvas
 {
-    public partial class RichItemsControl
+    public partial class RichCanvas
     {
         #region Dependency Properties
 
         /// <summary>
         /// Identifies the <see cref="ScaleFactor"/> dependency property.
         /// </summary>
-        public static DependencyProperty ScaleFactorProperty = DependencyProperty.Register(nameof(ScaleFactor), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(1.1d));
+        public static DependencyProperty ScaleFactorProperty = DependencyProperty.Register(nameof(ScaleFactor), typeof(double), typeof(RichCanvas), new FrameworkPropertyMetadata(1.1d));
 
         /// <summary>
         /// Gets or sets the factor used to change <see cref="ScaleTransform"/> on zoom.
@@ -29,7 +29,7 @@ namespace RichCanvas
         /// <summary>
         /// Identifies the <see cref="DisableZoom"/> dependency property.
         /// </summary>
-        public static DependencyProperty DisableZoomProperty = DependencyProperty.Register(nameof(DisableZoom), typeof(bool), typeof(RichItemsControl), new FrameworkPropertyMetadata(false));
+        public static DependencyProperty DisableZoomProperty = DependencyProperty.Register(nameof(DisableZoom), typeof(bool), typeof(RichCanvas), new FrameworkPropertyMetadata(false));
 
         /// <summary>
         /// Gets or sets whether zooming operation is disabled.
@@ -44,7 +44,7 @@ namespace RichCanvas
         /// <summary>
         /// Identifies the <see cref="MaxScale"/> dependency property.
         /// </summary>
-        public static DependencyProperty MaxScaleProperty = DependencyProperty.Register(nameof(MaxScale), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(2d, OnMaxScaleChanged, CoerceMaxScale));
+        public static DependencyProperty MaxScaleProperty = DependencyProperty.Register(nameof(MaxScale), typeof(double), typeof(RichCanvas), new FrameworkPropertyMetadata(2d, OnMaxScaleChanged, CoerceMaxScale));
 
         /// <summary>
         /// Gets or sets maximum scale for <see cref="ScaleTransform"/>.
@@ -58,7 +58,7 @@ namespace RichCanvas
 
         private static object CoerceMaxScale(DependencyObject d, object value)
         {
-            var zoom = (RichItemsControl)d;
+            var zoom = (RichCanvas)d;
             double min = zoom.MinScale;
 
             return (double)value < min ? 2d : value;
@@ -66,17 +66,17 @@ namespace RichCanvas
 
         private static void OnMaxScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var zoom = (RichItemsControl)d;
+            var zoom = (RichCanvas)d;
             zoom.CoerceValue(ViewportZoomProperty);
         }
 
         /// <summary>
         /// Identifies the <see cref="MinScale"/> dependency property.
         /// </summary>
-        public static DependencyProperty MinScaleProperty = DependencyProperty.Register(nameof(MinScale), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(0.1d, OnMinimumScaleChanged, CoerceMinimumScale));
+        public static DependencyProperty MinScaleProperty = DependencyProperty.Register(nameof(MinScale), typeof(double), typeof(RichCanvas), new FrameworkPropertyMetadata(0.1d, OnMinimumScaleChanged, CoerceMinimumScale));
 
         /// <summary>
-        /// Gets or sets minimum scale for <see cref="RichItemsControl.ScaleTransform"/>.
+        /// Gets or sets minimum scale for <see cref="RichCanvas.ScaleTransform"/>.
         /// Default is 0.1d.
         /// </summary>
         public double MinScale
@@ -87,7 +87,7 @@ namespace RichCanvas
 
         private static void OnMinimumScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var zoom = (RichItemsControl)d;
+            var zoom = (RichCanvas)d;
             zoom.CoerceValue(MaxScaleProperty);
             zoom.CoerceValue(ViewportZoomProperty);
         }
@@ -98,10 +98,10 @@ namespace RichCanvas
         /// <summary>
         /// Identifies the <see cref="ViewportZoom"/> dependency property.
         /// </summary>
-        public static DependencyProperty ViewportZoomProperty = DependencyProperty.Register(nameof(ViewportZoom), typeof(double), typeof(RichItemsControl), new FrameworkPropertyMetadata(1d, OnViewportZoomChanged, CoerceViewportZoom));
+        public static DependencyProperty ViewportZoomProperty = DependencyProperty.Register(nameof(ViewportZoom), typeof(double), typeof(RichCanvas), new FrameworkPropertyMetadata(1d, OnViewportZoomChanged, CoerceViewportZoom));
 
         /// <summary>
-        /// Gets or sets the current <see cref="RichItemsControl.ScaleTransform"/> value.
+        /// Gets or sets the current <see cref="RichCanvas.ScaleTransform"/> value.
         /// Default is 1.
         /// </summary>
         public double ViewportZoom
@@ -110,11 +110,11 @@ namespace RichCanvas
             set => SetValue(ViewportZoomProperty, value);
         }
 
-        private static void OnViewportZoomChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichItemsControl)d).OverrideScale((double)e.NewValue);
+        private static void OnViewportZoomChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) => ((RichCanvas)d).OverrideScale((double)e.NewValue);
 
         private static object CoerceViewportZoom(DependencyObject d, object value)
         {
-            var itemsControl = (RichItemsControl)d;
+            var itemsControl = (RichCanvas)d;
 
             if (itemsControl.DisableZoom)
             {
@@ -140,10 +140,10 @@ namespace RichCanvas
         /// <summary>
         /// Identifies the <see cref="Zooming"/> routed event.
         /// </summary>
-        public static readonly RoutedEvent ZoomingEvent = EventManager.RegisterRoutedEvent(nameof(Zooming), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(RichItemsControl));
+        public static readonly RoutedEvent ZoomingEvent = EventManager.RegisterRoutedEvent(nameof(Zooming), RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(RichCanvas));
 
         /// <summary>
-        /// Occurs whenever <see cref="RichItemsControl"/> is zooomed in or out.
+        /// Occurs whenever <see cref="RichCanvas"/> is zooomed in or out.
         /// </summary>
         public event RoutedEventHandler Zooming
         {
@@ -169,7 +169,7 @@ namespace RichCanvas
         }
 
         /// <summary>
-        /// Zooms the <see cref="RichItemsControl"/> at the specified <paramref name="mousePosition"/> using the given <paramref name="delta"/>.
+        /// Zooms the <see cref="RichCanvas"/> at the specified <paramref name="mousePosition"/> using the given <paramref name="delta"/>.
         /// </summary>
         /// <param name="mousePosition">Mouse position where to zoom at.</param>
         /// <param name="delta">Value of each zooming step.</param>
@@ -197,12 +197,12 @@ namespace RichCanvas
         }
 
         /// <summary>
-        /// Zooms in the <see cref="RichItemsControl"/> using its <see cref="MousePosition"/> and its <see cref="ScaleFactor"/>.
+        /// Zooms in the <see cref="RichCanvas"/> using its <see cref="MousePosition"/> and its <see cref="ScaleFactor"/>.
         /// </summary>
         public void ZoomIn() => ZoomAtPosition(MousePosition, ScaleFactor);
 
         /// <summary>
-        /// Zooms out the <see cref="RichItemsControl"/> using its <see cref="MousePosition"/> and its <see cref="ScaleFactor"/>.
+        /// Zooms out the <see cref="RichCanvas"/> using its <see cref="MousePosition"/> and its <see cref="ScaleFactor"/>.
         /// </summary>
         public void ZoomOut() => ZoomAtPosition(MousePosition, 1 / ScaleFactor);
 
