@@ -2,53 +2,53 @@
 
 namespace RichCanvas.States
 {
-    /// <summary>The base class for <see cref="RichItemsControl"/> states.</summary>
+    /// <summary>The base class for <see cref="RichCanvas"/> states.</summary>
     public abstract class CanvasState
     {
         /// <summary>The owner of the state.</summary>
-        protected RichItemsControl Parent { get; }
+        protected RichCanvas Parent { get; }
 
         /// <summary>
         /// Constructs a new <see cref="CanvasState "/>.
         /// </summary>
         /// <param name="parent">The owner of the state.</param>
-        public CanvasState(RichItemsControl parent)
+        public CanvasState(RichCanvas parent)
         {
             Parent = parent;
         }
 
         /// <summary>
-        /// Called whenever <see cref="RichItemsControl.PushState(CanvasState)"/> is called (becomes the <see cref="RichItemsControl.CurrentState"/>).
+        /// Called whenever <see cref="RichCanvas.PushState(CanvasState)"/> is called (becomes the <see cref="RichCanvas.CurrentState"/>).
         /// <br />
         /// Note: <i>Used to initialize the State before any input is processed by it.</i>
         /// </summary>
         public virtual void Enter() { }
 
         /// <summary>
-        /// Called whenever <see cref="RichItemsControl.PopState()"/> is called.
+        /// Called whenever <see cref="RichCanvas.PopState()"/> is called.
         /// <br />
         /// Note: <i>Used whenever a state switch happens in order to update the state which was suspended.</i>
         /// </summary>
         public virtual void ReEnter() { }
 
         /// <summary>
-        /// Called whenever <see cref="RichItemsControl.PopState()"/> is called.
+        /// Called whenever <see cref="RichCanvas.PopState()"/> is called.
         /// </summary>
         public virtual void Exit() { }
 
-        /// <inheritdoc cref="RichItemsControl.OnMouseDown(MouseButtonEventArgs)"/>
+        /// <inheritdoc cref="RichCanvas.OnMouseDown(MouseButtonEventArgs)"/>
         public virtual void HandleMouseDown(MouseButtonEventArgs e) { }
 
-        /// <inheritdoc cref="RichItemsControl.OnMouseMove(MouseEventArgs)"/>
+        /// <inheritdoc cref="RichCanvas.OnMouseMove(MouseEventArgs)"/>
         public virtual void HandleMouseMove(MouseEventArgs e) { }
 
-        /// <inheritdoc cref="RichItemsControl.OnMouseUp(MouseButtonEventArgs)"/>
+        /// <inheritdoc cref="RichCanvas.OnMouseUp(MouseButtonEventArgs)"/>
         public virtual void HandleMouseUp(MouseButtonEventArgs e) { }
 
-        /// <inheritdoc cref="RichItemsControl.OnKeyDown(KeyEventArgs)"/>
+        /// <inheritdoc cref="RichCanvas.OnKeyDown(KeyEventArgs)"/>
         public virtual void HandleKeyDown(KeyEventArgs e) { }
 
-        /// <inheritdoc cref="RichItemsControl.OnKeyUp(KeyEventArgs)"/>
+        /// <inheritdoc cref="RichCanvas.OnKeyUp(KeyEventArgs)"/>
         public virtual void HandleKeyUp(KeyEventArgs e) { }
 
         /// <summary>Handles auto panning when mouse is outside the canvas.</summary>
@@ -62,7 +62,7 @@ namespace RichCanvas.States
         public virtual void PopState() => Parent.PopState();
 
         /// <summary>
-        /// Called by <see cref="RichItemsControl.OnPreviewMouseDown(MouseButtonEventArgs)"/> to check if any state has priority over other controls handling MouseDown event.
+        /// Called by <see cref="RichCanvas.OnPreviewMouseDown(MouseButtonEventArgs)"/> to check if any state has priority over other controls handling MouseDown event.
         /// </summary>
         /// <param name="e"></param>
         /// <param name="matchingState"></param>

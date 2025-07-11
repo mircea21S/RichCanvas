@@ -9,19 +9,19 @@ using RichCanvas.Helpers;
 namespace RichCanvas.States
 {
     /// <summary>
-    /// Defines a new state used when single selection action happens on <see cref="RichItemsControl"/>.
+    /// Defines a new state used when single selection action happens on <see cref="RichCanvas"/>.
     /// </summary>
     public class SingleSelectionState : CanvasState
     {
         private Point _selectionRectangleInitialPosition;
-        private RichItemContainer? _selectedContainer;
-        private List<RichItemContainer> _selectedContainers = [];
+        private RichCanvasContainer? _selectedContainer;
+        private List<RichCanvasContainer> _selectedContainers = [];
 
         /// <summary>
         /// Initializes a new <see cref="SingleSelectionState"/>.
         /// </summary>
         /// <param name="parent">Owner of the state.</param>
-        public SingleSelectionState(RichItemsControl parent) : base(parent)
+        public SingleSelectionState(RichCanvas parent) : base(parent)
         {
         }
 
@@ -133,9 +133,9 @@ namespace RichCanvas.States
         private HitTestResultBehavior OnHitTestResultCallback(HitTestResult result)
         {
             var geometryHitTestResult = (GeometryHitTestResult)result;
-            if (geometryHitTestResult.VisualHit.DependencyObjectType.SystemType != typeof(RichItemContainer) && geometryHitTestResult.IntersectionDetail != IntersectionDetail.Empty)
+            if (geometryHitTestResult.VisualHit.DependencyObjectType.SystemType != typeof(RichCanvasContainer) && geometryHitTestResult.IntersectionDetail != IntersectionDetail.Empty)
             {
-                RichItemContainer container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
+                RichCanvasContainer container = VisualHelper.GetParentContainer(geometryHitTestResult.VisualHit);
                 if (container != null && container.IsSelectable)
                 {
                     // first element of this list is the last added item in the ItemsSource

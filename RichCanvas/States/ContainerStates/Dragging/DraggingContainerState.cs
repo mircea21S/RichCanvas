@@ -4,7 +4,7 @@ using System.Windows.Input;
 namespace RichCanvas.States.ContainerStates
 {
     /// <summary>
-    /// Defines a new state used when dragging action happens on <see cref="RichItemContainer"/>.
+    /// Defines a new state used when dragging action happens on <see cref="RichCanvasContainer"/>.
     /// </summary>
     public class DraggingContainerState : ContainerState
     {
@@ -16,7 +16,7 @@ namespace RichCanvas.States.ContainerStates
         /// Initializes a new <see cref="DraggingContainerState"/>.
         /// </summary>
         /// <param name="container">Owner of the state.</param>
-        public DraggingContainerState(RichItemContainer container) : base(container)
+        public DraggingContainerState(RichCanvasContainer container) : base(container)
         {
         }
 
