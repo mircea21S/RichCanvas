@@ -85,6 +85,8 @@
                     BorderBrush="BlueViolet"
                     Margin="2">
                 <StackPanel>
+                    <Button Content="Change Panning Gesture"
+                            Command="{Binding ChangePanningGestureCommand}" />
                     <ToggleButton AutomationProperties.AutomationId="{x:Static auto:AutomationIds.RealTimeSelectionToggleButtonId}"
                                   IsChecked="{Binding RealTimeSelectionEnabled, Mode=TwoWay}"
                                   Content="RealTimeSelection">

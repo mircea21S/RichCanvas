@@ -1,8 +1,11 @@
-﻿using RichCanvasUITests.App.States;
-using RichCanvasUITests.App.TestMocks;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows.Input;
+
+using RichCanvas.Gestures;
+
+using RichCanvasUITests.App.States;
+using RichCanvasUITests.App.TestMocks;
 
 namespace RichCanvasUITests.App
 {
@@ -32,7 +35,11 @@ namespace RichCanvasUITests.App
         private RelayCommand _resetViewportZoomCommand;
         public ICommand ResetViewportZoomCommand => _resetViewportZoomCommand ??= new RelayCommand(ResetViewportZoom);
 
+        private RelayCommand _changePanningGestureCommand;
+        public ICommand ChangePanningGestureCommand => _changePanningGestureCommand ??= new RelayCommand(OnChangePanningGesture);
+
         private bool _realTimeSelectionEnabled;
+
         public bool RealTimeSelectionEnabled
         {
             get => _realTimeSelectionEnabled;
@@ -40,6 +47,7 @@ namespace RichCanvasUITests.App
         }
 
         private bool _canSelectMultipleItems;
+
         public bool CanSelectMultipleItems
         {
             get => _canSelectMultipleItems;
@@ -47,6 +55,7 @@ namespace RichCanvasUITests.App
         }
 
         private bool _realTimeDraggingEnabled;
+
         public bool RealTimeDraggingEnabled
         {
             get => _realTimeDraggingEnabled;
@@ -54,6 +63,7 @@ namespace RichCanvasUITests.App
         }
 
         private System.Windows.Point _viewportLocation;
+
         public System.Windows.Point ViewportLocation
         {
             get => _viewportLocation;
@@ -61,6 +71,7 @@ namespace RichCanvasUITests.App
         }
 
         private System.Windows.Size _viewportSize;
+
         public System.Windows.Size ViewportSize
         {
             get => _viewportSize;
@@ -68,6 +79,7 @@ namespace RichCanvasUITests.App
         }
 
         private int _gridSpacing = 20;
+
         public int GridSpacing
         {
             get => _gridSpacing;
@@ -75,6 +87,7 @@ namespace RichCanvasUITests.App
         }
 
         private bool _enableSnapping;
+
         public bool EnableSnapping
         {
             get => _enableSnapping;
@@ -134,6 +147,11 @@ namespace RichCanvasUITests.App
         {
             ZoomingViewModel.ViewportZoom = 1;
             ViewportLocation = new System.Windows.Point(0, 0);
+        }
+
+        private void OnChangePanningGesture()
+        {
+            RichCanvasGestures.Pan = new MouseGesture(MouseAction.RightClick);
         }
     }
 }
