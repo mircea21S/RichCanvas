@@ -85,8 +85,6 @@
                     BorderBrush="BlueViolet"
                     Margin="2">
                 <StackPanel>
-                    <Button Command="{Binding AddImageCommand}"
-                            Content="Add image" />
                     <ToggleButton AutomationProperties.AutomationId="{x:Static auto:AutomationIds.RealTimeSelectionToggleButtonId}"
                                   IsChecked="{Binding RealTimeSelectionEnabled, Mode=TwoWay}"
                                   Content="RealTimeSelection">
@@ -164,7 +162,6 @@
                            ScaleFactor="{Binding ZoomingViewModel.ScaleFactor, Mode=TwoWay}"
                            EnableSnapping="{Binding EnableSnapping, Mode=TwoWay}"
                            GridSpacing="{Binding GridSpacing, Mode=TwoWay}"
-                           MouseMove="source_MouseMove"
                            Name="source">
                 <rc:RichCanvas.Background>
                     <DrawingBrush TileMode="Tile"
@@ -201,11 +198,6 @@
                     <DataTemplate DataType="{x:Type models:DrawingEndedRepresentation}">
                         <TextBlock Text="DRAWING ENDED"
                                    AutomationProperties.AutomationId="{x:Static auto:AutomationIds.DrawingEndedTextBoxId}" />
-                    </DataTemplate>
-                    <DataTemplate DataType="{x:Type models:ImageModel}">
-                        <!--TODO: replace Source value with an actual path to an image-->
-                        <Image Source="path to an image"
-                               Stretch="Fill" />
                     </DataTemplate>
                 </rc:RichCanvas.Resources>
                 <rc:RichCanvas.ItemContainerStyle>
