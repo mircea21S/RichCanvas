@@ -276,9 +276,9 @@ namespace RichCanvas
         /// Invoked when drawing opertation is completed. <br />
         /// Parameter is <see cref="Point"/>, representing the mouse position when drawing has finished.
         /// </summary>
-        public ICommand? DrawingEndedCommand
+        public ICommand DrawingEndedCommand
         {
-            get => (ICommand?)GetValue(DrawingEndedCommandProperty);
+            get => (ICommand)GetValue(DrawingEndedCommandProperty);
             set => SetValue(DrawingEndedCommandProperty, value);
         }
 
@@ -394,7 +394,6 @@ namespace RichCanvas
         #region Internal Properties
 
         internal RichCanvasPanel ItemsHost => _mainPanel;
-        internal bool IsPanning { get; set; }
         internal bool IsZooming { get; set; }
         internal IList BaseSelectedItems => base.SelectedItems;
         internal List<int> CurrentDrawingIndexes { get; } = [];
@@ -577,6 +576,11 @@ namespace RichCanvas
         #endregion Override Methods
 
         #region Public Api
+
+        /// <summary>
+        /// Get or set whether panning is currently in progress.
+        /// </summary>
+        public bool IsPanning { get; internal set; }
 
         /// <summary>Pushes a new state into the stack.</summary>
         /// <param name="state">The new state.</param>
