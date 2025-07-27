@@ -1,8 +1,8 @@
-name: Build & Deploy API Docs
+name: Build & Deploy API Reference DocFx Site
 
 on:
   push:
-    branches: [ docs ]
+    branches: [ main ]
 
 permissions:
   actions: read
