@@ -17,7 +17,7 @@
       "outputFormat": "markdown",
       "src": [
         {
-          "src": "../RichCanvas-v2.4.2",
+          "src": "../RichCanvas-v2.4.2/RichCanvas",
           "files": [
             "**/*.csproj"
           ]
