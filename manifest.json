@@ -1,0 +1,508 @@
+{
+  "source_base_path": "D:/a/RichCanvas/RichCanvas/docs",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Resource",
+      "output": {
+        "resource": {
+          "relative_path": "index.json"
+        }
+      }
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.Automation.ControlInformations.RichItemContainerData.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.Automation.ControlInformations.RichItemContainerData.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.Automation.ControlInformations.RichItemsControlData.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.Automation.ControlInformations.RichItemsControlData.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.Automation.ControlInformations.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.Automation.ControlInformations.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.Automation.RichItemContainerAutomationPeer.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.Automation.RichItemContainerAutomationPeer.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.Automation.RichItemsControlAutomationPeer.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.Automation.RichItemsControlAutomationPeer.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.Automation.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.Automation.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.Converters.UIntToRectConverter.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.Converters.UIntToRectConverter.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.Converters.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.Converters.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.CustomEventArgs.DrawEndedEventArgs.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.CustomEventArgs.DrawEndedEventArgs.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.CustomEventArgs.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.CustomEventArgs.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.Gestures.MouseKeyGesture.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.Gestures.MouseKeyGesture.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.Gestures.MultiGesture.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.Gestures.MultiGesture.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.Gestures.RichCanvasGestures.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.Gestures.RichCanvasGestures.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.Gestures.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.Gestures.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.Helpers.VisualHelper.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.Helpers.VisualHelper.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.Helpers.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.Helpers.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.PreviewLocationChanged.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.PreviewLocationChanged.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.RichCanvas.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.RichCanvas.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.RichCanvasCommands.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.RichCanvasCommands.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.RichCanvasContainer.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.RichCanvasContainer.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.RichCanvasPanel.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.RichCanvasPanel.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.States.CanvasState.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.States.CanvasState.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.States.ContainerStates.ContainerDefaultState.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.States.ContainerStates.ContainerDefaultState.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.States.ContainerStates.ContainerState.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.States.ContainerStates.ContainerState.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.States.ContainerStates.DraggingContainerState.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.States.ContainerStates.DraggingContainerState.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.States.ContainerStates.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.States.ContainerStates.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.States.DefaultState.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.States.DefaultState.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.States.DrawingState.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.States.DrawingState.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.States.MultipleSelectionState.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.States.MultipleSelectionState.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.States.PanningState.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.States.PanningState.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.States.SingleSelectionState.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.States.SingleSelectionState.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.States.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.States.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/RichCanvas.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/RichCanvas.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html"
+        },
+        ".json": {
+          "relative_path": "api/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/v2.4.2/RichCanvas.Converters.BoolToGeometryConverter.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/v2.4.2/RichCanvas.Converters.BoolToGeometryConverter.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/v2.4.2/RichCanvas.Converters.UIntToRectConverter.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/v2.4.2/RichCanvas.Converters.UIntToRectConverter.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/v2.4.2/RichCanvas.Converters.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/v2.4.2/RichCanvas.Converters.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/v2.4.2/RichCanvas.Helpers.VisualHelper.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/v2.4.2/RichCanvas.Helpers.VisualHelper.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/v2.4.2/RichCanvas.Helpers.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/v2.4.2/RichCanvas.Helpers.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/v2.4.2/RichCanvas.PanningGrid.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/v2.4.2/RichCanvas.PanningGrid.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/v2.4.2/RichCanvas.PreviewLocationChanged.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/v2.4.2/RichCanvas.PreviewLocationChanged.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/v2.4.2/RichCanvas.RichCanvas.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/v2.4.2/RichCanvas.RichCanvas.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/v2.4.2/RichCanvas.RichItemContainer.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/v2.4.2/RichCanvas.RichItemContainer.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/v2.4.2/RichCanvas.RichItemsControl.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/v2.4.2/RichCanvas.RichItemsControl.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "api/v2.4.2/RichCanvas.md",
+      "output": {
+        ".html": {
+          "relative_path": "api/v2.4.2/RichCanvas.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/v2.4.2/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/v2.4.2/toc.html"
+        },
+        ".json": {
+          "relative_path": "api/v2.4.2/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html"
+        },
+        ".json": {
+          "relative_path": "toc.json"
+        }
+      },
+      "version": ""
+    }
+  ],
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}

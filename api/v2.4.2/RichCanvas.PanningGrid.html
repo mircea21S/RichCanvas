@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+      <title> Class PanningGrid | RichCanvas API Reference </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="title" content=" Class PanningGrid | RichCanvas API Reference ">
+      
+      
+      <link rel="icon" href="../../favicon.ico">
+      <link rel="stylesheet" href="../../public/docfx.min.css">
+      <link rel="stylesheet" href="../../public/main.css">
+      <meta name="docfx:navrel" content="../../toc.html">
+      <meta name="docfx:tocrel" content="toc.html">
+      
+      <meta name="docfx:rel" content="../../">
+      
+      
+      <meta name="docfx:docurl" content="https://github.com/mircea21S/RichCanvas/blob/docs/docs/api/v2.4.2/RichCanvas.PanningGrid.md/#L1">
+      <meta name="loc:inThisArticle" content="In this article">
+      <meta name="loc:searchResultsCount" content="{count} results for &quot;{query}&quot;">
+      <meta name="loc:searchNoResults" content="No results for &quot;{query}&quot;">
+      <meta name="loc:tocFilter" content="Filter by title">
+      <meta name="loc:nextArticle" content="Next">
+      <meta name="loc:prevArticle" content="Previous">
+      <meta name="loc:themeLight" content="Light">
+      <meta name="loc:themeDark" content="Dark">
+      <meta name="loc:themeAuto" content="Auto">
+      <meta name="loc:changeTheme" content="Change theme">
+      <meta name="loc:copy" content="Copy">
+      <meta name="loc:downloadPdf" content="Download PDF">
+
+      <script type="module" src="./../../public/docfx.min.js"></script>
+
+      <script>
+        const theme = localStorage.getItem('theme') || 'auto'
+        document.documentElement.setAttribute('data-bs-theme', theme === 'auto' ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : theme)
+      </script>
+
+  </head>
+
+  <body class="tex2jax_ignore" data-layout="" data-yaml-mime="">
+    <header class="bg-body border-bottom">
+      <nav id="autocollapse" class="navbar navbar-expand-md" role="navigation">
+        <div class="container-xxl flex-nowrap">
+          <a class="navbar-brand" href="../../index.html">
+            <img id="logo" class="svg" src="../../logo.svg" alt="RichCanvas">
+            RichCanvas
+          </a>
+          <button class="btn btn-lg d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navpanel" aria-controls="navpanel" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="bi bi-three-dots"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navpanel">
+            <div id="navbar">
+              <form class="search" role="search" id="search">
+                <i class="bi bi-search"></i>
+                <input class="form-control" id="search-query" type="search" disabled placeholder="Search" autocomplete="off" aria-label="Search">
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container-xxl">
+      <div class="toc-offcanvas">
+        <div class="offcanvas-md offcanvas-start" tabindex="-1" id="tocOffcanvas" aria-labelledby="tocOffcanvasLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="tocOffcanvasLabel">Table of Contents</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#tocOffcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <nav class="toc" id="toc"></nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="actionbar">
+          <button class="btn btn-lg border-0 d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#tocOffcanvas" aria-controls="tocOffcanvas" aria-expanded="false" aria-label="Show table of contents">
+            <i class="bi bi-list"></i>
+          </button>
+
+          <nav id="breadcrumb"></nav>
+        </div>
+
+        <article data-uid="">
+<h1 id="RichCanvas_PanningGrid"> Class PanningGrid</h1>
+
+<p>Namespace: <a href="RichCanvas.html">RichCanvas</a><br>
+Assembly: RichCanvas.dll</p>
+<p>Grid defining scrolling functionalty</p>
+<pre><code class="lang-csharp">public class PanningGrid : Grid, IAnimatable, ISupportInitialize, IFrameworkInputElement, IInputElement, IQueryAmbient, IAddChild, IScrollInfo
+</code></pre>
+<h4 id="inheritance">Inheritance</h4>
+<p><a href="https://learn.microsoft.com/dotnet/api/system.object">object</a> ←
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.threading.dispatcherobject">DispatcherObject</a> ←
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.dependencyobject">DependencyObject</a> ←
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual">Visual</a> ←
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement">UIElement</a> ←
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement">FrameworkElement</a> ←
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.panel">Panel</a> ←
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid">Grid</a> ←
+<a href="RichCanvas.PanningGrid.html">PanningGrid</a></p>
+<h4 id="implements">Implements</h4>
+<p><a href="https://learn.microsoft.com/dotnet/api/system.windows.media.animation.ianimatable">IAnimatable</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.componentmodel.isupportinitialize">ISupportInitialize</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.iframeworkinputelement">IFrameworkInputElement</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.iinputelement">IInputElement</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.markup.iqueryambient">IQueryAmbient</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.markup.iaddchild">IAddChild</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.primitives.iscrollinfo">IScrollInfo</a></p>
+<h4 id="inherited-members">Inherited Members</h4>
+<p><a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid.columnproperty">Grid.ColumnProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid.columnspanproperty">Grid.ColumnSpanProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid.issharedsizescopeproperty">Grid.IsSharedSizeScopeProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid.rowproperty">Grid.RowProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid.rowspanproperty">Grid.RowSpanProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid.showgridlinesproperty">Grid.ShowGridLinesProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid.arrangeoverride">Grid.ArrangeOverride(Size)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid.getcolumn">Grid.GetColumn(UIElement)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid.getcolumnspan">Grid.GetColumnSpan(UIElement)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid.getissharedsizescope">Grid.GetIsSharedSizeScope(UIElement)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid.getrow">Grid.GetRow(UIElement)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid.getrowspan">Grid.GetRowSpan(UIElement)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid.getvisualchild">Grid.GetVisualChild(int)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid.measureoverride">Grid.MeasureOverride(Size)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid.onvisualchildrenchanged">Grid.OnVisualChildrenChanged(DependencyObject, DependencyObject)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid.setcolumn">Grid.SetColumn(UIElement, int)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid.setcolumnspan">Grid.SetColumnSpan(UIElement, int)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid.setissharedsizescope">Grid.SetIsSharedSizeScope(UIElement, bool)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid.setrow">Grid.SetRow(UIElement, int)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid.setrowspan">Grid.SetRowSpan(UIElement, int)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid.columndefinitions">Grid.ColumnDefinitions</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid.logicalchildren">Grid.LogicalChildren</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid.rowdefinitions">Grid.RowDefinitions</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid.showgridlines">Grid.ShowGridLines</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.grid.visualchildrencount">Grid.VisualChildrenCount</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.panel.backgroundproperty">Panel.BackgroundProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.panel.isitemshostproperty">Panel.IsItemsHostProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.panel.zindexproperty">Panel.ZIndexProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.panel.createuielementcollection">Panel.CreateUIElementCollection(FrameworkElement)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.panel.getvisualchild">Panel.GetVisualChild(int)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.panel.getzindex">Panel.GetZIndex(UIElement)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.panel.onisitemshostchanged">Panel.OnIsItemsHostChanged(bool, bool)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.panel.onrender">Panel.OnRender(DrawingContext)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.panel.onvisualchildrenchanged">Panel.OnVisualChildrenChanged(DependencyObject, DependencyObject)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.panel.setzindex">Panel.SetZIndex(UIElement, int)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.panel.background">Panel.Background</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.panel.children">Panel.Children</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.panel.haslogicalorientation">Panel.HasLogicalOrientation</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.panel.haslogicalorientationpublic">Panel.HasLogicalOrientationPublic</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.panel.internalchildren">Panel.InternalChildren</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.panel.isitemshost">Panel.IsItemsHost</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.panel.logicalchildren">Panel.LogicalChildren</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.panel.logicalorientation">Panel.LogicalOrientation</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.panel.logicalorientationpublic">Panel.LogicalOrientationPublic</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.panel.visualchildrencount">Panel.VisualChildrenCount</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.actualheightproperty">FrameworkElement.ActualHeightProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.actualwidthproperty">FrameworkElement.ActualWidthProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.bindinggroupproperty">FrameworkElement.BindingGroupProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.contextmenuclosingevent">FrameworkElement.ContextMenuClosingEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.contextmenuopeningevent">FrameworkElement.ContextMenuOpeningEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.contextmenuproperty">FrameworkElement.ContextMenuProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.cursorproperty">FrameworkElement.CursorProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.datacontextproperty">FrameworkElement.DataContextProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.defaultstylekeyproperty">FrameworkElement.DefaultStyleKeyProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.flowdirectionproperty">FrameworkElement.FlowDirectionProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.focusvisualstyleproperty">FrameworkElement.FocusVisualStyleProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.forcecursorproperty">FrameworkElement.ForceCursorProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.heightproperty">FrameworkElement.HeightProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.horizontalalignmentproperty">FrameworkElement.HorizontalAlignmentProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.inputscopeproperty">FrameworkElement.InputScopeProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.languageproperty">FrameworkElement.LanguageProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.layouttransformproperty">FrameworkElement.LayoutTransformProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.loadedevent">FrameworkElement.LoadedEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.marginproperty">FrameworkElement.MarginProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.maxheightproperty">FrameworkElement.MaxHeightProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.maxwidthproperty">FrameworkElement.MaxWidthProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.minheightproperty">FrameworkElement.MinHeightProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.minwidthproperty">FrameworkElement.MinWidthProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.nameproperty">FrameworkElement.NameProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.overridesdefaultstyleproperty">FrameworkElement.OverridesDefaultStyleProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.requestbringintoviewevent">FrameworkElement.RequestBringIntoViewEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.sizechangedevent">FrameworkElement.SizeChangedEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.styleproperty">FrameworkElement.StyleProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.tagproperty">FrameworkElement.TagProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.tooltipclosingevent">FrameworkElement.ToolTipClosingEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.tooltipopeningevent">FrameworkElement.ToolTipOpeningEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.tooltipproperty">FrameworkElement.ToolTipProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.unloadedevent">FrameworkElement.UnloadedEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.uselayoutroundingproperty">FrameworkElement.UseLayoutRoundingProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.verticalalignmentproperty">FrameworkElement.VerticalAlignmentProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.widthproperty">FrameworkElement.WidthProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.addlogicalchild">FrameworkElement.AddLogicalChild(object)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.applytemplate">FrameworkElement.ApplyTemplate()</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.arrangecore">FrameworkElement.ArrangeCore(Rect)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.arrangeoverride">FrameworkElement.ArrangeOverride(Size)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.begininit">FrameworkElement.BeginInit()</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.beginstoryboard#system-windows-frameworkelement-beginstoryboard(system-windows-media-animation-storyboard)">FrameworkElement.BeginStoryboard(Storyboard)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.beginstoryboard#system-windows-frameworkelement-beginstoryboard(system-windows-media-animation-storyboard-system-windows-media-animation-handoffbehavior)">FrameworkElement.BeginStoryboard(Storyboard, HandoffBehavior)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.beginstoryboard#system-windows-frameworkelement-beginstoryboard(system-windows-media-animation-storyboard-system-windows-media-animation-handoffbehavior-system-boolean)">FrameworkElement.BeginStoryboard(Storyboard, HandoffBehavior, bool)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.bringintoview#system-windows-frameworkelement-bringintoview">FrameworkElement.BringIntoView()</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.bringintoview#system-windows-frameworkelement-bringintoview(system-windows-rect)">FrameworkElement.BringIntoView(Rect)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.endinit">FrameworkElement.EndInit()</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.findname">FrameworkElement.FindName(string)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.findresource">FrameworkElement.FindResource(object)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.getbindingexpression">FrameworkElement.GetBindingExpression(DependencyProperty)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.getflowdirection">FrameworkElement.GetFlowDirection(DependencyObject)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.getlayoutclip">FrameworkElement.GetLayoutClip(Size)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.gettemplatechild">FrameworkElement.GetTemplateChild(string)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.getuiparentcore">FrameworkElement.GetUIParentCore()</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.getvisualchild">FrameworkElement.GetVisualChild(int)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.measurecore">FrameworkElement.MeasureCore(Size)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.measureoverride">FrameworkElement.MeasureOverride(Size)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.movefocus">FrameworkElement.MoveFocus(TraversalRequest)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.onapplytemplate">FrameworkElement.OnApplyTemplate()</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.oncontextmenuclosing">FrameworkElement.OnContextMenuClosing(ContextMenuEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.oncontextmenuopening">FrameworkElement.OnContextMenuOpening(ContextMenuEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.ongotfocus">FrameworkElement.OnGotFocus(RoutedEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.oninitialized">FrameworkElement.OnInitialized(EventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.onpropertychanged">FrameworkElement.OnPropertyChanged(DependencyPropertyChangedEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.onrendersizechanged">FrameworkElement.OnRenderSizeChanged(SizeChangedInfo)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.onstylechanged">FrameworkElement.OnStyleChanged(Style, Style)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.ontooltipclosing">FrameworkElement.OnToolTipClosing(ToolTipEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.ontooltipopening">FrameworkElement.OnToolTipOpening(ToolTipEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.onvisualparentchanged">FrameworkElement.OnVisualParentChanged(DependencyObject)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.parentlayoutinvalidated">FrameworkElement.ParentLayoutInvalidated(UIElement)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.predictfocus">FrameworkElement.PredictFocus(FocusNavigationDirection)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.registername">FrameworkElement.RegisterName(string, object)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.removelogicalchild">FrameworkElement.RemoveLogicalChild(object)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.setbinding#system-windows-frameworkelement-setbinding(system-windows-dependencyproperty-system-string)">FrameworkElement.SetBinding(DependencyProperty, string)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.setbinding#system-windows-frameworkelement-setbinding(system-windows-dependencyproperty-system-windows-data-bindingbase)">FrameworkElement.SetBinding(DependencyProperty, BindingBase)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.setflowdirection">FrameworkElement.SetFlowDirection(DependencyObject, FlowDirection)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.setresourcereference">FrameworkElement.SetResourceReference(DependencyProperty, object)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.tryfindresource">FrameworkElement.TryFindResource(object)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.unregistername">FrameworkElement.UnregisterName(string)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.updatedefaultstyle">FrameworkElement.UpdateDefaultStyle()</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.actualheight">FrameworkElement.ActualHeight</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.actualwidth">FrameworkElement.ActualWidth</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.bindinggroup">FrameworkElement.BindingGroup</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.contextmenu">FrameworkElement.ContextMenu</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.cursor">FrameworkElement.Cursor</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.datacontext">FrameworkElement.DataContext</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.defaultstylekey">FrameworkElement.DefaultStyleKey</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.flowdirection">FrameworkElement.FlowDirection</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.focusvisualstyle">FrameworkElement.FocusVisualStyle</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.forcecursor">FrameworkElement.ForceCursor</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.height">FrameworkElement.Height</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.horizontalalignment">FrameworkElement.HorizontalAlignment</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.inheritancebehavior">FrameworkElement.InheritanceBehavior</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.inputscope">FrameworkElement.InputScope</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.isinitialized">FrameworkElement.IsInitialized</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.isloaded">FrameworkElement.IsLoaded</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.language">FrameworkElement.Language</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.layouttransform">FrameworkElement.LayoutTransform</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.logicalchildren">FrameworkElement.LogicalChildren</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.margin">FrameworkElement.Margin</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.maxheight">FrameworkElement.MaxHeight</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.maxwidth">FrameworkElement.MaxWidth</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.minheight">FrameworkElement.MinHeight</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.minwidth">FrameworkElement.MinWidth</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.name">FrameworkElement.Name</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.overridesdefaultstyle">FrameworkElement.OverridesDefaultStyle</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.parent">FrameworkElement.Parent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.resources">FrameworkElement.Resources</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.style">FrameworkElement.Style</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.tag">FrameworkElement.Tag</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.templatedparent">FrameworkElement.TemplatedParent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.tooltip">FrameworkElement.ToolTip</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.triggers">FrameworkElement.Triggers</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.uselayoutrounding">FrameworkElement.UseLayoutRounding</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.verticalalignment">FrameworkElement.VerticalAlignment</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.visualchildrencount">FrameworkElement.VisualChildrenCount</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.width">FrameworkElement.Width</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.contextmenuclosing">FrameworkElement.ContextMenuClosing</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.contextmenuopening">FrameworkElement.ContextMenuOpening</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.datacontextchanged">FrameworkElement.DataContextChanged</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.initialized">FrameworkElement.Initialized</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.loaded">FrameworkElement.Loaded</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.requestbringintoview">FrameworkElement.RequestBringIntoView</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.sizechanged">FrameworkElement.SizeChanged</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.sourceupdated">FrameworkElement.SourceUpdated</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.targetupdated">FrameworkElement.TargetUpdated</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.tooltipclosing">FrameworkElement.ToolTipClosing</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.tooltipopening">FrameworkElement.ToolTipOpening</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.frameworkelement.unloaded">FrameworkElement.Unloaded</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.allowdropproperty">UIElement.AllowDropProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.areanytouchescapturedproperty">UIElement.AreAnyTouchesCapturedProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.areanytouchescapturedwithinproperty">UIElement.AreAnyTouchesCapturedWithinProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.areanytouchesdirectlyoverproperty">UIElement.AreAnyTouchesDirectlyOverProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.areanytouchesoverproperty">UIElement.AreAnyTouchesOverProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.bitmapeffectinputproperty">UIElement.BitmapEffectInputProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.bitmapeffectproperty">UIElement.BitmapEffectProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.cachemodeproperty">UIElement.CacheModeProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.clipproperty">UIElement.ClipProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.cliptoboundsproperty">UIElement.ClipToBoundsProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.dragenterevent">UIElement.DragEnterEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.dragleaveevent">UIElement.DragLeaveEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.dragoverevent">UIElement.DragOverEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.dropevent">UIElement.DropEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.effectproperty">UIElement.EffectProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.focusableproperty">UIElement.FocusableProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.givefeedbackevent">UIElement.GiveFeedbackEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.gotfocusevent">UIElement.GotFocusEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.gotkeyboardfocusevent">UIElement.GotKeyboardFocusEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.gotmousecaptureevent">UIElement.GotMouseCaptureEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.gotstyluscaptureevent">UIElement.GotStylusCaptureEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.gottouchcaptureevent">UIElement.GotTouchCaptureEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.isenabledproperty">UIElement.IsEnabledProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.isfocusedproperty">UIElement.IsFocusedProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ishittestvisibleproperty">UIElement.IsHitTestVisibleProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.iskeyboardfocusedproperty">UIElement.IsKeyboardFocusedProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.iskeyboardfocuswithinproperty">UIElement.IsKeyboardFocusWithinProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ismanipulationenabledproperty">UIElement.IsManipulationEnabledProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ismousecapturedproperty">UIElement.IsMouseCapturedProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ismousecapturewithinproperty">UIElement.IsMouseCaptureWithinProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ismousedirectlyoverproperty">UIElement.IsMouseDirectlyOverProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ismouseoverproperty">UIElement.IsMouseOverProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.isstyluscapturedproperty">UIElement.IsStylusCapturedProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.isstyluscapturewithinproperty">UIElement.IsStylusCaptureWithinProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.isstylusdirectlyoverproperty">UIElement.IsStylusDirectlyOverProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.isstylusoverproperty">UIElement.IsStylusOverProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.isvisibleproperty">UIElement.IsVisibleProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.keydownevent">UIElement.KeyDownEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.keyupevent">UIElement.KeyUpEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.lostfocusevent">UIElement.LostFocusEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.lostkeyboardfocusevent">UIElement.LostKeyboardFocusEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.lostmousecaptureevent">UIElement.LostMouseCaptureEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.loststyluscaptureevent">UIElement.LostStylusCaptureEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.losttouchcaptureevent">UIElement.LostTouchCaptureEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.manipulationboundaryfeedbackevent">UIElement.ManipulationBoundaryFeedbackEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.manipulationcompletedevent">UIElement.ManipulationCompletedEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.manipulationdeltaevent">UIElement.ManipulationDeltaEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.manipulationinertiastartingevent">UIElement.ManipulationInertiaStartingEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.manipulationstartedevent">UIElement.ManipulationStartedEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.manipulationstartingevent">UIElement.ManipulationStartingEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.mousedownevent">UIElement.MouseDownEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.mouseenterevent">UIElement.MouseEnterEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.mouseleaveevent">UIElement.MouseLeaveEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.mouseleftbuttondownevent">UIElement.MouseLeftButtonDownEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.mouseleftbuttonupevent">UIElement.MouseLeftButtonUpEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.mousemoveevent">UIElement.MouseMoveEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.mouserightbuttondownevent">UIElement.MouseRightButtonDownEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.mouserightbuttonupevent">UIElement.MouseRightButtonUpEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.mouseupevent">UIElement.MouseUpEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.mousewheelevent">UIElement.MouseWheelEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.opacitymaskproperty">UIElement.OpacityMaskProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.opacityproperty">UIElement.OpacityProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewdragenterevent">UIElement.PreviewDragEnterEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewdragleaveevent">UIElement.PreviewDragLeaveEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewdragoverevent">UIElement.PreviewDragOverEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewdropevent">UIElement.PreviewDropEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewgivefeedbackevent">UIElement.PreviewGiveFeedbackEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewgotkeyboardfocusevent">UIElement.PreviewGotKeyboardFocusEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewkeydownevent">UIElement.PreviewKeyDownEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewkeyupevent">UIElement.PreviewKeyUpEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewlostkeyboardfocusevent">UIElement.PreviewLostKeyboardFocusEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewmousedownevent">UIElement.PreviewMouseDownEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewmouseleftbuttondownevent">UIElement.PreviewMouseLeftButtonDownEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewmouseleftbuttonupevent">UIElement.PreviewMouseLeftButtonUpEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewmousemoveevent">UIElement.PreviewMouseMoveEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewmouserightbuttondownevent">UIElement.PreviewMouseRightButtonDownEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewmouserightbuttonupevent">UIElement.PreviewMouseRightButtonUpEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewmouseupevent">UIElement.PreviewMouseUpEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewmousewheelevent">UIElement.PreviewMouseWheelEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewquerycontinuedragevent">UIElement.PreviewQueryContinueDragEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewstylusbuttondownevent">UIElement.PreviewStylusButtonDownEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewstylusbuttonupevent">UIElement.PreviewStylusButtonUpEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewstylusdownevent">UIElement.PreviewStylusDownEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewstylusinairmoveevent">UIElement.PreviewStylusInAirMoveEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewstylusinrangeevent">UIElement.PreviewStylusInRangeEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewstylusmoveevent">UIElement.PreviewStylusMoveEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewstylusoutofrangeevent">UIElement.PreviewStylusOutOfRangeEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewstylussystemgestureevent">UIElement.PreviewStylusSystemGestureEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewstylusupevent">UIElement.PreviewStylusUpEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewtextinputevent">UIElement.PreviewTextInputEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewtouchdownevent">UIElement.PreviewTouchDownEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewtouchmoveevent">UIElement.PreviewTouchMoveEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewtouchupevent">UIElement.PreviewTouchUpEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.querycontinuedragevent">UIElement.QueryContinueDragEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.querycursorevent">UIElement.QueryCursorEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.rendertransformoriginproperty">UIElement.RenderTransformOriginProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.rendertransformproperty">UIElement.RenderTransformProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.snapstodevicepixelsproperty">UIElement.SnapsToDevicePixelsProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.stylusbuttondownevent">UIElement.StylusButtonDownEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.stylusbuttonupevent">UIElement.StylusButtonUpEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.stylusdownevent">UIElement.StylusDownEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.stylusenterevent">UIElement.StylusEnterEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.stylusinairmoveevent">UIElement.StylusInAirMoveEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.stylusinrangeevent">UIElement.StylusInRangeEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.stylusleaveevent">UIElement.StylusLeaveEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.stylusmoveevent">UIElement.StylusMoveEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.stylusoutofrangeevent">UIElement.StylusOutOfRangeEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.stylussystemgestureevent">UIElement.StylusSystemGestureEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.stylusupevent">UIElement.StylusUpEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.textinputevent">UIElement.TextInputEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.touchdownevent">UIElement.TouchDownEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.touchenterevent">UIElement.TouchEnterEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.touchleaveevent">UIElement.TouchLeaveEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.touchmoveevent">UIElement.TouchMoveEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.touchupevent">UIElement.TouchUpEvent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.uidproperty">UIElement.UidProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.visibilityproperty">UIElement.VisibilityProperty</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.addhandler#system-windows-uielement-addhandler(system-windows-routedevent-system-delegate)">UIElement.AddHandler(RoutedEvent, Delegate)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.addhandler#system-windows-uielement-addhandler(system-windows-routedevent-system-delegate-system-boolean)">UIElement.AddHandler(RoutedEvent, Delegate, bool)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.addtoeventroute">UIElement.AddToEventRoute(EventRoute, RoutedEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.applyanimationclock#system-windows-uielement-applyanimationclock(system-windows-dependencyproperty-system-windows-media-animation-animationclock)">UIElement.ApplyAnimationClock(DependencyProperty, AnimationClock)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.applyanimationclock#system-windows-uielement-applyanimationclock(system-windows-dependencyproperty-system-windows-media-animation-animationclock-system-windows-media-animation-handoffbehavior)">UIElement.ApplyAnimationClock(DependencyProperty, AnimationClock, HandoffBehavior)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.arrange">UIElement.Arrange(Rect)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.arrangecore">UIElement.ArrangeCore(Rect)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.beginanimation#system-windows-uielement-beginanimation(system-windows-dependencyproperty-system-windows-media-animation-animationtimeline)">UIElement.BeginAnimation(DependencyProperty, AnimationTimeline)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.beginanimation#system-windows-uielement-beginanimation(system-windows-dependencyproperty-system-windows-media-animation-animationtimeline-system-windows-media-animation-handoffbehavior)">UIElement.BeginAnimation(DependencyProperty, AnimationTimeline, HandoffBehavior)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.capturemouse">UIElement.CaptureMouse()</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.capturestylus">UIElement.CaptureStylus()</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.capturetouch">UIElement.CaptureTouch(TouchDevice)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.focus">UIElement.Focus()</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.getanimationbasevalue">UIElement.GetAnimationBaseValue(DependencyProperty)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.getlayoutclip">UIElement.GetLayoutClip(Size)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.getuiparentcore">UIElement.GetUIParentCore()</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.hittestcore#system-windows-uielement-hittestcore(system-windows-media-geometryhittestparameters)">UIElement.HitTestCore(GeometryHitTestParameters)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.hittestcore#system-windows-uielement-hittestcore(system-windows-media-pointhittestparameters)">UIElement.HitTestCore(PointHitTestParameters)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.inputhittest">UIElement.InputHitTest(Point)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.invalidatearrange">UIElement.InvalidateArrange()</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.invalidatemeasure">UIElement.InvalidateMeasure()</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.invalidatevisual">UIElement.InvalidateVisual()</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.measure">UIElement.Measure(Size)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.measurecore">UIElement.MeasureCore(Size)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.movefocus">UIElement.MoveFocus(TraversalRequest)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onaccesskey">UIElement.OnAccessKey(AccessKeyEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onchilddesiredsizechanged">UIElement.OnChildDesiredSizeChanged(UIElement)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.oncreateautomationpeer">UIElement.OnCreateAutomationPeer()</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ondragenter">UIElement.OnDragEnter(DragEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ondragleave">UIElement.OnDragLeave(DragEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ondragover">UIElement.OnDragOver(DragEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ondrop">UIElement.OnDrop(DragEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ongivefeedback">UIElement.OnGiveFeedback(GiveFeedbackEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ongotfocus">UIElement.OnGotFocus(RoutedEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ongotkeyboardfocus">UIElement.OnGotKeyboardFocus(KeyboardFocusChangedEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ongotmousecapture">UIElement.OnGotMouseCapture(MouseEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ongotstyluscapture">UIElement.OnGotStylusCapture(StylusEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ongottouchcapture">UIElement.OnGotTouchCapture(TouchEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.oniskeyboardfocusedchanged">UIElement.OnIsKeyboardFocusedChanged(DependencyPropertyChangedEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.oniskeyboardfocuswithinchanged">UIElement.OnIsKeyboardFocusWithinChanged(DependencyPropertyChangedEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onismousecapturedchanged">UIElement.OnIsMouseCapturedChanged(DependencyPropertyChangedEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onismousecapturewithinchanged">UIElement.OnIsMouseCaptureWithinChanged(DependencyPropertyChangedEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onismousedirectlyoverchanged">UIElement.OnIsMouseDirectlyOverChanged(DependencyPropertyChangedEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onisstyluscapturedchanged">UIElement.OnIsStylusCapturedChanged(DependencyPropertyChangedEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onisstyluscapturewithinchanged">UIElement.OnIsStylusCaptureWithinChanged(DependencyPropertyChangedEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onisstylusdirectlyoverchanged">UIElement.OnIsStylusDirectlyOverChanged(DependencyPropertyChangedEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onkeydown">UIElement.OnKeyDown(KeyEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onkeyup">UIElement.OnKeyUp(KeyEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onlostfocus">UIElement.OnLostFocus(RoutedEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onlostkeyboardfocus">UIElement.OnLostKeyboardFocus(KeyboardFocusChangedEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onlostmousecapture">UIElement.OnLostMouseCapture(MouseEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onloststyluscapture">UIElement.OnLostStylusCapture(StylusEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onlosttouchcapture">UIElement.OnLostTouchCapture(TouchEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onmanipulationboundaryfeedback">UIElement.OnManipulationBoundaryFeedback(ManipulationBoundaryFeedbackEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onmanipulationcompleted">UIElement.OnManipulationCompleted(ManipulationCompletedEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onmanipulationdelta">UIElement.OnManipulationDelta(ManipulationDeltaEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onmanipulationinertiastarting">UIElement.OnManipulationInertiaStarting(ManipulationInertiaStartingEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onmanipulationstarted">UIElement.OnManipulationStarted(ManipulationStartedEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onmanipulationstarting">UIElement.OnManipulationStarting(ManipulationStartingEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onmousedown">UIElement.OnMouseDown(MouseButtonEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onmouseenter">UIElement.OnMouseEnter(MouseEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onmouseleave">UIElement.OnMouseLeave(MouseEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onmouseleftbuttondown">UIElement.OnMouseLeftButtonDown(MouseButtonEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onmouseleftbuttonup">UIElement.OnMouseLeftButtonUp(MouseButtonEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onmousemove">UIElement.OnMouseMove(MouseEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onmouserightbuttondown">UIElement.OnMouseRightButtonDown(MouseButtonEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onmouserightbuttonup">UIElement.OnMouseRightButtonUp(MouseButtonEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onmouseup">UIElement.OnMouseUp(MouseButtonEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onmousewheel">UIElement.OnMouseWheel(MouseWheelEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewdragenter">UIElement.OnPreviewDragEnter(DragEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewdragleave">UIElement.OnPreviewDragLeave(DragEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewdragover">UIElement.OnPreviewDragOver(DragEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewdrop">UIElement.OnPreviewDrop(DragEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewgivefeedback">UIElement.OnPreviewGiveFeedback(GiveFeedbackEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewgotkeyboardfocus">UIElement.OnPreviewGotKeyboardFocus(KeyboardFocusChangedEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewkeydown">UIElement.OnPreviewKeyDown(KeyEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewkeyup">UIElement.OnPreviewKeyUp(KeyEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewlostkeyboardfocus">UIElement.OnPreviewLostKeyboardFocus(KeyboardFocusChangedEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewmousedown">UIElement.OnPreviewMouseDown(MouseButtonEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewmouseleftbuttondown">UIElement.OnPreviewMouseLeftButtonDown(MouseButtonEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewmouseleftbuttonup">UIElement.OnPreviewMouseLeftButtonUp(MouseButtonEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewmousemove">UIElement.OnPreviewMouseMove(MouseEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewmouserightbuttondown">UIElement.OnPreviewMouseRightButtonDown(MouseButtonEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewmouserightbuttonup">UIElement.OnPreviewMouseRightButtonUp(MouseButtonEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewmouseup">UIElement.OnPreviewMouseUp(MouseButtonEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewmousewheel">UIElement.OnPreviewMouseWheel(MouseWheelEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewquerycontinuedrag">UIElement.OnPreviewQueryContinueDrag(QueryContinueDragEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewstylusbuttondown">UIElement.OnPreviewStylusButtonDown(StylusButtonEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewstylusbuttonup">UIElement.OnPreviewStylusButtonUp(StylusButtonEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewstylusdown">UIElement.OnPreviewStylusDown(StylusDownEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewstylusinairmove">UIElement.OnPreviewStylusInAirMove(StylusEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewstylusinrange">UIElement.OnPreviewStylusInRange(StylusEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewstylusmove">UIElement.OnPreviewStylusMove(StylusEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewstylusoutofrange">UIElement.OnPreviewStylusOutOfRange(StylusEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewstylussystemgesture">UIElement.OnPreviewStylusSystemGesture(StylusSystemGestureEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewstylusup">UIElement.OnPreviewStylusUp(StylusEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewtextinput">UIElement.OnPreviewTextInput(TextCompositionEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewtouchdown">UIElement.OnPreviewTouchDown(TouchEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewtouchmove">UIElement.OnPreviewTouchMove(TouchEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onpreviewtouchup">UIElement.OnPreviewTouchUp(TouchEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onquerycontinuedrag">UIElement.OnQueryContinueDrag(QueryContinueDragEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onquerycursor">UIElement.OnQueryCursor(QueryCursorEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onrender">UIElement.OnRender(DrawingContext)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onrendersizechanged">UIElement.OnRenderSizeChanged(SizeChangedInfo)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onstylusbuttondown">UIElement.OnStylusButtonDown(StylusButtonEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onstylusbuttonup">UIElement.OnStylusButtonUp(StylusButtonEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onstylusdown">UIElement.OnStylusDown(StylusDownEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onstylusenter">UIElement.OnStylusEnter(StylusEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onstylusinairmove">UIElement.OnStylusInAirMove(StylusEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onstylusinrange">UIElement.OnStylusInRange(StylusEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onstylusleave">UIElement.OnStylusLeave(StylusEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onstylusmove">UIElement.OnStylusMove(StylusEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onstylusoutofrange">UIElement.OnStylusOutOfRange(StylusEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onstylussystemgesture">UIElement.OnStylusSystemGesture(StylusSystemGestureEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onstylusup">UIElement.OnStylusUp(StylusEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ontextinput">UIElement.OnTextInput(TextCompositionEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ontouchdown">UIElement.OnTouchDown(TouchEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ontouchenter">UIElement.OnTouchEnter(TouchEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ontouchleave">UIElement.OnTouchLeave(TouchEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ontouchmove">UIElement.OnTouchMove(TouchEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ontouchup">UIElement.OnTouchUp(TouchEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.onvisualparentchanged">UIElement.OnVisualParentChanged(DependencyObject)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.predictfocus">UIElement.PredictFocus(FocusNavigationDirection)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.raiseevent">UIElement.RaiseEvent(RoutedEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.releasealltouchcaptures">UIElement.ReleaseAllTouchCaptures()</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.releasemousecapture">UIElement.ReleaseMouseCapture()</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.releasestyluscapture">UIElement.ReleaseStylusCapture()</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.releasetouchcapture">UIElement.ReleaseTouchCapture(TouchDevice)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.removehandler">UIElement.RemoveHandler(RoutedEvent, Delegate)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.translatepoint">UIElement.TranslatePoint(Point, UIElement)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.updatelayout">UIElement.UpdateLayout()</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.allowdrop">UIElement.AllowDrop</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.areanytouchescaptured">UIElement.AreAnyTouchesCaptured</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.areanytouchescapturedwithin">UIElement.AreAnyTouchesCapturedWithin</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.areanytouchesdirectlyover">UIElement.AreAnyTouchesDirectlyOver</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.areanytouchesover">UIElement.AreAnyTouchesOver</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.bitmapeffect">UIElement.BitmapEffect</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.bitmapeffectinput">UIElement.BitmapEffectInput</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.cachemode">UIElement.CacheMode</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.clip">UIElement.Clip</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.cliptobounds">UIElement.ClipToBounds</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.commandbindings">UIElement.CommandBindings</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.desiredsize">UIElement.DesiredSize</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.effect">UIElement.Effect</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.focusable">UIElement.Focusable</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.hasanimatedproperties">UIElement.HasAnimatedProperties</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.haseffectivekeyboardfocus">UIElement.HasEffectiveKeyboardFocus</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.inputbindings">UIElement.InputBindings</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.isarrangevalid">UIElement.IsArrangeValid</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.isenabled">UIElement.IsEnabled</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.isenabledcore">UIElement.IsEnabledCore</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.isfocused">UIElement.IsFocused</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ishittestvisible">UIElement.IsHitTestVisible</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.isinputmethodenabled">UIElement.IsInputMethodEnabled</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.iskeyboardfocused">UIElement.IsKeyboardFocused</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.iskeyboardfocuswithin">UIElement.IsKeyboardFocusWithin</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ismanipulationenabled">UIElement.IsManipulationEnabled</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ismeasurevalid">UIElement.IsMeasureValid</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ismousecaptured">UIElement.IsMouseCaptured</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ismousecapturewithin">UIElement.IsMouseCaptureWithin</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ismousedirectlyover">UIElement.IsMouseDirectlyOver</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ismouseover">UIElement.IsMouseOver</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.isstyluscaptured">UIElement.IsStylusCaptured</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.isstyluscapturewithin">UIElement.IsStylusCaptureWithin</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.isstylusdirectlyover">UIElement.IsStylusDirectlyOver</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.isstylusover">UIElement.IsStylusOver</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.isvisible">UIElement.IsVisible</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.opacity">UIElement.Opacity</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.opacitymask">UIElement.OpacityMask</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.persistid">UIElement.PersistId</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.rendersize">UIElement.RenderSize</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.rendertransform">UIElement.RenderTransform</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.rendertransformorigin">UIElement.RenderTransformOrigin</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.snapstodevicepixels">UIElement.SnapsToDevicePixels</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.stylusplugins">UIElement.StylusPlugIns</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.touchescaptured">UIElement.TouchesCaptured</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.touchescapturedwithin">UIElement.TouchesCapturedWithin</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.touchesdirectlyover">UIElement.TouchesDirectlyOver</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.touchesover">UIElement.TouchesOver</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.uid">UIElement.Uid</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.visibility">UIElement.Visibility</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.dragenter">UIElement.DragEnter</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.dragleave">UIElement.DragLeave</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.dragover">UIElement.DragOver</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.drop">UIElement.Drop</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.focusablechanged">UIElement.FocusableChanged</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.givefeedback">UIElement.GiveFeedback</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.gotfocus">UIElement.GotFocus</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.gotkeyboardfocus">UIElement.GotKeyboardFocus</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.gotmousecapture">UIElement.GotMouseCapture</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.gotstyluscapture">UIElement.GotStylusCapture</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.gottouchcapture">UIElement.GotTouchCapture</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.isenabledchanged">UIElement.IsEnabledChanged</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ishittestvisiblechanged">UIElement.IsHitTestVisibleChanged</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.iskeyboardfocusedchanged">UIElement.IsKeyboardFocusedChanged</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.iskeyboardfocuswithinchanged">UIElement.IsKeyboardFocusWithinChanged</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ismousecapturedchanged">UIElement.IsMouseCapturedChanged</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ismousecapturewithinchanged">UIElement.IsMouseCaptureWithinChanged</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.ismousedirectlyoverchanged">UIElement.IsMouseDirectlyOverChanged</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.isstyluscapturedchanged">UIElement.IsStylusCapturedChanged</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.isstyluscapturewithinchanged">UIElement.IsStylusCaptureWithinChanged</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.isstylusdirectlyoverchanged">UIElement.IsStylusDirectlyOverChanged</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.isvisiblechanged">UIElement.IsVisibleChanged</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.keydown">UIElement.KeyDown</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.keyup">UIElement.KeyUp</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.layoutupdated">UIElement.LayoutUpdated</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.lostfocus">UIElement.LostFocus</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.lostkeyboardfocus">UIElement.LostKeyboardFocus</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.lostmousecapture">UIElement.LostMouseCapture</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.loststyluscapture">UIElement.LostStylusCapture</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.losttouchcapture">UIElement.LostTouchCapture</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.manipulationboundaryfeedback">UIElement.ManipulationBoundaryFeedback</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.manipulationcompleted">UIElement.ManipulationCompleted</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.manipulationdelta">UIElement.ManipulationDelta</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.manipulationinertiastarting">UIElement.ManipulationInertiaStarting</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.manipulationstarted">UIElement.ManipulationStarted</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.manipulationstarting">UIElement.ManipulationStarting</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.mousedown">UIElement.MouseDown</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.mouseenter">UIElement.MouseEnter</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.mouseleave">UIElement.MouseLeave</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.mouseleftbuttondown">UIElement.MouseLeftButtonDown</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.mouseleftbuttonup">UIElement.MouseLeftButtonUp</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.mousemove">UIElement.MouseMove</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.mouserightbuttondown">UIElement.MouseRightButtonDown</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.mouserightbuttonup">UIElement.MouseRightButtonUp</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.mouseup">UIElement.MouseUp</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.mousewheel">UIElement.MouseWheel</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewdragenter">UIElement.PreviewDragEnter</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewdragleave">UIElement.PreviewDragLeave</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewdragover">UIElement.PreviewDragOver</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewdrop">UIElement.PreviewDrop</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewgivefeedback">UIElement.PreviewGiveFeedback</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewgotkeyboardfocus">UIElement.PreviewGotKeyboardFocus</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewkeydown">UIElement.PreviewKeyDown</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewkeyup">UIElement.PreviewKeyUp</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewlostkeyboardfocus">UIElement.PreviewLostKeyboardFocus</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewmousedown">UIElement.PreviewMouseDown</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewmouseleftbuttondown">UIElement.PreviewMouseLeftButtonDown</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewmouseleftbuttonup">UIElement.PreviewMouseLeftButtonUp</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewmousemove">UIElement.PreviewMouseMove</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewmouserightbuttondown">UIElement.PreviewMouseRightButtonDown</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewmouserightbuttonup">UIElement.PreviewMouseRightButtonUp</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewmouseup">UIElement.PreviewMouseUp</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewmousewheel">UIElement.PreviewMouseWheel</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewquerycontinuedrag">UIElement.PreviewQueryContinueDrag</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewstylusbuttondown">UIElement.PreviewStylusButtonDown</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewstylusbuttonup">UIElement.PreviewStylusButtonUp</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewstylusdown">UIElement.PreviewStylusDown</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewstylusinairmove">UIElement.PreviewStylusInAirMove</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewstylusinrange">UIElement.PreviewStylusInRange</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewstylusmove">UIElement.PreviewStylusMove</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewstylusoutofrange">UIElement.PreviewStylusOutOfRange</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewstylussystemgesture">UIElement.PreviewStylusSystemGesture</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewstylusup">UIElement.PreviewStylusUp</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewtextinput">UIElement.PreviewTextInput</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewtouchdown">UIElement.PreviewTouchDown</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewtouchmove">UIElement.PreviewTouchMove</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.previewtouchup">UIElement.PreviewTouchUp</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.querycontinuedrag">UIElement.QueryContinueDrag</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.querycursor">UIElement.QueryCursor</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.stylusbuttondown">UIElement.StylusButtonDown</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.stylusbuttonup">UIElement.StylusButtonUp</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.stylusdown">UIElement.StylusDown</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.stylusenter">UIElement.StylusEnter</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.stylusinairmove">UIElement.StylusInAirMove</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.stylusinrange">UIElement.StylusInRange</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.stylusleave">UIElement.StylusLeave</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.stylusmove">UIElement.StylusMove</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.stylusoutofrange">UIElement.StylusOutOfRange</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.stylussystemgesture">UIElement.StylusSystemGesture</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.stylusup">UIElement.StylusUp</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.textinput">UIElement.TextInput</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.touchdown">UIElement.TouchDown</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.touchenter">UIElement.TouchEnter</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.touchleave">UIElement.TouchLeave</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.touchmove">UIElement.TouchMove</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.uielement.touchup">UIElement.TouchUp</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.addvisualchild">Visual.AddVisualChild(Visual)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.findcommonvisualancestor">Visual.FindCommonVisualAncestor(DependencyObject)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.getvisualchild">Visual.GetVisualChild(int)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.hittestcore#system-windows-media-visual-hittestcore(system-windows-media-geometryhittestparameters)">Visual.HitTestCore(GeometryHitTestParameters)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.hittestcore#system-windows-media-visual-hittestcore(system-windows-media-pointhittestparameters)">Visual.HitTestCore(PointHitTestParameters)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.isancestorof">Visual.IsAncestorOf(DependencyObject)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.isdescendantof">Visual.IsDescendantOf(DependencyObject)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.ondpichanged">Visual.OnDpiChanged(DpiScale, DpiScale)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.onvisualchildrenchanged">Visual.OnVisualChildrenChanged(DependencyObject, DependencyObject)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.onvisualparentchanged">Visual.OnVisualParentChanged(DependencyObject)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.pointfromscreen">Visual.PointFromScreen(Point)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.pointtoscreen">Visual.PointToScreen(Point)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.removevisualchild">Visual.RemoveVisualChild(Visual)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.transformtoancestor#system-windows-media-visual-transformtoancestor(system-windows-media-media3d-visual3d)">Visual.TransformToAncestor(Visual3D)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.transformtoancestor#system-windows-media-visual-transformtoancestor(system-windows-media-visual)">Visual.TransformToAncestor(Visual)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.transformtodescendant">Visual.TransformToDescendant(Visual)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.transformtovisual">Visual.TransformToVisual(Visual)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.visualbitmapeffect">Visual.VisualBitmapEffect</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.visualbitmapeffectinput">Visual.VisualBitmapEffectInput</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.visualbitmapscalingmode">Visual.VisualBitmapScalingMode</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.visualcachemode">Visual.VisualCacheMode</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.visualchildrencount">Visual.VisualChildrenCount</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.visualcleartypehint">Visual.VisualClearTypeHint</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.visualclip">Visual.VisualClip</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.visualedgemode">Visual.VisualEdgeMode</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.visualeffect">Visual.VisualEffect</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.visualoffset">Visual.VisualOffset</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.visualopacity">Visual.VisualOpacity</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.visualopacitymask">Visual.VisualOpacityMask</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.visualparent">Visual.VisualParent</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.visualscrollableareaclip">Visual.VisualScrollableAreaClip</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.visualtexthintingmode">Visual.VisualTextHintingMode</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.visualtextrenderingmode">Visual.VisualTextRenderingMode</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.visualtransform">Visual.VisualTransform</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.visualxsnappingguidelines">Visual.VisualXSnappingGuidelines</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual.visualysnappingguidelines">Visual.VisualYSnappingGuidelines</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.dependencyobject.clearvalue#system-windows-dependencyobject-clearvalue(system-windows-dependencyproperty)">DependencyObject.ClearValue(DependencyProperty)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.dependencyobject.clearvalue#system-windows-dependencyobject-clearvalue(system-windows-dependencypropertykey)">DependencyObject.ClearValue(DependencyPropertyKey)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.dependencyobject.coercevalue">DependencyObject.CoerceValue(DependencyProperty)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.dependencyobject.equals">DependencyObject.Equals(object)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.dependencyobject.gethashcode">DependencyObject.GetHashCode()</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.dependencyobject.getlocalvalueenumerator">DependencyObject.GetLocalValueEnumerator()</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.dependencyobject.getvalue">DependencyObject.GetValue(DependencyProperty)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.dependencyobject.invalidateproperty">DependencyObject.InvalidateProperty(DependencyProperty)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.dependencyobject.onpropertychanged">DependencyObject.OnPropertyChanged(DependencyPropertyChangedEventArgs)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.dependencyobject.readlocalvalue">DependencyObject.ReadLocalValue(DependencyProperty)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.dependencyobject.setcurrentvalue">DependencyObject.SetCurrentValue(DependencyProperty, object)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.dependencyobject.setvalue#system-windows-dependencyobject-setvalue(system-windows-dependencyproperty-system-object)">DependencyObject.SetValue(DependencyProperty, object)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.dependencyobject.setvalue#system-windows-dependencyobject-setvalue(system-windows-dependencypropertykey-system-object)">DependencyObject.SetValue(DependencyPropertyKey, object)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.dependencyobject.shouldserializeproperty">DependencyObject.ShouldSerializeProperty(DependencyProperty)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.dependencyobject.dependencyobjecttype">DependencyObject.DependencyObjectType</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.dependencyobject.issealed">DependencyObject.IsSealed</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.windows.threading.dispatcherobject.dispatcher">DispatcherObject.Dispatcher</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)">object.Equals(object?)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)">object.Equals(object?, object?)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.object.gethashcode">object.GetHashCode()</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.object.gettype">object.GetType()</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone">object.MemberwiseClone()</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.object.referenceequals">object.ReferenceEquals(object?, object?)</a>,
+<a href="https://learn.microsoft.com/dotnet/api/system.object.tostring">object.ToString()</a></p>
+<h2 id="properties">Properties</h2>
+<h3 id="RichCanvas_PanningGrid_BottomLimit"> BottomLimit</h3>
+<p>Bottom limit of <span class="xref">RichCanvas.PanningGrid.ScrollOwner</span> viewport</p>
+<pre><code class="lang-csharp">public double BottomLimit { get; }
+</code></pre>
+<h4 id="property-value">Property Value</h4>
+<p><a href="https://learn.microsoft.com/dotnet/api/system.double">double</a></p>
+<h3 id="RichCanvas_PanningGrid_BottomOffset"> BottomOffset</h3>
+<p>Negative Vertical offset of <span class="xref">RichCanvas.PanningGrid.ScrollOwner</span></p>
+<pre><code class="lang-csharp">protected double BottomOffset { get; }
+</code></pre>
+<h4 id="property-value-1">Property Value</h4>
+<p><a href="https://learn.microsoft.com/dotnet/api/system.double">double</a></p>
+<h3 id="RichCanvas_PanningGrid_CanHorizontallyScroll"> CanHorizontallyScroll</h3>
+<p>Gets or sets a value that indicates whether scrolling on the horizontal axis is possible.</p>
+<pre><code class="lang-csharp">public bool CanHorizontallyScroll { get; set; }
+</code></pre>
+<h4 id="property-value-2">Property Value</h4>
+<p><a href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></p>
+<h3 id="RichCanvas_PanningGrid_CanVerticallyScroll"> CanVerticallyScroll</h3>
+<p>Gets or sets a value that indicates whether scrolling on the vertical axis is possible.</p>
+<pre><code class="lang-csharp">public bool CanVerticallyScroll { get; set; }
+</code></pre>
+<h4 id="property-value-3">Property Value</h4>
+<p><a href="https://learn.microsoft.com/dotnet/api/system.boolean">bool</a></p>
+<h3 id="RichCanvas_PanningGrid_ExtentHeight"> ExtentHeight</h3>
+<p>Gets the vertical size of the extent.</p>
+<pre><code class="lang-csharp">public double ExtentHeight { get; }
+</code></pre>
+<h4 id="property-value-4">Property Value</h4>
+<p><a href="https://learn.microsoft.com/dotnet/api/system.double">double</a></p>
+<h3 id="RichCanvas_PanningGrid_ExtentWidth"> ExtentWidth</h3>
+<p>Gets the horizontal size of the extent.</p>
+<pre><code class="lang-csharp">public double ExtentWidth { get; }
+</code></pre>
+<h4 id="property-value-5">Property Value</h4>
+<p><a href="https://learn.microsoft.com/dotnet/api/system.double">double</a></p>
+<h3 id="RichCanvas_PanningGrid_HorizontalOffset"> HorizontalOffset</h3>
+<p>Gets the horizontal offset of the scrolled content.</p>
+<pre><code class="lang-csharp">public double HorizontalOffset { get; }
+</code></pre>
+<h4 id="property-value-6">Property Value</h4>
+<p><a href="https://learn.microsoft.com/dotnet/api/system.double">double</a></p>
+<h3 id="RichCanvas_PanningGrid_LeftLimit"> LeftLimit</h3>
+<p>Left limit of <span class="xref">RichCanvas.PanningGrid.ScrollOwner</span> viewport</p>
+<pre><code class="lang-csharp">public double LeftLimit { get; }
+</code></pre>
+<h4 id="property-value-7">Property Value</h4>
+<p><a href="https://learn.microsoft.com/dotnet/api/system.double">double</a></p>
+<h3 id="RichCanvas_PanningGrid_LeftOffset"> LeftOffset</h3>
+<p>Positive Horizontal offset of <span class="xref">RichCanvas.PanningGrid.ScrollOwner</span></p>
+<pre><code class="lang-csharp">protected double LeftOffset { get; }
+</code></pre>
+<h4 id="property-value-8">Property Value</h4>
+<p><a href="https://learn.microsoft.com/dotnet/api/system.double">double</a></p>
+<h3 id="RichCanvas_PanningGrid_RightLimit"> RightLimit</h3>
+<p>Right limit of <span class="xref">RichCanvas.PanningGrid.ScrollOwner</span> viewport</p>
+<pre><code class="lang-csharp">public double RightLimit { get; }
+</code></pre>
+<h4 id="property-value-9">Property Value</h4>
+<p><a href="https://learn.microsoft.com/dotnet/api/system.double">double</a></p>
+<h3 id="RichCanvas_PanningGrid_RightOffset"> RightOffset</h3>
+<p>Negative Horizontal offset of <span class="xref">RichCanvas.PanningGrid.ScrollOwner</span></p>
+<pre><code class="lang-csharp">protected double RightOffset { get; }
+</code></pre>
+<h4 id="property-value-10">Property Value</h4>
+<p><a href="https://learn.microsoft.com/dotnet/api/system.double">double</a></p>
+<h3 id="RichCanvas_PanningGrid_ScrollOwner"> ScrollOwner</h3>
+<p>Gets or sets a <span class="xref">System.Windows.Controls.ScrollViewer</span> element that controls scrolling behavior.</p>
+<pre><code class="lang-csharp">public ScrollViewer? ScrollOwner { get; set; }
+</code></pre>
+<h4 id="property-value-11">Property Value</h4>
+<p><a href="https://learn.microsoft.com/dotnet/api/system.windows.controls.scrollviewer">ScrollViewer</a>?</p>
+<h3 id="RichCanvas_PanningGrid_TopLimit"> TopLimit</h3>
+<p>Top limit of <span class="xref">RichCanvas.PanningGrid.ScrollOwner</span> viewport</p>
+<pre><code class="lang-csharp">public double TopLimit { get; }
+</code></pre>
+<h4 id="property-value-12">Property Value</h4>
+<p><a href="https://learn.microsoft.com/dotnet/api/system.double">double</a></p>
+<h3 id="RichCanvas_PanningGrid_TopOffset"> TopOffset</h3>
+<p>Positive Vertical offset of <span class="xref">RichCanvas.PanningGrid.ScrollOwner</span></p>
+<pre><code class="lang-csharp">protected double TopOffset { get; }
+</code></pre>
+<h4 id="property-value-13">Property Value</h4>
+<p><a href="https://learn.microsoft.com/dotnet/api/system.double">double</a></p>
+<h3 id="RichCanvas_PanningGrid_VerticalOffset"> VerticalOffset</h3>
+<p>Gets the vertical offset of the scrolled content.</p>
+<pre><code class="lang-csharp">public double VerticalOffset { get; }
+</code></pre>
+<h4 id="property-value-14">Property Value</h4>
+<p><a href="https://learn.microsoft.com/dotnet/api/system.double">double</a></p>
+<h3 id="RichCanvas_PanningGrid_ViewportHeight"> ViewportHeight</h3>
+<p>Gets the vertical size of the viewport for this content.</p>
+<pre><code class="lang-csharp">public double ViewportHeight { get; }
+</code></pre>
+<h4 id="property-value-15">Property Value</h4>
+<p><a href="https://learn.microsoft.com/dotnet/api/system.double">double</a></p>
+<h3 id="RichCanvas_PanningGrid_ViewportWidth"> ViewportWidth</h3>
+<p>Gets the horizontal size of the viewport for this content.</p>
+<pre><code class="lang-csharp">public double ViewportWidth { get; }
+</code></pre>
+<h4 id="property-value-16">Property Value</h4>
+<p><a href="https://learn.microsoft.com/dotnet/api/system.double">double</a></p>
+<h2 id="methods">Methods</h2>
+<h3 id="RichCanvas_PanningGrid_ArrangeOverride_System_Windows_Size_"> ArrangeOverride(Size)</h3>
+<p>Arranges the content of a <span class="xref">System.Windows.Controls.Grid</span> element.</p>
+<pre><code class="lang-csharp">protected override Size ArrangeOverride(Size arrangeSize)
+</code></pre>
+<h4 id="parameters">Parameters</h4>
+<p><code>arrangeSize</code> <a href="https://learn.microsoft.com/dotnet/api/system.windows.size">Size</a></p>
+<p>Specifies the size this <span class="xref">System.Windows.Controls.Grid</span> element should use to arrange its child elements.</p>
+<h4 id="returns">Returns</h4>
+<p><a href="https://learn.microsoft.com/dotnet/api/system.windows.size">Size</a></p>
+<p><span class="xref">System.Windows.Size</span> that represents the arranged size of this Grid element and its children.</p>
+<h3 id="RichCanvas_PanningGrid_LineDown"> LineDown()</h3>
+<p>Scrolls down within content by one logical unit.</p>
+<pre><code class="lang-csharp">public void LineDown()
+</code></pre>
+<h3 id="RichCanvas_PanningGrid_LineLeft"> LineLeft()</h3>
+<p>Scrolls left within content by one logical unit.</p>
+<pre><code class="lang-csharp">public void LineLeft()
+</code></pre>
+<h3 id="RichCanvas_PanningGrid_LineRight"> LineRight()</h3>
+<p>Scrolls right within content by one logical unit.</p>
+<pre><code class="lang-csharp">public void LineRight()
+</code></pre>
+<h3 id="RichCanvas_PanningGrid_LineUp"> LineUp()</h3>
+<p>Scrolls up within content by one logical unit.</p>
+<pre><code class="lang-csharp">public void LineUp()
+</code></pre>
+<h3 id="RichCanvas_PanningGrid_MakeVisible_System_Windows_Media_Visual_System_Windows_Rect_"> MakeVisible(Visual, Rect)</h3>
+<p>Forces content to scroll until the coordinate space of a <span class="xref">System.Windows.Media.Visual</span> object is visible.</p>
+<pre><code class="lang-csharp">public Rect MakeVisible(Visual visual, Rect rectangle)
+</code></pre>
+<h4 id="parameters-1">Parameters</h4>
+<p><code>visual</code> <a href="https://learn.microsoft.com/dotnet/api/system.windows.media.visual">Visual</a></p>
+<p>A <span class="xref">System.Windows.Media.Visual</span> that becomes visible.</p>
+<p><code>rectangle</code> <a href="https://learn.microsoft.com/dotnet/api/system.windows.rect">Rect</a></p>
+<p>A bounding rectangle that identifies the coordinate space to make visible.</p>
+<h4 id="returns-1">Returns</h4>
+<p><a href="https://learn.microsoft.com/dotnet/api/system.windows.rect">Rect</a></p>
+<p>A <span class="xref">System.Windows.Rect</span> that is visible.</p>
+<h3 id="RichCanvas_PanningGrid_MouseWheelDown"> MouseWheelDown()</h3>
+<p>Scrolls down within content after a user clicks the wheel button on a mouse.</p>
+<pre><code class="lang-csharp">public void MouseWheelDown()
+</code></pre>
+<h3 id="RichCanvas_PanningGrid_MouseWheelLeft"> MouseWheelLeft()</h3>
+<p>Scrolls left within content after a user clicks the wheel button on a mouse.</p>
+<pre><code class="lang-csharp">public void MouseWheelLeft()
+</code></pre>
+<h3 id="RichCanvas_PanningGrid_MouseWheelRight"> MouseWheelRight()</h3>
+<p>Scrolls right within content after a user clicks the wheel button on a mouse.</p>
+<pre><code class="lang-csharp">public void MouseWheelRight()
+</code></pre>
+<h3 id="RichCanvas_PanningGrid_MouseWheelUp"> MouseWheelUp()</h3>
+<p>Scrolls up within content after a user clicks the wheel button on a mouse.</p>
+<pre><code class="lang-csharp">public void MouseWheelUp()
+</code></pre>
+<h3 id="RichCanvas_PanningGrid_OnMouseUp_System_Windows_Input_MouseButtonEventArgs_"> OnMouseUp(MouseButtonEventArgs)</h3>
+<p>Invoked when an unhandled <span class="xref">System.Windows.Input.Mouse.MouseUp</span> routed event reaches an element in its route that is derived from this class. Implement this method to add class handling for this event.</p>
+<pre><code class="lang-csharp">protected override void OnMouseUp(MouseButtonEventArgs e)
+</code></pre>
+<h4 id="parameters-2">Parameters</h4>
+<p><code>e</code> <a href="https://learn.microsoft.com/dotnet/api/system.windows.input.mousebuttoneventargs">MouseButtonEventArgs</a></p>
+<p>The <span class="xref">System.Windows.Input.MouseButtonEventArgs</span> that contains the event data. The event data reports that the mouse button was released.</p>
+<h3 id="RichCanvas_PanningGrid_OnPreviewMouseLeftButtonDown_System_Windows_Input_MouseButtonEventArgs_"> OnPreviewMouseLeftButtonDown(MouseButtonEventArgs)</h3>
+<p>Invoked when an unhandled <span class="xref">System.Windows.UIElement.PreviewMouseLeftButtonDown</span> routed event reaches an element in its route that is derived from this class. Implement this method to add class handling for this event.</p>
+<pre><code class="lang-csharp">protected override void OnPreviewMouseLeftButtonDown(MouseButtonEventArgs e)
+</code></pre>
+<h4 id="parameters-3">Parameters</h4>
+<p><code>e</code> <a href="https://learn.microsoft.com/dotnet/api/system.windows.input.mousebuttoneventargs">MouseButtonEventArgs</a></p>
+<p>The <span class="xref">System.Windows.Input.MouseButtonEventArgs</span> that contains the event data. The event data reports that the left mouse button was pressed.</p>
+<h3 id="RichCanvas_PanningGrid_OnPreviewMouseMove_System_Windows_Input_MouseEventArgs_"> OnPreviewMouseMove(MouseEventArgs)</h3>
+<p>Invoked when an unhandled <span class="xref">System.Windows.Input.Mouse.PreviewMouseMove</span> attached event reaches an element in its route that is derived from this class. Implement this method to add class handling for this event.</p>
+<pre><code class="lang-csharp">protected override void OnPreviewMouseMove(MouseEventArgs e)
+</code></pre>
+<h4 id="parameters-4">Parameters</h4>
+<p><code>e</code> <a href="https://learn.microsoft.com/dotnet/api/system.windows.input.mouseeventargs">MouseEventArgs</a></p>
+<p>The <span class="xref">System.Windows.Input.MouseEventArgs</span> that contains the event data.</p>
+<h3 id="RichCanvas_PanningGrid_OnPreviewMouseWheel_System_Windows_Input_MouseWheelEventArgs_"> OnPreviewMouseWheel(MouseWheelEventArgs)</h3>
+<p>Invoked when an unhandled <span class="xref">System.Windows.Input.Mouse.PreviewMouseWheel</span> attached event reaches an element in its route that is derived from this class. Implement this method to add class handling for this event.</p>
+<pre><code class="lang-csharp">protected override void OnPreviewMouseWheel(MouseWheelEventArgs e)
+</code></pre>
+<h4 id="parameters-5">Parameters</h4>
+<p><code>e</code> <a href="https://learn.microsoft.com/dotnet/api/system.windows.input.mousewheeleventargs">MouseWheelEventArgs</a></p>
+<p>The <span class="xref">System.Windows.Input.MouseWheelEventArgs</span> that contains the event data.</p>
+<h3 id="RichCanvas_PanningGrid_PageDown"> PageDown()</h3>
+<p>Scrolls down within content by one page.</p>
+<pre><code class="lang-csharp">public void PageDown()
+</code></pre>
+<h3 id="RichCanvas_PanningGrid_PageLeft"> PageLeft()</h3>
+<p>Scrolls left within content by one page.</p>
+<pre><code class="lang-csharp">public void PageLeft()
+</code></pre>
+<h3 id="RichCanvas_PanningGrid_PageRight"> PageRight()</h3>
+<p>Scrolls right within content by one page.</p>
+<pre><code class="lang-csharp">public void PageRight()
+</code></pre>
+<h3 id="RichCanvas_PanningGrid_PageUp"> PageUp()</h3>
+<p>Scrolls up within content by one page.</p>
+<pre><code class="lang-csharp">public void PageUp()
+</code></pre>
+<h3 id="RichCanvas_PanningGrid_Pan_System_Windows_Point_System_Windows_Point_"> Pan(Point, Point)</h3>
+<p>Panning of the canvas using the difference between the specified points.</p>
+<pre><code class="lang-csharp">public void Pan(Point initialPosition, Point currentMousePosition)
+</code></pre>
+<h4 id="parameters-6">Parameters</h4>
+<p><code>initialPosition</code> <a href="https://learn.microsoft.com/dotnet/api/system.windows.point">Point</a></p>
+<p>Calculated initial mouse position. For example, on click.</p>
+<p><code>currentMousePosition</code> <a href="https://learn.microsoft.com/dotnet/api/system.windows.point">Point</a></p>
+<p>Current calculated mouse position.</p>
+<h3 id="RichCanvas_PanningGrid_PanHorizontally_System_Double_"> PanHorizontally(double)</h3>
+<p>Scrolls and translates horizontally the <span class="xref">RichCanvas.PanningGrid.ScrollOwner</span> viewport</p>
+<pre><code class="lang-csharp">public void PanHorizontally(double offset)
+</code></pre>
+<h4 id="parameters-7">Parameters</h4>
+<p><code>offset</code> <a href="https://learn.microsoft.com/dotnet/api/system.double">double</a></p>
+<p>Scroll factor which determines the speed</p>
+<h3 id="RichCanvas_PanningGrid_PanVertically_System_Double_"> PanVertically(double)</h3>
+<p>Scrolls and translates vertically the <span class="xref">RichCanvas.PanningGrid.ScrollOwner</span> viewport</p>
+<pre><code class="lang-csharp">public void PanVertically(double offset)
+</code></pre>
+<h4 id="parameters-8">Parameters</h4>
+<p><code>offset</code> <a href="https://learn.microsoft.com/dotnet/api/system.double">double</a></p>
+<p>Scroll factor which determines the speed</p>
+<h3 id="RichCanvas_PanningGrid_SetHorizontalOffset_System_Double_"> SetHorizontalOffset(double)</h3>
+<p>Sets the amount of horizontal offset.</p>
+<pre><code class="lang-csharp">public void SetHorizontalOffset(double offset)
+</code></pre>
+<h4 id="parameters-9">Parameters</h4>
+<p><code>offset</code> <a href="https://learn.microsoft.com/dotnet/api/system.double">double</a></p>
+<p>The degree to which content is horizontally offset from the containing viewport.</p>
+<h3 id="RichCanvas_PanningGrid_SetVerticalOffset_System_Double_"> SetVerticalOffset(double)</h3>
+<p>Sets the amount of vertical offset.</p>
+<pre><code class="lang-csharp">public void SetVerticalOffset(double offset)
+</code></pre>
+<h4 id="parameters-10">Parameters</h4>
+<p><code>offset</code> <a href="https://learn.microsoft.com/dotnet/api/system.double">double</a></p>
+<p>The degree to which content is vertically offset from the containing viewport.</p>
+<h3 id="RichCanvas_PanningGrid_Zoom_System_Windows_Point_System_Int32_"> Zoom(Point, int)</h3>
+<p>Zooms at the specified position</p>
+<pre><code class="lang-csharp">public void Zoom(Point position, int delta)
+</code></pre>
+<h4 id="parameters-11">Parameters</h4>
+<p><code>position</code> <a href="https://learn.microsoft.com/dotnet/api/system.windows.point">Point</a></p>
+<p>Mouse position to zoom at</p>
+<p><code>delta</code> <a href="https://learn.microsoft.com/dotnet/api/system.int32">int</a></p>
+<p>Determines whether to zoom in or out by the sign</p>
+
+</article>
+
+        <div class="contribution d-print-none">
+          <a href="https://github.com/mircea21S/RichCanvas/blob/docs/docs/api/v2.4.2/RichCanvas.PanningGrid.md/#L1" class="edit-link">Edit this page</a>
+        </div>
+
+        <div class="next-article d-print-none border-top" id="nextArticle"></div>
+
+      </div>
+
+      <div class="affix">
+        <nav id="affix"></nav>
+      </div>
+    </main>
+
+    <div class="container-xxl search-results" id="search-results"></div>
+
+    <footer class="border-top text-secondary">
+      <div class="container-xxl">
+        <div class="flex-fill">
+          <span>Made with <a href="https://dotnet.github.io/docfx">docfx</a></span>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
