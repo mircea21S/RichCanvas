@@ -1,0 +1,50 @@
+name: Build & Deploy API Docs
+
+on:
+  push:
+    branches: [ docs ]
+
+permissions:
+  actions: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+  
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      # 1. Checkout current main branch into RichCanvas/
+      - name: Checkout current branch
+        uses: actions/checkout@v4
+
+      # 2. Checkout v2.4.2 into RichCanvas-2.4.2/
+      - name: Checkout v2.4.2
+        uses: actions/checkout@v4
+        with:
+          ref: v2.4.2
+          path: RichCanvas-v2.4.2
+
+      # 3. Setup .NET (if your project needs it for metadata)
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      # 4. Download DocFX
+      - run: dotnet tool update -g docfx
+      - name: DocFX Build
+        working-directory: docs
+        run: docfx docfx.json
+        continue-on-error: false
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+            path: 'docs/_site'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
