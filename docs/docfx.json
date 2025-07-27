@@ -1,0 +1,56 @@
+{
+  "$schema": "https://raw.githubusercontent.com/dotnet/docfx/main/schemas/docfx.schema.json",
+  "metadata": [
+    {
+      "outputFormat": "markdown",
+      "src": [
+        {
+          "src": "../RichCanvas",
+          "files": [
+            "**/*.csproj"
+          ]
+        }
+      ],
+      "dest": "api"
+    },
+    {
+      "outputFormat": "markdown",
+      "src": [
+        {
+          "src": "../RichCanvas-v2.4.2",
+          "files": [
+            "**/*.csproj"
+          ]
+        }
+      ],
+      "dest": "api/v2.4.2"
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "api/*.{md,yml}",
+          "index.md",
+          "toc.yml",
+          "api/v2.4.2/*.{md,yml}"
+        ],
+        "exclude": [
+          "_site/**"
+        ]
+      }
+    ],
+    "resource": [],
+    "output": "_site",
+    "template": [
+      "default",
+      "modern"
+    ],
+    "globalMetadata": {
+      "_appName": "RichCanvas",
+      "_appTitle": "RichCanvas API Reference",
+      "_enableSearch": true,
+      "pdf": false
+    }
+  }
+}
