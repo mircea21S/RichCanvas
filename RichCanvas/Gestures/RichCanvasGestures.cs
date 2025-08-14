@@ -40,7 +40,6 @@ namespace RichCanvas.Gestures
         /// </summary>
         public static InputGesture Pan { get; set; } = new MouseKeyGesture(new MouseGesture(MouseAction.LeftClick), new KeyGesture(Key.Space));
 
-        //TODO: add a bool DP to change from wheel zoom to a state with a custom gesture
         /// <summary>
         /// Gets or sets the <see cref="ModifierKeys"/> used together with MouseWheel for zooming.
         /// <br/>
