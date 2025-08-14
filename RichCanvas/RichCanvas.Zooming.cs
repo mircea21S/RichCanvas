@@ -216,7 +216,6 @@ namespace RichCanvas
             ViewportSize = new Size(ActualWidth / ViewportZoom, ActualHeight / ViewportZoom);
 
             UpdateScrollbars();
-            //TODO: apply any caching optimizations
         }
     }
 }
