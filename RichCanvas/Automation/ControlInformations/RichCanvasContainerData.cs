@@ -5,7 +5,7 @@ namespace RichCanvas.Automation.ControlInformations
     /// <summary>
     /// Data transfer object exposing <see cref="RichCanvasContainer"/> information to UI Automation proejct.
     /// </summary>
-    public class RichItemContainerData
+    public class RichCanvasContainerData
     {
         /// <summary>
         /// Bound <see cref="RichCanvasContainer"/>.DataContext type.

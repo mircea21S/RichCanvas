@@ -13,7 +13,7 @@ namespace RichCanvas.UITests.Tests.Zooming
     {
         public override void TearDown()
         {
-            RichItemsControl.ResetZoom();
+            RichCanvas.ResetZoom();
 
             base.TearDown();
         }
@@ -29,7 +29,7 @@ namespace RichCanvas.UITests.Tests.Zooming
             Mouse.Position = desiredMousePosition;
 
             // act
-            RichItemsControl.Zoom(zoomIn);
+            RichCanvas.Zoom(zoomIn);
 
             // assert
             Mouse.Position.Should().Be(desiredMousePosition);
@@ -41,16 +41,16 @@ namespace RichCanvas.UITests.Tests.Zooming
         public void RichCanvas_WhenZooming_ShouldUpdateViewportZoom(bool zoomIn)
         {
             // arrange
-            var initialZoom = RichItemsControl.ViewportZoom;
+            var initialZoom = RichCanvas.ViewportZoom;
 
             // act
-            RichItemsControl.Zoom(zoomIn);
+            RichCanvas.Zoom(zoomIn);
 
             // assert
             double expectedViewportZoom = zoomIn
-                ? initialZoom * RichItemsControl.ScaleFactor
-                : initialZoom / RichItemsControl.ScaleFactor;
-            RichItemsControl.RichItemsControlData.ViewportZoom.Should().Be(expectedViewportZoom);
+                ? initialZoom * RichCanvas.ScaleFactor
+                : initialZoom / RichCanvas.ScaleFactor;
+            RichCanvas.RichCanvasData.ViewportZoom.Should().Be(expectedViewportZoom);
         }
 
         [TestCase(100, 100, true)]
@@ -75,13 +75,13 @@ namespace RichCanvas.UITests.Tests.Zooming
             var canvasPoint = mousePosition.ToCanvasDrawingPoint();
             Mouse.Position = canvasPoint;
 
-            var mousePositionBeforeZooming = RichItemsControl.RichItemsControlData.MousePosition;
+            var mousePositionBeforeZooming = RichCanvas.RichCanvasData.MousePosition;
 
             // act
-            RichItemsControl.Zoom(zoomIn);
+            RichCanvas.Zoom(zoomIn);
 
             // assert
-            var mousePositionAfterZooming = RichItemsControl.RichItemsControlData.MousePosition;
+            var mousePositionAfterZooming = RichCanvas.RichCanvasData.MousePosition;
             mousePositionBeforeZooming.Should().Be(mousePositionAfterZooming);
         }
 
@@ -95,20 +95,20 @@ namespace RichCanvas.UITests.Tests.Zooming
         public void RichCanvas_WhenZooming_EachStepShouldBeChangedAccordingToScaleFactor(bool zoomIn)
         {
             // arrange
-            var scaleFactor = RichItemsControl.ScaleFactor;
-            var zoomBefore = RichItemsControl.ViewportZoom;
+            var scaleFactor = RichCanvas.ScaleFactor;
+            var zoomBefore = RichCanvas.ViewportZoom;
 
             // act
-            RichItemsControl.Zoom(zoomIn);
+            RichCanvas.Zoom(zoomIn);
 
             // assert
             if (zoomIn)
             {
-                RichItemsControl.ViewportZoom.Should().Be(scaleFactor * zoomBefore);
+                RichCanvas.ViewportZoom.Should().Be(scaleFactor * zoomBefore);
             }
             else
             {
-                RichItemsControl.ViewportZoom.Should().Be((1 / scaleFactor) * zoomBefore);
+                RichCanvas.ViewportZoom.Should().Be((1 / scaleFactor) * zoomBefore);
             }
         }
 
@@ -116,38 +116,38 @@ namespace RichCanvas.UITests.Tests.Zooming
         public void RichCanvas_WhenZoomIn_ShouldStopAtMaxScale()
         {
             // arrange
-            var maxZoom = RichItemsControl.RichItemsControlData.MaxZoom;
-            var scaleFactor = RichItemsControl.ScaleFactor;
+            var maxZoom = RichCanvas.RichCanvasData.MaxZoom;
+            var scaleFactor = RichCanvas.ScaleFactor;
             double noOfZoomsUntilMax = Math.Log(maxZoom) / Math.Log(scaleFactor);
 
             // act
             // Zoom in even though the max zoom is reached (that's why we add 4) just for test purposes
             for (int i = 0; i < noOfZoomsUntilMax + 4; i++)
             {
-                RichItemsControl.Zoom(true);
+                RichCanvas.Zoom(true);
             }
 
             // assert
-            RichItemsControl.ViewportZoom.Should().Be(maxZoom);
+            RichCanvas.ViewportZoom.Should().Be(maxZoom);
         }
 
         [Test]
         public void RichCanvas_WhenZoomOut_ShouldStopAtMinScale()
         {
             // arrange
-            var minZoom = RichItemsControl.RichItemsControlData.MinZoom;
-            var scaleFactor = RichItemsControl.ScaleFactor;
+            var minZoom = RichCanvas.RichCanvasData.MinZoom;
+            var scaleFactor = RichCanvas.ScaleFactor;
             double noOfZoomsUntilMax = Math.Log(1 / minZoom) / Math.Log(scaleFactor);
 
             // act
             // Zoom out even though the max zoom is reached (that's why we add 4) just for test purposes
             for (int i = 0; i < noOfZoomsUntilMax + 4; i++)
             {
-                RichItemsControl.Zoom(false);
+                RichCanvas.Zoom(false);
             }
 
             // assert
-            RichItemsControl.ViewportZoom.Should().Be(minZoom);
+            RichCanvas.ViewportZoom.Should().Be(minZoom);
         }
 
         [Test]
@@ -159,16 +159,16 @@ namespace RichCanvas.UITests.Tests.Zooming
 
             // act
             Mouse.Position = canvasTopLeftCorner;
-            RichItemsControl.Zoom(false);
-            RichItemsControl.Zoom(true);
-            RichItemsControl.Zoom(true);
-            RichItemsControl.Zoom(true);
-            RichItemsControl.Zoom(false);
-            RichItemsControl.Zoom(false);
-            RichItemsControl.Zoom(false);
+            RichCanvas.Zoom(false);
+            RichCanvas.Zoom(true);
+            RichCanvas.Zoom(true);
+            RichCanvas.Zoom(true);
+            RichCanvas.Zoom(false);
+            RichCanvas.Zoom(false);
+            RichCanvas.Zoom(false);
 
             // assert
-            RichItemsControl.RichItemsControlData.MousePosition.Should().Be(RichItemsControl.ViewportLocation.AsWindowsPoint());
+            RichCanvas.RichCanvasData.MousePosition.Should().Be(RichCanvas.ViewportLocation.AsWindowsPoint());
         }
 
         [TestCase(2)]
@@ -183,20 +183,20 @@ namespace RichCanvas.UITests.Tests.Zooming
         public void RichCanvas_WhenViewportZoomIsSetThroughBinding_ShouldUpdateZoom(double viewportZoomValue)
         {
             // arrange & act
-            RichItemsControl.SetViewportZoom(viewportZoomValue);
+            RichCanvas.SetViewportZoom(viewportZoomValue);
             // lose focus to trigger the binding
             Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.TAB);
 
             // assert
-            if (viewportZoomValue > RichItemsControl.RichItemsControlData.MaxZoom)
+            if (viewportZoomValue > RichCanvas.RichCanvasData.MaxZoom)
             {
-                viewportZoomValue = RichItemsControl.RichItemsControlData.MaxZoom;
+                viewportZoomValue = RichCanvas.RichCanvasData.MaxZoom;
             }
-            else if (viewportZoomValue < RichItemsControl.RichItemsControlData.MinZoom)
+            else if (viewportZoomValue < RichCanvas.RichCanvasData.MinZoom)
             {
-                viewportZoomValue = RichItemsControl.RichItemsControlData.MinZoom;
+                viewportZoomValue = RichCanvas.RichCanvasData.MinZoom;
             }
-            RichItemsControl.ViewportZoom.Should().Be(viewportZoomValue);
+            RichCanvas.ViewportZoom.Should().Be(viewportZoomValue);
         }
 
         [Test]
@@ -209,19 +209,19 @@ namespace RichCanvas.UITests.Tests.Zooming
             // act
             for (int i = 0; i < 4; i++)
             {
-                RichItemsControl.Zoom(true);
+                RichCanvas.Zoom(true);
             }
 
             // assert
-            var expectedScrollOffset = ViewportLocation - RichItemsControl.RichItemsControlData.ItemsExtent.Location;
-            var expectedExtent = RichItemsControl.RichItemsControlData.ItemsExtent;
+            var expectedScrollOffset = ViewportLocation - RichCanvas.RichCanvasData.ItemsExtent.Location;
+            var expectedExtent = RichCanvas.RichCanvasData.ItemsExtent;
             expectedExtent.Union(new System.Windows.Rect(ViewportLocation, ViewportSize));
             var doubleTolerance = 1e-5;
 
-            RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().BeApproximately(expectedScrollOffset.Y < 0 ? 0 : expectedScrollOffset.Y, doubleTolerance);
-            RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().BeApproximately(expectedScrollOffset.X < 0 ? 0 : expectedScrollOffset.X, doubleTolerance);
-            RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().BeApproximately(expectedExtent.Height, doubleTolerance);
-            RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().BeApproximately(expectedExtent.Width, doubleTolerance);
+            RichCanvas.ScrollInfo.VerticalScrollPercent.Value.Should().BeApproximately(expectedScrollOffset.Y < 0 ? 0 : expectedScrollOffset.Y, doubleTolerance);
+            RichCanvas.ScrollInfo.HorizontalScrollPercent.Value.Should().BeApproximately(expectedScrollOffset.X < 0 ? 0 : expectedScrollOffset.X, doubleTolerance);
+            RichCanvas.RichCanvasData.ViewportExtent.Height.Should().BeApproximately(expectedExtent.Height, doubleTolerance);
+            RichCanvas.RichCanvasData.ViewportExtent.Width.Should().BeApproximately(expectedExtent.Width, doubleTolerance);
         }
 
         [Test]
@@ -232,25 +232,25 @@ namespace RichCanvas.UITests.Tests.Zooming
             Mouse.Position = new Point(203, 303).ToCanvasDrawingPoint();
             for (int i = 0; i < 6; i++)
             {
-                RichItemsControl.Zoom(true);
+                RichCanvas.Zoom(true);
             }
 
             // act
             for (int i = 0; i < 3; i++)
             {
-                RichItemsControl.Zoom(false);
+                RichCanvas.Zoom(false);
             }
 
             // assert
-            var expectedScrollOffset = ViewportLocation - RichItemsControl.RichItemsControlData.ItemsExtent.Location;
-            var expectedExtent = RichItemsControl.RichItemsControlData.ItemsExtent;
+            var expectedScrollOffset = ViewportLocation - RichCanvas.RichCanvasData.ItemsExtent.Location;
+            var expectedExtent = RichCanvas.RichCanvasData.ItemsExtent;
             expectedExtent.Union(new System.Windows.Rect(ViewportLocation, ViewportSize));
             var doubleTolerance = 1e-5;
 
-            RichItemsControl.ScrollInfo.VerticalScrollPercent.Value.Should().BeApproximately(expectedScrollOffset.Y < 0 ? 0 : expectedScrollOffset.Y, doubleTolerance);
-            RichItemsControl.ScrollInfo.HorizontalScrollPercent.Value.Should().BeApproximately(expectedScrollOffset.X < 0 ? 0 : expectedScrollOffset.X, doubleTolerance);
-            RichItemsControl.RichItemsControlData.ViewportExtent.Height.Should().BeApproximately(expectedExtent.Height, doubleTolerance);
-            RichItemsControl.RichItemsControlData.ViewportExtent.Width.Should().BeApproximately(expectedExtent.Width, doubleTolerance);
+            RichCanvas.ScrollInfo.VerticalScrollPercent.Value.Should().BeApproximately(expectedScrollOffset.Y < 0 ? 0 : expectedScrollOffset.Y, doubleTolerance);
+            RichCanvas.ScrollInfo.HorizontalScrollPercent.Value.Should().BeApproximately(expectedScrollOffset.X < 0 ? 0 : expectedScrollOffset.X, doubleTolerance);
+            RichCanvas.RichCanvasData.ViewportExtent.Height.Should().BeApproximately(expectedExtent.Height, doubleTolerance);
+            RichCanvas.RichCanvasData.ViewportExtent.Width.Should().BeApproximately(expectedExtent.Width, doubleTolerance);
         }
     }
 }

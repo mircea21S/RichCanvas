@@ -11,36 +11,36 @@ namespace RichCanvas.Automation
     /// <summary>
     /// Exposes the <see cref="RichCanvas"/> to UI Automation project.
     /// </summary>
-    public class RichItemsControlAutomationPeer : SelectorAutomationPeer,
+    public class RichCanvasAutomationPeer : SelectorAutomationPeer,
         IValueProvider,
         IScrollProvider
     //ITransformProvider
     {
         /// <summary>
-        /// Gets the <see cref="RichCanvas"/> that is associated with this <see cref="RichItemsControlAutomationPeer"/>.
+        /// Gets the <see cref="RichCanvas"/> that is associated with this <see cref="RichCanvasAutomationPeer"/>.
         /// </summary>
-        protected RichCanvas OwnerItemsControl => (RichCanvas)Owner;
+        protected RichCanvas OwnerRichCanvas => (RichCanvas)Owner;
 
         /// <inheritdoc/>
         public bool IsReadOnly => true;
 
         /// <summary>
-        /// Gets the serialized json value of <see cref="RichItemsControlData"/> containing data about the associated <see cref="RichCanvas"/>.
+        /// Gets the serialized json value of <see cref="RichCanvasData"/> containing data about the associated <see cref="RichCanvas"/>.
         /// </summary>
-        public string Value => JsonConvert.SerializeObject(new RichItemsControlData
+        public string Value => JsonConvert.SerializeObject(new RichCanvasData
         {
-            TranslateTransformX = OwnerItemsControl.TranslateTransform.X,
-            TranslateTransformY = OwnerItemsControl.TranslateTransform.Y,
-            ItemsExtent = OwnerItemsControl.ItemsExtent,
-            ScrollFactor = OwnerItemsControl.ScrollFactor,
-            ViewportLocation = OwnerItemsControl.ViewportLocation,
-            ViewportSize = OwnerItemsControl.ViewportSize,
-            ViewportExtent = new System.Windows.Size(OwnerItemsControl.ScrollInfo.ExtentWidth, OwnerItemsControl.ScrollInfo.ExtentHeight),
-            ViewportZoom = OwnerItemsControl.ViewportZoom,
-            ScaleFactor = OwnerItemsControl.ScaleFactor,
-            MousePosition = OwnerItemsControl.MousePosition,
-            MaxZoom = OwnerItemsControl.MaxScale,
-            MinZoom = OwnerItemsControl.MinScale
+            TranslateTransformX = OwnerRichCanvas.TranslateTransform.X,
+            TranslateTransformY = OwnerRichCanvas.TranslateTransform.Y,
+            ItemsExtent = OwnerRichCanvas.ItemsExtent,
+            ScrollFactor = OwnerRichCanvas.ScrollFactor,
+            ViewportLocation = OwnerRichCanvas.ViewportLocation,
+            ViewportSize = OwnerRichCanvas.ViewportSize,
+            ViewportExtent = new System.Windows.Size(OwnerRichCanvas.ScrollInfo.ExtentWidth, OwnerRichCanvas.ScrollInfo.ExtentHeight),
+            ViewportZoom = OwnerRichCanvas.ViewportZoom,
+            ScaleFactor = OwnerRichCanvas.ScaleFactor,
+            MousePosition = OwnerRichCanvas.MousePosition,
+            MaxZoom = OwnerRichCanvas.MaxScale,
+            MinZoom = OwnerRichCanvas.MinScale
         });
 
         /// <summary>
@@ -53,12 +53,12 @@ namespace RichCanvas.Automation
         /// <summary>
         /// Gets associated <see cref="RichCanvas.HorizontalOffset"/> value.
         /// </summary>
-        public double HorizontalScrollPercent => OwnerItemsControl.HorizontalOffset;
+        public double HorizontalScrollPercent => OwnerRichCanvas.HorizontalOffset;
 
         /// <summary>
         /// Gets associated <see cref="RichCanvas.ViewportSize"/>.Width value.
         /// </summary>
-        public double HorizontalViewSize => OwnerItemsControl.ViewportSize.Width;
+        public double HorizontalViewSize => OwnerRichCanvas.ViewportSize.Width;
 
         /// <summary>
         /// <inheritdoc/>
@@ -70,18 +70,18 @@ namespace RichCanvas.Automation
         /// <summary>
         /// Gets associated <see cref="RichCanvas.VerticalOffset"/> value.
         /// </summary>
-        public double VerticalScrollPercent => OwnerItemsControl.VerticalOffset;
+        public double VerticalScrollPercent => OwnerRichCanvas.VerticalOffset;
 
         /// <summary>
         /// Gets associated <see cref="RichCanvas.ViewportSize"/>.Height value.
         /// </summary>
-        public double VerticalViewSize => OwnerItemsControl.ViewportSize.Height;
+        public double VerticalViewSize => OwnerRichCanvas.ViewportSize.Height;
 
         /// <summary>
-        /// Initializes a new <see cref="RichItemsControlAutomationPeer"/>.
+        /// Initializes a new <see cref="RichCanvasAutomationPeer"/>.
         /// </summary>
         /// <param name="owner"></param>
-        public RichItemsControlAutomationPeer(RichCanvas owner) : base(owner)
+        public RichCanvasAutomationPeer(RichCanvas owner) : base(owner)
         {
         }
 
@@ -110,57 +110,57 @@ namespace RichCanvas.Automation
 
         /// <inheritdoc/>
         protected override ItemAutomationPeer CreateItemAutomationPeer(object item)
-            => new RichItemContainerAutomationPeer(item, this);
+            => new RichCanvasContainerAutomationPeer(item, this);
 
         /// <summary>
         /// <inheritdoc/>
         /// <br/>
-        /// Using <see cref="OwnerItemsControl"/> implementation of <see cref="System.Windows.Controls.Primitives.IScrollInfo"/>.
+        /// Using <see cref="OwnerRichCanvas"/> implementation of <see cref="System.Windows.Controls.Primitives.IScrollInfo"/>.
         /// </summary>
         public void Scroll(ScrollAmount horizontalAmount, ScrollAmount verticalAmount)
         {
             if (verticalAmount == ScrollAmount.SmallIncrement)
             {
-                OwnerItemsControl.LineDown();
+                OwnerRichCanvas.LineDown();
             }
             if (verticalAmount == ScrollAmount.SmallDecrement)
             {
-                OwnerItemsControl.LineUp();
+                OwnerRichCanvas.LineUp();
             }
             if (verticalAmount == ScrollAmount.LargeIncrement)
             {
-                OwnerItemsControl.PageDown();
+                OwnerRichCanvas.PageDown();
             }
             if (verticalAmount == ScrollAmount.LargeDecrement)
             {
-                OwnerItemsControl.PageUp();
+                OwnerRichCanvas.PageUp();
             }
 
             if (horizontalAmount == ScrollAmount.SmallIncrement)
             {
-                OwnerItemsControl.LineLeft();
+                OwnerRichCanvas.LineLeft();
             }
             if (horizontalAmount == ScrollAmount.SmallDecrement)
             {
-                OwnerItemsControl.LineRight();
+                OwnerRichCanvas.LineRight();
             }
             if (horizontalAmount == ScrollAmount.LargeIncrement)
             {
-                OwnerItemsControl.PageLeft();
+                OwnerRichCanvas.PageLeft();
             }
             if (horizontalAmount == ScrollAmount.LargeDecrement)
             {
-                OwnerItemsControl.PageRight();
+                OwnerRichCanvas.PageRight();
             }
         }
 
         /// <summary>
-        /// Sets the amount of vertical and horizontal offset on the <see cref="OwnerItemsControl"/>.
+        /// Sets the amount of vertical and horizontal offset on the <see cref="OwnerRichCanvas"/>.
         /// </summary>
         public void SetScrollPercent(double horizontalPercent, double verticalPercent)
         {
-            OwnerItemsControl.SetVerticalOffset(OwnerItemsControl.VerticalOffset + verticalPercent);
-            OwnerItemsControl.SetHorizontalOffset(OwnerItemsControl.HorizontalOffset + horizontalPercent);
+            OwnerRichCanvas.SetVerticalOffset(OwnerRichCanvas.VerticalOffset + verticalPercent);
+            OwnerRichCanvas.SetHorizontalOffset(OwnerRichCanvas.HorizontalOffset + horizontalPercent);
         }
     }
 }
