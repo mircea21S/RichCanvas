@@ -1,15 +1,20 @@
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Input;
 using FlaUI.Core.Tools;
+
 using FluentAssertions;
 using FluentAssertions.Execution;
+
 using NUnit.Framework;
+
 using RichCanvas.Gestures;
 using RichCanvas.UITests.Helpers;
+
 using RichCanvasUITests.App;
 using RichCanvasUITests.App.Automation;
 using RichCanvasUITests.App.Models;
 using RichCanvasUITests.App.TestMocks;
+
 using Point = System.Drawing.Point;
 
 namespace RichCanvas.UITests.Tests
@@ -21,7 +26,7 @@ namespace RichCanvas.UITests.Tests
         public void DragMouseToDraw_WhenRemovingOneItem_ShouldDrawOnlyRemainingItem()
         {
             // arrange
-            var endingPointLine = PointUtilities.GetEndingPoint(ViewportCenter, 50, 50);
+            Point endingPointLine = PointUtilities.GetEndingPoint(ViewportCenter, 50, 50);
             Window.ToggleCheckbox(AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId);
 
             // act
@@ -34,11 +39,11 @@ namespace RichCanvas.UITests.Tests
 
             // draw
             Input.WithGesture(RichCanvasGestures.Drawing).Drag(ViewportCenter, endingPointLine);
-            var itemDrawn = RichItemsControl.Items[0];
+            RichItemContainerAutomation itemDrawn = RichCanvas.Items[0];
 
             // assert
-            RichItemsControl.Items.Length.Should().Be(1);
-            itemDrawn.RichItemContainerData.DataContextType.Should().Be(typeof(Line));
+            RichCanvas.Items.Length.Should().Be(1);
+            itemDrawn.RichCanvasContainerData.DataContextType.Should().Be(typeof(Line));
             Window.ToggleCheckbox(AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId);
         }
 
@@ -46,8 +51,8 @@ namespace RichCanvas.UITests.Tests
         public void DragMouseToDraw_WhenMovingItemsOrder_ShouldDrawItemsInOrder()
         {
             // arrange
-            var endingPointLine = PointUtilities.GetEndingPoint(ViewportCenter, 50, 50);
-            var endingPointRectangle = PointUtilities.GetEndingPoint(ViewportCenter.MoveX(100), 50, 50);
+            Point endingPointLine = PointUtilities.GetEndingPoint(ViewportCenter, 50, 50);
+            Point endingPointRectangle = PointUtilities.GetEndingPoint(ViewportCenter.MoveX(100), 50, 50);
 
             // act
             // add not drawn rectangle
@@ -59,15 +64,15 @@ namespace RichCanvas.UITests.Tests
 
             // draw first item
             Input.WithGesture(RichCanvasGestures.Drawing).Drag(ViewportCenter, endingPointLine);
-            var firstItemDrawn = RichItemsControl.Items[0];
+            RichItemContainerAutomation firstItemDrawn = RichCanvas.Items[0];
             // assert
-            firstItemDrawn.RichItemContainerData.DataContextType.Should().Be(typeof(Line));
+            firstItemDrawn.RichCanvasContainerData.DataContextType.Should().Be(typeof(Line));
 
             // draw second item
             Input.WithGesture(RichCanvasGestures.Drawing).Drag(ViewportCenter.MoveX(100, HorizontalDirection.LeftToRight), endingPointRectangle);
-            var secondItemDrawn = RichItemsControl.Items[1];
+            RichItemContainerAutomation secondItemDrawn = RichCanvas.Items[1];
             // assert
-            secondItemDrawn.RichItemContainerData.DataContextType.Should().Be(typeof(RichItemContainerModel));
+            secondItemDrawn.RichCanvasContainerData.DataContextType.Should().Be(typeof(RichItemContainerModel));
         }
 
         [Test]
@@ -78,8 +83,8 @@ namespace RichCanvas.UITests.Tests
         public void DragMouseToDraw_WhenAddingItemWithAllowScaleToUpdatePositionFalse_ShouldNotModifyTopAndLeft(HorizontalDirection horizontalDirection, VerticalDirection verticalDirection)
         {
             // arrange
-            var mockRectangle = DrawingStateDataMocks.ImmutablePositionedRectangleMockWithoutSize;
-            var endPoint = PointUtilities.GetEndingPoint(
+            RichItemContainerModel mockRectangle = DrawingStateDataMocks.ImmutablePositionedRectangleMockWithoutSize;
+            Point endPoint = PointUtilities.GetEndingPoint(
                 new Point(mockRectangle.Left.ToInt(), mockRectangle.Top.ToInt()),
                 50,
                 50,
@@ -89,13 +94,13 @@ namespace RichCanvas.UITests.Tests
             // act
             Window.InvokeButton(AutomationIds.AddImmutablePositionedRectangleButtonId);
             Input.WithGesture(RichCanvasGestures.Drawing).Click(endPoint);
-            var drawnContainer = RichItemsControl.Items[0];
+            RichItemContainerAutomation drawnContainer = RichCanvas.Items[0];
 
             // assert
             using (new AssertionScope())
             {
-                drawnContainer.RichItemContainerData.Top.Should().Be(mockRectangle.Top);
-                drawnContainer.RichItemContainerData.Left.Should().Be(mockRectangle.Left);
+                drawnContainer.RichCanvasContainerData.Top.Should().Be(mockRectangle.Top);
+                drawnContainer.RichCanvasContainerData.Left.Should().Be(mockRectangle.Left);
             }
         }
 
@@ -107,8 +112,8 @@ namespace RichCanvas.UITests.Tests
         public void DragMouseToDraw_WhenAddingItemWithAllowScaleToUpdatePositionTrue_ShouldModifyLeftAndTopIfScaleIsChanged(HorizontalDirection horizontalDirection, VerticalDirection verticalDirection)
         {
             // arrange
-            var rectangleMock = DrawingStateDataMocks.PositionedRectangleMockWithoutSize;
-            var containerLocation = PointUtilities.GetEndingPoint(new Point(rectangleMock.Left.ToInt(), rectangleMock.Top.ToInt()),
+            RichItemContainerModel rectangleMock = DrawingStateDataMocks.PositionedRectangleMockWithoutSize;
+            Point containerLocation = PointUtilities.GetEndingPoint(new Point(rectangleMock.Left.ToInt(), rectangleMock.Top.ToInt()),
                 50,
                 50,
                 horizontalDirection,
@@ -117,16 +122,16 @@ namespace RichCanvas.UITests.Tests
             // act
             Window.InvokeButton(AutomationIds.AddPositionedRectangleButtonId);
             Input.WithGesture(RichCanvasGestures.Drawing).Click(containerLocation);
-            var drawnContainer = RichItemsControl.Items[0];
+            RichItemContainerAutomation drawnContainer = RichCanvas.Items[0];
 
             // assert
-            var expectedTop = verticalDirection switch
+            double expectedTop = verticalDirection switch
             {
                 VerticalDirection.BottomToTop => rectangleMock.Top - drawnContainer.ActualHeight,
                 VerticalDirection.TopToBottom => rectangleMock.Top,
                 _ => rectangleMock.Top,
             };
-            var expectedLeft = horizontalDirection switch
+            double expectedLeft = horizontalDirection switch
             {
                 HorizontalDirection.LeftToRight => rectangleMock.Left,
                 HorizontalDirection.RightToLeft => rectangleMock.Left - drawnContainer.ActualWidth,
@@ -134,8 +139,8 @@ namespace RichCanvas.UITests.Tests
             };
             using (new AssertionScope())
             {
-                drawnContainer.RichItemContainerData.Top.Should().Be(expectedTop);
-                drawnContainer.RichItemContainerData.Left.Should().Be(expectedLeft);
+                drawnContainer.RichCanvasContainerData.Top.Should().Be(expectedTop);
+                drawnContainer.RichCanvasContainerData.Left.Should().Be(expectedLeft);
             }
         }
 
@@ -144,7 +149,7 @@ namespace RichCanvas.UITests.Tests
         /// <br></br>
         /// <i>Note: <paramref name="horizontalDirection"/> modifies <see cref="RichCanvas.ScaleTransform"/>.ScaleX
         /// <br></br>
-        /// <paramref name="verticalDirection"/> modifies <see cref="RichCanvas.ScaleTransform"/>.ScaleY 
+        /// <paramref name="verticalDirection"/> modifies <see cref="RichCanvas.ScaleTransform"/>.ScaleY
         /// </i>
         /// </summary>
         /// <param name="rectanglesCount"></param>
@@ -154,15 +159,12 @@ namespace RichCanvas.UITests.Tests
         [TestCase(3, HorizontalDirection.LeftToRight, VerticalDirection.TopToBottom)]
         [TestCase(4, HorizontalDirection.LeftToRight, VerticalDirection.TopToBottom)]
         [TestCase(1, HorizontalDirection.LeftToRight, VerticalDirection.TopToBottom)]
-
         [TestCase(3, HorizontalDirection.RightToLeft, VerticalDirection.TopToBottom)]
         [TestCase(4, HorizontalDirection.RightToLeft, VerticalDirection.TopToBottom)]
         [TestCase(1, HorizontalDirection.RightToLeft, VerticalDirection.TopToBottom)]
-
         [TestCase(3, HorizontalDirection.LeftToRight, VerticalDirection.BottomToTop)]
         [TestCase(4, HorizontalDirection.LeftToRight, VerticalDirection.BottomToTop)]
         [TestCase(1, HorizontalDirection.LeftToRight, VerticalDirection.BottomToTop)]
-
         [TestCase(3, HorizontalDirection.RightToLeft, VerticalDirection.BottomToTop)]
         [TestCase(4, HorizontalDirection.RightToLeft, VerticalDirection.BottomToTop)]
         [TestCase(1, HorizontalDirection.RightToLeft, VerticalDirection.BottomToTop)]
@@ -170,11 +172,11 @@ namespace RichCanvas.UITests.Tests
         {
             // arrange
             Window.ToggleCheckbox(AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId);
-            var rectangleWidth = 50;
-            var rectangleHeight = 50;
+            int rectangleWidth = 50;
+            int rectangleHeight = 50;
 
-            var startPoint = ViewportCenter;
-            var endPoint = PointUtilities.GetEndingPoint(startPoint, rectangleWidth, rectangleHeight, horizontalDirection, verticalDirection);
+            Point startPoint = ViewportCenter;
+            Point endPoint = PointUtilities.GetEndingPoint(startPoint, rectangleWidth, rectangleHeight, horizontalDirection, verticalDirection);
 
             // act
             var itemMouseDownPositions = new System.Windows.Point[rectanglesCount];
@@ -186,7 +188,7 @@ namespace RichCanvas.UITests.Tests
                 // draw the rectanlge
                 Input.WithGesture(RichCanvasGestures.Drawing).Drag(startPoint, endPoint);
                 // save rectangle position (on click)
-                var startPointRelativeToCanvas = startPoint.ToCanvasPoint();
+                System.Windows.Point startPointRelativeToCanvas = startPoint.ToCanvasPoint();
                 itemMouseDownPositions[i] = startPointRelativeToCanvas;
 
                 // move points for the next rectangle
@@ -197,23 +199,23 @@ namespace RichCanvas.UITests.Tests
             // assert
             using (new AssertionScope())
             {
-                RichItemsControl.Items.Length.Should().Be(rectanglesCount);
-                for (int i = 0; i < RichItemsControl.Items.Length; i++)
+                RichCanvas.Items.Length.Should().Be(rectanglesCount);
+                for (int i = 0; i < RichCanvas.Items.Length; i++)
                 {
-                    var item = RichItemsControl.Items[i];
-                    var initialMouseDownPosition = itemMouseDownPositions[i];
+                    RichItemContainerAutomation item = RichCanvas.Items[i];
+                    System.Windows.Point initialMouseDownPosition = itemMouseDownPositions[i];
 
-                    var expectedTopPosition = item.RichItemContainerData.ScaleY == 1 ? initialMouseDownPosition.Y :
+                    double expectedTopPosition = item.RichCanvasContainerData.ScaleY == 1 ? initialMouseDownPosition.Y :
                         initialMouseDownPosition.Y - item.ActualHeight;
-                    var expectedLeftPosition = item.RichItemContainerData.ScaleX == 1 ? initialMouseDownPosition.X :
+                    double expectedLeftPosition = item.RichCanvasContainerData.ScaleX == 1 ? initialMouseDownPosition.X :
                         initialMouseDownPosition.X - item.ActualWidth;
 
-                    item.RichItemContainerData.Top.Should().Be(expectedTopPosition);
-                    item.RichItemContainerData.Left.Should().Be(expectedLeftPosition);
+                    item.RichCanvasContainerData.Top.Should().Be(expectedTopPosition);
+                    item.RichCanvasContainerData.Left.Should().Be(expectedLeftPosition);
                     item.ActualWidth.Should().Be(rectangleWidth);
                     item.ActualHeight.Should().Be(rectangleHeight);
-                    item.RichItemContainerData.ScaleX.Should().Be(horizontalDirection == HorizontalDirection.LeftToRight ? 1 : -1);
-                    item.RichItemContainerData.ScaleY.Should().Be(verticalDirection == VerticalDirection.TopToBottom ? 1 : -1);
+                    item.RichCanvasContainerData.ScaleX.Should().Be(horizontalDirection == HorizontalDirection.LeftToRight ? 1 : -1);
+                    item.RichCanvasContainerData.ScaleY.Should().Be(verticalDirection == VerticalDirection.TopToBottom ? 1 : -1);
                 }
             }
             Window.ToggleCheckbox(AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId);
@@ -223,17 +225,17 @@ namespace RichCanvas.UITests.Tests
         public void AddContainerWithBindedPositionAndSize_ShouldDrawContainerWithPositionAndSizeTheSameAsSpecified()
         {
             // arrange
-            var mockRectangle = DrawingStateDataMocks.DrawnRectangleMock;
+            RichItemContainerModel mockRectangle = DrawingStateDataMocks.DrawnRectangleMock;
 
             // act
             Window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);
-            var drawnContainer = RichItemsControl.Items[0];
+            RichItemContainerAutomation drawnContainer = RichCanvas.Items[0];
 
             // assert
             using (new AssertionScope())
             {
-                drawnContainer.RichItemContainerData.Top.Should().Be(mockRectangle.Top);
-                drawnContainer.RichItemContainerData.Left.Should().Be(mockRectangle.Left);
+                drawnContainer.RichCanvasContainerData.Top.Should().Be(mockRectangle.Top);
+                drawnContainer.RichCanvasContainerData.Left.Should().Be(mockRectangle.Left);
                 drawnContainer.ActualHeight.Should().Be(mockRectangle.Height);
                 drawnContainer.ActualWidth.Should().Be(mockRectangle.Width);
             }
@@ -243,7 +245,7 @@ namespace RichCanvas.UITests.Tests
         public void DragMouseToDraw_WhenDrawingIsFinished_ShouldInvokeDrawEndedCommand()
         {
             // arrange
-            var drawingStartPoint = ViewportCenter;
+            Point drawingStartPoint = ViewportCenter;
             var drawingEndPoint = new Point(drawingStartPoint.X + 50, drawingStartPoint.Y + 50);
 
             // act
@@ -252,7 +254,7 @@ namespace RichCanvas.UITests.Tests
             Wait.UntilInputIsProcessed();
 
             // assert
-            var drawingEndedTextBox = RichItemsControl.FindFirstDescendant(x => x.ByAutomationId(AutomationIds.DrawingEndedTextBoxId)).AsTextBox();
+            TextBox drawingEndedTextBox = RichCanvas.FindFirstDescendant(x => x.ByAutomationId(AutomationIds.DrawingEndedTextBoxId)).AsTextBox();
             drawingEndedTextBox.Name.Should().Be("DRAWING ENDED");
         }
     }
@@ -287,6 +289,7 @@ namespace RichCanvas.UITests.Tests
         LeftToRight,
         RightToLeft
     }
+
     public enum VerticalDirection
     {
         TopToBottom,

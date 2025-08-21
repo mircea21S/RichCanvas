@@ -6,10 +6,10 @@ using RichCanvasUITests.App.Automation;
 
 namespace RichCanvas.UITests
 {
-    public partial class RichItemsControlAutomation
+    public partial class RichCanvasAutomation
     {
-        public double ViewportZoom => RichItemsControlData.ViewportZoom;
-        public double ScaleFactor => RichItemsControlData.ScaleFactor;
+        public double ViewportZoom => RichCanvasData.ViewportZoom;
+        public double ScaleFactor => RichCanvasData.ScaleFactor;
 
         public void ZoomIn()
         {

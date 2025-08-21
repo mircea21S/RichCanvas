@@ -447,7 +447,7 @@ namespace RichCanvas
 
         /// <inheritdoc/>
         protected override AutomationPeer OnCreateAutomationPeer()
-            => new RichItemsControlAutomationPeer(this);
+            => new RichCanvasAutomationPeer(this);
 
         /// <inheritdoc/>
         protected override bool IsItemItsOwnContainerOverride(object item) => item is RichCanvasContainer;
