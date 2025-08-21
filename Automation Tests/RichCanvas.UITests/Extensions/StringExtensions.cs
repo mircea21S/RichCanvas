@@ -6,7 +6,7 @@ namespace RichCanvas.UITests
 {
     internal static class StringExtensions
     {
-        internal static RichItemsControlData AsRichItemsControlData(this string value) => JsonConvert.DeserializeObject<RichItemsControlData>(value, new JsonSerializerSettings
+        internal static RichCanvasData AsRichCanvasData(this string value) => JsonConvert.DeserializeObject<RichCanvasData>(value, new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.All
         });

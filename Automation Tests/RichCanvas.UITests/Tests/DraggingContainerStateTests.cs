@@ -45,26 +45,26 @@ namespace RichCanvas.UITests.Tests
             // assert
             void AssertPosition1UpdatedOnMouseMove()
             {
-                var container = RichItemsControl.Items[0];
-                container.RichItemContainerData.Top.Should().Be(dragPoint1.Y - 1);
-                container.RichItemContainerData.Left.Should().Be(dragPoint1.X - 1);
+                var container = RichCanvas.Items[0];
+                container.RichCanvasContainerData.Top.Should().Be(dragPoint1.Y - 1);
+                container.RichCanvasContainerData.Left.Should().Be(dragPoint1.X - 1);
             }
             void AssertPosition2UpdatedOnMouseMove()
             {
-                var container = RichItemsControl.Items[0];
-                container.RichItemContainerData.Top.Should().Be(dragPoint2.Y - 1);
-                container.RichItemContainerData.Left.Should().Be(dragPoint2.X - 1);
+                var container = RichCanvas.Items[0];
+                container.RichCanvasContainerData.Top.Should().Be(dragPoint2.Y - 1);
+                container.RichCanvasContainerData.Left.Should().Be(dragPoint2.X - 1);
             }
             void AssertPosition3UpdatedOnMouseMove()
             {
-                var container = RichItemsControl.Items[0];
-                container.RichItemContainerData.Top.Should().Be(dragPoint3.Y - 1);
-                container.RichItemContainerData.Left.Should().Be(dragPoint3.X - 1);
+                var container = RichCanvas.Items[0];
+                container.RichCanvasContainerData.Top.Should().Be(dragPoint3.Y - 1);
+                container.RichCanvasContainerData.Left.Should().Be(dragPoint3.X - 1);
             }
 
-            var container = RichItemsControl.Items[0];
-            container.RichItemContainerData.Top.Should().Be(dragPoint3.Y - 1);
-            container.RichItemContainerData.Left.Should().Be(dragPoint3.X - 1);
+            var container = RichCanvas.Items[0];
+            container.RichCanvasContainerData.Top.Should().Be(dragPoint3.Y - 1);
+            container.RichCanvasContainerData.Left.Should().Be(dragPoint3.X - 1);
             if (canSelectMultipleItems)
             {
                 Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
@@ -104,21 +104,21 @@ namespace RichCanvas.UITests.Tests
             // assert
             void AssertPosition1UpdatedOnMouseMove()
             {
-                var container = RichItemsControl.Items[0];
-                container.RichItemContainerData.Top.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Top);
-                container.RichItemContainerData.Left.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Left);
+                var container = RichCanvas.Items[0];
+                container.RichCanvasContainerData.Top.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Top);
+                container.RichCanvasContainerData.Left.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Left);
             }
             void AssertPosition2UpdatedOnMouseMove()
             {
-                var container = RichItemsControl.Items[0];
-                container.RichItemContainerData.Top.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Top);
-                container.RichItemContainerData.Left.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Left);
+                var container = RichCanvas.Items[0];
+                container.RichCanvasContainerData.Top.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Top);
+                container.RichCanvasContainerData.Left.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Left);
             }
             void AssertPosition3UpdatedOnMouseMove()
             {
-                var container = RichItemsControl.Items[0];
-                container.RichItemContainerData.Top.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Top);
-                container.RichItemContainerData.Left.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Left);
+                var container = RichCanvas.Items[0];
+                container.RichCanvasContainerData.Top.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Top);
+                container.RichCanvasContainerData.Left.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Left);
             }
             if (canSelectMultipleItems)
             {
@@ -148,9 +148,9 @@ namespace RichCanvas.UITests.Tests
             Wait.UntilInputIsProcessed();
 
             // assert
-            var container = RichItemsControl.Items[0];
-            container.RichItemContainerData.Top.Should().Be(endDraggingPoint.Y - 1);
-            container.RichItemContainerData.Left.Should().Be(endDraggingPoint.X - 1);
+            var container = RichCanvas.Items[0];
+            container.RichCanvasContainerData.Top.Should().Be(endDraggingPoint.Y - 1);
+            container.RichCanvasContainerData.Left.Should().Be(endDraggingPoint.X - 1);
             if (canSelectMultipleItems)
             {
                 Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
@@ -172,18 +172,18 @@ namespace RichCanvas.UITests.Tests
             // act & assert
             var (startPoint0, endPoint0) = GetDragPointsForContainer(0);
             Input.WithGesture(RichCanvasGestures.Drag).Drag(startPoint0, endPoint0);
-            RichItemsControl.SelectedItem.Should().Be(RichItemsControl.Items[0]);
-            RichItemsControl.SelectedItems.Length.Should().Be(1);
+            RichCanvas.SelectedItem.Should().Be(RichCanvas.Items[0]);
+            RichCanvas.SelectedItems.Length.Should().Be(1);
 
             var (startPoint1, endPoint1) = GetDragPointsForContainer(1);
             Input.WithGesture(RichCanvasGestures.Drag).Drag(startPoint1, endPoint1);
-            RichItemsControl.SelectedItem.Should().Be(RichItemsControl.Items[1]);
-            RichItemsControl.SelectedItems.Length.Should().Be(1);
+            RichCanvas.SelectedItem.Should().Be(RichCanvas.Items[1]);
+            RichCanvas.SelectedItems.Length.Should().Be(1);
 
             var (startPoint2, endPoint2) = GetDragPointsForContainer(2);
             Input.WithGesture(RichCanvasGestures.Drag).Drag(startPoint2, endPoint2);
-            RichItemsControl.SelectedItem.Should().Be(RichItemsControl.Items[2]);
-            RichItemsControl.SelectedItems.Length.Should().Be(1);
+            RichCanvas.SelectedItem.Should().Be(RichCanvas.Items[2]);
+            RichCanvas.SelectedItems.Length.Should().Be(1);
 
             if (realTimeDraggingEnabled)
             {
@@ -207,15 +207,15 @@ namespace RichCanvas.UITests.Tests
             // act & assert
             var (startPoint0, endPoint0) = GetDragPointsForContainer(0);
             Input.WithGesture(RichCanvasGestures.Drag).Drag(startPoint0, endPoint0);
-            RichItemsControl.SelectedItems.Length.Should().Be(1);
+            RichCanvas.SelectedItems.Length.Should().Be(1);
 
             var (startPoint1, endPoint1) = GetDragPointsForContainer(1);
             Input.WithGesture(RichCanvasGestures.Drag).Drag(startPoint1, endPoint1);
-            RichItemsControl.SelectedItems.Length.Should().Be(2);
+            RichCanvas.SelectedItems.Length.Should().Be(2);
 
             var (startPoint2, endPoint2) = GetDragPointsForContainer(2);
             Input.WithGesture(RichCanvasGestures.Drag).Drag(startPoint2, endPoint2);
-            RichItemsControl.SelectedItems.Length.Should().Be(3);
+            RichCanvas.SelectedItems.Length.Should().Be(3);
 
             if (realTimeDraggingEnabled)
             {
@@ -265,39 +265,39 @@ namespace RichCanvas.UITests.Tests
             // assert
             void AssertPosition1UpdatedOnMouseMove()
             {
-                var container = RichItemsControl.Items[0];
-                var container1 = RichItemsControl.Items[1];
-                var container2 = RichItemsControl.Items[2];
-                container.RichItemContainerData.Top.Should().Be(dragPoint1.Y - 1);
-                container.RichItemContainerData.Left.Should().Be(dragPoint1.X - 1);
-                container1.RichItemContainerData.Top.Should().Be(containers[1].Top + (dragPoint1.Y - pointOnFirstContainer.Y));
-                container1.RichItemContainerData.Left.Should().Be(containers[1].Left + (dragPoint1.X - pointOnFirstContainer.X));
-                container2.RichItemContainerData.Top.Should().Be(containers[2].Top + (dragPoint1.Y - pointOnFirstContainer.Y));
-                container2.RichItemContainerData.Left.Should().Be(containers[2].Left + (dragPoint1.X - pointOnFirstContainer.X));
+                var container = RichCanvas.Items[0];
+                var container1 = RichCanvas.Items[1];
+                var container2 = RichCanvas.Items[2];
+                container.RichCanvasContainerData.Top.Should().Be(dragPoint1.Y - 1);
+                container.RichCanvasContainerData.Left.Should().Be(dragPoint1.X - 1);
+                container1.RichCanvasContainerData.Top.Should().Be(containers[1].Top + (dragPoint1.Y - pointOnFirstContainer.Y));
+                container1.RichCanvasContainerData.Left.Should().Be(containers[1].Left + (dragPoint1.X - pointOnFirstContainer.X));
+                container2.RichCanvasContainerData.Top.Should().Be(containers[2].Top + (dragPoint1.Y - pointOnFirstContainer.Y));
+                container2.RichCanvasContainerData.Left.Should().Be(containers[2].Left + (dragPoint1.X - pointOnFirstContainer.X));
             }
             void AssertPosition2UpdatedOnMouseMove()
             {
-                var container = RichItemsControl.Items[0];
-                var container1 = RichItemsControl.Items[1];
-                var container2 = RichItemsControl.Items[2];
-                container.RichItemContainerData.Top.Should().Be(dragPoint2.Y - 1);
-                container.RichItemContainerData.Left.Should().Be(dragPoint2.X - 1);
-                container1.RichItemContainerData.Top.Should().Be(containers[1].Top + (dragPoint2.Y - pointOnFirstContainer.Y));
-                container1.RichItemContainerData.Left.Should().Be(containers[1].Left + (dragPoint2.X - pointOnFirstContainer.X));
-                container2.RichItemContainerData.Top.Should().Be(containers[2].Top + (dragPoint2.Y - pointOnFirstContainer.Y));
-                container2.RichItemContainerData.Left.Should().Be(containers[2].Left + (dragPoint2.X - pointOnFirstContainer.X));
+                var container = RichCanvas.Items[0];
+                var container1 = RichCanvas.Items[1];
+                var container2 = RichCanvas.Items[2];
+                container.RichCanvasContainerData.Top.Should().Be(dragPoint2.Y - 1);
+                container.RichCanvasContainerData.Left.Should().Be(dragPoint2.X - 1);
+                container1.RichCanvasContainerData.Top.Should().Be(containers[1].Top + (dragPoint2.Y - pointOnFirstContainer.Y));
+                container1.RichCanvasContainerData.Left.Should().Be(containers[1].Left + (dragPoint2.X - pointOnFirstContainer.X));
+                container2.RichCanvasContainerData.Top.Should().Be(containers[2].Top + (dragPoint2.Y - pointOnFirstContainer.Y));
+                container2.RichCanvasContainerData.Left.Should().Be(containers[2].Left + (dragPoint2.X - pointOnFirstContainer.X));
             }
             void AssertPosition3UpdatedOnMouseMove()
             {
-                var container = RichItemsControl.Items[0];
-                var container1 = RichItemsControl.Items[1];
-                var container2 = RichItemsControl.Items[2];
-                container.RichItemContainerData.Top.Should().Be(dragPoint3.Y - 1);
-                container.RichItemContainerData.Left.Should().Be(dragPoint3.X - 1);
-                container1.RichItemContainerData.Top.Should().Be(containers[1].Top + (dragPoint3.Y - pointOnFirstContainer.Y));
-                container1.RichItemContainerData.Left.Should().Be(containers[1].Left + (dragPoint3.X - pointOnFirstContainer.X));
-                container2.RichItemContainerData.Top.Should().Be(containers[2].Top + (dragPoint3.Y - pointOnFirstContainer.Y));
-                container2.RichItemContainerData.Left.Should().Be(containers[2].Left + (dragPoint3.X - pointOnFirstContainer.X));
+                var container = RichCanvas.Items[0];
+                var container1 = RichCanvas.Items[1];
+                var container2 = RichCanvas.Items[2];
+                container.RichCanvasContainerData.Top.Should().Be(dragPoint3.Y - 1);
+                container.RichCanvasContainerData.Left.Should().Be(dragPoint3.X - 1);
+                container1.RichCanvasContainerData.Top.Should().Be(containers[1].Top + (dragPoint3.Y - pointOnFirstContainer.Y));
+                container1.RichCanvasContainerData.Left.Should().Be(containers[1].Left + (dragPoint3.X - pointOnFirstContainer.X));
+                container2.RichCanvasContainerData.Top.Should().Be(containers[2].Top + (dragPoint3.Y - pointOnFirstContainer.Y));
+                container2.RichCanvasContainerData.Left.Should().Be(containers[2].Left + (dragPoint3.X - pointOnFirstContainer.X));
             }
 
             Window.ToggleButton(AutomationIds.RealTimeDraggingToggleButtonId);

@@ -25,7 +25,7 @@ namespace RichCanvas.UITests.Tests
         public void PanningCanvas_InDirectionByDistance_ShouldUpdateViewportLocationToDraggedDistance(Direction direction, int distance)
         {
             // arrange
-            RichItemsControl.Focus();
+            RichCanvas.Focus();
             var fromPoint = ViewportCenter;
             var toPoint = direction switch
             {
@@ -40,12 +40,12 @@ namespace RichCanvas.UITests.Tests
             var initialViewportLocation = ViewportLocation;
 
             // act
-            RichItemsControl.Pan(fromPoint, toPoint);
+            RichCanvas.Pan(fromPoint, toPoint);
 
             // assert
             var expectedLocation = new System.Windows.Point(initialViewportLocation.X - distanceVector.X, initialViewportLocation.Y - distanceVector.Y);
             ViewportLocation.Should().Be(expectedLocation);
-            RichItemsControl.ResetViewportLocation();
+            RichCanvas.ResetViewportLocation();
         }
 
         [TestCase(Direction.Left, 50)]
@@ -64,7 +64,7 @@ namespace RichCanvas.UITests.Tests
         public void PanningCanvas_InDirectionByDistance_ShouldUpdateTranslateTransformValueToDraggedDistance(Direction direction, int distance)
         {
             // arrange
-            RichItemsControl.Focus();
+            RichCanvas.Focus();
             var fromPoint = ViewportCenter;
             var toPoint = direction switch
             {
@@ -78,12 +78,12 @@ namespace RichCanvas.UITests.Tests
             var distanceVector = toPoint.AsWindowsPoint() - fromPoint.AsWindowsPoint();
 
             // act
-            RichItemsControl.Pan(fromPoint, toPoint);
+            RichCanvas.Pan(fromPoint, toPoint);
 
             // assert
-            RichItemsControl.RichItemsControlData.TranslateTransformX.Should().Be(distanceVector.X);
-            RichItemsControl.RichItemsControlData.TranslateTransformY.Should().Be(distanceVector.Y);
-            RichItemsControl.ResetViewportLocation();
+            RichCanvas.RichCanvasData.TranslateTransformX.Should().Be(distanceVector.X);
+            RichCanvas.RichCanvasData.TranslateTransformY.Should().Be(distanceVector.Y);
+            RichCanvas.ResetViewportLocation();
         }
 
         [TestCase(Direction.Left, 50)]
@@ -102,7 +102,7 @@ namespace RichCanvas.UITests.Tests
         public void MultipleCanvasPanning_InDirectionByDistance_ShouldAddUpDragDistanceToTranslateTransformValue(Direction direction, int distance)
         {
             // arrange
-            RichItemsControl.Focus();
+            RichCanvas.Focus();
             var fromPoint = ViewportCenter;
             var toPoint = direction switch
             {
@@ -116,15 +116,15 @@ namespace RichCanvas.UITests.Tests
             var distanceVector = toPoint.AsWindowsPoint() - fromPoint.AsWindowsPoint();
 
             // act & assert
-            RichItemsControl.Pan(fromPoint, toPoint);
-            RichItemsControl.RichItemsControlData.TranslateTransformX.Should().Be(distanceVector.X);
-            RichItemsControl.RichItemsControlData.TranslateTransformY.Should().Be(distanceVector.Y);
+            RichCanvas.Pan(fromPoint, toPoint);
+            RichCanvas.RichCanvasData.TranslateTransformX.Should().Be(distanceVector.X);
+            RichCanvas.RichCanvasData.TranslateTransformY.Should().Be(distanceVector.Y);
 
-            RichItemsControl.Pan(fromPoint, toPoint);
-            RichItemsControl.RichItemsControlData.TranslateTransformX.Should().Be(distanceVector.X * 2);
-            RichItemsControl.RichItemsControlData.TranslateTransformY.Should().Be(distanceVector.Y * 2);
+            RichCanvas.Pan(fromPoint, toPoint);
+            RichCanvas.RichCanvasData.TranslateTransformX.Should().Be(distanceVector.X * 2);
+            RichCanvas.RichCanvasData.TranslateTransformY.Should().Be(distanceVector.Y * 2);
 
-            RichItemsControl.ResetViewportLocation();
+            RichCanvas.ResetViewportLocation();
         }
 
         [Test]
@@ -134,9 +134,9 @@ namespace RichCanvas.UITests.Tests
             Window.InvokeButton(AutomationIds.SetViewportLocationValueButtonId);
 
             // assert
-            RichItemsControl.RichItemsControlData.TranslateTransformX.Should().Be(-PanningStateDataMocks.ViewportLocationMockValue.X);
-            RichItemsControl.RichItemsControlData.TranslateTransformY.Should().Be(-PanningStateDataMocks.ViewportLocationMockValue.Y);
-            RichItemsControl.ResetViewportLocation();
+            RichCanvas.RichCanvasData.TranslateTransformX.Should().Be(-PanningStateDataMocks.ViewportLocationMockValue.X);
+            RichCanvas.RichCanvasData.TranslateTransformY.Should().Be(-PanningStateDataMocks.ViewportLocationMockValue.Y);
+            RichCanvas.ResetViewportLocation();
         }
     }
 }

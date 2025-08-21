@@ -5,7 +5,7 @@ namespace RichCanvas.Automation.ControlInformations
     /// <summary>
     /// Data transfer object exposing <see cref="RichCanvas"/> information to UI Automation proejct.
     /// </summary>
-    public class RichItemsControlData
+    public class RichCanvasData
     {
         /// <summary>
         /// <see cref="RichCanvas.TranslateTransform"/>.X property value.

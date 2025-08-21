@@ -1,4 +1,9 @@
-﻿using FlaUI.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+
+using FlaUI.Core;
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Definitions;
 using FlaUI.Core.Patterns;
@@ -10,24 +15,19 @@ using RichCanvas.UITests.Tests;
 
 using RichCanvasUITests.App.Automation;
 
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-
 namespace RichCanvas.UITests
 {
-    public partial class RichItemsControlAutomation : AutomationElement
+    public partial class RichCanvasAutomation : AutomationElement
     {
-        public Point ViewportLocation => RichItemsControlData.ViewportLocation.AsDrawingPoint();
+        public Point ViewportLocation => RichCanvasData.ViewportLocation.AsDrawingPoint();
 
-        public Size ViewportSizeInteger => new Size((int)RichItemsControlData.ViewportSize.Width, (int)RichItemsControlData.ViewportSize.Height);
+        public Size ViewportSizeInteger => new Size((int)RichCanvasData.ViewportSize.Width, (int)RichCanvasData.ViewportSize.Height);
 
         public RichItemContainerAutomation[] Items
         {
             get
             {
-                if (Patterns.ItemContainer.TryGetPattern(out var itemContainerPattern))
+                if (Patterns.ItemContainer.TryGetPattern(out IItemContainerPattern itemContainerPattern))
                 {
                     var allItems = new List<RichItemContainerAutomation>();
                     AutomationElement item = null;
@@ -36,7 +36,7 @@ namespace RichCanvas.UITests
                         item = itemContainerPattern.FindItemByProperty(item, null, null);
                         if (item != null)
                         {
-                            allItems.Add(item.AsRichItemContainerAutomation());
+                            allItems.Add(item.AsRichCanvasContainerAutomation());
                         }
                     }
                     while (item != null);
@@ -50,14 +50,14 @@ namespace RichCanvas.UITests
         {
             get
             {
-                if (Patterns.Selection.TryGetPattern(out var selectionPattern))
+                if (Patterns.Selection.TryGetPattern(out ISelectionPattern selectionPattern))
                 {
                     var allItems = new List<RichItemContainerAutomation>();
-                    foreach (var selection in selectionPattern.Selection.ValueOrDefault)
+                    foreach (AutomationElement selection in selectionPattern.Selection.ValueOrDefault)
                     {
                         if (selection != null)
                         {
-                            allItems.Add(selection.AsRichItemContainerAutomation());
+                            allItems.Add(selection.AsRichCanvasContainerAutomation());
                         }
                     }
                     return allItems.ToArray();
@@ -70,27 +70,27 @@ namespace RichCanvas.UITests
         {
             get
             {
-                if (Patterns.Selection.TryGetPattern(out var selectionPattern) && !selectionPattern.CanSelectMultiple)
+                if (Patterns.Selection.TryGetPattern(out ISelectionPattern selectionPattern) && !selectionPattern.CanSelectMultiple)
                 {
-                    return selectionPattern.Selection.ValueOrDefault.SingleOrDefault().AsRichItemContainerAutomation();
+                    return selectionPattern.Selection.ValueOrDefault.SingleOrDefault().AsRichCanvasContainerAutomation();
                 }
                 return null;
             }
         }
 
-        public RichItemsControlData RichItemsControlData => Patterns.Value.Pattern.Value.Value.AsRichItemsControlData();
+        public RichCanvasData RichCanvasData => Patterns.Value.Pattern.Value.Value.AsRichCanvasData();
 
         public IScrollPattern ScrollInfo => Patterns.Scroll.PatternOrDefault;
 
         public Window ParentWindow { get; internal set; }
 
-        public RichItemsControlAutomation(FrameworkAutomationElementBase frameworkAutomationElement) : base(frameworkAutomationElement)
+        public RichCanvasAutomation(FrameworkAutomationElementBase frameworkAutomationElement) : base(frameworkAutomationElement)
         {
         }
 
         public void ScrollByArrowKeyOrButton(Direction scrollingMode)
         {
-            if (Patterns.Scroll.TryGetPattern(out var scrollPattern))
+            if (Patterns.Scroll.TryGetPattern(out IScrollPattern scrollPattern))
             {
                 if (scrollingMode == Direction.Up)
                 {
@@ -113,7 +113,7 @@ namespace RichCanvas.UITests
 
         public void ScrollByPage(Direction scrollingMode)
         {
-            if (Patterns.Scroll.TryGetPattern(out var scrollPattern))
+            if (Patterns.Scroll.TryGetPattern(out IScrollPattern scrollPattern))
             {
                 if (scrollingMode == Direction.Up)
                 {
@@ -136,7 +136,7 @@ namespace RichCanvas.UITests
 
         public void ScrollByScrollbarsDragging(Direction scrollingMode)
         {
-            if (Patterns.Scroll.TryGetPattern(out var scrollPattern))
+            if (Patterns.Scroll.TryGetPattern(out IScrollPattern scrollPattern))
             {
                 if (scrollingMode == Direction.Up)
                 {
@@ -159,7 +159,7 @@ namespace RichCanvas.UITests
 
         public void SetScrollPercent(double horizontalOffset, double verticalOffset)
         {
-            if (Patterns.Scroll.TryGetPattern(out var scrollPattern))
+            if (Patterns.Scroll.TryGetPattern(out IScrollPattern scrollPattern))
             {
                 scrollPattern.SetScrollPercent(horizontalOffset, verticalOffset);
             }
@@ -167,9 +167,9 @@ namespace RichCanvas.UITests
 
         public void DragContainerOutsideViewportWithOffset(RichItemContainerAutomation richItemContainer, Direction direction, int offsetDistance, System.Windows.Size visualViewportSize)
         {
-            var containerLocation = richItemContainer.BoundingRectangle.Location;
-            var currentItemBounds = richItemContainer.BoundingRectangle;
-            var offset = direction == Direction.Left ? new Point(offsetDistance, 0) : new Point(0, 0);
+            Point containerLocation = richItemContainer.BoundingRectangle.Location;
+            Rectangle currentItemBounds = richItemContainer.BoundingRectangle;
+            Point offset = direction == Direction.Left ? new Point(offsetDistance, 0) : new Point(0, 0);
             Point draggingEndPoint = direction switch
             {
                 Direction.Left => new Point(-offsetDistance, containerLocation.Y),
@@ -189,8 +189,8 @@ namespace RichCanvas.UITests
             Action<Point, int> assertStepAction,
             System.Windows.Size visualViewportSize)
         {
-            var currentItemBounds = richItemContainer.BoundingRectangle;
-            var containerLocation = currentItemBounds.Location;
+            Rectangle currentItemBounds = richItemContainer.BoundingRectangle;
+            Point containerLocation = currentItemBounds.Location;
 
             Point firstDraggingPoint = direction switch
             {
