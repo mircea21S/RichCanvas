@@ -1,5 +1,5 @@
 > **🎉 RichCanvas v.3.0.0 Released!**  
-> Check out the new features & breaking changes in the [release notes].
+> Check out the new features & breaking changes in the [release notes](https://github.com/mircea21S/RichCanvas/releases/tag/v3.0.0).
 
 <div align="center">
   <img width="524" height="310" alt="RichCanvas" src="https://github.com/user-attachments/assets/584ae1fa-cefe-42ec-8129-86f93187a6ff" />
