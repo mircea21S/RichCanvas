@@ -7,18 +7,28 @@ on:
       - "v*.*.*"
 
 jobs:
-  publish:
+  build:
     runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v4
-      - name: Setup .NET Core
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Setup NuGet
+        uses: nuget/setup-nuget@v2
+
+      - name: Setup .NET 9
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "9.0.x"
-      - name: Install dependencies
-        run: dotnet restore
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
+          dotnet-version: 9.0.x
+
+      - name: Restore solution
+        run: nuget restore RichCanvas.sln
+
+      - name: Build solution
+        run: msbuild RichCanvas.sln /p:Configuration=Release
+
       - name: Publish the package
-        run: dotnet nuget push "*/bin/Release/*.nupkg" -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+        run: dotnet nuget push "./RichCanvas/bin/Release/*.nupkg" -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
