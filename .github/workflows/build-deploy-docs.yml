@@ -3,6 +3,8 @@ name: Build & Deploy API Reference DocFx Site
 on:
   push:
     branches: [ main ]
+    tags:
+      - 'v*.*.*'
 
 permissions:
   actions: read
