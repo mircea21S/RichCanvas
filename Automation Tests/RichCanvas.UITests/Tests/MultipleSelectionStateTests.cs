@@ -46,21 +46,21 @@ namespace RichCanvas.UITests.Tests
             {
                 var startPoint = new Point((int)currentUiItems[1].BoundingBox.Right + 1, (int)currentUiItems[1].BoundingBox.Bottom + 1);
                 Input.WithGesture(RichCanvasGestures.Select).DefferedDrag(startPoint, [
-                        (currentUiItems[1].BoundingBox.TopLeft.AsDrawingPoint(), () => RichItemsControl.SelectedItems.Length.Should().Be(1)),
-                        (currentUiItems[0].BoundingBox.TopLeft.AsDrawingPoint(), () => RichItemsControl.SelectedItems.Length.Should().Be(2))
+                        (currentUiItems[1].BoundingBox.TopLeft.AsDrawingPoint(), () => RichCanvas.SelectedItems.Length.Should().Be(1)),
+                        (currentUiItems[0].BoundingBox.TopLeft.AsDrawingPoint(), () => RichCanvas.SelectedItems.Length.Should().Be(2))
                     ]);
 
-                RichItemsControl.SelectedItems.Length.Should().Be(currentUiItems.Count);
+                RichCanvas.SelectedItems.Length.Should().Be(currentUiItems.Count);
             }
             else
             {
                 var startPoint = new Point((int)currentUiItems[0].Left - 1, (int)currentUiItems[0].Top - 1);
                 Input.WithGesture(RichCanvasGestures.Select).DefferedDrag(startPoint, [
-                       (currentUiItems[0].BoundingBox.BottomRight.AsDrawingPoint(), () => RichItemsControl.SelectedItems.Length.Should().Be(1)),
-                       (currentUiItems[1].BoundingBox.BottomRight.AsDrawingPoint(), () => RichItemsControl.SelectedItems.Length.Should().Be(2))
+                       (currentUiItems[0].BoundingBox.BottomRight.AsDrawingPoint(), () => RichCanvas.SelectedItems.Length.Should().Be(1)),
+                       (currentUiItems[1].BoundingBox.BottomRight.AsDrawingPoint(), () => RichCanvas.SelectedItems.Length.Should().Be(2))
                    ]);
 
-                RichItemsControl.SelectedItems.Length.Should().Be(currentUiItems.Count);
+                RichCanvas.SelectedItems.Length.Should().Be(currentUiItems.Count);
             }
         }
 
@@ -76,11 +76,11 @@ namespace RichCanvas.UITests.Tests
             // act and assert
             Input.WithGesture(RichCanvasGestures.Select)
                 .Click(currentUiItems[0].Center.AsDrawingPoint().ToCanvasDrawingPoint());
-            RichItemsControl.SelectedItems.Length.Should().Be(1);
+            RichCanvas.SelectedItems.Length.Should().Be(1);
 
             Input.WithGesture(RichCanvasGestures.Select)
                .Click(currentUiItems[1].Center.AsDrawingPoint().ToCanvasDrawingPoint());
-            RichItemsControl.SelectedItems.Length.Should().Be(2);
+            RichCanvas.SelectedItems.Length.Should().Be(2);
         }
 
         [TestCase(true)]
@@ -95,11 +95,11 @@ namespace RichCanvas.UITests.Tests
             // act and assert
             Input.WithGesture(RichCanvasGestures.Select)
                 .Click(currentUiItems[0].Center.AsDrawingPoint().ToCanvasDrawingPoint());
-            RichItemsControl.SelectedItems.Length.Should().Be(1);
+            RichCanvas.SelectedItems.Length.Should().Be(1);
 
             Input.WithGesture(RichCanvasGestures.Select)
                .Click(currentUiItems[1].Center.AsDrawingPoint().ToCanvasDrawingPoint());
-            RichItemsControl.SelectedItems.Length.Should().Be(2);
+            RichCanvas.SelectedItems.Length.Should().Be(2);
         }
 
         [TestCase(true)]
@@ -112,23 +112,23 @@ namespace RichCanvas.UITests.Tests
 
             // act & assert
             Window.InvokeButton(AutomationIds.SelectFirst1ItemsNotSelectedButtonId);
-            RichItemsControl.SelectedItems.Length.Should().Be(1);
-            RichItemsControl.Items[0].RichItemContainerData.IsSelected.Should().BeTrue();
+            RichCanvas.SelectedItems.Length.Should().Be(1);
+            RichCanvas.Items[0].RichCanvasContainerData.IsSelected.Should().BeTrue();
 
             Window.InvokeButton(AutomationIds.SelectFirst2ItemsNotSelectedButtonId);
-            RichItemsControl.SelectedItems.Length.Should().Be(3);
-            RichItemsControl.Items[0].RichItemContainerData.IsSelected.Should().BeTrue();
-            RichItemsControl.Items[1].RichItemContainerData.IsSelected.Should().BeTrue();
-            RichItemsControl.Items[2].RichItemContainerData.IsSelected.Should().BeTrue();
+            RichCanvas.SelectedItems.Length.Should().Be(3);
+            RichCanvas.Items[0].RichCanvasContainerData.IsSelected.Should().BeTrue();
+            RichCanvas.Items[1].RichCanvasContainerData.IsSelected.Should().BeTrue();
+            RichCanvas.Items[2].RichCanvasContainerData.IsSelected.Should().BeTrue();
 
             Window.InvokeButton(AutomationIds.SelectFirst3ItemsNotSelectedButtonId);
-            RichItemsControl.SelectedItems.Length.Should().Be(6);
-            RichItemsControl.Items[0].RichItemContainerData.IsSelected.Should().BeTrue();
-            RichItemsControl.Items[1].RichItemContainerData.IsSelected.Should().BeTrue();
-            RichItemsControl.Items[2].RichItemContainerData.IsSelected.Should().BeTrue();
-            RichItemsControl.Items[3].RichItemContainerData.IsSelected.Should().BeTrue();
-            RichItemsControl.Items[4].RichItemContainerData.IsSelected.Should().BeTrue();
-            RichItemsControl.Items[5].RichItemContainerData.IsSelected.Should().BeTrue();
+            RichCanvas.SelectedItems.Length.Should().Be(6);
+            RichCanvas.Items[0].RichCanvasContainerData.IsSelected.Should().BeTrue();
+            RichCanvas.Items[1].RichCanvasContainerData.IsSelected.Should().BeTrue();
+            RichCanvas.Items[2].RichCanvasContainerData.IsSelected.Should().BeTrue();
+            RichCanvas.Items[3].RichCanvasContainerData.IsSelected.Should().BeTrue();
+            RichCanvas.Items[4].RichCanvasContainerData.IsSelected.Should().BeTrue();
+            RichCanvas.Items[5].RichCanvasContainerData.IsSelected.Should().BeTrue();
         }
 
         [TestCase(true, 1)]
@@ -144,23 +144,23 @@ namespace RichCanvas.UITests.Tests
             ArrangeSelectionScenario(realTimeSelectionEnabled, AutomationIds.AddSelectableItemsButtonId2);
             Window.InvokeButton(AutomationIds.SelectFirst3ItemsNotSelectedButtonId);
             // act & assert
-            RichItemsControl.SelectedItems.Should().HaveCount(3);
+            RichCanvas.SelectedItems.Should().HaveCount(3);
 
             if (itemsClicked == 1)
             {
                 Input.WithGesture(RichCanvasGestures.Select).Click(MultipleSelectionStateDataMocks.MultipleSelectionDummyItems[3].Center.AsDrawingPoint().ToCanvasDrawingPoint());
-                RichItemsControl.Items[3].RichItemContainerData.IsSelected.Should().BeTrue();
+                RichCanvas.Items[3].RichCanvasContainerData.IsSelected.Should().BeTrue();
             }
             else
             {
-                var selectionCount = RichItemsControl.SelectedItems.Length;
+                var selectionCount = RichCanvas.SelectedItems.Length;
                 for (int i = 1; i <= itemsClicked; i++)
                 {
                     Input.WithGesture(RichCanvasGestures.Select).Click(MultipleSelectionStateDataMocks.MultipleSelectionDummyItems[selectionCount + i].Center.AsDrawingPoint().ToCanvasDrawingPoint());
-                    RichItemsControl.Items[selectionCount + i].RichItemContainerData.IsSelected.Should().BeTrue();
+                    RichCanvas.Items[selectionCount + i].RichCanvasContainerData.IsSelected.Should().BeTrue();
                 }
             }
-            RichItemsControl.SelectedItems.Should().HaveCount(3 + itemsClicked);
+            RichCanvas.SelectedItems.Should().HaveCount(3 + itemsClicked);
         }
 
         [TestCase(true)]
@@ -174,7 +174,7 @@ namespace RichCanvas.UITests.Tests
 
             // act & assert
             Input.WithGesture(RichCanvasGestures.Select).Click(new Point(105, 105));
-            RichItemsControl.SelectedItems.Should().BeEmpty();
+            RichCanvas.SelectedItems.Should().BeEmpty();
         }
 
         [TestCase(true)]
@@ -191,25 +191,25 @@ namespace RichCanvas.UITests.Tests
             {
                 var startPoint = new Point((int)currentUiItems[7].BoundingBox.Right + 1, (int)currentUiItems[7].BoundingBox.Bottom + 1);
                 Input.WithGesture(RichCanvasGestures.Select).DefferedDrag(startPoint, [
-                        (currentUiItems[5].BoundingBox.TopLeft.AsDrawingPoint(), () => RichItemsControl.SelectedItems.Length.Should().Be(0)),
-                        (currentUiItems[3].BoundingBox.TopLeft.AsDrawingPoint(), () => RichItemsControl.SelectedItems.Length.Should().Be(0)),
-                        (currentUiItems[1].BoundingBox.TopLeft.AsDrawingPoint(), () => RichItemsControl.SelectedItems.Length.Should().Be(0)),
-                        (currentUiItems[0].BoundingBox.TopLeft.AsDrawingPoint(), () => RichItemsControl.SelectedItems.Length.Should().Be(0))
+                        (currentUiItems[5].BoundingBox.TopLeft.AsDrawingPoint(), () => RichCanvas.SelectedItems.Length.Should().Be(0)),
+                        (currentUiItems[3].BoundingBox.TopLeft.AsDrawingPoint(), () => RichCanvas.SelectedItems.Length.Should().Be(0)),
+                        (currentUiItems[1].BoundingBox.TopLeft.AsDrawingPoint(), () => RichCanvas.SelectedItems.Length.Should().Be(0)),
+                        (currentUiItems[0].BoundingBox.TopLeft.AsDrawingPoint(), () => RichCanvas.SelectedItems.Length.Should().Be(0))
                     ]);
 
-                RichItemsControl.SelectedItems.Length.Should().Be(currentUiItems.Count);
+                RichCanvas.SelectedItems.Length.Should().Be(currentUiItems.Count);
             }
             else
             {
                 var startPoint = new Point((int)currentUiItems[0].Left - 1, (int)currentUiItems[0].Top - 1);
                 Input.WithGesture(RichCanvasGestures.Select).DefferedDrag(startPoint, [
-                       (currentUiItems[1].BoundingBox.BottomRight.AsDrawingPoint(), () => RichItemsControl.SelectedItems.Length.Should().Be(0)),
-                       (currentUiItems[3].BoundingBox.BottomRight.AsDrawingPoint(), () => RichItemsControl.SelectedItems.Length.Should().Be(0)),
-                       (currentUiItems[5].BoundingBox.BottomRight.AsDrawingPoint(), () => RichItemsControl.SelectedItems.Length.Should().Be(0)),
-                       (currentUiItems[7].BoundingBox.BottomRight.AsDrawingPoint(), () => RichItemsControl.SelectedItems.Length.Should().Be(0))
+                       (currentUiItems[1].BoundingBox.BottomRight.AsDrawingPoint(), () => RichCanvas.SelectedItems.Length.Should().Be(0)),
+                       (currentUiItems[3].BoundingBox.BottomRight.AsDrawingPoint(), () => RichCanvas.SelectedItems.Length.Should().Be(0)),
+                       (currentUiItems[5].BoundingBox.BottomRight.AsDrawingPoint(), () => RichCanvas.SelectedItems.Length.Should().Be(0)),
+                       (currentUiItems[7].BoundingBox.BottomRight.AsDrawingPoint(), () => RichCanvas.SelectedItems.Length.Should().Be(0))
                    ]);
 
-                RichItemsControl.SelectedItems.Length.Should().Be(currentUiItems.Count);
+                RichCanvas.SelectedItems.Length.Should().Be(currentUiItems.Count);
             }
         }
 
@@ -227,7 +227,7 @@ namespace RichCanvas.UITests.Tests
             Window.ClearAllItems();
 
             // assert
-            RichItemsControl.SelectedItems.Should().BeEmpty();
+            RichCanvas.SelectedItems.Should().BeEmpty();
         }
 
         [TestCase(true)]
@@ -244,9 +244,9 @@ namespace RichCanvas.UITests.Tests
             Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
 
             // assert
-            RichItemsControl.SelectedItem.Should().Be(RichItemsControl.Items[0]);
-            RichItemsControl.SelectedItems.Length.Should().Be(1);
-            RichItemsControl.SelectedItems[0].Should().Be(RichItemsControl.Items[0]);
+            RichCanvas.SelectedItem.Should().Be(RichCanvas.Items[0]);
+            RichCanvas.SelectedItems.Length.Should().Be(1);
+            RichCanvas.SelectedItems[0].Should().Be(RichCanvas.Items[0]);
             // toggle button again preparing for teardown
             Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
         }
@@ -266,8 +266,8 @@ namespace RichCanvas.UITests.Tests
             Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
 
             // assert
-            RichItemsControl.SelectedItem.Should().BeNull();
-            RichItemsControl.SelectedItems.Should().BeEmpty();
+            RichCanvas.SelectedItem.Should().BeNull();
+            RichCanvas.SelectedItems.Should().BeEmpty();
             // toggle button again preparing for teardown
             Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
         }

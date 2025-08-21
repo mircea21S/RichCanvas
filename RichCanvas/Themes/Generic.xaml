@@ -3,7 +3,7 @@
                     xmlns:local="clr-namespace:RichCanvas">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/RichCanvas;component/Styles/RichCanvasStyle.xaml"></ResourceDictionary>
-        <ResourceDictionary Source="pack://application:,,,/RichCanvas;component/Styles/RichItemContainerStyle.xaml"></ResourceDictionary>
+        <ResourceDictionary Source="pack://application:,,,/RichCanvas;component/Styles/RichCanvasContainerStyle.xaml"></ResourceDictionary>
         <ResourceDictionary Source="pack://application:,,,/RichCanvas;component/Styles/Converters.xaml"></ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
