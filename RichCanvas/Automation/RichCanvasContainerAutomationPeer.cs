@@ -10,22 +10,22 @@ namespace RichCanvas.Automation
     /// <summary>
     /// Exposes the <see cref="RichCanvasContainer"/> to UI Automation project.
     /// </summary>
-    public class RichItemContainerAutomationPeer : SelectorItemAutomationPeer, IValueProvider
+    public class RichCanvasContainerAutomationPeer : SelectorItemAutomationPeer, IValueProvider
     {
         /// <summary>
-        /// Gets the <see cref="RichCanvas"/> that is associated with this <see cref="RichItemContainerAutomationPeer"/>.
+        /// Gets the <see cref="RichCanvas"/> that is associated with this <see cref="RichCanvasContainerAutomationPeer"/>.
         /// </summary>
-        protected RichCanvas OwnerItemsControl => (RichCanvas)ItemsControlAutomationPeer.Owner;
+        protected RichCanvas OwnerRichCanvas => (RichCanvas)ItemsControlAutomationPeer.Owner;
 
         /// <summary>
-        /// Gets the <see cref="RichCanvasContainer"/> that is associated with this <see cref="RichItemContainerAutomationPeer"/>.
+        /// Gets the <see cref="RichCanvasContainer"/> that is associated with this <see cref="RichCanvasContainerAutomationPeer"/>.
         /// </summary>
-        protected RichCanvasContainer Container => (RichCanvasContainer)OwnerItemsControl.ItemContainerGenerator.ContainerFromItem(Item);
+        protected RichCanvasContainer Container => (RichCanvasContainer)OwnerRichCanvas.ItemContainerGenerator.ContainerFromItem(Item);
 
         /// <summary>
-        /// Gets the serialized json value of <see cref="RichItemContainerData"/> containing data about the associated <see cref="RichCanvasContainer"/>.
+        /// Gets the serialized json value of <see cref="RichCanvasContainerData"/> containing data about the associated <see cref="RichCanvasContainer"/>.
         /// </summary>
-        public string Value => JsonConvert.SerializeObject(new RichItemContainerData
+        public string Value => JsonConvert.SerializeObject(new RichCanvasContainerData
         {
             Top = Container.Top,
             Left = Container.Left,
@@ -39,11 +39,11 @@ namespace RichCanvas.Automation
         public bool IsReadOnly => true;
 
         /// <summary>
-        /// Initializes a new <see cref="RichItemContainerAutomationPeer"/> for a <see cref="RichCanvasContainer"/> in <see cref="RichCanvas"/>.Items collection.
+        /// Initializes a new <see cref="RichCanvasContainerAutomationPeer"/> for a <see cref="RichCanvasContainer"/> in <see cref="RichCanvas"/>.Items collection.
         /// </summary>
         /// <param name="item">The data item associated with a <see cref="RichCanvasContainer"/> inside a <see cref="RichCanvas"/></param>
-        /// <param name="itemsControlAutomationPeer">Owner <see cref="RichItemsControlAutomationPeer"/></param>
-        public RichItemContainerAutomationPeer(object item, SelectorAutomationPeer itemsControlAutomationPeer) : base(item, itemsControlAutomationPeer)
+        /// <param name="itemsControlAutomationPeer">Owner <see cref="RichCanvasAutomationPeer"/></param>
+        public RichCanvasContainerAutomationPeer(object item, SelectorAutomationPeer itemsControlAutomationPeer) : base(item, itemsControlAutomationPeer)
         {
         }
 
