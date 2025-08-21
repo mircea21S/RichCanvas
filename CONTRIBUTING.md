@@ -17,12 +17,12 @@ before raising a new question.
 
 ## 🐛 Found an issue?
 
-Found a bug or you noticed something doesn't work as expected? Just raise a new [issue]() and let us know, so we can fix it. 
+Found a bug or you noticed something doesn't work as expected? Just raise a new [issue](https://github.com/mircea21S/RichCanvas/issues/new?template=bug-report.md) and let us know, so we can fix it. 
 Please provide as much detail as possible to help us address the issue.
 
 ## 💡 New feature or enhancement suggestions
 
-You have an idea about a new feature or enhancement or you need a feature that's not present in RichCanvas? Just open a [new feature ticket]() discribing your idea.
+You have an idea about a new feature or enhancement or you need a feature that's not present in RichCanvas? Just open a [new feature ticket](https://github.com/mircea21S/RichCanvas/issues/new?template=feature_request.md) discribing your idea.
 Also, you can come up with suggestions in the [Roadmap discussion](https://github.com/mircea21S/RichCanvas/discussions/45) this is the best place to come up with ideas, suggestions and so on.
 Offering feedback on the roadmap is always appreciated!
 
