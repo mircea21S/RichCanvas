@@ -31,4 +31,4 @@ jobs:
         run: msbuild RichCanvas.sln /p:Configuration=Release
 
       - name: Publish the package
-        run: dotnet nuget push "./RichCanvas/bin/Release/*.nupkg" -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+        run: dotnet nuget push "*/bin/Release/*.nupkg" -k ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
