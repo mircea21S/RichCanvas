@@ -18,15 +18,16 @@ Install-Package RichCanvas
 ```
 ## ✨ Features
 
-- Designed for **MVVM**
-- **No dependencies** other than WPF
-- **Optimized** for interactions with hundreds of elements
-- **Zoom, Pan, Scroll** and other out of the box functionalities
-- **Selection and Dragging** for items
-- Default **"Drawing"** mechanism when adding new items
-- Infinite scrolling
-- Configurable input gestures for each action
+- Supports adding items directly through **ItemsSource collection binding**
+- Offers [drawing](https://github.com/mircea21S/RichCanvas/wiki/RichCanvas-Overview#drawing) mechanism for items added to ItemsSource
+- Out of the box **zooming, panning, auto-panning, infinite scrolling and other functionalities**
+- **Dragging and selection** for items
+- [Items](https://github.com/mircea21S/RichCanvas/wiki/RichCanvasContainer-Overview) come with **location and size** dependency properties (no attached properties)
 - Lots of **configurable** dependency properties
+- Ready to support [custom](https://github.com/mircea21S/RichCanvas/wiki/RichCanvas-Overview#customize) actions and functionalities
+- **Optimized** for interactions with hundreds of elements
+- **No dependencies** other than WPF
+- Designed for **MVVM**
 
 ## 💻 Demo
 
@@ -43,11 +44,13 @@ to get a grasp of the new changes and features added with v.3.0.0.
 
 API Reference can be found [here](https://github.com/mircea21S/RichCanvas/wiki/API).
 
-For documentation please refrer to [Wiki](https://github.com/mircea21S/RichCanvas/wiki).
+For documentation please refer to [Wiki](https://github.com/mircea21S/RichCanvas/wiki).
 
 ## ❤ Contributing
 
 Feel free to help with documentation, bug reports, pull requests or new/missing features ideas.
+
+Check out the [Contributing page](https://github.com/mircea21S/RichCanvas/tree/release-v3.0.0?tab=contributing-ov-file) for details.
 
 ## 🙏 Special Thanks
 
