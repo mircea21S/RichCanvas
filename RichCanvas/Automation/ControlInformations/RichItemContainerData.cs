@@ -10,31 +10,31 @@ namespace RichCanvas.Automation.ControlInformations
         /// <summary>
         /// Bound <see cref="RichCanvasContainer"/>.DataContext type.
         /// </summary>
-        public Type? DataContextType { get; internal set; }
+        public Type? DataContextType { get; set; }
 
         /// <summary>
         /// <see cref="RichCanvasContainer.Top"/> property value.
         /// </summary>
-        public double Top { get; internal set; }
+        public double Top { get; set; }
 
         /// <summary>
         /// <see cref="RichCanvasContainer.Left"/> property value.
         /// </summary>
-        public double Left { get; internal set; }
+        public double Left { get; set; }
 
         /// <summary>
         /// <see cref="RichCanvasContainer.IsSelected"/> property value.
         /// </summary>
-        public bool IsSelected { get; internal set; }
+        public bool IsSelected { get; set; }
 
         /// <summary>
         /// <see cref="RichCanvasContainer.Scale"/> property value.
         /// </summary>
-        public double ScaleX { get; internal set; }
+        public double ScaleX { get; set; }
 
         /// <summary>
         /// <see cref="RichCanvasContainer.Scale"/> property value.
         /// </summary>
-        public double ScaleY { get; internal set; }
+        public double ScaleY { get; set; }
     }
 }
