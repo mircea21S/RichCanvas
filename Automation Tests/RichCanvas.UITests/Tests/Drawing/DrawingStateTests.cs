@@ -17,7 +17,7 @@ using RichCanvasUITests.App.TestMocks;
 
 using Point = System.Drawing.Point;
 
-namespace RichCanvas.UITests.Tests
+namespace RichCanvas.UITests.Tests.Drawing
 {
     [TestFixture]
     public class DrawingStateTests : RichCanvasTestAppTest

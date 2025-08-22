@@ -1,7 +1,9 @@
 ﻿using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Input;
+
 using RichCanvas.Gestures;
 using RichCanvas.UITests.Helpers;
+
 using RichCanvasUITests.App.Automation;
 
 namespace RichCanvas.UITests
@@ -43,7 +45,7 @@ namespace RichCanvas.UITests
 
         public void SetViewportZoom(double zoomValue)
         {
-            var viewportZoomTextBox = ParentWindow.FindFirstDescendant(d => d.ByAutomationId(AutomationIds.ViewportZoomTextBoxId)).AsTextBox();
+            TextBox viewportZoomTextBox = ParentWindow.FindFirstDescendant(d => d.ByAutomationId(AutomationIds.ViewportZoomTextBoxId)).AsTextBox();
             viewportZoomTextBox.Patterns.Value.Pattern.SetValue(zoomValue.ToString());
         }
     }

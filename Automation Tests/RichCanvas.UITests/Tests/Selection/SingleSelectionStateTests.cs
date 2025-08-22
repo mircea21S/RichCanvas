@@ -1,14 +1,19 @@
-﻿using FlaUI.Core.Input;
-using FluentAssertions;
-using NUnit.Framework;
-using RichCanvas.Gestures;
-using RichCanvas.UITests.Helpers;
-using RichCanvasUITests.App.Automation;
-using RichCanvasUITests.App.TestMocks;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Linq;
 
-namespace RichCanvas.UITests.Tests
+using FlaUI.Core.Input;
+
+using FluentAssertions;
+
+using NUnit.Framework;
+
+using RichCanvas.Gestures;
+using RichCanvas.UITests.Helpers;
+
+using RichCanvasUITests.App.Automation;
+using RichCanvasUITests.App.TestMocks;
+
+namespace RichCanvas.UITests.Tests.Selection
 {
     [TestFixture]
     public class SingleSelectionStateTests : RichCanvasTestAppTest
@@ -226,7 +231,7 @@ namespace RichCanvas.UITests.Tests
         {
             // arrange
             ArrangeSelectionScenario(realTimeSelectionEnabled);
-            var currentUiItems = SingleSelectionStateDataMocks.SingleSelectionItems;
+            System.Collections.Generic.List<RichCanvasUITests.App.RichItemContainerModel> currentUiItems = SingleSelectionStateDataMocks.SingleSelectionItems;
 
             // act
             Input.WithGesture(RichCanvasGestures.Select).Click(currentUiItems[0].Center.AsDrawingPoint().ToCanvasDrawingPoint());
@@ -246,7 +251,7 @@ namespace RichCanvas.UITests.Tests
         {
             // arrange
             ArrangeSelectionScenario(realTimeSelectionEnabled);
-            var currentUiItems = SingleSelectionStateDataMocks.SingleSelectionItems;
+            System.Collections.Generic.List<RichCanvasUITests.App.RichItemContainerModel> currentUiItems = SingleSelectionStateDataMocks.SingleSelectionItems;
             Input.WithGesture(RichCanvasGestures.Select).Click(currentUiItems[0].Center.AsDrawingPoint().ToCanvasDrawingPoint());
 
             // act

@@ -15,9 +15,7 @@ using RichCanvas.UITests.Helpers;
 
 using RichCanvasUITests.App.Automation;
 
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-
-namespace RichCanvas.UITests.Tests
+namespace RichCanvas.UITests.Tests.Scrolling
 {
     // TODO: Investingate horizontal mouse wheel scrolling.
     [TestFixture(false)]

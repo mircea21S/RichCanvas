@@ -1,10 +1,14 @@
-﻿using FlaUI.Core.AutomationElements;
-using FlaUI.Core.Input;
-using FluentAssertions;
-using NUnit.Framework;
-using RichCanvasUITests.App.Automation;
-using System;
+﻿using System;
 using System.Drawing;
+
+using FlaUI.Core.AutomationElements;
+using FlaUI.Core.Input;
+
+using FluentAssertions;
+
+using NUnit.Framework;
+
+using RichCanvasUITests.App.Automation;
 
 namespace RichCanvas.UITests.Tests.Zooming
 {
@@ -18,7 +22,6 @@ namespace RichCanvas.UITests.Tests.Zooming
             base.TearDown();
         }
 
-        // TODO: bool "zoomIn" should be converted to an enum.
         [TestCase(true)]
         [TestCase(false)]
         [Test]
@@ -41,7 +44,7 @@ namespace RichCanvas.UITests.Tests.Zooming
         public void RichCanvas_WhenZooming_ShouldUpdateViewportZoom(bool zoomIn)
         {
             // arrange
-            var initialZoom = RichCanvas.ViewportZoom;
+            double initialZoom = RichCanvas.ViewportZoom;
 
             // act
             RichCanvas.Zoom(zoomIn);
@@ -57,12 +60,10 @@ namespace RichCanvas.UITests.Tests.Zooming
         [TestCase(110, 110, true)]
         [TestCase(120, 120, true)]
         [TestCase(120, 120, true)]
-
         [TestCase(150, 150, false)]
         [TestCase(120, 120, false)]
         [TestCase(123, 123, false)]
         [TestCase(105, 115, false)]
-
         [TestCase(130, 134, true)]
         [TestCase(121, 120, false)]
         [TestCase(90, 109, true)]
@@ -72,16 +73,16 @@ namespace RichCanvas.UITests.Tests.Zooming
         {
             // arrange
             var mousePosition = new Point(xPosition, yPosition);
-            var canvasPoint = mousePosition.ToCanvasDrawingPoint();
+            Point canvasPoint = mousePosition.ToCanvasDrawingPoint();
             Mouse.Position = canvasPoint;
 
-            var mousePositionBeforeZooming = RichCanvas.RichCanvasData.MousePosition;
+            System.Windows.Point mousePositionBeforeZooming = RichCanvas.RichCanvasData.MousePosition;
 
             // act
             RichCanvas.Zoom(zoomIn);
 
             // assert
-            var mousePositionAfterZooming = RichCanvas.RichCanvasData.MousePosition;
+            System.Windows.Point mousePositionAfterZooming = RichCanvas.RichCanvasData.MousePosition;
             mousePositionBeforeZooming.Should().Be(mousePositionAfterZooming);
         }
 
@@ -95,8 +96,8 @@ namespace RichCanvas.UITests.Tests.Zooming
         public void RichCanvas_WhenZooming_EachStepShouldBeChangedAccordingToScaleFactor(bool zoomIn)
         {
             // arrange
-            var scaleFactor = RichCanvas.ScaleFactor;
-            var zoomBefore = RichCanvas.ViewportZoom;
+            double scaleFactor = RichCanvas.ScaleFactor;
+            double zoomBefore = RichCanvas.ViewportZoom;
 
             // act
             RichCanvas.Zoom(zoomIn);
@@ -116,8 +117,8 @@ namespace RichCanvas.UITests.Tests.Zooming
         public void RichCanvas_WhenZoomIn_ShouldStopAtMaxScale()
         {
             // arrange
-            var maxZoom = RichCanvas.RichCanvasData.MaxZoom;
-            var scaleFactor = RichCanvas.ScaleFactor;
+            double maxZoom = RichCanvas.RichCanvasData.MaxZoom;
+            double scaleFactor = RichCanvas.ScaleFactor;
             double noOfZoomsUntilMax = Math.Log(maxZoom) / Math.Log(scaleFactor);
 
             // act
@@ -135,8 +136,8 @@ namespace RichCanvas.UITests.Tests.Zooming
         public void RichCanvas_WhenZoomOut_ShouldStopAtMinScale()
         {
             // arrange
-            var minZoom = RichCanvas.RichCanvasData.MinZoom;
-            var scaleFactor = RichCanvas.ScaleFactor;
+            double minZoom = RichCanvas.RichCanvasData.MinZoom;
+            double scaleFactor = RichCanvas.ScaleFactor;
             double noOfZoomsUntilMax = Math.Log(1 / minZoom) / Math.Log(scaleFactor);
 
             // act
@@ -155,7 +156,7 @@ namespace RichCanvas.UITests.Tests.Zooming
         {
             // arrange
             var topLeftCornerPoint = new Point(0, 0);
-            var canvasTopLeftCorner = topLeftCornerPoint.ToCanvasDrawingPoint();
+            Point canvasTopLeftCorner = topLeftCornerPoint.ToCanvasDrawingPoint();
 
             // act
             Mouse.Position = canvasTopLeftCorner;
@@ -213,10 +214,10 @@ namespace RichCanvas.UITests.Tests.Zooming
             }
 
             // assert
-            var expectedScrollOffset = ViewportLocation - RichCanvas.RichCanvasData.ItemsExtent.Location;
-            var expectedExtent = RichCanvas.RichCanvasData.ItemsExtent;
+            System.Windows.Vector expectedScrollOffset = ViewportLocation - RichCanvas.RichCanvasData.ItemsExtent.Location;
+            System.Windows.Rect expectedExtent = RichCanvas.RichCanvasData.ItemsExtent;
             expectedExtent.Union(new System.Windows.Rect(ViewportLocation, ViewportSize));
-            var doubleTolerance = 1e-5;
+            double doubleTolerance = 1e-5;
 
             RichCanvas.ScrollInfo.VerticalScrollPercent.Value.Should().BeApproximately(expectedScrollOffset.Y < 0 ? 0 : expectedScrollOffset.Y, doubleTolerance);
             RichCanvas.ScrollInfo.HorizontalScrollPercent.Value.Should().BeApproximately(expectedScrollOffset.X < 0 ? 0 : expectedScrollOffset.X, doubleTolerance);
@@ -242,10 +243,10 @@ namespace RichCanvas.UITests.Tests.Zooming
             }
 
             // assert
-            var expectedScrollOffset = ViewportLocation - RichCanvas.RichCanvasData.ItemsExtent.Location;
-            var expectedExtent = RichCanvas.RichCanvasData.ItemsExtent;
+            System.Windows.Vector expectedScrollOffset = ViewportLocation - RichCanvas.RichCanvasData.ItemsExtent.Location;
+            System.Windows.Rect expectedExtent = RichCanvas.RichCanvasData.ItemsExtent;
             expectedExtent.Union(new System.Windows.Rect(ViewportLocation, ViewportSize));
-            var doubleTolerance = 1e-5;
+            double doubleTolerance = 1e-5;
 
             RichCanvas.ScrollInfo.VerticalScrollPercent.Value.Should().BeApproximately(expectedScrollOffset.Y < 0 ? 0 : expectedScrollOffset.Y, doubleTolerance);
             RichCanvas.ScrollInfo.HorizontalScrollPercent.Value.Should().BeApproximately(expectedScrollOffset.X < 0 ? 0 : expectedScrollOffset.X, doubleTolerance);

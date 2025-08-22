@@ -4,7 +4,7 @@ using System.Windows.Input;
 using MouseButton = FlaUI.Core.Input.MouseButton;
 using System.Drawing;
 using System;
-using RichCanvas.UITests.Tests;
+using RichCanvas.UITests.Tests.Scrolling;
 
 namespace RichCanvas.UITests.Helpers
 {

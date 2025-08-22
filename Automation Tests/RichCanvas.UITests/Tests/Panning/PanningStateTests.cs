@@ -1,10 +1,15 @@
 ﻿using FluentAssertions;
+
 using NUnit.Framework;
+
+using RichCanvas.UITests.Tests.Scrolling;
+
 using RichCanvasUITests.App.Automation;
 using RichCanvasUITests.App.TestMocks;
+
 using System.Drawing;
 
-namespace RichCanvas.UITests.Tests
+namespace RichCanvas.UITests.Tests.Panning
 {
     [TestFixture]
     public class PanningStateTests : RichCanvasTestAppTest
