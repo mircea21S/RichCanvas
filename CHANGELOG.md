@@ -2,10 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+#### **Version 3.0.1**
+
+> - Breaking Changes:
+> - Features:
+> - Bugfixes:
+>	- Fixed ScrollOwner null reference exception when RichCanvas is not wrapped in a ScrollViewer
+
 #### **Version 3.0.0**
 
 > - Breaking Changes:
->	   - Renamed RichItemsControl to RichCanvas
+>	 - Renamed RichItemsControl to RichCanvas
 >    - Renamed RichItemContainer to RichCanvasContainer
 >    - Renamed RichCanvas to RichCanvasPanel
 >    - Removed PanningGrid (scrolling is now handled inside main control class and needs to be wrapped in a ScrollViewer)
@@ -23,7 +30,7 @@ All notable changes to this project will be documented in this file.
 >    - Renamed Scale dependency property to ViewportZoom
 >    - Replaced ViewportRect to ViewportSize dependency property
 > - Features:
->	   - All default operations of RichCanvas work now based on states classes derived from CanvasState class
+>	 - All default operations of RichCanvas work now based on states classes derived from CanvasState class
 >    - Interactions between them and input gestures are defined through a state obtained from method RichCanvas.GetDefaultState()
 >      - Inheriting RichCanvas and overriding this method will let you define your own states and orchestration of them
 >    - Default states:
