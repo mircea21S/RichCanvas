@@ -40,7 +40,7 @@ namespace RichCanvas
         public double HorizontalOffset => _offset.X;
 
         /// <inheritdoc/>
-        public ScrollViewer ScrollOwner { get; set; }
+        public ScrollViewer? ScrollOwner { get; set; }
 
         /// <inheritdoc/>
         public double VerticalOffset => _offset.Y;
@@ -66,20 +66,8 @@ namespace RichCanvas
         /// <inheritdoc/>
         public Rect MakeVisible(Visual visual, Rect rectangle)
         {
-            if (visual is RichCanvasContainer container && container.ShouldBringIntoView)
-            {
-                var containerLocation = new Vector(container.Left, container.Top);
-                var viewportCenter = new Vector(ViewportWidth / 2, ViewportHeight / 2);
-                var relativePoint = (Point)(containerLocation * ViewportZoom - viewportCenter);
-                if (TranslateTransform != null)
-                {
-                    TranslateTransform.X = -relativePoint.X;
-                    TranslateTransform.Y = -relativePoint.Y;
-                }
-                container.ShouldBringIntoView = false;
-                return new Rect(ScrollOwner.RenderSize);
-            }
-            return new Rect(ScrollOwner.RenderSize);
+            // TODO: Implement MakeVisible logic for next releases
+            return rectangle;
         }
 
         /// <inheritdoc/>
@@ -137,7 +125,7 @@ namespace RichCanvas
             double locationY = Math.Min(ItemsExtent.Top, _viewportLocationBeforeScrolling.Value.Y) + VerticalOffset;
             ViewportLocation = new Point(locationX, locationY);
             EnsureExtentIsUpdated();
-            ScrollOwner.InvalidateScrollInfo();
+            ScrollOwner?.InvalidateScrollInfo();
             _isScrolling = false;
         }
 
@@ -176,7 +164,7 @@ namespace RichCanvas
 
                 _offset.X = Math.Max(0, scrollOffset.X);
                 _offset.Y = Math.Max(0, scrollOffset.Y);
-                ScrollOwner.InvalidateScrollInfo();
+                ScrollOwner?.InvalidateScrollInfo();
             }
         }
 
