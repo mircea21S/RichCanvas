@@ -26,10 +26,19 @@ namespace RichCanvas
             RichCanvasGestures.ZoomOut
         });
 
+        /// <summary>
+        /// Change the viewport location and zoom to fit as many items as possible on screen.
+        /// </summary>
+        public static RoutedUICommand FitToScreen { get; } = new RoutedUICommand("Fit to screen", nameof(FitToScreen), typeof(RichCanvasCommands), new InputGestureCollection
+        {
+           RichCanvasGestures.FitToScreen
+        });
+
         internal static void Register(Type type)
         {
             CommandManager.RegisterClassCommandBinding(type, new CommandBinding(ZoomIn, OnZoomIn));
             CommandManager.RegisterClassCommandBinding(type, new CommandBinding(ZoomOut, OnZoomOut));
+            CommandManager.RegisterClassCommandBinding(type, new CommandBinding(FitToScreen, OnFitToScreen));
         }
 
         private static void OnZoomOut(object sender, ExecutedRoutedEventArgs e)
@@ -45,6 +54,14 @@ namespace RichCanvas
             if (sender is RichCanvas richItemsControl)
             {
                 richItemsControl.ZoomIn();
+            }
+        }
+
+        private static void OnFitToScreen(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (sender is RichCanvas richItemsControl)
+            {
+                richItemsControl.FitToScreen();
             }
         }
     }
