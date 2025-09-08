@@ -41,6 +41,11 @@ namespace RichCanvas.Gestures
         public static InputGesture Pan { get; set; } = new MouseKeyGesture(new MouseGesture(MouseAction.LeftClick), new KeyGesture(Key.Space));
 
         /// <summary>
+        /// Gets or sets the <see cref="InputGesture"/> used to match the <see cref="RichCanvasCommands.FitToScreen"/>.
+        /// </summary>
+        public static InputGesture FitToScreen { get; set; } = new KeyGesture(Key.Home);
+
+        /// <summary>
         /// Gets or sets the <see cref="ModifierKeys"/> used together with MouseWheel for zooming.
         /// <br/>
         /// Default is <see cref="ModifierKeys.Control"/>.
