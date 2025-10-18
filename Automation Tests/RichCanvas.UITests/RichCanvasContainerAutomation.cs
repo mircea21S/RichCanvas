@@ -59,5 +59,12 @@ namespace RichCanvas.UITests
             flaUIDragInput.Stop();
             _dragging = false;
         }
+
+        internal void Drag(int offset)
+        {
+            StartDragging();
+            Move(offset);
+            EndDragging();
+        }
     }
 }

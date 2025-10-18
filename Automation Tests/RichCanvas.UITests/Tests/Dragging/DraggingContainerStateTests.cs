@@ -1,14 +1,15 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 
-using FlaUI.Core.Input;
+using FlaUI.Core.Tools;
 
 using FluentAssertions;
 
 using NUnit.Framework;
 
-using RichCanvas.Gestures;
-using RichCanvas.UITests.Helpers;
+using RichCanvas.UITests.Tests.Selection.SelectionModes;
 
+using RichCanvasUITests.App;
 using RichCanvasUITests.App.Automation;
 using RichCanvasUITests.App.TestMocks;
 
@@ -17,18 +18,11 @@ namespace RichCanvas.UITests.Tests.Dragging
     [TestFixture]
     public class DraggingContainerStateTests : RichCanvasTestAppTest
     {
-        [TestCase(true)]
-        [TestCase(false)]
-        [Test]
-        public void DragContainer_WithRealTimeDraggingEnabledAndEachSelectionScenario_ShouldUpdateTopLeftPositionWhileDragging(bool canSelectMultipleItems)
+        [Test, RealTimeDragging(true)]
+        public void DragSingleContainer_WithRealTimeDraggingEnabled_ShouldUpdateContainerLocationWhileMouseIsMoving()
         {
             // arrange
             Window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);
-            Window.ToggleButton(AutomationIds.RealTimeDraggingToggleButtonId);
-            if (canSelectMultipleItems)
-            {
-                Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
-            }
             int dragOffset = 50;
 
             // act & assert
@@ -44,244 +38,101 @@ namespace RichCanvas.UITests.Tests.Dragging
             drawnContainer.Location.Should().Be(Point.Add(locationBeforeMove2, new Size(dragOffset, dragOffset)).ToCanvasDrawingPoint());
 
             drawnContainer.EndDragging();
-
-            if (canSelectMultipleItems)
-            {
-                Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
-            }
-            Window.ToggleButton(AutomationIds.RealTimeDraggingToggleButtonId);
         }
 
-        [TestCase(true)]
-        [TestCase(false)]
-        [Test]
-        public void DragContainer_WithRealTimeDraggingDisabledAndEachSelectionScenario_ShouldNotUpdateTopLeftPositionWhileDragging(bool canSelectMultipleItems)
+        [Test, RealTimeDragging(false)]
+        public void DragSingleContainer_WithRealTimeDraggingDisabled_ShouldNotUpdateContainerLocationWhileMouseIsMoving()
         {
             // arrange
             Window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);
-            if (canSelectMultipleItems)
-            {
-                Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
-            }
+            int dragOffset = 50;
 
-            var pointOnRectangle = new Point((int)DrawingStateDataMocks.DrawnRectangleMock.Left + 1, (int)DrawingStateDataMocks.DrawnRectangleMock.Top + 1);
-            var dragPoint1 = new Point(pointOnRectangle.X + 50, pointOnRectangle.Y + 50);
-            var dragPoint2 = new Point(dragPoint1.X + 50, dragPoint1.Y + 50);
-            var dragPoint3 = new Point(dragPoint2.X + 50, dragPoint2.Y + 50);
+            // act & assert
+            RichCanvasContainerAutomation drawnContainer = RichCanvas.Items[0];
+            drawnContainer.StartDragging();
 
-            Point canvasPointOnRectangle = pointOnRectangle.ToCanvasDrawingPoint();
-            Point canvasDragPoint1 = dragPoint1.ToCanvasDrawingPoint();
-            Point canvasDragPoint2 = dragPoint2.ToCanvasDrawingPoint();
-            Point canvasDragPoint3 = dragPoint3.ToCanvasDrawingPoint();
+            Point locationBeforeMove = drawnContainer.Location;
+            drawnContainer.Move(dragOffset);
+            drawnContainer.Location.Should().Be(new Point(DrawingStateDataMocks.DrawnRectangleMock.Left.ToInt(), DrawingStateDataMocks.DrawnRectangleMock.Top.ToInt()));
 
-            // act
-            Input.WithGesture(RichCanvasGestures.Drag).DefferedDrag(canvasPointOnRectangle, [
-                (canvasDragPoint1, AssertPosition1UpdatedOnMouseMove),
-                (canvasDragPoint2, AssertPosition2UpdatedOnMouseMove),
-                (canvasDragPoint3, AssertPosition3UpdatedOnMouseMove),
-                ]);
+            Point locationBeforeMove2 = drawnContainer.Location;
+            drawnContainer.Move(dragOffset);
+            drawnContainer.Location.Should().Be(new Point(DrawingStateDataMocks.DrawnRectangleMock.Left.ToInt(), DrawingStateDataMocks.DrawnRectangleMock.Top.ToInt()));
 
-            // assert
-            void AssertPosition1UpdatedOnMouseMove()
-            {
-                RichCanvasContainerAutomation container = RichCanvas.Items[0];
-                container.RichCanvasContainerData.Top.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Top);
-                container.RichCanvasContainerData.Left.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Left);
-            }
-            void AssertPosition2UpdatedOnMouseMove()
-            {
-                RichCanvasContainerAutomation container = RichCanvas.Items[0];
-                container.RichCanvasContainerData.Top.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Top);
-                container.RichCanvasContainerData.Left.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Left);
-            }
-            void AssertPosition3UpdatedOnMouseMove()
-            {
-                RichCanvasContainerAutomation container = RichCanvas.Items[0];
-                container.RichCanvasContainerData.Top.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Top);
-                container.RichCanvasContainerData.Left.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Left);
-            }
-            if (canSelectMultipleItems)
-            {
-                Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
-            }
+            drawnContainer.EndDragging();
         }
 
-        [TestCase(true)]
-        [TestCase(false)]
-        [Test]
-        public void DragContainer_WithRealTimeDraggingDisabledAndEachSelectionScenario_ShouldUpdateTopLeftPositionWhenDragHasFinished(bool canSelectMultipleItems)
+        [Test, RealTimeDragging(false)]
+        public void DragSingleContainer_WithRealTimeDraggingDisabled_ShouldUpdateContainerLocationWhenMouseIsReleased()
         {
             // arrange
             Window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);
-            if (canSelectMultipleItems)
-            {
-                Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
-            }
-
-            var pointOnRectangle = new Point((int)DrawingStateDataMocks.DrawnRectangleMock.Left + 1, (int)DrawingStateDataMocks.DrawnRectangleMock.Top + 1);
-            var endDraggingPoint = new Point(pointOnRectangle.X + 100, pointOnRectangle.Y + 100);
-            Point canvasPointOnRectangle = pointOnRectangle.ToCanvasDrawingPoint();
-            Point canvasEndDraggingPoint = endDraggingPoint.ToCanvasDrawingPoint();
+            int dragOffset = 50;
 
             // act
-            Input.WithGesture(RichCanvasGestures.Drag).Drag(canvasPointOnRectangle, canvasEndDraggingPoint);
-            Wait.UntilInputIsProcessed();
+            RichCanvasContainerAutomation drawnContainer = RichCanvas.Items[0];
+            drawnContainer.Drag(dragOffset);
 
             // assert
-            RichCanvasContainerAutomation container = RichCanvas.Items[0];
-            container.RichCanvasContainerData.Top.Should().Be(endDraggingPoint.Y - 1);
-            container.RichCanvasContainerData.Left.Should().Be(endDraggingPoint.X - 1);
-            if (canSelectMultipleItems)
-            {
-                Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
-            }
+            var containerInitialLocation = new Point(DrawingStateDataMocks.DrawnRectangleMock.Left.ToInt(), DrawingStateDataMocks.DrawnRectangleMock.Top.ToInt());
+            drawnContainer.Location.Should().Be(Point.Add(containerInitialLocation, new Size(dragOffset, dragOffset)).ToCanvasDrawingPoint());
         }
 
-        [TestCase(true)]
-        [TestCase(false)]
-        [Test]
-        public void DragMultipleContainer_WhenCanSelectMultipleItemsIsFalseAndWithEachDraggingScenario_ShouldSelectOnlyOneContainerPerDrag(bool realTimeDraggingEnabled)
+        [Test, RealTimeDragging(true), MultipleSelection]
+        public void DragMultipleContainers_WithRealTimeSelectionEnabled_ShouldUpdatePositionForAllSelectedContainersWhileMouseIsMoving()
         {
             // arrange
-            if (realTimeDraggingEnabled)
-            {
-                Window.ToggleButton(AutomationIds.RealTimeDraggingToggleButtonId);
-            }
             Window.InvokeButton(AutomationIds.AddTestSingleSelectionItemsButtonId);
+            List<RichItemContainerModel> containers = SingleSelectionStateDataMocks.SingleSelectionItems;
+            RichCanvas.SelectAllItems();
+            int dragOffset = 50;
 
             // act & assert
-            (Point startPoint0, Point endPoint0) = GetDragPointsForContainer(0);
-            Input.WithGesture(RichCanvasGestures.Drag).Drag(startPoint0, endPoint0);
-            RichCanvas.SelectedItem.Should().Be(RichCanvas.Items[0]);
-            RichCanvas.SelectedItems.Length.Should().Be(1);
+            RichCanvasContainerAutomation dragContainer = RichCanvas.Items[0];
+            dragContainer.StartDragging();
 
-            (Point startPoint1, Point endPoint1) = GetDragPointsForContainer(1);
-            Input.WithGesture(RichCanvasGestures.Drag).Drag(startPoint1, endPoint1);
-            RichCanvas.SelectedItem.Should().Be(RichCanvas.Items[1]);
-            RichCanvas.SelectedItems.Length.Should().Be(1);
-
-            (Point startPoint2, Point endPoint2) = GetDragPointsForContainer(2);
-            Input.WithGesture(RichCanvasGestures.Drag).Drag(startPoint2, endPoint2);
-            RichCanvas.SelectedItem.Should().Be(RichCanvas.Items[2]);
-            RichCanvas.SelectedItems.Length.Should().Be(1);
-
-            if (realTimeDraggingEnabled)
+            dragContainer.Move(dragOffset);
+            for (int i = 0; i < containers.Count; i++)
             {
-                Window.ToggleButton(AutomationIds.RealTimeDraggingToggleButtonId);
+                RichItemContainerModel item = containers[i];
+                RichCanvasContainerAutomation container = RichCanvas.Items[i];
+                container.Location.Should().Be(new Point(item.Left.ToInt() + dragOffset, item.Top.ToInt() + dragOffset).ToCanvasDrawingPoint());
             }
+
+            dragContainer.Move(dragOffset);
+            for (int i = 0; i < containers.Count; i++)
+            {
+                RichItemContainerModel item = containers[i];
+                RichCanvasContainerAutomation container = RichCanvas.Items[i];
+                container.Location.Should().Be(new Point(item.Left.ToInt() + (dragOffset * 2), item.Top.ToInt() + (dragOffset * 2))
+                    // called twice to apply the title bar height twice as containers were moved twice in the scenario
+                    .ToCanvasDrawingPoint()
+                    .ToCanvasDrawingPoint());
+            }
+
+            dragContainer.EndDragging();
         }
 
-        [TestCase(true)]
-        [TestCase(false)]
-        [Test]
-        public void DragMultipleContainer_WhenCanSelectMultipleItemsIsTrueAndWithEachDraggingScenario_ShouldAddToSelectionEachDraggedContainer(bool realTimeDraggingEnabled)
+        [Test, RealTimeDragging(false), MultipleSelection]
+        public void DragMultipleContainers_WithRealTimeSelectionDisabled_ShouldUpdatePositionForAllSelectedContainersWhenMouseIsReleased()
         {
             // arrange
-            if (realTimeDraggingEnabled)
-            {
-                Window.ToggleButton(AutomationIds.RealTimeDraggingToggleButtonId);
-            }
-            Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
             Window.InvokeButton(AutomationIds.AddTestSingleSelectionItemsButtonId);
-
-            // act & assert
-            (Point startPoint0, Point endPoint0) = GetDragPointsForContainer(0);
-            Input.WithGesture(RichCanvasGestures.Drag).Drag(startPoint0, endPoint0);
-            RichCanvas.SelectedItems.Length.Should().Be(1);
-
-            (Point startPoint1, Point endPoint1) = GetDragPointsForContainer(1);
-            Input.WithGesture(RichCanvasGestures.Drag).Drag(startPoint1, endPoint1);
-            RichCanvas.SelectedItems.Length.Should().Be(2);
-
-            (Point startPoint2, Point endPoint2) = GetDragPointsForContainer(2);
-            Input.WithGesture(RichCanvasGestures.Drag).Drag(startPoint2, endPoint2);
-            RichCanvas.SelectedItems.Length.Should().Be(3);
-
-            if (realTimeDraggingEnabled)
-            {
-                Window.ToggleButton(AutomationIds.RealTimeDraggingToggleButtonId);
-            }
-            Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
-        }
-
-        private (Point StartPoint, Point EndPoint) GetDragPointsForContainer(int index)
-        {
-            System.Collections.Generic.List<RichCanvasUITests.App.RichItemContainerModel> containers = SingleSelectionStateDataMocks.SingleSelectionItems;
-            var firstContainerStartPoint = new Point((int)containers[index].Left + 1, (int)containers[index].Top + 1);
-            var firstContainerEndPoint = new Point(firstContainerStartPoint.X + 100, firstContainerStartPoint.Y + 10);
-            Point fristContainerCanvasStartPoint = firstContainerStartPoint.ToCanvasDrawingPoint();
-            Point firstContainerCanvasEndPoint = firstContainerEndPoint.ToCanvasDrawingPoint();
-            return (fristContainerCanvasStartPoint, firstContainerCanvasEndPoint);
-        }
-
-        [Test]
-        public void DragMultipleSelectedContainers_WithRealTimeSelectionEnabled_ShouldUpdatePositionForAllSelectedContainersOnDrag()
-        {
-            // arrange
-            Window.ToggleButton(AutomationIds.RealTimeDraggingToggleButtonId);
-            Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
-
-            Window.InvokeButton(AutomationIds.AddTestSingleSelectionItemsButtonId);
-            System.Collections.Generic.List<RichCanvasUITests.App.RichItemContainerModel> containers = SingleSelectionStateDataMocks.SingleSelectionItems;
-            Window.InvokeButton(AutomationIds.SelectAllItemsButtonId);
+            List<RichItemContainerModel> containers = SingleSelectionStateDataMocks.SingleSelectionItems;
+            RichCanvas.SelectAllItems();
+            int dragOffset = 50;
 
             // act
-            var pointOnFirstContainer = new Point((int)containers[0].Left + 1, (int)containers[0].Top + 1);
-            var dragPoint1 = new Point(pointOnFirstContainer.X + 50, pointOnFirstContainer.Y + 50);
-            var dragPoint2 = new Point(dragPoint1.X + 50, dragPoint1.Y + 50);
-            var dragPoint3 = new Point(dragPoint2.X + 50, dragPoint2.Y + 50);
-
-            Point canvasPointOnRectangle = pointOnFirstContainer.ToCanvasDrawingPoint();
-            Point canvasDragPoint1 = dragPoint1.ToCanvasDrawingPoint();
-            Point canvasDragPoint2 = dragPoint2.ToCanvasDrawingPoint();
-            Point canvasDragPoint3 = dragPoint3.ToCanvasDrawingPoint();
-
-            Input.WithGesture(RichCanvasGestures.Drag).DefferedDrag(canvasPointOnRectangle, [
-                (canvasDragPoint1, AssertPosition1UpdatedOnMouseMove),
-                (canvasDragPoint2, AssertPosition2UpdatedOnMouseMove),
-                (canvasDragPoint3, AssertPosition3UpdatedOnMouseMove),
-                ]);
+            RichCanvasContainerAutomation dragContainer = RichCanvas.Items[0];
+            dragContainer.Drag(dragOffset);
 
             // assert
-            void AssertPosition1UpdatedOnMouseMove()
+            for (int i = 0; i < containers.Count; i++)
             {
-                RichCanvasContainerAutomation container = RichCanvas.Items[0];
-                RichCanvasContainerAutomation container1 = RichCanvas.Items[1];
-                RichCanvasContainerAutomation container2 = RichCanvas.Items[2];
-                container.RichCanvasContainerData.Top.Should().Be(dragPoint1.Y - 1);
-                container.RichCanvasContainerData.Left.Should().Be(dragPoint1.X - 1);
-                container1.RichCanvasContainerData.Top.Should().Be(containers[1].Top + (dragPoint1.Y - pointOnFirstContainer.Y));
-                container1.RichCanvasContainerData.Left.Should().Be(containers[1].Left + (dragPoint1.X - pointOnFirstContainer.X));
-                container2.RichCanvasContainerData.Top.Should().Be(containers[2].Top + (dragPoint1.Y - pointOnFirstContainer.Y));
-                container2.RichCanvasContainerData.Left.Should().Be(containers[2].Left + (dragPoint1.X - pointOnFirstContainer.X));
+                RichItemContainerModel item = containers[i];
+                RichCanvasContainerAutomation container = RichCanvas.Items[i];
+                container.Location.Should().Be(new Point(item.Left.ToInt() + dragOffset, item.Top.ToInt() + dragOffset).ToCanvasDrawingPoint());
             }
-            void AssertPosition2UpdatedOnMouseMove()
-            {
-                RichCanvasContainerAutomation container = RichCanvas.Items[0];
-                RichCanvasContainerAutomation container1 = RichCanvas.Items[1];
-                RichCanvasContainerAutomation container2 = RichCanvas.Items[2];
-                container.RichCanvasContainerData.Top.Should().Be(dragPoint2.Y - 1);
-                container.RichCanvasContainerData.Left.Should().Be(dragPoint2.X - 1);
-                container1.RichCanvasContainerData.Top.Should().Be(containers[1].Top + (dragPoint2.Y - pointOnFirstContainer.Y));
-                container1.RichCanvasContainerData.Left.Should().Be(containers[1].Left + (dragPoint2.X - pointOnFirstContainer.X));
-                container2.RichCanvasContainerData.Top.Should().Be(containers[2].Top + (dragPoint2.Y - pointOnFirstContainer.Y));
-                container2.RichCanvasContainerData.Left.Should().Be(containers[2].Left + (dragPoint2.X - pointOnFirstContainer.X));
-            }
-            void AssertPosition3UpdatedOnMouseMove()
-            {
-                RichCanvasContainerAutomation container = RichCanvas.Items[0];
-                RichCanvasContainerAutomation container1 = RichCanvas.Items[1];
-                RichCanvasContainerAutomation container2 = RichCanvas.Items[2];
-                container.RichCanvasContainerData.Top.Should().Be(dragPoint3.Y - 1);
-                container.RichCanvasContainerData.Left.Should().Be(dragPoint3.X - 1);
-                container1.RichCanvasContainerData.Top.Should().Be(containers[1].Top + (dragPoint3.Y - pointOnFirstContainer.Y));
-                container1.RichCanvasContainerData.Left.Should().Be(containers[1].Left + (dragPoint3.X - pointOnFirstContainer.X));
-                container2.RichCanvasContainerData.Top.Should().Be(containers[2].Top + (dragPoint3.Y - pointOnFirstContainer.Y));
-                container2.RichCanvasContainerData.Left.Should().Be(containers[2].Left + (dragPoint3.X - pointOnFirstContainer.X));
-            }
-
-            Window.ToggleButton(AutomationIds.RealTimeDraggingToggleButtonId);
-            Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
         }
     }
 }

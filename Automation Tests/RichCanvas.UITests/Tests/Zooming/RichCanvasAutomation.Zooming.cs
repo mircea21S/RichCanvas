@@ -48,5 +48,10 @@ namespace RichCanvas.UITests
             TextBox viewportZoomTextBox = ParentWindow.FindFirstDescendant(d => d.ByAutomationId(AutomationIds.ViewportZoomTextBoxId)).AsTextBox();
             viewportZoomTextBox.Patterns.Value.Pattern.SetValue(zoomValue.ToString());
         }
+
+        internal void SelectAllItems()
+        {
+            ParentWindow.InvokeButton(AutomationIds.SelectAllItemsButtonId);
+        }
     }
 }

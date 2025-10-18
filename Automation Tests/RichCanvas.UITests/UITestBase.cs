@@ -1,12 +1,14 @@
-﻿using FlaUI.Core;
-using FlaUI.Core.AutomationElements;
-using FlaUI.Core.Tools;
-using FlaUI.UIA3;
-using RichCanvasUITests.App;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
+
+using FlaUI.Core;
+using FlaUI.Core.AutomationElements;
+using FlaUI.Core.Tools;
+using FlaUI.UIA3;
+
+using RichCanvasUITests.App;
 
 namespace RichCanvas.UITests
 {
@@ -16,9 +18,8 @@ namespace RichCanvas.UITests
 
         private string AppPath { get; }
         protected Application Application { get; private set; }
-        protected Window Window { get; private set; }
+        public Window Window { get; private set; }
         protected IEventLibrary EventLibrary => _automation.EventLibrary;
-
 
         public UITestBase()
         {
