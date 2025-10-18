@@ -10,7 +10,7 @@ namespace RichCanvas.UITests
                 ParentWindow = parentWindow
             };
 
-        internal static RichItemContainerAutomation AsRichCanvasContainerAutomation(this AutomationElement self)
-           => self == null ? null : new RichItemContainerAutomation(self.FrameworkAutomationElement);
+        internal static RichCanvasContainerAutomation AsRichCanvasContainerAutomation(this AutomationElement self)
+           => self == null ? null : new RichCanvasContainerAutomation(self.FrameworkAutomationElement);
     }
 }

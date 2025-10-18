@@ -20,13 +20,13 @@ namespace RichCanvas.UITests
 
         public Size ViewportSizeInteger => new Size((int)RichCanvasData.ViewportSize.Width, (int)RichCanvasData.ViewportSize.Height);
 
-        public RichItemContainerAutomation[] Items
+        public RichCanvasContainerAutomation[] Items
         {
             get
             {
                 if (Patterns.ItemContainer.TryGetPattern(out IItemContainerPattern itemContainerPattern))
                 {
-                    var allItems = new List<RichItemContainerAutomation>();
+                    var allItems = new List<RichCanvasContainerAutomation>();
                     AutomationElement item = null;
                     do
                     {
@@ -43,13 +43,13 @@ namespace RichCanvas.UITests
             }
         }
 
-        public RichItemContainerAutomation[] SelectedItems
+        public RichCanvasContainerAutomation[] SelectedItems
         {
             get
             {
                 if (Patterns.Selection.TryGetPattern(out ISelectionPattern selectionPattern))
                 {
-                    var allItems = new List<RichItemContainerAutomation>();
+                    var allItems = new List<RichCanvasContainerAutomation>();
                     foreach (AutomationElement selection in selectionPattern.Selection.ValueOrDefault)
                     {
                         if (selection != null)
@@ -63,7 +63,7 @@ namespace RichCanvas.UITests
             }
         }
 
-        public RichItemContainerAutomation SelectedItem
+        public RichCanvasContainerAutomation SelectedItem
         {
             get
             {
@@ -83,7 +83,7 @@ namespace RichCanvas.UITests
         {
         }
 
-        public void DragContainerOutsideViewportWithOffset(RichItemContainerAutomation richItemContainer, Direction direction, int offsetDistance, System.Windows.Size visualViewportSize)
+        public void DragContainerOutsideViewportWithOffset(RichCanvasContainerAutomation richItemContainer, Direction direction, int offsetDistance, System.Windows.Size visualViewportSize)
         {
             Point containerLocation = richItemContainer.BoundingRectangle.Location;
             Rectangle currentItemBounds = richItemContainer.BoundingRectangle;
@@ -101,7 +101,7 @@ namespace RichCanvas.UITests
             Input.WithGesture(RichCanvasGestures.Drag).Drag(containerLocation, draggingEndPoint.ToCanvasDrawingPoint());
         }
 
-        public void DefferedDragContainerOutsideViewportWithOffset(RichItemContainerAutomation richItemContainer,
+        public void DefferedDragContainerOutsideViewportWithOffset(RichCanvasContainerAutomation richItemContainer,
             Direction direction,
             int offsetBetweenPoints,
             Action<Point, int> assertStepAction,
@@ -123,10 +123,10 @@ namespace RichCanvas.UITests
             Input.WithGesture(RichCanvasGestures.Drag).DefferedDrag(containerLocation, data, assertStepAction);
         }
 
-        public void DragCurrentSelectionOutsideViewport(RichItemContainerAutomation fromContainer, Direction direction, System.Windows.Size visualViewportSize)
+        public void DragCurrentSelectionOutsideViewport(RichCanvasContainerAutomation fromContainer, Direction direction, System.Windows.Size visualViewportSize)
             => DragContainerOutsideViewportWithOffset(fromContainer, direction, 0, visualViewportSize);
 
-        public void DefferedDragCurrentSelectionOutsideViewport(RichItemContainerAutomation fromContainer,
+        public void DefferedDragCurrentSelectionOutsideViewport(RichCanvasContainerAutomation fromContainer,
             Direction direction,
             Action<Point, int> assertStepAction,
             System.Windows.Size visualViewportSize,

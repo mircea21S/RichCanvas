@@ -16,7 +16,7 @@ namespace RichCanvas.UITests
             Input.WithGesture(RichCanvasGestures.Pan).Drag(fromPoint, toPoint);
         }
 
-        public void PanItemOutsideViewport(RichItemContainerAutomation itemContainer, Direction direction, int outsideDistance, System.Windows.Size visualViewportSize)
+        public void PanItemOutsideViewport(RichCanvasContainerAutomation itemContainer, Direction direction, int outsideDistance, System.Windows.Size visualViewportSize)
         {
             Point panningStartPoint = direction switch
             {

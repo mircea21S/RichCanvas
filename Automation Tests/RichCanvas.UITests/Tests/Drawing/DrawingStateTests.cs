@@ -39,7 +39,7 @@ namespace RichCanvas.UITests.Tests.Drawing
 
             // draw
             Input.WithGesture(RichCanvasGestures.Drawing).Drag(ViewportCenter, endingPointLine);
-            RichItemContainerAutomation itemDrawn = RichCanvas.Items[0];
+            RichCanvasContainerAutomation itemDrawn = RichCanvas.Items[0];
 
             // assert
             RichCanvas.Items.Length.Should().Be(1);
@@ -64,13 +64,13 @@ namespace RichCanvas.UITests.Tests.Drawing
 
             // draw first item
             Input.WithGesture(RichCanvasGestures.Drawing).Drag(ViewportCenter, endingPointLine);
-            RichItemContainerAutomation firstItemDrawn = RichCanvas.Items[0];
+            RichCanvasContainerAutomation firstItemDrawn = RichCanvas.Items[0];
             // assert
             firstItemDrawn.RichCanvasContainerData.DataContextType.Should().Be(typeof(Line));
 
             // draw second item
             Input.WithGesture(RichCanvasGestures.Drawing).Drag(ViewportCenter.MoveX(100, HorizontalDirection.LeftToRight), endingPointRectangle);
-            RichItemContainerAutomation secondItemDrawn = RichCanvas.Items[1];
+            RichCanvasContainerAutomation secondItemDrawn = RichCanvas.Items[1];
             // assert
             secondItemDrawn.RichCanvasContainerData.DataContextType.Should().Be(typeof(RichItemContainerModel));
         }
@@ -94,7 +94,7 @@ namespace RichCanvas.UITests.Tests.Drawing
             // act
             Window.InvokeButton(AutomationIds.AddImmutablePositionedRectangleButtonId);
             Input.WithGesture(RichCanvasGestures.Drawing).Click(endPoint);
-            RichItemContainerAutomation drawnContainer = RichCanvas.Items[0];
+            RichCanvasContainerAutomation drawnContainer = RichCanvas.Items[0];
 
             // assert
             using (new AssertionScope())
@@ -122,7 +122,7 @@ namespace RichCanvas.UITests.Tests.Drawing
             // act
             Window.InvokeButton(AutomationIds.AddPositionedRectangleButtonId);
             Input.WithGesture(RichCanvasGestures.Drawing).Click(containerLocation);
-            RichItemContainerAutomation drawnContainer = RichCanvas.Items[0];
+            RichCanvasContainerAutomation drawnContainer = RichCanvas.Items[0];
 
             // assert
             double expectedTop = verticalDirection switch
@@ -202,7 +202,7 @@ namespace RichCanvas.UITests.Tests.Drawing
                 RichCanvas.Items.Length.Should().Be(rectanglesCount);
                 for (int i = 0; i < RichCanvas.Items.Length; i++)
                 {
-                    RichItemContainerAutomation item = RichCanvas.Items[i];
+                    RichCanvasContainerAutomation item = RichCanvas.Items[i];
                     System.Windows.Point initialMouseDownPosition = itemMouseDownPositions[i];
 
                     double expectedTopPosition = item.RichCanvasContainerData.ScaleY == 1 ? initialMouseDownPosition.Y :
@@ -229,7 +229,7 @@ namespace RichCanvas.UITests.Tests.Drawing
 
             // act
             Window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);
-            RichItemContainerAutomation drawnContainer = RichCanvas.Items[0];
+            RichCanvasContainerAutomation drawnContainer = RichCanvas.Items[0];
 
             // assert
             using (new AssertionScope())

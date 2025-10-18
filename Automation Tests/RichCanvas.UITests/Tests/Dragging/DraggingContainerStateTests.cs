@@ -29,47 +29,22 @@ namespace RichCanvas.UITests.Tests.Dragging
             {
                 Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
             }
+            int dragOffset = 50;
 
-            var pointOnRectangle = new Point((int)DrawingStateDataMocks.DrawnRectangleMock.Left + 1, (int)DrawingStateDataMocks.DrawnRectangleMock.Top + 1);
-            var dragPoint1 = new Point(pointOnRectangle.X + 50, pointOnRectangle.Y + 50);
-            var dragPoint2 = new Point(dragPoint1.X + 50, dragPoint1.Y + 50);
-            var dragPoint3 = new Point(dragPoint2.X + 50, dragPoint2.Y + 50);
+            // act & assert
+            RichCanvasContainerAutomation drawnContainer = RichCanvas.Items[0];
+            drawnContainer.StartDragging();
 
-            Point canvasPointOnRectangle = pointOnRectangle.ToCanvasDrawingPoint();
-            Point canvasDragPoint1 = dragPoint1.ToCanvasDrawingPoint();
-            Point canvasDragPoint2 = dragPoint2.ToCanvasDrawingPoint();
-            Point canvasDragPoint3 = dragPoint3.ToCanvasDrawingPoint();
+            Point locationBeforeMove = drawnContainer.Location;
+            drawnContainer.Move(dragOffset);
+            drawnContainer.Location.Should().Be(Point.Add(locationBeforeMove, new Size(dragOffset, dragOffset)).ToCanvasDrawingPoint());
 
-            // act
-            Input.WithGesture(RichCanvasGestures.Drag).DefferedDrag(canvasPointOnRectangle, [
-                (canvasDragPoint1, AssertPosition1UpdatedOnMouseMove),
-                (canvasDragPoint2, AssertPosition2UpdatedOnMouseMove),
-                (canvasDragPoint3, AssertPosition3UpdatedOnMouseMove),
-                ]);
+            Point locationBeforeMove2 = drawnContainer.Location;
+            drawnContainer.Move(dragOffset);
+            drawnContainer.Location.Should().Be(Point.Add(locationBeforeMove2, new Size(dragOffset, dragOffset)).ToCanvasDrawingPoint());
 
-            // assert
-            void AssertPosition1UpdatedOnMouseMove()
-            {
-                RichItemContainerAutomation container = RichCanvas.Items[0];
-                container.RichCanvasContainerData.Top.Should().Be(dragPoint1.Y - 1);
-                container.RichCanvasContainerData.Left.Should().Be(dragPoint1.X - 1);
-            }
-            void AssertPosition2UpdatedOnMouseMove()
-            {
-                RichItemContainerAutomation container = RichCanvas.Items[0];
-                container.RichCanvasContainerData.Top.Should().Be(dragPoint2.Y - 1);
-                container.RichCanvasContainerData.Left.Should().Be(dragPoint2.X - 1);
-            }
-            void AssertPosition3UpdatedOnMouseMove()
-            {
-                RichItemContainerAutomation container = RichCanvas.Items[0];
-                container.RichCanvasContainerData.Top.Should().Be(dragPoint3.Y - 1);
-                container.RichCanvasContainerData.Left.Should().Be(dragPoint3.X - 1);
-            }
+            drawnContainer.EndDragging();
 
-            RichItemContainerAutomation container = RichCanvas.Items[0];
-            container.RichCanvasContainerData.Top.Should().Be(dragPoint3.Y - 1);
-            container.RichCanvasContainerData.Left.Should().Be(dragPoint3.X - 1);
             if (canSelectMultipleItems)
             {
                 Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
@@ -109,19 +84,19 @@ namespace RichCanvas.UITests.Tests.Dragging
             // assert
             void AssertPosition1UpdatedOnMouseMove()
             {
-                RichItemContainerAutomation container = RichCanvas.Items[0];
+                RichCanvasContainerAutomation container = RichCanvas.Items[0];
                 container.RichCanvasContainerData.Top.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Top);
                 container.RichCanvasContainerData.Left.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Left);
             }
             void AssertPosition2UpdatedOnMouseMove()
             {
-                RichItemContainerAutomation container = RichCanvas.Items[0];
+                RichCanvasContainerAutomation container = RichCanvas.Items[0];
                 container.RichCanvasContainerData.Top.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Top);
                 container.RichCanvasContainerData.Left.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Left);
             }
             void AssertPosition3UpdatedOnMouseMove()
             {
-                RichItemContainerAutomation container = RichCanvas.Items[0];
+                RichCanvasContainerAutomation container = RichCanvas.Items[0];
                 container.RichCanvasContainerData.Top.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Top);
                 container.RichCanvasContainerData.Left.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Left);
             }
@@ -153,7 +128,7 @@ namespace RichCanvas.UITests.Tests.Dragging
             Wait.UntilInputIsProcessed();
 
             // assert
-            RichItemContainerAutomation container = RichCanvas.Items[0];
+            RichCanvasContainerAutomation container = RichCanvas.Items[0];
             container.RichCanvasContainerData.Top.Should().Be(endDraggingPoint.Y - 1);
             container.RichCanvasContainerData.Left.Should().Be(endDraggingPoint.X - 1);
             if (canSelectMultipleItems)
@@ -270,9 +245,9 @@ namespace RichCanvas.UITests.Tests.Dragging
             // assert
             void AssertPosition1UpdatedOnMouseMove()
             {
-                RichItemContainerAutomation container = RichCanvas.Items[0];
-                RichItemContainerAutomation container1 = RichCanvas.Items[1];
-                RichItemContainerAutomation container2 = RichCanvas.Items[2];
+                RichCanvasContainerAutomation container = RichCanvas.Items[0];
+                RichCanvasContainerAutomation container1 = RichCanvas.Items[1];
+                RichCanvasContainerAutomation container2 = RichCanvas.Items[2];
                 container.RichCanvasContainerData.Top.Should().Be(dragPoint1.Y - 1);
                 container.RichCanvasContainerData.Left.Should().Be(dragPoint1.X - 1);
                 container1.RichCanvasContainerData.Top.Should().Be(containers[1].Top + (dragPoint1.Y - pointOnFirstContainer.Y));
@@ -282,9 +257,9 @@ namespace RichCanvas.UITests.Tests.Dragging
             }
             void AssertPosition2UpdatedOnMouseMove()
             {
-                RichItemContainerAutomation container = RichCanvas.Items[0];
-                RichItemContainerAutomation container1 = RichCanvas.Items[1];
-                RichItemContainerAutomation container2 = RichCanvas.Items[2];
+                RichCanvasContainerAutomation container = RichCanvas.Items[0];
+                RichCanvasContainerAutomation container1 = RichCanvas.Items[1];
+                RichCanvasContainerAutomation container2 = RichCanvas.Items[2];
                 container.RichCanvasContainerData.Top.Should().Be(dragPoint2.Y - 1);
                 container.RichCanvasContainerData.Left.Should().Be(dragPoint2.X - 1);
                 container1.RichCanvasContainerData.Top.Should().Be(containers[1].Top + (dragPoint2.Y - pointOnFirstContainer.Y));
@@ -294,9 +269,9 @@ namespace RichCanvas.UITests.Tests.Dragging
             }
             void AssertPosition3UpdatedOnMouseMove()
             {
-                RichItemContainerAutomation container = RichCanvas.Items[0];
-                RichItemContainerAutomation container1 = RichCanvas.Items[1];
-                RichItemContainerAutomation container2 = RichCanvas.Items[2];
+                RichCanvasContainerAutomation container = RichCanvas.Items[0];
+                RichCanvasContainerAutomation container1 = RichCanvas.Items[1];
+                RichCanvasContainerAutomation container2 = RichCanvas.Items[2];
                 container.RichCanvasContainerData.Top.Should().Be(dragPoint3.Y - 1);
                 container.RichCanvasContainerData.Left.Should().Be(dragPoint3.X - 1);
                 container1.RichCanvasContainerData.Top.Should().Be(containers[1].Top + (dragPoint3.Y - pointOnFirstContainer.Y));
