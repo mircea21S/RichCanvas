@@ -22,7 +22,7 @@ namespace RichCanvas
 
         #region IScrollInfo
 
-        internal IScrollInfo ScrollInfo => this;
+        protected IScrollInfo ScrollInfo => this;
 
         /// <inheritdoc/>
         public bool CanHorizontallyScroll { get; set; }

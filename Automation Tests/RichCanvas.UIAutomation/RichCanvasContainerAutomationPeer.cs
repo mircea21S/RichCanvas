@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 using RichCanvas.Automation.ControlInformations;
 
-namespace RichCanvas.Automation
+namespace RichCanvas.UIAutomation
 {
     /// <summary>
     /// Exposes the <see cref="RichCanvasContainer"/> to UI Automation project.
@@ -57,7 +57,7 @@ namespace RichCanvas.Automation
         /// <inheritdoc/>
         public void SetValue(string value)
         {
-            throw new System.NotSupportedException("This control does not allow setting the value.");
+            throw new NotSupportedException("This control does not allow setting the value.");
         }
 
         /// <inheritdoc/>

@@ -4,14 +4,19 @@ using System.Windows.Automation.Provider;
 
 using Newtonsoft.Json;
 
+using RichCanvas.Automation;
 using RichCanvas.Automation.ControlInformations;
 
-namespace RichCanvas.Automation
+namespace RichCanvas.UIAutomation
 {
     /// <summary>
     /// Exposes the <see cref="RichCanvas"/> to UI Automation project.
     /// </summary>
-    public class RichCanvasAutomationPeer : SelectorAutomationPeer,
+    /// <remarks>
+    /// Initializes a new <see cref="RichCanvasAutomationPeer"/>.
+    /// </remarks>
+    /// <param name="owner"></param>
+    public class RichCanvasAutomationPeer(RichCanvasAutomation owner) : SelectorAutomationPeer(owner),
         IValueProvider,
         IScrollProvider
     //ITransformProvider
@@ -19,7 +24,7 @@ namespace RichCanvas.Automation
         /// <summary>
         /// Gets the <see cref="RichCanvas"/> that is associated with this <see cref="RichCanvasAutomationPeer"/>.
         /// </summary>
-        protected RichCanvas OwnerRichCanvas => (RichCanvas)Owner;
+        protected RichCanvasAutomation OwnerRichCanvas => (RichCanvasAutomation)Owner;
 
         /// <inheritdoc/>
         public bool IsReadOnly => true;
@@ -29,13 +34,13 @@ namespace RichCanvas.Automation
         /// </summary>
         public string Value => JsonConvert.SerializeObject(new RichCanvasData
         {
-            TranslateTransformX = OwnerRichCanvas.TranslateTransform.X,
-            TranslateTransformY = OwnerRichCanvas.TranslateTransform.Y,
+            TranslateTransformX = OwnerRichCanvas.ExposedTranslateTransform.X,
+            TranslateTransformY = OwnerRichCanvas.ExposedTranslateTransform.Y,
             ItemsExtent = OwnerRichCanvas.ItemsExtent,
             ScrollFactor = OwnerRichCanvas.ScrollFactor,
             ViewportLocation = OwnerRichCanvas.ViewportLocation,
             ViewportSize = OwnerRichCanvas.ViewportSize,
-            ViewportExtent = new System.Windows.Size(OwnerRichCanvas.ScrollInfo.ExtentWidth, OwnerRichCanvas.ScrollInfo.ExtentHeight),
+            ViewportExtent = new System.Windows.Size(OwnerRichCanvas.ExposedScrollInfo.ExtentWidth, OwnerRichCanvas.ExposedScrollInfo.ExtentHeight),
             ViewportZoom = OwnerRichCanvas.ViewportZoom,
             ScaleFactor = OwnerRichCanvas.ScaleFactor,
             MousePosition = OwnerRichCanvas.MousePosition,
@@ -77,20 +82,12 @@ namespace RichCanvas.Automation
         /// </summary>
         public double VerticalViewSize => OwnerRichCanvas.ViewportSize.Height;
 
-        /// <summary>
-        /// Initializes a new <see cref="RichCanvasAutomationPeer"/>.
-        /// </summary>
-        /// <param name="owner"></param>
-        public RichCanvasAutomationPeer(RichCanvas owner) : base(owner)
-        {
-        }
-
         /// <inheritdoc/>
         public void SetValue(string value)
         {
             //TODO: maybe deserialize a json form a specific types with allowed dependency props
             //      that are modifiable and serializable
-            throw new System.NotSupportedException("This control does not allow setting the value.");
+            throw new NotSupportedException("This control does not allow setting the value.");
         }
 
         /// <inheritdoc/>

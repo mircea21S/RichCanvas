@@ -10,6 +10,7 @@
         xmlns:rc="clr-namespace:RichCanvas;assembly=RichCanvas"
         xmlns:richCanvasConverters="clr-namespace:RichCanvas.Converters;assembly=RichCanvas"
         xmlns:statePresenters="clr-namespace:RichCanvasUITests.App.StatePresenters"
+        xmlns:richCanvasUIA="clr-namespace:RichCanvas.UIAutomation;assembly=RichCanvas.UIAutomation"
         mc:Ignorable="d"
         Title="MainWindow"
         WindowState="Maximized">
@@ -146,31 +147,31 @@
         <ScrollViewer CanContentScroll="True"
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Auto">
-            <rc:RichCanvas ItemsSource="{Binding Items}"
-                           SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
-                           SelectedItems="{Binding SelectedItems}"
-                           RealTimeSelectionEnabled="{Binding RealTimeSelectionEnabled}"
-                           CanSelectMultipleItems="{Binding CanSelectMultipleItems}"
-                           RealTimeDraggingEnabled="{Binding RealTimeDraggingEnabled}"
-                           DrawingEndedCommand="{Binding DrawingState.DrawingEndedCommand}"
-                           ViewportLocation="{Binding ViewportLocation, Mode=TwoWay}"
-                           ViewportSize="{Binding ViewportSize, Mode=OneWayToSource}"
-                           ViewportZoom="{Binding ZoomingViewModel.ViewportZoom, Mode=TwoWay}"
-                           ScrollFactor="100"
-                           MinScale="{Binding ZoomingViewModel.MinScale, Mode=TwoWay}"
-                           MaxScale="{Binding ZoomingViewModel.MaxScale, Mode=TwoWay}"
-                           ScaleFactor="{Binding ZoomingViewModel.ScaleFactor, Mode=TwoWay}"
-                           EnableSnapping="{Binding EnableSnapping, Mode=TwoWay}"
-                           GridSpacing="{Binding GridSpacing, Mode=TwoWay}"
-                           Name="source">
-                <rc:RichCanvas.Background>
+            <richCanvasUIA:RichCanvasAutomation ItemsSource="{Binding Items}"
+                                                SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                                                SelectedItems="{Binding SelectedItems}"
+                                                RealTimeSelectionEnabled="{Binding RealTimeSelectionEnabled}"
+                                                CanSelectMultipleItems="{Binding CanSelectMultipleItems}"
+                                                RealTimeDraggingEnabled="{Binding RealTimeDraggingEnabled}"
+                                                DrawingEndedCommand="{Binding DrawingState.DrawingEndedCommand}"
+                                                ViewportLocation="{Binding ViewportLocation, Mode=TwoWay}"
+                                                ViewportSize="{Binding ViewportSize, Mode=OneWayToSource}"
+                                                ViewportZoom="{Binding ZoomingViewModel.ViewportZoom, Mode=TwoWay}"
+                                                ScrollFactor="100"
+                                                MinScale="{Binding ZoomingViewModel.MinScale, Mode=TwoWay}"
+                                                MaxScale="{Binding ZoomingViewModel.MaxScale, Mode=TwoWay}"
+                                                ScaleFactor="{Binding ZoomingViewModel.ScaleFactor, Mode=TwoWay}"
+                                                EnableSnapping="{Binding EnableSnapping, Mode=TwoWay}"
+                                                GridSpacing="{Binding GridSpacing, Mode=TwoWay}"
+                                                Name="source">
+                <richCanvasUIA:RichCanvasAutomation.Background>
                     <DrawingBrush TileMode="Tile"
                                   ViewportUnits="Absolute"
                                   Viewport="{Binding GridSpacing, ElementName=source, Converter={StaticResource UIntToRectConverter}}"
                                   Transform="{Binding AppliedTransform, ElementName=source}"
                                   Drawing="{StaticResource RectangleGridGeometry}" />
-                </rc:RichCanvas.Background>
-                <rc:RichCanvas.Resources>
+                </richCanvasUIA:RichCanvasAutomation.Background>
+                <richCanvasUIA:RichCanvasAutomation.Resources>
                     <DataTemplate DataType="{x:Type local:RichItemContainerModel}">
                         <Rectangle Fill="Red">
                             <Rectangle.Style>
@@ -199,8 +200,8 @@
                         <TextBlock Text="DRAWING ENDED"
                                    AutomationProperties.AutomationId="{x:Static auto:AutomationIds.DrawingEndedTextBoxId}" />
                     </DataTemplate>
-                </rc:RichCanvas.Resources>
-                <rc:RichCanvas.ItemContainerStyle>
+                </richCanvasUIA:RichCanvasAutomation.Resources>
+                <richCanvasUIA:RichCanvasAutomation.ItemContainerStyle>
                     <Style TargetType="rc:RichCanvasContainer">
 
                         <Setter Property="Top"
@@ -226,8 +227,8 @@
                             </Trigger>
                         </Style.Triggers>
                     </Style>
-                </rc:RichCanvas.ItemContainerStyle>
-            </rc:RichCanvas>
+                </richCanvasUIA:RichCanvasAutomation.ItemContainerStyle>
+            </richCanvasUIA:RichCanvasAutomation>
         </ScrollViewer>
 
         <StatusBar Grid.Row="1">

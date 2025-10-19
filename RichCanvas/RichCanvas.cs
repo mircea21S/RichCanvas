@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Windows;
-using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -11,7 +10,6 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-using RichCanvas.Automation;
 using RichCanvas.CustomEventArgs;
 using RichCanvas.Helpers;
 using RichCanvas.States;
@@ -36,7 +34,7 @@ namespace RichCanvas
         #region Private Fields
 
         internal readonly ScaleTransform ScaleTransform = new ScaleTransform();
-        internal readonly TranslateTransform TranslateTransform = new TranslateTransform();
+        protected readonly TranslateTransform TranslateTransform = new TranslateTransform();
         private RichCanvasPanel _mainPanel;
         private DispatcherTimer _autoPanTimer;
         private Stack<CanvasState> _states;
@@ -444,10 +442,6 @@ namespace RichCanvas
             _mainPanel.ItemsOwner = this;
             SetCachingMode(DisableCache);
         }
-
-        /// <inheritdoc/>
-        protected override AutomationPeer OnCreateAutomationPeer()
-            => new RichCanvasAutomationPeer(this);
 
         /// <inheritdoc/>
         protected override bool IsItemItsOwnContainerOverride(object item) => item is RichCanvasContainer;
