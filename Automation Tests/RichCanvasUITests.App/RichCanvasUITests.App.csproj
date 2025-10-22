@@ -59,7 +59,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Automation\AutomationIds.cs" />
+    <Compile Include="UIA Mode\Automation\AutomationIds.cs" />
     <Compile Include="Converters\PointToStringConverter.cs" />
     <Compile Include="Converters\StringToDoubleConverter.cs" />
     <Compile Include="Models\DrawingEndedRepresentation.cs" />

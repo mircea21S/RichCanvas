@@ -8,18 +8,20 @@ using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Tools;
 using FlaUI.UIA3;
 
+using RichCanvas.UITests.IPC;
+
 using RichCanvasUITests.App;
 
 namespace RichCanvas.UITests
 {
     public abstract class UITestBase
     {
-        private AutomationBase _automation = new UIA3Automation();
+        private readonly AutomationBase _automation = new UIA3Automation();
 
         private string AppPath { get; }
         protected Application Application { get; private set; }
         public Window Window { get; private set; }
-        protected IEventLibrary EventLibrary => _automation.EventLibrary;
+        public RichCanvasUITestsPipeServer UITestsAppChannel { get; private set; }
 
         public UITestBase()
         {
@@ -29,13 +31,13 @@ namespace RichCanvas.UITests
 
         // Note: use TearDown and SetUp attributes for NUnit if any usage for before and after each test executes is needed
         // Run once needed now
-
         protected void CloseApplication()
         {
             if (Application != null)
             {
                 Application.Close();
                 Retry.WhileFalse(() => Application.HasExited, TimeSpan.FromSeconds(2), ignoreException: true);
+                UITestsAppChannel.Dispose();
                 Application.Dispose();
                 Application = null;
             }
@@ -43,13 +45,20 @@ namespace RichCanvas.UITests
 
         protected void StartApplication()
         {
+            UITestsAppChannel = new RichCanvasUITestsPipeServer();
+
             var app = Application.AttachOrLaunch(new ProcessStartInfo
             {
-                FileName = AppPath
+                FileName = AppPath,
+                Arguments = UITestsAppChannel.GetClientHandleAsString(),
+                UseShellExecute = false
             });
             app.WaitWhileMainHandleIsMissing();
             // hack to wait for all the initializations (some NullRefException being thrown if not)
             Thread.Sleep(1000);
+
+            UITestsAppChannel.DisposeLocalCopyOfClientHandle();
+
             Application = app;
             Window = app.GetMainWindow(_automation);
         }

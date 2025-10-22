@@ -233,6 +233,9 @@
 
         <StatusBar Grid.Row="1">
             <StatusBarItem>
+                <TextBlock Text="{Binding PipeDataInfo, StringFormat='\{0\} pipe data'}"></TextBlock>
+            </StatusBarItem>
+            <StatusBarItem>
                 <TextBlock Text="{Binding ElementName=source, Path=ViewportZoom, StringFormat='\{0\} zoom'}" />
             </StatusBarItem>
         </StatusBar>

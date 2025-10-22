@@ -4,7 +4,6 @@ using System.Windows.Automation.Provider;
 
 using Newtonsoft.Json;
 
-using RichCanvas.Automation;
 using RichCanvas.Automation.ControlInformations;
 
 namespace RichCanvas.UIAutomation
