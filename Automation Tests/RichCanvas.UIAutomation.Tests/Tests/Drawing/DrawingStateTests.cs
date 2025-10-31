@@ -10,10 +10,10 @@ using NUnit.Framework;
 using RichCanvas.Gestures;
 using RichCanvas.UIAutomation.Tests.Helpers;
 
-using RichCanvasUITests.App;
-using RichCanvasUITests.App.Automation;
-using RichCanvasUITests.App.Models;
-using RichCanvasUITests.App.TestMocks;
+using RichCanvasUIA.Client;
+using RichCanvasUIA.Client.Automation;
+using RichCanvasUIA.Client.Models;
+using RichCanvasUIA.Client.TestMocks;
 
 using Point = System.Drawing.Point;
 

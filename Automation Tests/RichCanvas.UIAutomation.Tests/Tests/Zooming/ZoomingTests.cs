@@ -8,7 +8,7 @@ using FluentAssertions;
 
 using NUnit.Framework;
 
-using RichCanvasUITests.App.Automation;
+using RichCanvasUIA.Client.Automation;
 
 namespace RichCanvas.UIAutomation.Tests.Tests.Zooming
 {

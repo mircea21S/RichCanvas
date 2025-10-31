@@ -10,7 +10,7 @@ using FlaUI.UIA3;
 
 using RichCanvas.UIAutomation.Tests.IPC;
 
-using RichCanvasUITests.App;
+using RichCanvasUIA.Client;
 
 namespace RichCanvas.UIAutomation.Tests
 {

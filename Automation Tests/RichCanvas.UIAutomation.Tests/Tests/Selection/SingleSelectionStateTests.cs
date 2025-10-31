@@ -10,8 +10,8 @@ using NUnit.Framework;
 using RichCanvas.Gestures;
 using RichCanvas.UIAutomation.Tests.Helpers;
 
-using RichCanvasUITests.App.Automation;
-using RichCanvasUITests.App.TestMocks;
+using RichCanvasUIA.Client.Automation;
+using RichCanvasUIA.Client.TestMocks;
 
 namespace RichCanvas.UIAutomation.Tests.Tests.Selection
 {
@@ -231,7 +231,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
         {
             // arrange
             ArrangeSelectionScenario(realTimeSelectionEnabled);
-            System.Collections.Generic.List<RichCanvasUITests.App.RichItemContainerModel> currentUiItems = SingleSelectionStateDataMocks.SingleSelectionItems;
+            System.Collections.Generic.List<RichCanvasUIA.Client.RichItemContainerModel> currentUiItems = SingleSelectionStateDataMocks.SingleSelectionItems;
 
             // act
             Input.WithGesture(RichCanvasGestures.Select).Click(currentUiItems[0].Center.AsDrawingPoint().ToCanvasDrawingPoint());
@@ -251,7 +251,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
         {
             // arrange
             ArrangeSelectionScenario(realTimeSelectionEnabled);
-            System.Collections.Generic.List<RichCanvasUITests.App.RichItemContainerModel> currentUiItems = SingleSelectionStateDataMocks.SingleSelectionItems;
+            System.Collections.Generic.List<RichCanvasUIA.Client.RichItemContainerModel> currentUiItems = SingleSelectionStateDataMocks.SingleSelectionItems;
             Input.WithGesture(RichCanvasGestures.Select).Click(currentUiItems[0].Center.AsDrawingPoint().ToCanvasDrawingPoint());
 
             // act

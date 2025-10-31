@@ -1,6 +1,6 @@
 ﻿using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Input;
-using RichCanvasUITests.App.Automation;
+using RichCanvasUIA.Client.Automation;
 
 namespace RichCanvas.UIAutomation.Tests
 {

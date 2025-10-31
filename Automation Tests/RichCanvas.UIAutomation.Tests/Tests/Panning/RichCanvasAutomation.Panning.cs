@@ -5,7 +5,7 @@ using RichCanvas.Gestures;
 using RichCanvas.UIAutomation.Tests.Helpers;
 using RichCanvas.UIAutomation.Tests.Tests.Scrolling;
 
-using RichCanvasUITests.App.Automation;
+using RichCanvasUIA.Client.Automation;
 
 namespace RichCanvas.UIAutomation.Tests
 {

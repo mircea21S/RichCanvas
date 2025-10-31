@@ -4,8 +4,8 @@ using NUnit.Framework;
 
 using RichCanvas.UIAutomation.Tests.Tests.Scrolling;
 
-using RichCanvasUITests.App.Automation;
-using RichCanvasUITests.App.TestMocks;
+using RichCanvasUIA.Client.Automation;
+using RichCanvasUIA.Client.TestMocks;
 
 using System.Drawing;
 

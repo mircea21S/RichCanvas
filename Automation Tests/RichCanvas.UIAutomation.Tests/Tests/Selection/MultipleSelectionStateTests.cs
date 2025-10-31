@@ -5,8 +5,8 @@ using NUnit.Framework;
 using RichCanvas.Gestures;
 using RichCanvas.UIAutomation.Tests.Helpers;
 
-using RichCanvasUITests.App.Automation;
-using RichCanvasUITests.App.TestMocks;
+using RichCanvasUIA.Client.Automation;
+using RichCanvasUIA.Client.TestMocks;
 
 using System.Drawing;
 

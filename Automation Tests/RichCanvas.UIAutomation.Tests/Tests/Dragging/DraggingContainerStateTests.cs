@@ -9,9 +9,9 @@ using NUnit.Framework;
 
 using RichCanvas.UIAutomation.Tests.Tests.Selection.SelectionModes;
 
-using RichCanvasUITests.App;
-using RichCanvasUITests.App.Automation;
-using RichCanvasUITests.App.TestMocks;
+using RichCanvasUIA.Client;
+using RichCanvasUIA.Client.Automation;
+using RichCanvasUIA.Client.TestMocks;
 
 namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
 {

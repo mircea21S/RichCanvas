@@ -4,7 +4,7 @@ using FlaUI.Core.Input;
 using RichCanvas.Gestures;
 using RichCanvas.UIAutomation.Tests.Helpers;
 
-using RichCanvasUITests.App.Automation;
+using RichCanvasUIA.Client.Automation;
 
 namespace RichCanvas.UIAutomation.Tests
 {

@@ -5,7 +5,7 @@ using FlaUI.Core.AutomationElements;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
-using RichCanvasUITests.App.Automation;
+using RichCanvasUIA.Client.Automation;
 
 namespace RichCanvas.UIAutomation.Tests.Tests.Selection.SelectionModes
 {
