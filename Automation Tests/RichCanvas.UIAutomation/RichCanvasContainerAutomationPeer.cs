@@ -3,7 +3,7 @@ using System.Windows.Automation.Provider;
 
 using Newtonsoft.Json;
 
-using RichCanvas.Automation.ControlInformations;
+using RichCanvas.UIAutomation.ControlInformations;
 
 namespace RichCanvas.UIAutomation
 {
@@ -32,11 +32,12 @@ namespace RichCanvas.UIAutomation
             IsSelected = Container.IsSelected,
             ScaleX = Container.ScaleTransform?.ScaleX ?? -1,
             ScaleY = Container.ScaleTransform?.ScaleY ?? -1,
-            DataContextType = Container.DataContext.GetType()
+            DataContextType = Container.DataContext.GetType(),
+            IsDraggable = Container.IsDraggable
         });
 
         /// <inheritdoc/>
-        public bool IsReadOnly => true;
+        public bool IsReadOnly => false;
 
         /// <summary>
         /// Initializes a new <see cref="RichCanvasContainerAutomationPeer"/> for a <see cref="RichCanvasContainer"/> in <see cref="RichCanvas"/>.Items collection.
@@ -57,7 +58,24 @@ namespace RichCanvas.UIAutomation
         /// <inheritdoc/>
         public void SetValue(string value)
         {
-            throw new NotSupportedException("This control does not allow setting the value.");
+            RichCanvasContainerData? richCanvasContainerData = JsonConvert.DeserializeObject<RichCanvasContainerData>(value, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All
+            });
+            if (richCanvasContainerData == null)
+            {
+                return;
+            }
+
+            Container.Top = richCanvasContainerData.Top;
+            Container.Left = richCanvasContainerData.Left;
+            Container.IsSelected = richCanvasContainerData.IsSelected;
+            if (Container.ScaleTransform != null)
+            {
+                Container.ScaleTransform.ScaleX = richCanvasContainerData.ScaleX;
+                Container.ScaleTransform.ScaleY = richCanvasContainerData.ScaleY;
+            }
+            Container.IsDraggable = richCanvasContainerData.IsDraggable;
         }
 
         /// <inheritdoc/>

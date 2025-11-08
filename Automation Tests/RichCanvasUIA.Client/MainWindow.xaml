@@ -112,6 +112,8 @@
                     <TextBlock Text="{Binding SelectedItem.Width, StringFormat='\{0\} width'}" />
                     <TextBlock Text="{Binding SelectedItem.Top, StringFormat='\{0\} top'}" />
                     <TextBlock Text="{Binding SelectedItem.Left, StringFormat='\{0\} left'}" />
+                    <CheckBox Content="Is draggable"
+                              IsChecked="{Binding SelectedItem.IsDraggable}" />
                     <TextBox Text="{Binding SelectedItem.Angle, Mode=TwoWay}"
                              AutomationProperties.AutomationId="{x:Static auto:AutomationIds.RichItemContainerAngleTextBoxId}"></TextBox>
                 </StackPanel>
@@ -218,6 +220,9 @@
 
                         <Setter Property="AllowScaleChangeToUpdatePosition"
                                 Value="{Binding AllowScaleChangeToUpdatePosition}" />
+
+                        <Setter Property="IsDraggable"
+                                Value="{Binding IsDraggable, Mode=TwoWay}" />
 
                         <Style.Triggers>
                             <Trigger Property="IsSelected"

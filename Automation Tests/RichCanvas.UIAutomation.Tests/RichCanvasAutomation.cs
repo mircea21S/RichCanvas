@@ -7,8 +7,8 @@ using FlaUI.Core;
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Patterns;
 
-using RichCanvas.Automation.ControlInformations;
 using RichCanvas.Gestures;
+using RichCanvas.UIAutomation.ControlInformations;
 using RichCanvas.UIAutomation.Tests.Helpers;
 using RichCanvas.UIAutomation.Tests.Tests.Scrolling;
 

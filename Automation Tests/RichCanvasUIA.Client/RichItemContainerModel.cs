@@ -5,6 +5,7 @@ namespace RichCanvasUIA.Client
     public class RichItemContainerModel : ObservableObject
     {
         private double _top;
+
         public double Top
         {
             get => _top;
@@ -12,6 +13,7 @@ namespace RichCanvasUIA.Client
         }
 
         private double _left;
+
         public double Left
         {
             get => _left;
@@ -19,6 +21,7 @@ namespace RichCanvasUIA.Client
         }
 
         private double _width;
+
         public double Width
         {
             get => _width;
@@ -26,6 +29,7 @@ namespace RichCanvasUIA.Client
         }
 
         private double _height;
+
         public double Height
         {
             get => _height;
@@ -33,6 +37,7 @@ namespace RichCanvasUIA.Client
         }
 
         private bool _allowScaleChangeToUpdatePosition = true;
+
         public bool AllowScaleChangeToUpdatePosition
         {
             get => _allowScaleChangeToUpdatePosition;
@@ -40,10 +45,19 @@ namespace RichCanvasUIA.Client
         }
 
         private double _angle;
+
         public double Angle
         {
             get => _angle;
             set => SetProperty(ref _angle, value);
+        }
+
+        private bool _isDraggable = true;
+
+        public bool IsDraggable
+        {
+            get => _isDraggable;
+            set => SetProperty(ref _isDraggable, value);
         }
 
         public Rect BoundingBox => new(Left, Top, Width, Height);

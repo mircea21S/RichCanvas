@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace RichCanvas.Automation.ControlInformations
+﻿namespace RichCanvas.UIAutomation.ControlInformations
 {
     /// <summary>
     /// Data transfer object exposing <see cref="RichCanvasContainer"/> information to UI Automation proejct.
     /// </summary>
-    public class RichCanvasContainerData
+    public class RichCanvasContainerData : ICloneable
     {
         /// <summary>
         /// Bound <see cref="RichCanvasContainer"/>.DataContext type.
@@ -36,5 +34,20 @@ namespace RichCanvas.Automation.ControlInformations
         /// <see cref="RichCanvasContainer.Scale"/> property value.
         /// </summary>
         public double ScaleY { get; set; }
+
+        public bool IsDraggable { get; set; }
+
+        public object Clone()
+        {
+            return new RichCanvasContainerData
+            {
+                DataContextType = DataContextType,
+                Top = Top,
+                Left = Left,
+                ScaleX = ScaleX,
+                ScaleY = ScaleY,
+                IsDraggable = IsDraggable
+            };
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace RichCanvas.Automation.ControlInformations
+namespace RichCanvas.UIAutomation.ControlInformations
 {
     /// <summary>
     /// Data transfer object exposing <see cref="RichCanvas"/> information to UI Automation proejct.

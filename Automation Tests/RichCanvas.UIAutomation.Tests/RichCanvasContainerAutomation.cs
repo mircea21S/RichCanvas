@@ -8,8 +8,8 @@ using FlaUI.Core.Tools;
 
 using Newtonsoft.Json;
 
-using RichCanvas.Automation.ControlInformations;
 using RichCanvas.Gestures;
+using RichCanvas.UIAutomation.ControlInformations;
 using RichCanvas.UIAutomation.Tests.Helpers;
 
 namespace RichCanvas.UIAutomation.Tests
@@ -24,6 +24,12 @@ namespace RichCanvas.UIAutomation.Tests
         });
 
         public Point Location => new Point(RichCanvasContainerData.Left.ToInt(), RichCanvasContainerData.Top.ToInt());
+
+        public bool IsDraggable
+        {
+            get => RichCanvasContainerData.IsDraggable;
+            internal set => SetValue(nameof(IsDraggable), value);
+        }
 
         public void StartDragging()
         {
@@ -65,6 +71,14 @@ namespace RichCanvas.UIAutomation.Tests
             StartDragging();
             Move(offset);
             EndDragging();
+        }
+
+        private void SetValue(string propertyName, object value)
+        {
+            var containerInfoClone = (RichCanvasContainerData)RichCanvasContainerData.Clone();
+            System.Reflection.PropertyInfo property = containerInfoClone.GetType().GetProperty(propertyName);
+            property.SetValue(containerInfoClone, value);
+            Patterns.Value.Pattern.SetValue(JsonConvert.SerializeObject(containerInfoClone));
         }
     }
 }
