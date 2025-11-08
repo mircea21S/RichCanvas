@@ -51,11 +51,9 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
             RichCanvasContainerAutomation drawnContainer = RichCanvas.Items[0];
             drawnContainer.StartDragging();
 
-            Point locationBeforeMove = drawnContainer.Location;
             drawnContainer.Move(dragOffset);
             drawnContainer.Location.Should().Be(new Point(DrawingStateDataMocks.DrawnRectangleMock.Left.ToInt(), DrawingStateDataMocks.DrawnRectangleMock.Top.ToInt()));
 
-            Point locationBeforeMove2 = drawnContainer.Location;
             drawnContainer.Move(dragOffset);
             drawnContainer.Location.Should().Be(new Point(DrawingStateDataMocks.DrawnRectangleMock.Left.ToInt(), DrawingStateDataMocks.DrawnRectangleMock.Top.ToInt()));
 
@@ -134,6 +132,22 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
                 RichCanvasContainerAutomation container = RichCanvas.Items[i];
                 container.Location.Should().Be(new Point(item.Left.ToInt() + dragOffset, item.Top.ToInt() + dragOffset).ToCanvasDrawingPoint());
             }
+        }
+
+        [Test]
+        public void DraggingContainer_WhenIsNotDraggable_ShouldNotUpdateLocation()
+        {
+            // arrange
+            Window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);
+            RichCanvasContainerAutomation container = RichCanvas.Items[0];
+            container.IsDraggable = false;
+
+            // act
+            container.Drag(50);
+
+            // assert
+            container.Location.X.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Left.ToInt());
+            container.Location.Y.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Top.ToInt());
         }
     }
 }
