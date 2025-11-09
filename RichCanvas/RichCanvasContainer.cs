@@ -352,6 +352,11 @@ namespace RichCanvas
         /// <inheritdoc/>
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
+            if (!IsValid())
+            {
+                return;
+            }
+
             Focus();
             if (Mouse.Captured == null || IsMouseCaptured)
             {

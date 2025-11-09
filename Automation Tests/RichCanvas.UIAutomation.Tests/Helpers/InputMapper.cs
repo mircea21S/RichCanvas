@@ -43,5 +43,12 @@ namespace RichCanvas.UIAutomation.Tests.Helpers
             Mouse.Drag(startPoint, endPoint, MouseButton);
             Keyboard.Release(Key);
         }
+
+        internal void Click(Point pointOnCanvas)
+        {
+            Keyboard.Press(Key);
+            Mouse.Click(pointOnCanvas, MouseButton);
+            Keyboard.Release(Key);
+        }
     }
 }

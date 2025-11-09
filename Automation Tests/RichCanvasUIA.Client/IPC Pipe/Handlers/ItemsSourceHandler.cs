@@ -1,10 +1,10 @@
 ﻿namespace RichCanvasUIA.Client.IPC_Pipe.Handlers
 {
-    public class RichCanvasItemsHandler : IPipeHandler
+    public class ItemsSourceHandler : IPipeHandler
     {
         private readonly MainWindowViewModel _mainWindowDataContext;
 
-        public RichCanvasItemsHandler(MainWindowViewModel mainWindowDataContext)
+        public ItemsSourceHandler(MainWindowViewModel mainWindowDataContext)
         {
             _mainWindowDataContext = mainWindowDataContext;
         }

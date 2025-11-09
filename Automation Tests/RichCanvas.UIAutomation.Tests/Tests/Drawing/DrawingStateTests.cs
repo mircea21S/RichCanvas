@@ -25,7 +25,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
     public class DrawingStateTests : RichCanvasTestAppTest
     {
         [Test, ShouldExecuteDrawingEndedCommand(false)]
-        public void DragMouseToDraw_WhenRemovingOneItem_ShouldDrawOnlyRemainingItem()
+        public void DrawFromItemsSourceWithTwoItems_AfterRemovingOneItem_ShouldDrawOnlyRemainingItem()
         {
             // arrange
             RichCanvas.AddEmptyRectangle();
@@ -43,7 +43,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
         }
 
         [Test]
-        public void DragMouseToDraw_WhenMovingItemsOrder_ShouldDrawItemsInOrder()
+        public void DrawFromItemsSourceWithTwoItems_WhenMovingFirstToTheEnd_ShouldDrawItemsInOrder()
         {
             // arrange
             RichCanvas.AddEmptyRectangle();
@@ -66,31 +66,26 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
         }
 
         [Test]
-        [TestCase(HorizontalDirection.LeftToRight, VerticalDirection.TopToBottom)]
-        [TestCase(HorizontalDirection.RightToLeft, VerticalDirection.TopToBottom)]
-        [TestCase(HorizontalDirection.LeftToRight, VerticalDirection.BottomToTop)]
-        [TestCase(HorizontalDirection.RightToLeft, VerticalDirection.BottomToTop)]
-        public void DragMouseToDraw_WhenAddingItemWithAllowScaleToUpdatePositionFalse_ShouldNotModifyTopAndLeft(HorizontalDirection horizontalDirection, VerticalDirection verticalDirection)
+        [TestCase(-1, 1)]
+        [TestCase(1, -1)]
+        [TestCase(-1, -1)]
+        public void DrawScaledItem_WithAllowScaleToUpdatePositionFalse_ShouldNotModifyTopAndLeft(int scaleX, int scaleY)
         {
             // arrange
             RichItemContainerModel mockRectangle = DrawingStateDataMocks.ImmutablePositionedRectangleMockWithoutSize;
-            Point endPoint = PointUtilities.GetEndingPoint(
-                new Point(mockRectangle.Left.ToInt(), mockRectangle.Top.ToInt()),
-                50,
-                50,
-                horizontalDirection,
-                verticalDirection);
+            var mockRectangleSize = new Size(50, 50);
 
             // act
-            Window.InvokeButton(AutomationIds.AddImmutablePositionedRectangleButtonId);
-            Input.WithGesture(RichCanvasGestures.Drawing).Click(endPoint);
+            RichCanvas.AddImmutableRectangle();
             RichCanvasContainerAutomation drawnContainer = RichCanvas.Items[0];
+            RichCanvas.DrawPositionedContainer(drawnContainer, mockRectangleSize, scaleX, scaleY);
 
             // assert
             using (new AssertionScope())
             {
-                drawnContainer.RichCanvasContainerData.Top.Should().Be(mockRectangle.Top);
-                drawnContainer.RichCanvasContainerData.Left.Should().Be(mockRectangle.Left);
+                drawnContainer.Location.Should().Be(new Point(mockRectangle.Left.ToInt(), mockRectangle.Top.ToInt()));
+                drawnContainer.ActualWidth.Should().Be(mockRectangleSize.Width);
+                drawnContainer.ActualHeight.Should().Be(mockRectangleSize.Height);
             }
         }
 

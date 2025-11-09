@@ -14,6 +14,7 @@
             public const string AddEmptyLine = "AddEmptyLine";
             public const string DisableDrawingEndedCommandExecution = "DisableDrawingEndedCommandExecution";
             public const string EnableDrawingEndedCommandExecution = "EnableDrawingEndedCommandExecution";
+            public const string AddImmutableRectangle = "AddImmutableDrawnRectangle";
         }
     }
 }

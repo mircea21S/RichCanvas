@@ -1,4 +1,5 @@
 ﻿using RichCanvasUIA.Client.Models;
+using RichCanvasUIA.Client.TestMocks;
 
 namespace RichCanvasUIA.Client.IPC_Pipe.Handlers
 {
@@ -29,6 +30,10 @@ namespace RichCanvasUIA.Client.IPC_Pipe.Handlers
 
                 case PipeHandlerNames.Drawing.DisableDrawingEndedCommandExecution:
                     _mainWindowDataContext.DrawingState.ShouldExecuteDrawingEndedCommand = false;
+                    break;
+
+                case PipeHandlerNames.Drawing.AddImmutableRectangle:
+                    _mainWindowDataContext.Items.Add(DrawingStateDataMocks.ImmutablePositionedRectangleMockWithoutSize);
                     break;
             }
         }

@@ -16,10 +16,40 @@ namespace RichCanvas.UIAutomation.Tests
     {
         public void Draw(Size containerSize)
         {
-            Point pointOnCanvas = GetRandomPointOnRichCanvas().ToCanvasDrawingPoint();
+            Point pointOnCanvas = GetRandomPointOnRichCanvas();
             FlaUIInputData flaUiInput = InputMapper.MapToFlaUIInput(RichCanvasGestures.Drawing);
-            var endPoint = new Point(pointOnCanvas.X + containerSize.Width, pointOnCanvas.Y + containerSize.Height);
+            Point endPoint = GetEndPointByScale(pointOnCanvas, containerSize, 1, 1);
             flaUiInput.Drag(pointOnCanvas, endPoint);
+        }
+
+        public void DrawPositionedContainer(RichCanvasContainerAutomation container, Size containerSize, int scaleX = 1, int scaleY = 1)
+        {
+            Point startPoint = container.Location.ToCanvasDrawingPoint();
+            FlaUIInputData flaUiInput = InputMapper.MapToFlaUIInput(RichCanvasGestures.Drawing);
+            Point endPoint = GetEndPointByScale(startPoint, containerSize, scaleX, scaleY);
+            flaUiInput.Drag(startPoint, endPoint);
+        }
+
+        private Point GetEndPointByScale(Point pointOnCanvas, Size containerSize, int scaleX, int scaleY)
+        {
+            if (scaleX == 1 && scaleY == 1)
+            {
+                return new Point(pointOnCanvas.X + containerSize.Width, pointOnCanvas.Y + containerSize.Height);
+            }
+            else if (scaleX == -1 && scaleY == 1)
+            {
+                return new Point(pointOnCanvas.X - containerSize.Width, pointOnCanvas.Y + containerSize.Height);
+            }
+            else if (scaleX == 1 && scaleY == -1)
+            {
+                return new Point(pointOnCanvas.X + containerSize.Width, pointOnCanvas.Y - containerSize.Height);
+            }
+            return new Point(pointOnCanvas.X - containerSize.Width, pointOnCanvas.Y - containerSize.Height);
+        }
+
+        public void AddImmutableRectangle()
+        {
+            SendToAppWithDrawingPrefix(PipeHandlerNames.Drawing.AddImmutableRectangle);
         }
 
         public void MoveFirstItemToTheEnd()
@@ -64,8 +94,10 @@ namespace RichCanvas.UIAutomation.Tests
 
         private Point GetRandomPointOnRichCanvas()
         {
-            double width = ActualWidth;
-            double height = ActualHeight;
+            // add a tolerance to not get a point on the edge and not being able to draw due to not having enough space
+            int viewportSizeTolerance = 50;
+            double width = ActualWidth - viewportSizeTolerance;
+            double height = ActualHeight - viewportSizeTolerance;
 
             if (width <= 0 || height <= 0)
             {
