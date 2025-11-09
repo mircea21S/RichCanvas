@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Drawing;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 
 using FlaUI.Core;
 using FlaUI.Core.AutomationElements;
@@ -28,7 +30,7 @@ namespace RichCanvas.UIAutomation.Tests
         public bool IsDraggable
         {
             get => RichCanvasContainerData.IsDraggable;
-            internal set => SetValue(nameof(IsDraggable), value);
+            internal set => SetValue(value);
         }
 
         public void StartDragging()
@@ -73,10 +75,10 @@ namespace RichCanvas.UIAutomation.Tests
             EndDragging();
         }
 
-        private void SetValue(string propertyName, object value)
+        private void SetValue(object value, [CallerMemberName] string propertyName = default)
         {
             var containerInfoClone = (RichCanvasContainerData)RichCanvasContainerData.Clone();
-            System.Reflection.PropertyInfo property = containerInfoClone.GetType().GetProperty(propertyName);
+            PropertyInfo property = containerInfoClone.GetType().GetProperty(propertyName);
             property.SetValue(containerInfoClone, value);
             Patterns.Value.Pattern.SetValue(JsonConvert.SerializeObject(containerInfoClone));
         }

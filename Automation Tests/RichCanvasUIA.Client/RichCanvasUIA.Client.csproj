@@ -59,9 +59,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="UIA Mode\Automation\AutomationIds.cs" />
+    <Compile Include="Automation\AutomationIds.cs" />
     <Compile Include="Converters\PointToStringConverter.cs" />
     <Compile Include="Converters\StringToDoubleConverter.cs" />
+    <Compile Include="IPC Pipe\Handlers\DrawingStateHandler.cs" />
+    <Compile Include="IPC Pipe\Handlers\IPipeHandler.cs" />
+    <Compile Include="IPC Pipe\PipeHandlerNames.cs" />
+    <Compile Include="IPC Pipe\RichCanvasUITestsPipeHandler.cs" />
     <Compile Include="Models\DrawingEndedRepresentation.cs" />
     <Compile Include="Models\Line.cs" />
     <Compile Include="RelayCommand.cs" />

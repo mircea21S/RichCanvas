@@ -4,6 +4,8 @@ using System.IO.Pipes;
 using System.Threading.Tasks;
 using System.Windows;
 
+using RichCanvasUIA.Client.IPC_Pipe;
+
 namespace RichCanvasUIA.Client
 {
     /// <summary>
@@ -21,26 +23,25 @@ namespace RichCanvasUIA.Client
             base.OnStartup(e);
             if (e.Args.Length > 0)
             {
-                StartListeningToUITestsPipe(e.Args[0]);
+                var pipeHandler = new RichCanvasUITestsPipeHandler();
+                StartListeningToUITestsPipe(e.Args[0], pipeHandler);
             }
         }
 
-        private async Task StartListeningToUITestsPipe(string pipeHandleName)
+        private void StartListeningToUITestsPipe(string pipeHandleName, RichCanvasUITestsPipeHandler pipeHandler)
         {
-            await Task.Run(() =>
+            Task.Run(() =>
             {
                 using PipeStream pipeClient = new AnonymousPipeClientStream(PipeDirection.In, pipeHandleName);
                 using var sr = new StreamReader(pipeClient);
-                string temp;
-                while ((temp = sr.ReadLine()) != null)
+                string pipeData;
+                while ((pipeData = sr.ReadLine()) != null)
                 {
-                    //RichCanvasUITestsPipeHandler.Process(temp);
                     Current.Dispatcher.BeginInvoke(() =>
                     {
-                        (MainWindow.DataContext as MainWindowViewModel).PipeDataInfo = $"{temp}";
+                        pipeHandler.Process(pipeData, (MainWindowViewModel)MainWindow.DataContext);
                     });
                 }
-                (MainWindow.DataContext as MainWindowViewModel).PipeDataInfo = "Te-ai inchis ceau";
             });
         }
 

@@ -6,11 +6,32 @@ using RichCanvas.UIAutomation.Tests.Helpers;
 using RichCanvas.UIAutomation.Tests.Tests.Scrolling;
 
 using RichCanvasUIA.Client.Automation;
+using RichCanvasUIA.Client.IPC_Pipe;
 
 namespace RichCanvas.UIAutomation.Tests
 {
     public partial class RichCanvasAutomation
     {
+        public void AddEmptyRectangle()
+        {
+            SendToAppWithDrawingPrefix(PipeHandlerNames.Drawing.AddEmptyRectangle);
+        }
+
+        public void AddEmptyLine()
+        {
+            SendToAppWithDrawingPrefix(PipeHandlerNames.Drawing.AddEmptyLine);
+        }
+
+        public void RemoveFirstItem()
+        {
+            SendToAppWithDrawingPrefix(PipeHandlerNames.Drawing.RemoveFirstItem);
+        }
+
+        private void SendToAppWithDrawingPrefix(string operationName)
+        {
+            UITestsAppChannel.Send($"{nameof(PipeHandlerNames.Drawing)}.{operationName}");
+        }
+
         public void DrawEmptyContainer(System.Windows.Size visualViewportSize, Direction direction, int offset, Action assertCallbackAction)
         {
             ParentWindow.InvokeButton(AutomationIds.AddEmptyRectangleButtonId);

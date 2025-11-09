@@ -15,7 +15,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests
 
         private readonly Size _visualViewportSize;
 
-        protected RichCanvasAutomation RichCanvas => Window.FindFirstDescendant(d => d.ByAutomationId("source")).AsRichCanvasAutomation(Window);
+        protected RichCanvasAutomation RichCanvas => Window.FindFirstDescendant(d => d.ByAutomationId("source")).AsRichCanvasAutomation(Window, UITestsAppChannel);
         protected Size ViewportSize => RichCanvas?.RichCanvasData?.ViewportSize ?? new Size(1187, 800);
         protected Size VisualViewportSize => _visualViewportSize;
         protected System.Drawing.Point VisualViewportCenter => new System.Drawing.Point((int)VisualViewportSize.Width / 2, (int)VisualViewportSize.Height / 2);

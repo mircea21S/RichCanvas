@@ -30,12 +30,9 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
             Window.ToggleCheckbox(AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId);
 
             // act
-            // add not drawn rectangle
-            Window.InvokeButton(AutomationIds.AddEmptyRectangleButtonId);
-            // add not drawn line
-            Window.InvokeButton(AutomationIds.AddEmptyLineButtonId);
-            // remove first item
-            Window.InvokeButton(AutomationIds.RemoveFirstItemButtonId);
+            RichCanvas.AddEmptyRectangle();
+            RichCanvas.AddEmptyLine();
+            RichCanvas.RemoveFirstItem();
 
             // draw
             Input.WithGesture(RichCanvasGestures.Drawing).Drag(ViewportCenter, endingPointLine);

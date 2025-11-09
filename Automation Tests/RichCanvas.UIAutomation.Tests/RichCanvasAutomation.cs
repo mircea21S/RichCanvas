@@ -10,6 +10,7 @@ using FlaUI.Core.Patterns;
 using RichCanvas.Gestures;
 using RichCanvas.UIAutomation.ControlInformations;
 using RichCanvas.UIAutomation.Tests.Helpers;
+using RichCanvas.UIAutomation.Tests.IPC;
 using RichCanvas.UIAutomation.Tests.Tests.Scrolling;
 
 namespace RichCanvas.UIAutomation.Tests
@@ -78,6 +79,8 @@ namespace RichCanvas.UIAutomation.Tests
         public RichCanvasData RichCanvasData => Patterns.Value.Pattern.Value.Value.AsRichCanvasData();
 
         public Window ParentWindow { get; internal set; }
+
+        public RichCanvasUITestsPipeServer UITestsAppChannel { get; internal set; }
 
         public RichCanvasAutomation(FrameworkAutomationElementBase frameworkAutomationElement) : base(frameworkAutomationElement)
         {
