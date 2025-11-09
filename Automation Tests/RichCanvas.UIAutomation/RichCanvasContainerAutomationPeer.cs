@@ -67,14 +67,6 @@ namespace RichCanvas.UIAutomation
                 return;
             }
 
-            Container.Top = richCanvasContainerData.Top;
-            Container.Left = richCanvasContainerData.Left;
-            Container.IsSelected = richCanvasContainerData.IsSelected;
-            if (Container.ScaleTransform != null)
-            {
-                Container.ScaleTransform.ScaleX = richCanvasContainerData.ScaleX;
-                Container.ScaleTransform.ScaleY = richCanvasContainerData.ScaleY;
-            }
             Container.IsDraggable = richCanvasContainerData.IsDraggable;
         }
 

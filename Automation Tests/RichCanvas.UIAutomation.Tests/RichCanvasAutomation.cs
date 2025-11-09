@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 
 using FlaUI.Core;
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Patterns;
+
+using Newtonsoft.Json;
 
 using RichCanvas.Gestures;
 using RichCanvas.UIAutomation.ControlInformations;
@@ -82,6 +86,12 @@ namespace RichCanvas.UIAutomation.Tests
 
         public RichCanvasUITestsPipeServer UITestsAppChannel { get; internal set; }
 
+        public bool RealTimeDraggingEnabled
+        {
+            get => RichCanvasData.RealTimeDraggingEnabled;
+            set => SetValue(value);
+        }
+
         public RichCanvasAutomation(FrameworkAutomationElementBase frameworkAutomationElement) : base(frameworkAutomationElement)
         {
         }
@@ -135,5 +145,13 @@ namespace RichCanvas.UIAutomation.Tests
             System.Windows.Size visualViewportSize,
             int stepOffset = 0)
             => DefferedDragContainerOutsideViewportWithOffset(fromContainer, direction, stepOffset, assertStepAction, visualViewportSize);
+
+        private void SetValue(object value, [CallerMemberName] string propertyName = default)
+        {
+            var containerInfoClone = (RichCanvasData)RichCanvasData.Clone();
+            PropertyInfo property = containerInfoClone.GetType().GetProperty(propertyName);
+            property.SetValue(containerInfoClone, value);
+            Patterns.Value.Pattern.SetValue(JsonConvert.SerializeObject(containerInfoClone));
+        }
     }
 }

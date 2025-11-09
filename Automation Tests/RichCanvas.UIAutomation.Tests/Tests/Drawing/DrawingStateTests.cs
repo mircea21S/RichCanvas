@@ -22,12 +22,11 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
     [TestFixture]
     public class DrawingStateTests : RichCanvasTestAppTest
     {
-        [Test]
+        [Test, ShouldExecuteDrawingEndedCommand(false)]
         public void DragMouseToDraw_WhenRemovingOneItem_ShouldDrawOnlyRemainingItem()
         {
             // arrange
             Point endingPointLine = PointUtilities.GetEndingPoint(ViewportCenter, 50, 50);
-            Window.ToggleCheckbox(AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId);
 
             // act
             RichCanvas.AddEmptyRectangle();
@@ -41,7 +40,6 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
             // assert
             RichCanvas.Items.Length.Should().Be(1);
             itemDrawn.RichCanvasContainerData.DataContextType.Should().Be(typeof(Line));
-            Window.ToggleCheckbox(AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId);
         }
 
         [Test]

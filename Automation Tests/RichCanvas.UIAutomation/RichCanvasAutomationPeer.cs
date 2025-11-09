@@ -26,7 +26,7 @@ namespace RichCanvas.UIAutomation
         protected RichCanvasAutomation OwnerRichCanvas => (RichCanvasAutomation)Owner;
 
         /// <inheritdoc/>
-        public bool IsReadOnly => true;
+        public bool IsReadOnly => false;
 
         /// <summary>
         /// Gets the serialized json value of <see cref="RichCanvasData"/> containing data about the associated <see cref="RichCanvas"/>.
@@ -44,7 +44,8 @@ namespace RichCanvas.UIAutomation
             ScaleFactor = OwnerRichCanvas.ScaleFactor,
             MousePosition = OwnerRichCanvas.MousePosition,
             MaxZoom = OwnerRichCanvas.MaxScale,
-            MinZoom = OwnerRichCanvas.MinScale
+            MinZoom = OwnerRichCanvas.MinScale,
+            RealTimeDraggingEnabled = OwnerRichCanvas.RealTimeDraggingEnabled
         });
 
         /// <summary>
@@ -84,9 +85,15 @@ namespace RichCanvas.UIAutomation
         /// <inheritdoc/>
         public void SetValue(string value)
         {
-            //TODO: maybe deserialize a json form a specific types with allowed dependency props
-            //      that are modifiable and serializable
-            throw new NotSupportedException("This control does not allow setting the value.");
+            RichCanvasData? richCanvasData = JsonConvert.DeserializeObject<RichCanvasData>(value, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All
+            });
+            if (richCanvasData == null)
+            {
+                return;
+            }
+            OwnerRichCanvas.RealTimeDraggingEnabled = richCanvasData.RealTimeDraggingEnabled;
         }
 
         /// <inheritdoc/>

@@ -3,21 +3,21 @@
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
-namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
+namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
-    internal class RealTimeDraggingAttribute(bool enabled) : Attribute, ITestAction
+    public class ShouldExecuteDrawingEndedCommandAttribute(bool enabled) : Attribute, ITestAction
     {
-        public ActionTargets Targets => ActionTargets.Test;
-
         public bool Enabled { get; } = enabled;
+
+        public ActionTargets Targets => ActionTargets.Test;
 
         public void AfterTest(ITest test)
         {
             if (test.Fixture is RichCanvasTestAppTest testParent)
             {
                 // always reset to default value
-                testParent.RichCanvas.RealTimeDraggingEnabled = false;
+                testParent.RichCanvas.EnableDrawingEndedCommandExecution();
             }
         }
 
@@ -25,7 +25,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
         {
             if (test.Fixture is RichCanvasTestAppTest testParent)
             {
-                testParent.RichCanvas.RealTimeDraggingEnabled = Enabled;
+                testParent.RichCanvas.DisableDrawingEndedCommandExecution();
             }
         }
     }

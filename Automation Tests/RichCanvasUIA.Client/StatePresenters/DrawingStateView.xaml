@@ -62,10 +62,6 @@
                         AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddEmptyLineButtonId}"
                         Content="Add Empty Line"></Button>
 
-                <CheckBox IsChecked="{Binding ShouldExecuteDrawingEndedCommand, Mode=TwoWay}"
-                          Content="Execute Drawing Ended Command"
-                          AutomationProperties.AutomationId="{x:Static auto:AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId}" />
-
                 <Button Command="{Binding AddItemOutsideViewportCommand}"
                         CommandParameter="{x:Static vm:Direction.Top}"
                         AutomationProperties.AutomationId="{x:Static auto:AutomationIds.AddItemTopOutsideViewportButtonId}"

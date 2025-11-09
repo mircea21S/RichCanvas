@@ -27,6 +27,16 @@ namespace RichCanvas.UIAutomation.Tests
             SendToAppWithDrawingPrefix(PipeHandlerNames.Drawing.RemoveFirstItem);
         }
 
+        public void DisableDrawingEndedCommandExecution()
+        {
+            SendToAppWithDrawingPrefix(PipeHandlerNames.Drawing.DisableDrawingEndedCommandExecution);
+        }
+
+        public void EnableDrawingEndedCommandExecution()
+        {
+            SendToAppWithDrawingPrefix(PipeHandlerNames.Drawing.EnableDrawingEndedCommandExecution);
+        }
+
         private void SendToAppWithDrawingPrefix(string operationName)
         {
             UITestsAppChannel.Send($"{nameof(PipeHandlerNames.Drawing)}.{operationName}");

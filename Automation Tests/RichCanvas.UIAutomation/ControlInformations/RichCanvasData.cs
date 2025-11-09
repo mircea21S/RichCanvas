@@ -5,7 +5,7 @@ namespace RichCanvas.UIAutomation.ControlInformations
     /// <summary>
     /// Data transfer object exposing <see cref="RichCanvas"/> information to UI Automation proejct.
     /// </summary>
-    public class RichCanvasData
+    public class RichCanvasData : ICloneable
     {
         /// <summary>
         /// <see cref="RichCanvas.TranslateTransform"/>.X property value.
@@ -66,5 +66,27 @@ namespace RichCanvas.UIAutomation.ControlInformations
         /// <see cref="RichCanvas.MinScale"/> property value.
         /// </summary>
         public double MinZoom { get; set; }
+
+        public bool RealTimeDraggingEnabled { get; set; }
+
+        public object Clone()
+        {
+            return new RichCanvasData
+            {
+                ItemsExtent = ItemsExtent,
+                ScrollFactor = ScrollFactor,
+                MaxZoom = MaxZoom,
+                MinZoom = MinZoom,
+                TranslateTransformX = TranslateTransformX,
+                TranslateTransformY = TranslateTransformY,
+                MousePosition = MousePosition,
+                ScaleFactor = ScaleFactor,
+                ViewportExtent = ViewportExtent,
+                ViewportLocation = ViewportLocation,
+                ViewportSize = ViewportSize,
+                ViewportZoom = ViewportZoom,
+                RealTimeDraggingEnabled = RealTimeDraggingEnabled
+            };
+        }
     }
 }

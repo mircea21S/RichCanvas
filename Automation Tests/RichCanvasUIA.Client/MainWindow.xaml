@@ -154,7 +154,7 @@
                                                 SelectedItems="{Binding SelectedItems}"
                                                 RealTimeSelectionEnabled="{Binding RealTimeSelectionEnabled}"
                                                 CanSelectMultipleItems="{Binding CanSelectMultipleItems}"
-                                                RealTimeDraggingEnabled="{Binding RealTimeDraggingEnabled}"
+                                                RealTimeDraggingEnabled="{Binding RealTimeDraggingEnabled, Mode=TwoWay}"
                                                 DrawingEndedCommand="{Binding DrawingState.DrawingEndedCommand}"
                                                 ViewportLocation="{Binding ViewportLocation, Mode=TwoWay}"
                                                 ViewportSize="{Binding ViewportSize, Mode=OneWayToSource}"

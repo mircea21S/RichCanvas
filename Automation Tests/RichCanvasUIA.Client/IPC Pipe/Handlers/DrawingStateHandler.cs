@@ -26,6 +26,14 @@ namespace RichCanvasUIA.Client.IPC_Pipe.Handlers
                 case PipeHandlerNames.Drawing.RemoveFirstItem:
                     _mainWindowDataContext.Items.RemoveAt(0);
                     break;
+
+                case PipeHandlerNames.Drawing.EnableDrawingEndedCommandExecution:
+                    _mainWindowDataContext.DrawingState.ShouldExecuteDrawingEndedCommand = true;
+                    break;
+
+                case PipeHandlerNames.Drawing.DisableDrawingEndedCommandExecution:
+                    _mainWindowDataContext.DrawingState.ShouldExecuteDrawingEndedCommand = false;
+                    break;
             }
         }
     }

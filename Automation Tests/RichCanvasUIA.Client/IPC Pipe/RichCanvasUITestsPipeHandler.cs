@@ -10,7 +10,7 @@ namespace RichCanvasUIA.Client.IPC_Pipe
 
         internal void Process(string pipeData, MainWindowViewModel mainWindowDataContext)
         {
-            //mainWindowDataContext.PipeDataInfo = $"{pipeData}";
+            mainWindowDataContext.PipeDataInfo = $"{pipeData}";
             if (pipeData.Split('.').Length != 2)
             {
                 return;
