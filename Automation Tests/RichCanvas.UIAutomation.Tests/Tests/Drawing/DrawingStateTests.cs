@@ -1,3 +1,5 @@
+using System.Drawing;
+
 using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Input;
 using FlaUI.Core.Tools;
@@ -26,48 +28,41 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
         public void DragMouseToDraw_WhenRemovingOneItem_ShouldDrawOnlyRemainingItem()
         {
             // arrange
-            Point endingPointLine = PointUtilities.GetEndingPoint(ViewportCenter, 50, 50);
-
-            // act
             RichCanvas.AddEmptyRectangle();
             RichCanvas.AddEmptyLine();
             RichCanvas.RemoveFirstItem();
 
-            // draw
-            Input.WithGesture(RichCanvasGestures.Drawing).Drag(ViewportCenter, endingPointLine);
-            RichCanvasContainerAutomation itemDrawn = RichCanvas.Items[0];
+            // act
+            RichCanvas.Draw(new Size(50, 50));
 
             // assert
             RichCanvas.Items.Length.Should().Be(1);
+            RichCanvasContainerAutomation itemDrawn = RichCanvas.Items[0];
             itemDrawn.RichCanvasContainerData.DataContextType.Should().Be(typeof(Line));
+            itemDrawn.IsDrawn.Should().BeTrue();
         }
 
         [Test]
         public void DragMouseToDraw_WhenMovingItemsOrder_ShouldDrawItemsInOrder()
         {
             // arrange
-            Point endingPointLine = PointUtilities.GetEndingPoint(ViewportCenter, 50, 50);
-            Point endingPointRectangle = PointUtilities.GetEndingPoint(ViewportCenter.MoveX(100), 50, 50);
-
-            // act
-            // add not drawn rectangle
-            Window.InvokeButton(AutomationIds.AddEmptyRectangleButtonId);
-            // add not drawn line
-            Window.InvokeButton(AutomationIds.AddEmptyLineButtonId);
-            // move rectangle on second position
-            Window.InvokeButton(AutomationIds.MoveFirstItemToTheEndButtonId);
+            RichCanvas.AddEmptyRectangle();
+            RichCanvas.AddEmptyLine();
+            RichCanvas.MoveFirstItemToTheEnd();
 
             // draw first item
-            Input.WithGesture(RichCanvasGestures.Drawing).Drag(ViewportCenter, endingPointLine);
+            RichCanvas.Draw(new Size(50, 50));
             RichCanvasContainerAutomation firstItemDrawn = RichCanvas.Items[0];
             // assert
             firstItemDrawn.RichCanvasContainerData.DataContextType.Should().Be(typeof(Line));
+            firstItemDrawn.IsDrawn.Should().BeTrue();
 
             // draw second item
-            Input.WithGesture(RichCanvasGestures.Drawing).Drag(ViewportCenter.MoveX(100, HorizontalDirection.LeftToRight), endingPointRectangle);
+            RichCanvas.Draw(new Size(50, 50));
             RichCanvasContainerAutomation secondItemDrawn = RichCanvas.Items[1];
             // assert
             secondItemDrawn.RichCanvasContainerData.DataContextType.Should().Be(typeof(RichItemContainerModel));
+            secondItemDrawn.IsDrawn.Should().BeTrue();
         }
 
         [Test]

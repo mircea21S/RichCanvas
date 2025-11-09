@@ -33,6 +33,7 @@ namespace RichCanvasUIA.Client.IPC_Pipe
                 pipeHandler = pipeHandlerName switch
                 {
                     nameof(PipeHandlerNames.Drawing) => new DrawingStateHandler(mainWindowDataContext),
+                    nameof(PipeHandlerNames.ItemsSource) => new RichCanvasItemsHandler(mainWindowDataContext),
                     _ => throw new System.NotImplementedException()
                 };
                 _nameToPipeHandlerMap.Add(pipeHandlerName, pipeHandler);

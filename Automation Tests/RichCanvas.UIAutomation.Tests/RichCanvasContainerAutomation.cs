@@ -33,6 +33,8 @@ namespace RichCanvas.UIAutomation.Tests
             internal set => SetValue(value);
         }
 
+        public bool IsDrawn => ActualHeight != 0 && ActualWidth != 0 && !double.IsNaN(ActualHeight) && !double.IsNaN(ActualWidth);
+
         public void StartDragging()
         {
             if (_dragging)

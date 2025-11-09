@@ -64,6 +64,7 @@
     <Compile Include="Converters\StringToDoubleConverter.cs" />
     <Compile Include="IPC Pipe\Handlers\DrawingStateHandler.cs" />
     <Compile Include="IPC Pipe\Handlers\IPipeHandler.cs" />
+    <Compile Include="IPC Pipe\Handlers\RichCanvasItemsHandler.cs" />
     <Compile Include="IPC Pipe\PipeHandlerNames.cs" />
     <Compile Include="IPC Pipe\RichCanvasUITestsPipeHandler.cs" />
     <Compile Include="Models\DrawingEndedRepresentation.cs" />

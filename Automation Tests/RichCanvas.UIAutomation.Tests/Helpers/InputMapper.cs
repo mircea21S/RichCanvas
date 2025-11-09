@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 
 using FlaUI.Core.Input;
 using FlaUI.Core.WindowsAPI;
@@ -34,6 +35,13 @@ namespace RichCanvas.UIAutomation.Tests.Helpers
             Mouse.Up(MouseButton);
             Keyboard.Release(Key);
             Wait.UntilInputIsProcessed();
+        }
+
+        public void Drag(Point startPoint, Point endPoint)
+        {
+            Keyboard.Press(Key);
+            Mouse.Drag(startPoint, endPoint, MouseButton);
+            Keyboard.Release(Key);
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Drawing;
 
+using FlaUI.Core.Tools;
+
 using RichCanvas.Gestures;
 using RichCanvas.UIAutomation.Tests.Helpers;
 using RichCanvas.UIAutomation.Tests.Tests.Scrolling;
@@ -12,6 +14,24 @@ namespace RichCanvas.UIAutomation.Tests
 {
     public partial class RichCanvasAutomation
     {
+        public void Draw(Size containerSize)
+        {
+            Point pointOnCanvas = GetRandomPointOnRichCanvas().ToCanvasDrawingPoint();
+            FlaUIInputData flaUiInput = InputMapper.MapToFlaUIInput(RichCanvasGestures.Drawing);
+            var endPoint = new Point(pointOnCanvas.X + containerSize.Width, pointOnCanvas.Y + containerSize.Height);
+            flaUiInput.Drag(pointOnCanvas, endPoint);
+        }
+
+        public void MoveFirstItemToTheEnd()
+        {
+            SendToAppWithItemsSourcePrefix(PipeHandlerNames.ItemsSource.MoveFirstItemToTheEnd);
+        }
+
+        public void RemoveFirstItem()
+        {
+            SendToAppWithItemsSourcePrefix(PipeHandlerNames.ItemsSource.RemoveFirstItem);
+        }
+
         public void AddEmptyRectangle()
         {
             SendToAppWithDrawingPrefix(PipeHandlerNames.Drawing.AddEmptyRectangle);
@@ -20,11 +40,6 @@ namespace RichCanvas.UIAutomation.Tests
         public void AddEmptyLine()
         {
             SendToAppWithDrawingPrefix(PipeHandlerNames.Drawing.AddEmptyLine);
-        }
-
-        public void RemoveFirstItem()
-        {
-            SendToAppWithDrawingPrefix(PipeHandlerNames.Drawing.RemoveFirstItem);
         }
 
         public void DisableDrawingEndedCommandExecution()
@@ -40,6 +55,27 @@ namespace RichCanvas.UIAutomation.Tests
         private void SendToAppWithDrawingPrefix(string operationName)
         {
             UITestsAppChannel.Send($"{nameof(PipeHandlerNames.Drawing)}.{operationName}");
+        }
+
+        private void SendToAppWithItemsSourcePrefix(string operationName)
+        {
+            UITestsAppChannel.Send($"{nameof(PipeHandlerNames.ItemsSource)}.{operationName}");
+        }
+
+        private Point GetRandomPointOnRichCanvas()
+        {
+            double width = ActualWidth;
+            double height = ActualHeight;
+
+            if (width <= 0 || height <= 0)
+            {
+                throw new InvalidOperationException("Canvas has no rendered size. Ensure it's loaded and visible.");
+            }
+
+            var rand = new Random();
+            double x = rand.NextDouble() * width;
+            double y = rand.NextDouble() * height;
+            return new Point(x.ToInt(), y.ToInt()).ToCanvasDrawingPoint();
         }
 
         public void DrawEmptyContainer(System.Windows.Size visualViewportSize, Direction direction, int offset, Action assertCallbackAction)
