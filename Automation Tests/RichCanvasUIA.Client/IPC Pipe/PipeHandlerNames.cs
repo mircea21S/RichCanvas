@@ -15,6 +15,8 @@
             public const string DisableDrawingEndedCommandExecution = "DisableDrawingEndedCommandExecution";
             public const string EnableDrawingEndedCommandExecution = "EnableDrawingEndedCommandExecution";
             public const string AddImmutableRectangle = "AddImmutableDrawnRectangle";
+            public const string AddPositionedRectangle = "AddPositionedRectangle";
+            public const string AddDrawnRectangle = "AddDrawnRectangle";
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using FlaUI.Core.AutomationElements;
+﻿using System;
+
+using FlaUI.Core.AutomationElements;
 using FlaUI.Core.Input;
 
 using RichCanvas.Gestures;

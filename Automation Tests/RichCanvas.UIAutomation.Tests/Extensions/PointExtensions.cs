@@ -1,30 +1,12 @@
 ﻿using System.Drawing;
 
 using RichCanvas.UIAutomation.Tests.Tests;
-using RichCanvas.UIAutomation.Tests.Tests.Drawing;
 
 namespace RichCanvas.UIAutomation.Tests
 {
     internal static class PointExtensions
     {
-        internal static Point MoveX(this Point point, int x, HorizontalDirection direction = HorizontalDirection.LeftToRight)
-        {
-            if (direction == HorizontalDirection.LeftToRight)
-            {
-                point.X += x;
-            }
-            else
-            {
-                point.X += x;
-            }
-            return point;
-        }
-
-        internal static System.Windows.Point ToCanvasPoint(this Point point) => new System.Windows.Point(point.X, point.Y - RichCanvasTestAppTest.RichCanvasDemoTitleBarHeight);
-
         internal static Point ToCanvasDrawingPoint(this Point point) => new Point(point.X, point.Y + (int)RichCanvasTestAppTest.RichCanvasDemoTitleBarHeight);
-
-        internal static System.Windows.Point ToCanvasPoint(this System.Windows.Point point) => new System.Windows.Point(point.X, point.Y - RichCanvasTestAppTest.RichCanvasDemoTitleBarHeight);
 
         /// <summary>
         /// Workaround of issue with FlaUI https://github.com/FlaUI/FlaUI/issues/612.

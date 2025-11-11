@@ -35,6 +35,14 @@ namespace RichCanvasUIA.Client.IPC_Pipe.Handlers
                 case PipeHandlerNames.Drawing.AddImmutableRectangle:
                     _mainWindowDataContext.Items.Add(DrawingStateDataMocks.ImmutablePositionedRectangleMockWithoutSize);
                     break;
+
+                case PipeHandlerNames.Drawing.AddPositionedRectangle:
+                    _mainWindowDataContext.Items.Add(DrawingStateDataMocks.PositionedRectangleMockWithoutSize);
+                    break;
+
+                case PipeHandlerNames.Drawing.AddDrawnRectangle:
+                    _mainWindowDataContext.Items.Add(DrawingStateDataMocks.DrawnRectangleMock);
+                    break;
             }
         }
     }

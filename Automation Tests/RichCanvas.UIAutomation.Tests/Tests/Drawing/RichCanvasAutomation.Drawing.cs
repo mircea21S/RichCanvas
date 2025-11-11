@@ -14,12 +14,13 @@ namespace RichCanvas.UIAutomation.Tests
 {
     public partial class RichCanvasAutomation
     {
-        public void Draw(Size containerSize)
+        public void Draw(Size containerSize, out Point containerLocation, int scaleX = 1, int scaleY = 1)
         {
             Point pointOnCanvas = GetRandomPointOnRichCanvas();
             FlaUIInputData flaUiInput = InputMapper.MapToFlaUIInput(RichCanvasGestures.Drawing);
-            Point endPoint = GetEndPointByScale(pointOnCanvas, containerSize, 1, 1);
-            flaUiInput.Drag(pointOnCanvas, endPoint);
+            Point endPoint = GetEndPointByScale(pointOnCanvas, containerSize, scaleX, scaleY);
+            flaUiInput.Drag(pointOnCanvas.ToCanvasDrawingPoint(), endPoint.ToCanvasDrawingPoint());
+            containerLocation = pointOnCanvas;
         }
 
         public void DrawPositionedContainer(RichCanvasContainerAutomation container, Size containerSize, int scaleX = 1, int scaleY = 1)
@@ -27,7 +28,7 @@ namespace RichCanvas.UIAutomation.Tests
             Point startPoint = container.Location.ToCanvasDrawingPoint();
             FlaUIInputData flaUiInput = InputMapper.MapToFlaUIInput(RichCanvasGestures.Drawing);
             Point endPoint = GetEndPointByScale(startPoint, containerSize, scaleX, scaleY);
-            flaUiInput.Drag(startPoint, endPoint);
+            flaUiInput.Drag(startPoint, endPoint.ToCanvasDrawingPoint());
         }
 
         private Point GetEndPointByScale(Point pointOnCanvas, Size containerSize, int scaleX, int scaleY)
@@ -45,6 +46,16 @@ namespace RichCanvas.UIAutomation.Tests
                 return new Point(pointOnCanvas.X + containerSize.Width, pointOnCanvas.Y - containerSize.Height);
             }
             return new Point(pointOnCanvas.X - containerSize.Width, pointOnCanvas.Y - containerSize.Height);
+        }
+
+        internal void AddDrawnRectangle()
+        {
+            SendToAppWithDrawingPrefix(PipeHandlerNames.Drawing.AddDrawnRectangle);
+        }
+
+        internal void AddPositionedRectangle()
+        {
+            SendToAppWithDrawingPrefix(PipeHandlerNames.Drawing.AddPositionedRectangle);
         }
 
         public void AddImmutableRectangle()
@@ -107,7 +118,7 @@ namespace RichCanvas.UIAutomation.Tests
             var rand = new Random();
             double x = rand.NextDouble() * width;
             double y = rand.NextDouble() * height;
-            return new Point(x.ToInt(), y.ToInt()).ToCanvasDrawingPoint();
+            return new Point(x.ToInt(), y.ToInt());
         }
 
         public void DrawEmptyContainer(System.Windows.Size visualViewportSize, Direction direction, int offset, Action assertCallbackAction)

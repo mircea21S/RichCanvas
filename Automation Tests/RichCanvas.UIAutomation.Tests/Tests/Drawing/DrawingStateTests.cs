@@ -1,16 +1,12 @@
 using System.Drawing;
 
 using FlaUI.Core.AutomationElements;
-using FlaUI.Core.Input;
 using FlaUI.Core.Tools;
 
 using FluentAssertions;
 using FluentAssertions.Execution;
 
 using NUnit.Framework;
-
-using RichCanvas.Gestures;
-using RichCanvas.UIAutomation.Tests.Helpers;
 
 using RichCanvasUIA.Client;
 using RichCanvasUIA.Client.Automation;
@@ -33,7 +29,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
             RichCanvas.RemoveFirstItem();
 
             // act
-            RichCanvas.Draw(new Size(50, 50));
+            RichCanvas.Draw(new Size(50, 50), out _);
 
             // assert
             RichCanvas.Items.Length.Should().Be(1);
@@ -51,14 +47,14 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
             RichCanvas.MoveFirstItemToTheEnd();
 
             // draw first item
-            RichCanvas.Draw(new Size(50, 50));
+            RichCanvas.Draw(new Size(50, 50), out _);
             RichCanvasContainerAutomation firstItemDrawn = RichCanvas.Items[0];
             // assert
             firstItemDrawn.RichCanvasContainerData.DataContextType.Should().Be(typeof(Line));
             firstItemDrawn.IsDrawn.Should().BeTrue();
 
             // draw second item
-            RichCanvas.Draw(new Size(50, 50));
+            RichCanvas.Draw(new Size(50, 50), out _);
             RichCanvasContainerAutomation secondItemDrawn = RichCanvas.Items[1];
             // assert
             secondItemDrawn.RichCanvasContainerData.DataContextType.Should().Be(typeof(RichItemContainerModel));
@@ -90,133 +86,87 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
         }
 
         [Test]
-        [TestCase(HorizontalDirection.LeftToRight, VerticalDirection.TopToBottom)]
-        [TestCase(HorizontalDirection.RightToLeft, VerticalDirection.TopToBottom)]
-        [TestCase(HorizontalDirection.LeftToRight, VerticalDirection.BottomToTop)]
-        [TestCase(HorizontalDirection.RightToLeft, VerticalDirection.BottomToTop)]
-        public void DragMouseToDraw_WhenAddingItemWithAllowScaleToUpdatePositionTrue_ShouldModifyLeftAndTopIfScaleIsChanged(HorizontalDirection horizontalDirection, VerticalDirection verticalDirection)
+        [TestCase(-1, 1)]
+        [TestCase(1, -1)]
+        [TestCase(-1, -1)]
+        public void DrawScaledItem_WithAllowScaleToUpdatePositionTrue_ShouldModifyTopAndLeft(int scaleX, int scaleY)
         {
             // arrange
             RichItemContainerModel rectangleMock = DrawingStateDataMocks.PositionedRectangleMockWithoutSize;
-            Point containerLocation = PointUtilities.GetEndingPoint(new Point(rectangleMock.Left.ToInt(), rectangleMock.Top.ToInt()),
-                50,
-                50,
-                horizontalDirection,
-                verticalDirection);
+            var mockRectangleSize = new Size(50, 50);
 
             // act
-            Window.InvokeButton(AutomationIds.AddPositionedRectangleButtonId);
-            Input.WithGesture(RichCanvasGestures.Drawing).Click(containerLocation);
+            RichCanvas.AddPositionedRectangle();
             RichCanvasContainerAutomation drawnContainer = RichCanvas.Items[0];
+            RichCanvas.DrawPositionedContainer(drawnContainer, mockRectangleSize, scaleX, scaleY);
 
             // assert
-            double expectedTop = verticalDirection switch
+            double expectedTop = scaleY switch
             {
-                VerticalDirection.BottomToTop => rectangleMock.Top - drawnContainer.ActualHeight,
-                VerticalDirection.TopToBottom => rectangleMock.Top,
+                -1 => rectangleMock.Top - drawnContainer.ActualHeight,
+                1 => rectangleMock.Top,
                 _ => rectangleMock.Top,
             };
-            double expectedLeft = horizontalDirection switch
+            double expectedLeft = scaleX switch
             {
-                HorizontalDirection.LeftToRight => rectangleMock.Left,
-                HorizontalDirection.RightToLeft => rectangleMock.Left - drawnContainer.ActualWidth,
+                1 => rectangleMock.Left,
+                -1 => rectangleMock.Left - drawnContainer.ActualWidth,
                 _ => rectangleMock.Left,
             };
             using (new AssertionScope())
             {
-                drawnContainer.RichCanvasContainerData.Top.Should().Be(expectedTop);
-                drawnContainer.RichCanvasContainerData.Left.Should().Be(expectedLeft);
+                drawnContainer.Location.Should().Be(new Point(expectedLeft.ToInt(), expectedTop.ToInt()));
             }
         }
 
-        /// <summary>
-        /// Test to draw multiple rectangles in specified <paramref name="horizontalDirection"/> and <paramref name="verticalDirection"/> and verify their ActualSize.
-        /// <br></br>
-        /// <i>Note: <paramref name="horizontalDirection"/> modifies <see cref="RichCanvas.ScaleTransform"/>.ScaleX
-        /// <br></br>
-        /// <paramref name="verticalDirection"/> modifies <see cref="RichCanvas.ScaleTransform"/>.ScaleY
-        /// </i>
-        /// </summary>
-        /// <param name="rectanglesCount"></param>
-        /// <param name="horizontalDirection"></param>
-        /// <param name="verticalDirection"></param>
         [Test]
-        [TestCase(3, HorizontalDirection.LeftToRight, VerticalDirection.TopToBottom)]
-        [TestCase(4, HorizontalDirection.LeftToRight, VerticalDirection.TopToBottom)]
-        [TestCase(1, HorizontalDirection.LeftToRight, VerticalDirection.TopToBottom)]
-        [TestCase(3, HorizontalDirection.RightToLeft, VerticalDirection.TopToBottom)]
-        [TestCase(4, HorizontalDirection.RightToLeft, VerticalDirection.TopToBottom)]
-        [TestCase(1, HorizontalDirection.RightToLeft, VerticalDirection.TopToBottom)]
-        [TestCase(3, HorizontalDirection.LeftToRight, VerticalDirection.BottomToTop)]
-        [TestCase(4, HorizontalDirection.LeftToRight, VerticalDirection.BottomToTop)]
-        [TestCase(1, HorizontalDirection.LeftToRight, VerticalDirection.BottomToTop)]
-        [TestCase(3, HorizontalDirection.RightToLeft, VerticalDirection.BottomToTop)]
-        [TestCase(4, HorizontalDirection.RightToLeft, VerticalDirection.BottomToTop)]
-        [TestCase(1, HorizontalDirection.RightToLeft, VerticalDirection.BottomToTop)]
-        public void DragMouseToDraw_WhenAddingEmptyContainer_ContainerSizeIsTheDraggedSizeAndPositionIsRelativeToScaleTransform(int rectanglesCount, HorizontalDirection horizontalDirection, VerticalDirection verticalDirection)
+        [TestCase(1, 1)]
+        [TestCase(-1, 1)]
+        [TestCase(1, -1)]
+        [TestCase(-1, -1)]
+        [ShouldExecuteDrawingEndedCommand(false)]
+        public void DrawItemFromItemsSource_WhenNotInitialized_ContainerSizeIsTheDraggedSizeAndPositionIsRelativeToScaleTransform(int scaleX, int scaleY)
         {
             // arrange
-            Window.ToggleCheckbox(AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId);
-            int rectangleWidth = 50;
-            int rectangleHeight = 50;
-
-            Point startPoint = ViewportCenter;
-            Point endPoint = PointUtilities.GetEndingPoint(startPoint, rectangleWidth, rectangleHeight, horizontalDirection, verticalDirection);
+            var containerSize = new Size(100, 100);
 
             // act
-            var itemMouseDownPositions = new System.Windows.Point[rectanglesCount];
-            for (int i = 0; i < rectanglesCount; i++)
-            {
-                // add rectangle to ItemsSource
-                Window.InvokeButton(AutomationIds.AddEmptyRectangleButtonId);
-
-                // draw the rectanlge
-                Input.WithGesture(RichCanvasGestures.Drawing).Drag(startPoint, endPoint);
-                // save rectangle position (on click)
-                System.Windows.Point startPointRelativeToCanvas = startPoint.ToCanvasPoint();
-                itemMouseDownPositions[i] = startPointRelativeToCanvas;
-
-                // move points for the next rectangle
-                startPoint = startPoint.MoveX(rectangleWidth + 1, horizontalDirection);
-                endPoint = endPoint.MoveX(rectangleWidth + 1, horizontalDirection);
-            }
+            RichCanvas.AddEmptyRectangle();
+            RichCanvas.Draw(containerSize, out Point unscaledContainerLocation, scaleX, scaleY);
 
             // assert
-            using (new AssertionScope())
+            var drawnRectangleContainer = RichCanvas.Items[0];
+
+            double expectedTop = scaleY switch
             {
-                RichCanvas.Items.Length.Should().Be(rectanglesCount);
-                for (int i = 0; i < RichCanvas.Items.Length; i++)
-                {
-                    RichCanvasContainerAutomation item = RichCanvas.Items[i];
-                    System.Windows.Point initialMouseDownPosition = itemMouseDownPositions[i];
-
-                    double expectedTopPosition = item.RichCanvasContainerData.ScaleY == 1 ? initialMouseDownPosition.Y :
-                        initialMouseDownPosition.Y - item.ActualHeight;
-                    double expectedLeftPosition = item.RichCanvasContainerData.ScaleX == 1 ? initialMouseDownPosition.X :
-                        initialMouseDownPosition.X - item.ActualWidth;
-
-                    item.RichCanvasContainerData.Top.Should().Be(expectedTopPosition);
-                    item.RichCanvasContainerData.Left.Should().Be(expectedLeftPosition);
-                    item.ActualWidth.Should().Be(rectangleWidth);
-                    item.ActualHeight.Should().Be(rectangleHeight);
-                    item.RichCanvasContainerData.ScaleX.Should().Be(horizontalDirection == HorizontalDirection.LeftToRight ? 1 : -1);
-                    item.RichCanvasContainerData.ScaleY.Should().Be(verticalDirection == VerticalDirection.TopToBottom ? 1 : -1);
-                }
-            }
-            Window.ToggleCheckbox(AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId);
+                -1 => unscaledContainerLocation.Y - drawnRectangleContainer.ActualHeight,
+                1 => unscaledContainerLocation.Y,
+                _ => unscaledContainerLocation.Y,
+            };
+            double expectedLeft = scaleX switch
+            {
+                1 => unscaledContainerLocation.X,
+                -1 => unscaledContainerLocation.X - drawnRectangleContainer.ActualWidth,
+                _ => unscaledContainerLocation.X,
+            };
+            drawnRectangleContainer.Location.Should().Be(new Point(expectedLeft.ToInt(), expectedTop.ToInt()));
+            drawnRectangleContainer.ActualWidth.Should().Be(containerSize.Width);
+            drawnRectangleContainer.ActualHeight.Should().Be(containerSize.Height);
+            drawnRectangleContainer.RichCanvasContainerData.ScaleX.Should().Be(scaleX);
+            drawnRectangleContainer.RichCanvasContainerData.ScaleY.Should().Be(scaleY);
         }
 
         [Test]
-        public void AddContainerWithBindedPositionAndSize_ShouldDrawContainerWithPositionAndSizeTheSameAsSpecified()
+        public void AddContainerWithBoundPositionAndSize_ShouldDrawContainerWithPositionAndSizeTheSameAsSpecified()
         {
             // arrange
             RichItemContainerModel mockRectangle = DrawingStateDataMocks.DrawnRectangleMock;
 
             // act
-            Window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);
-            RichCanvasContainerAutomation drawnContainer = RichCanvas.Items[0];
+            RichCanvas.AddDrawnRectangle();
 
             // assert
+            RichCanvasContainerAutomation drawnContainer = RichCanvas.Items[0];
             using (new AssertionScope())
             {
                 drawnContainer.RichCanvasContainerData.Top.Should().Be(mockRectangle.Top);
@@ -227,57 +177,18 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
         }
 
         [Test]
-        public void DragMouseToDraw_WhenDrawingIsFinished_ShouldInvokeDrawEndedCommand()
+        public void DrawItem_WhenDrawingIsFinished_ShouldInvokeDrawEndedCommand()
         {
             // arrange
-            Point drawingStartPoint = ViewportCenter;
-            var drawingEndPoint = new Point(drawingStartPoint.X + 50, drawingStartPoint.Y + 50);
+            var itemSize = new Size(40, 40);
 
             // act
-            Window.InvokeButton(AutomationIds.AddEmptyRectangleButtonId);
-            Input.WithGesture(RichCanvasGestures.Drawing).Drag(drawingStartPoint, drawingEndPoint);
-            Wait.UntilInputIsProcessed();
+            RichCanvas.AddEmptyRectangle();
+            RichCanvas.Draw(itemSize, out _);
 
             // assert
             TextBox drawingEndedTextBox = RichCanvas.FindFirstDescendant(x => x.ByAutomationId(AutomationIds.DrawingEndedTextBoxId)).AsTextBox();
             drawingEndedTextBox.Name.Should().Be("DRAWING ENDED");
         }
-    }
-
-    internal static class PointUtilities
-    {
-        internal static Point GetEndingPoint(Point startPoint, int rectangleWidth, int rectangleHeight, HorizontalDirection horizontalDirection = HorizontalDirection.LeftToRight, VerticalDirection verticalDirection = VerticalDirection.TopToBottom)
-        {
-            Point endPoint = Point.Empty;
-            if (horizontalDirection == HorizontalDirection.LeftToRight && verticalDirection == VerticalDirection.TopToBottom)
-            {
-                endPoint = new Point(startPoint.X + rectangleWidth, startPoint.Y + rectangleHeight);
-            }
-            else if (horizontalDirection == HorizontalDirection.RightToLeft && verticalDirection == VerticalDirection.TopToBottom)
-            {
-                endPoint = new Point(startPoint.X - rectangleWidth, startPoint.Y + rectangleHeight);
-            }
-            if (horizontalDirection == HorizontalDirection.LeftToRight && verticalDirection == VerticalDirection.BottomToTop)
-            {
-                endPoint = new Point(startPoint.X + rectangleWidth, startPoint.Y - rectangleHeight);
-            }
-            else if (horizontalDirection == HorizontalDirection.RightToLeft && verticalDirection == VerticalDirection.BottomToTop)
-            {
-                endPoint = new Point(startPoint.X - rectangleWidth, startPoint.Y - rectangleHeight);
-            }
-            return endPoint;
-        }
-    }
-
-    public enum HorizontalDirection
-    {
-        LeftToRight,
-        RightToLeft
-    }
-
-    public enum VerticalDirection
-    {
-        TopToBottom,
-        BottomToTop
     }
 }
