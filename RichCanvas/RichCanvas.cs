@@ -38,6 +38,7 @@ namespace RichCanvas
         private RichCanvasPanel _mainPanel;
         private DispatcherTimer _autoPanTimer;
         private Stack<CanvasState> _states;
+        private readonly DrawingIndexesTracker _drawingIndexesTracker;
 
         #endregion Private Fields
 
@@ -394,7 +395,7 @@ namespace RichCanvas
         internal RichCanvasPanel ItemsHost => _mainPanel;
         internal bool IsZooming { get; set; }
         internal IList BaseSelectedItems => base.SelectedItems;
-        internal List<int> CurrentDrawingIndexes { get; } = [];
+        internal List<int> CurrentDrawingIndexes => _drawingIndexesTracker.DrawingIndexes;
 
         #endregion Internal Properties
 
@@ -421,6 +422,24 @@ namespace RichCanvas
 
             _states = new Stack<CanvasState>();
             _states.Push(GetDefaultState());
+            _drawingIndexesTracker = new DrawingIndexesTracker(Items,
+                index =>
+                {
+                    var container = (RichCanvasContainer)ItemContainerGenerator.ContainerFromIndex(index);
+                    return !container.IsValid();
+                },
+                () =>
+                {
+                    if (CanSelectMultipleItems)
+                    {
+                        base.SelectedItems.Clear();
+                        SelectedItems.Clear();
+                    }
+                    else
+                    {
+                        SelectedItem = null;
+                    }
+                });
         }
 
         #endregion Constructors
@@ -514,48 +533,6 @@ namespace RichCanvas
         {
             CurrentState.HandleKeyUp(e);
             PopState();
-        }
-
-        /// <inheritdoc/>
-        protected override void OnItemsChanged(NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action == NotifyCollectionChangedAction.Reset)
-            {
-                CurrentDrawingIndexes.Clear();
-                if (CanSelectMultipleItems)
-                {
-                    base.SelectedItems.Clear();
-                    SelectedItems.Clear();
-                }
-                else
-                {
-                    SelectedItem = null;
-                }
-            }
-            else if (e.NewStartingIndex != -1 && e.Action == NotifyCollectionChangedAction.Add)
-            {
-                // a container is not able to be drawn if it has Width or Height already
-                var container = (RichCanvasContainer)ItemContainerGenerator.ContainerFromIndex(e.NewStartingIndex);
-                if (!container.IsValid())
-                {
-                    CurrentDrawingIndexes.Add(e.NewStartingIndex);
-                }
-            }
-            else if (e.Action == NotifyCollectionChangedAction.Remove)
-            {
-                CurrentDrawingIndexes.Remove(e.OldStartingIndex);
-                for (int i = e.OldStartingIndex; i < CurrentDrawingIndexes.Count; i++)
-                {
-                    CurrentDrawingIndexes[i]--;
-                }
-            }
-            else if (e.Action == NotifyCollectionChangedAction.Move)
-            {
-                int oldValue = CurrentDrawingIndexes[e.OldStartingIndex];
-                CurrentDrawingIndexes.Remove(oldValue);
-                CurrentDrawingIndexes.Insert(e.NewStartingIndex, oldValue);
-            }
-            // Replace event not implemented because the index doesn't change
         }
 
         /// <inheritdoc />

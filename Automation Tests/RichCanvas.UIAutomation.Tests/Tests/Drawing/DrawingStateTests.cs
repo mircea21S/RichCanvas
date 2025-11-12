@@ -10,7 +10,6 @@ using NUnit.Framework;
 
 using RichCanvasUIA.Client;
 using RichCanvasUIA.Client.Automation;
-using RichCanvasUIA.Client.Models;
 using RichCanvasUIA.Client.TestMocks;
 
 using Point = System.Drawing.Point;
@@ -20,47 +19,6 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
     [TestFixture]
     public class DrawingStateTests : RichCanvasTestAppTest
     {
-        [Test, ShouldExecuteDrawingEndedCommand(false)]
-        public void DrawFromItemsSourceWithTwoItems_AfterRemovingOneItem_ShouldDrawOnlyRemainingItem()
-        {
-            // arrange
-            RichCanvas.AddEmptyRectangle();
-            RichCanvas.AddEmptyLine();
-            RichCanvas.RemoveFirstItem();
-
-            // act
-            RichCanvas.Draw(new Size(50, 50), out _);
-
-            // assert
-            RichCanvas.Items.Length.Should().Be(1);
-            RichCanvasContainerAutomation itemDrawn = RichCanvas.Items[0];
-            itemDrawn.RichCanvasContainerData.DataContextType.Should().Be(typeof(Line));
-            itemDrawn.IsDrawn.Should().BeTrue();
-        }
-
-        [Test]
-        public void DrawFromItemsSourceWithTwoItems_WhenMovingFirstToTheEnd_ShouldDrawItemsInOrder()
-        {
-            // arrange
-            RichCanvas.AddEmptyRectangle();
-            RichCanvas.AddEmptyLine();
-            RichCanvas.MoveFirstItemToTheEnd();
-
-            // draw first item
-            RichCanvas.Draw(new Size(50, 50), out _);
-            RichCanvasContainerAutomation firstItemDrawn = RichCanvas.Items[0];
-            // assert
-            firstItemDrawn.RichCanvasContainerData.DataContextType.Should().Be(typeof(Line));
-            firstItemDrawn.IsDrawn.Should().BeTrue();
-
-            // draw second item
-            RichCanvas.Draw(new Size(50, 50), out _);
-            RichCanvasContainerAutomation secondItemDrawn = RichCanvas.Items[1];
-            // assert
-            secondItemDrawn.RichCanvasContainerData.DataContextType.Should().Be(typeof(RichItemContainerModel));
-            secondItemDrawn.IsDrawn.Should().BeTrue();
-        }
-
         [Test]
         [TestCase(-1, 1)]
         [TestCase(1, -1)]

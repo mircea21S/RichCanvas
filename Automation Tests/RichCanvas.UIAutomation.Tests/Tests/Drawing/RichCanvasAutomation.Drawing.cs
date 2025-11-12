@@ -25,10 +25,10 @@ namespace RichCanvas.UIAutomation.Tests
 
         public void DrawPositionedContainer(RichCanvasContainerAutomation container, Size containerSize, int scaleX = 1, int scaleY = 1)
         {
-            Point startPoint = container.Location.ToCanvasDrawingPoint();
+            Point startPoint = container.Location;
             FlaUIInputData flaUiInput = InputMapper.MapToFlaUIInput(RichCanvasGestures.Drawing);
             Point endPoint = GetEndPointByScale(startPoint, containerSize, scaleX, scaleY);
-            flaUiInput.Drag(startPoint, endPoint.ToCanvasDrawingPoint());
+            flaUiInput.Drag(startPoint.ToCanvasDrawingPoint(), endPoint.ToCanvasDrawingPoint());
         }
 
         private Point GetEndPointByScale(Point pointOnCanvas, Size containerSize, int scaleX, int scaleY)
