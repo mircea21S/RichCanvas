@@ -15,10 +15,8 @@ namespace RichCanvas.UIAutomation
     /// Initializes a new <see cref="RichCanvasAutomationPeer"/>.
     /// </remarks>
     /// <param name="owner"></param>
-    public class RichCanvasAutomationPeer(RichCanvasAutomation owner) : SelectorAutomationPeer(owner),
-        IValueProvider,
-        IScrollProvider
-    //ITransformProvider
+    public partial class RichCanvasAutomationPeer(RichCanvasAutomation owner) : SelectorAutomationPeer(owner),
+        IValueProvider, IScrollProvider
     {
         /// <summary>
         /// Gets the <see cref="RichCanvas"/> that is associated with this <see cref="RichCanvasAutomationPeer"/>.
@@ -94,6 +92,7 @@ namespace RichCanvas.UIAutomation
                 return;
             }
             OwnerRichCanvas.RealTimeDraggingEnabled = richCanvasData.RealTimeDraggingEnabled;
+            OwnerRichCanvas.ViewportLocation = richCanvasData.ViewportLocation;
         }
 
         /// <inheritdoc/>
@@ -101,6 +100,7 @@ namespace RichCanvas.UIAutomation
         {
             PatternInterface.Value => this,
             PatternInterface.Scroll => this,
+            PatternInterface.Transform => this,
             _ => base.GetPattern(patternInterface)
         };
 

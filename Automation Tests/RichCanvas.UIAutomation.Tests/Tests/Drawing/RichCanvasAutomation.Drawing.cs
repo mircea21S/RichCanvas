@@ -14,6 +14,8 @@ namespace RichCanvas.UIAutomation.Tests
 {
     public partial class RichCanvasAutomation
     {
+        private static readonly Random _rand = new();
+
         public void Draw(Size containerSize, out Point containerLocation, int scaleX = 1, int scaleY = 1)
         {
             Point pointOnCanvas = GetRandomPointOnRichCanvas();
@@ -115,9 +117,8 @@ namespace RichCanvas.UIAutomation.Tests
                 throw new InvalidOperationException("Canvas has no rendered size. Ensure it's loaded and visible.");
             }
 
-            var rand = new Random();
-            double x = rand.NextDouble() * width;
-            double y = rand.NextDouble() * height;
+            double x = _rand.NextDouble() * width;
+            double y = _rand.NextDouble() * height;
             return new Point(x.ToInt(), y.ToInt());
         }
 

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 
 using FlaUI.Core.Input;
 using FlaUI.Core.WindowsAPI;
+
+using RichCanvas.Gestures;
 
 namespace RichCanvas.UIAutomation.Tests.Helpers
 {
@@ -12,20 +15,24 @@ namespace RichCanvas.UIAutomation.Tests.Helpers
         {
             if (input is System.Windows.Input.MouseGesture mouseGesture)
             {
-                return new FlaUIInputData(mouseGesture.Modifiers.ToVirtualKeyShort(), mouseGesture.MouseAction.ToMouseButton());
+                return new FlaUIInputData([mouseGesture.Modifiers.ToVirtualKeyShort()], mouseGesture.MouseAction.ToMouseButton());
+            }
+            if (input is MouseKeyGesture mouseKeyGesture)
+            {
+                return new FlaUIInputData([.. mouseKeyGesture.KeyGestures.Select(x => x.Key.ToVirtualKeyShort())], mouseKeyGesture.MouseGesture.MouseAction.ToMouseButton());
             }
             throw new NotSupportedException($"Input gesture {input.GetType().Name} not supported.");
         }
     }
 
-    internal class FlaUIInputData(VirtualKeyShort key, MouseButton mouseButton)
+    internal class FlaUIInputData(VirtualKeyShort[] keys, MouseButton mouseButton)
     {
-        public VirtualKeyShort Key { get; } = key;
+        public VirtualKeyShort[] Keys { get; } = keys;
         public MouseButton MouseButton { get; } = mouseButton;
 
         public void Start()
         {
-            Keyboard.Press(Key);
+            PressKeys();
             Mouse.Down(MouseButton);
             Wait.UntilInputIsProcessed();
         }
@@ -33,22 +40,31 @@ namespace RichCanvas.UIAutomation.Tests.Helpers
         public void Stop()
         {
             Mouse.Up(MouseButton);
-            Keyboard.Release(Key);
+            ReleaseKeys();
             Wait.UntilInputIsProcessed();
         }
 
         public void Drag(Point startPoint, Point endPoint)
         {
-            Keyboard.Press(Key);
+            PressKeys();
             Mouse.Drag(startPoint, endPoint, MouseButton);
-            Keyboard.Release(Key);
+            ReleaseKeys();
         }
 
-        internal void Click(Point pointOnCanvas)
+        private void PressKeys()
         {
-            Keyboard.Press(Key);
-            Mouse.Click(pointOnCanvas, MouseButton);
-            Keyboard.Release(Key);
+            foreach (var key in Keys)
+            {
+                Keyboard.Press(key);
+            }
+        }
+
+        private void ReleaseKeys()
+        {
+            foreach (var key in Keys)
+            {
+                Keyboard.Release(key);
+            }
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System.Drawing;
 
+using FlaUI.Core.Tools;
+
 using RichCanvas.UIAutomation.Tests.Tests;
 
 namespace RichCanvas.UIAutomation.Tests
@@ -16,7 +18,7 @@ namespace RichCanvas.UIAutomation.Tests
         /// <returns></returns>
         internal static Point AsFlaUIFixedPoint(this Point point) => new Point(point.X * 2, point.Y * 2);
 
-        internal static Point AsDrawingPoint(this System.Windows.Point windowsPoint) => new Point((int)windowsPoint.X, (int)windowsPoint.Y);
+        internal static Point AsDrawingPoint(this System.Windows.Point windowsPoint) => new Point(windowsPoint.X.ToInt(), windowsPoint.Y.ToInt());
 
         internal static System.Windows.Point AsWindowsPoint(this Point drawingPoint) => new System.Windows.Point(drawingPoint.X, drawingPoint.Y);
 

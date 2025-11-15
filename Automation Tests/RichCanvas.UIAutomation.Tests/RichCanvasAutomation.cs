@@ -21,7 +21,11 @@ namespace RichCanvas.UIAutomation.Tests
 {
     public partial class RichCanvasAutomation : AutomationElement
     {
-        public Point ViewportLocation => RichCanvasData.ViewportLocation.AsDrawingPoint();
+        public Point ViewportLocation
+        {
+            get => RichCanvasData.ViewportLocation.AsDrawingPoint();
+            set => SetValue(value.AsWindowsPoint());
+        }
 
         public Size ViewportSizeInteger => new Size((int)RichCanvasData.ViewportSize.Width, (int)RichCanvasData.ViewportSize.Height);
 

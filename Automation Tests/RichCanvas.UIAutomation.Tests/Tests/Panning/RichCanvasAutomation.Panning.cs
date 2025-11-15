@@ -11,10 +11,18 @@ namespace RichCanvas.UIAutomation.Tests
 {
     public partial class RichCanvasAutomation
     {
-        public void Pan(Point fromPoint, Point toPoint)
+        public void Pan(out System.Windows.Vector distanceVector)
         {
-            Input.WithGesture(RichCanvasGestures.Pan).Drag(fromPoint, toPoint);
+            var panInputGesture = InputMapper.MapToFlaUIInput(RichCanvasGestures.Pan);
+            var startPoint = GetRandomPointOnRichCanvas();
+            var endPoint = GetRandomPointOnRichCanvas();
+            distanceVector = endPoint.AsWindowsPoint() - startPoint.AsWindowsPoint();
+
+            panInputGesture.Drag(startPoint.ToCanvasDrawingPoint(), endPoint.ToCanvasDrawingPoint());
         }
+
+        public void Pan(double x, double y)
+            => Patterns.Transform.Pattern.Move(x, y);
 
         public void PanItemOutsideViewport(RichCanvasContainerAutomation itemContainer, Direction direction, int outsideDistance, System.Windows.Size visualViewportSize)
         {
@@ -34,9 +42,12 @@ namespace RichCanvas.UIAutomation.Tests
                 Direction.Down => new Point(itemContainer.BoundingRectangle.Left, (int)visualViewportSize.Height + outsideDistance),
                 _ => throw new NotImplementedException()
             };
-            Pan(panningStartPoint, outsideViewportPoint.ToCanvasDrawingPoint());
+            Input.WithGesture(RichCanvasGestures.Pan).Drag(panningStartPoint, outsideViewportPoint.ToCanvasDrawingPoint());
         }
 
-        public void ResetViewportLocation() => ParentWindow.InvokeButton(AutomationIds.ResetViewportLocationButtonId);
+        public void ResetViewportLocation()
+        {
+            ParentWindow.InvokeButton(AutomationIds.ResetViewportLocationButtonId);
+        }
     }
 }
