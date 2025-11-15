@@ -2,11 +2,6 @@
 
 using NUnit.Framework;
 
-using RichCanvas.UIAutomation.Tests.Tests.Scrolling;
-
-using RichCanvasUIA.Client.Automation;
-using RichCanvasUIA.Client.TestMocks;
-
 using System.Drawing;
 
 namespace RichCanvas.UIAutomation.Tests.Tests.Panning
