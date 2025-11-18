@@ -11,7 +11,7 @@ using FlaUI.Core.Tools;
 using Newtonsoft.Json;
 
 using RichCanvas.Gestures;
-using RichCanvas.UIAutomation.ControlInformations;
+using RichCanvas.UIAutomation.Core.ControlInformations;
 using RichCanvas.UIAutomation.Tests.Helpers;
 
 namespace RichCanvas.UIAutomation.Tests

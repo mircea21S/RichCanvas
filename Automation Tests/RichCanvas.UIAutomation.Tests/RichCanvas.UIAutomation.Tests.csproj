@@ -17,7 +17,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\RichCanvas\RichCanvas.csproj" />
-		<ProjectReference Include="..\RichCanvas.UIAutomation\RichCanvas.UIAutomation.csproj" />
+		<ProjectReference Include="..\RichCanvas.UIAutomation.Core\RichCanvas.UIAutomation.Core.csproj" />
 		<ProjectReference Include="..\RichCanvasUIA.Client\RichCanvasUIA.Client.csproj" />
 	</ItemGroup>
 

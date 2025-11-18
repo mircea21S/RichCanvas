@@ -1,4 +1,4 @@
-﻿namespace RichCanvas.UIAutomation.ControlInformations
+﻿namespace RichCanvas.UIAutomation.Core.ControlInformations
 {
     /// <summary>
     /// Data transfer object exposing <see cref="RichCanvasContainer"/> information to UI Automation proejct.

@@ -10,7 +10,7 @@
         xmlns:rc="clr-namespace:RichCanvas;assembly=RichCanvas"
         xmlns:richCanvasConverters="clr-namespace:RichCanvas.Converters;assembly=RichCanvas"
         xmlns:statePresenters="clr-namespace:RichCanvasUIA.Client.StatePresenters"
-        xmlns:richCanvasUIA="clr-namespace:RichCanvas.UIAutomation;assembly=RichCanvas.UIAutomation"
+        xmlns:richCanvasUIA="clr-namespace:RichCanvas.UIAutomation.Core;assembly=RichCanvas.UIAutomation.Core"
         mc:Ignorable="d"
         Title="MainWindow"
         WindowState="Maximized">

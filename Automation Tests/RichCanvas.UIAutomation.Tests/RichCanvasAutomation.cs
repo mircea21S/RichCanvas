@@ -12,7 +12,7 @@ using FlaUI.Core.Patterns;
 using Newtonsoft.Json;
 
 using RichCanvas.Gestures;
-using RichCanvas.UIAutomation.ControlInformations;
+using RichCanvas.UIAutomation.Core.ControlInformations;
 using RichCanvas.UIAutomation.Tests.Helpers;
 using RichCanvas.UIAutomation.Tests.IPC;
 using RichCanvas.UIAutomation.Tests.Tests.Scrolling;

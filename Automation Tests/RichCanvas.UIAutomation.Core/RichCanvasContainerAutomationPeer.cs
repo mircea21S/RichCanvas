@@ -3,9 +3,9 @@ using System.Windows.Automation.Provider;
 
 using Newtonsoft.Json;
 
-using RichCanvas.UIAutomation.ControlInformations;
+using RichCanvas.UIAutomation.Core.ControlInformations;
 
-namespace RichCanvas.UIAutomation
+namespace RichCanvas.UIAutomation.Core
 {
     /// <summary>
     /// Exposes the <see cref="RichCanvasContainer"/> to UI Automation project.

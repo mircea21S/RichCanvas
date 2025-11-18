@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-using RichCanvas.UIAutomation.ControlInformations;
+using RichCanvas.UIAutomation.Core.ControlInformations;
 
 namespace RichCanvas.UIAutomation.Tests
 {

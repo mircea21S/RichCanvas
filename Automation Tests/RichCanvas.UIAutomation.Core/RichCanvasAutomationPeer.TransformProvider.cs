@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Automation.Provider;
 
-namespace RichCanvas.UIAutomation
+namespace RichCanvas.UIAutomation.Core
 {
     public partial class RichCanvasAutomationPeer : ITransformProvider
     {
