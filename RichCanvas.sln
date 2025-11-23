@@ -25,6 +25,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{02EA681E-C
 		docs\index.md = docs\index.md
 		docs\toc.yml = docs\toc.yml
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RichCanvas.UIAutomation.FlaUIClient", "Automation Tests\RichCanvas.UIAutomation.FlaUIClient\RichCanvas.UIAutomation.FlaUIClient.csproj", "{A2E7D8E9-2C79-4E26-8C55-041B3C477D54}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +38,10 @@ Global
 		{490C2A94-4C73-4B94-A041-080A41664E3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{490C2A94-4C73-4B94-A041-080A41664E3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{490C2A94-4C73-4B94-A041-080A41664E3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24630D9B-6FA8-4AA6-9855-9188736AA514}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24630D9B-6FA8-4AA6-9855-9188736AA514}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24630D9B-6FA8-4AA6-9855-9188736AA514}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24630D9B-6FA8-4AA6-9855-9188736AA514}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6A0834C1-7244-4B8F-A552-397B682AAD97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6A0834C1-7244-4B8F-A552-397B682AAD97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A0834C1-7244-4B8F-A552-397B682AAD97}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -43,18 +50,19 @@ Global
 		{D14A9E09-16C8-45D1-B43E-CD8107C3D03B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D14A9E09-16C8-45D1-B43E-CD8107C3D03B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D14A9E09-16C8-45D1-B43E-CD8107C3D03B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{24630D9B-6FA8-4AA6-9855-9188736AA514}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{24630D9B-6FA8-4AA6-9855-9188736AA514}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{24630D9B-6FA8-4AA6-9855-9188736AA514}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{24630D9B-6FA8-4AA6-9855-9188736AA514}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2E7D8E9-2C79-4E26-8C55-041B3C477D54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2E7D8E9-2C79-4E26-8C55-041B3C477D54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2E7D8E9-2C79-4E26-8C55-041B3C477D54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2E7D8E9-2C79-4E26-8C55-041B3C477D54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{24630D9B-6FA8-4AA6-9855-9188736AA514} = {AE0C5FFB-8DF8-4443-9187-2ED9A8BA64FB}
 		{6A0834C1-7244-4B8F-A552-397B682AAD97} = {AE0C5FFB-8DF8-4443-9187-2ED9A8BA64FB}
 		{D14A9E09-16C8-45D1-B43E-CD8107C3D03B} = {AE0C5FFB-8DF8-4443-9187-2ED9A8BA64FB}
-		{24630D9B-6FA8-4AA6-9855-9188736AA514} = {AE0C5FFB-8DF8-4443-9187-2ED9A8BA64FB}
+		{A2E7D8E9-2C79-4E26-8C55-041B3C477D54} = {AE0C5FFB-8DF8-4443-9187-2ED9A8BA64FB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {76F1837C-5EF7-4270-B808-4CF79BCCE864}
