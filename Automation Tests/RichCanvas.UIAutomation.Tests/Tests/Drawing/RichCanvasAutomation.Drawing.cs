@@ -8,7 +8,6 @@ using RichCanvas.UIAutomation.Tests.Helpers;
 using RichCanvas.UIAutomation.Tests.Tests.Scrolling;
 
 using RichCanvasUIA.Client.Automation;
-using RichCanvasUIA.Client.IPC_Pipe;
 
 namespace RichCanvas.UIAutomation.Tests
 {
@@ -48,61 +47,6 @@ namespace RichCanvas.UIAutomation.Tests
                 return new Point(pointOnCanvas.X + containerSize.Width, pointOnCanvas.Y - containerSize.Height);
             }
             return new Point(pointOnCanvas.X - containerSize.Width, pointOnCanvas.Y - containerSize.Height);
-        }
-
-        internal void AddDrawnRectangle()
-        {
-            SendToAppWithDrawingPrefix(PipeHandlerNames.Drawing.AddDrawnRectangle);
-        }
-
-        internal void AddPositionedRectangle()
-        {
-            SendToAppWithDrawingPrefix(PipeHandlerNames.Drawing.AddPositionedRectangle);
-        }
-
-        public void AddImmutableRectangle()
-        {
-            SendToAppWithDrawingPrefix(PipeHandlerNames.Drawing.AddImmutableRectangle);
-        }
-
-        public void MoveFirstItemToTheEnd()
-        {
-            SendToAppWithItemsSourcePrefix(PipeHandlerNames.ItemsSource.MoveFirstItemToTheEnd);
-        }
-
-        public void RemoveFirstItem()
-        {
-            SendToAppWithItemsSourcePrefix(PipeHandlerNames.ItemsSource.RemoveFirstItem);
-        }
-
-        public void AddEmptyRectangle()
-        {
-            SendToAppWithDrawingPrefix(PipeHandlerNames.Drawing.AddEmptyRectangle);
-        }
-
-        public void AddEmptyLine()
-        {
-            SendToAppWithDrawingPrefix(PipeHandlerNames.Drawing.AddEmptyLine);
-        }
-
-        public void DisableDrawingEndedCommandExecution()
-        {
-            SendToAppWithDrawingPrefix(PipeHandlerNames.Drawing.DisableDrawingEndedCommandExecution);
-        }
-
-        public void EnableDrawingEndedCommandExecution()
-        {
-            SendToAppWithDrawingPrefix(PipeHandlerNames.Drawing.EnableDrawingEndedCommandExecution);
-        }
-
-        private void SendToAppWithDrawingPrefix(string operationName)
-        {
-            UITestsAppChannel.Send($"{nameof(PipeHandlerNames.Drawing)}.{operationName}");
-        }
-
-        private void SendToAppWithItemsSourcePrefix(string operationName)
-        {
-            UITestsAppChannel.Send($"{nameof(PipeHandlerNames.ItemsSource)}.{operationName}");
         }
 
         private Point GetRandomPointOnRichCanvas()

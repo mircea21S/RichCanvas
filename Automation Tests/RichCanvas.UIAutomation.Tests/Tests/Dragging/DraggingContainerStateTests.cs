@@ -118,7 +118,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
             Window.InvokeButton(AutomationIds.AddTestSingleSelectionItemsButtonId);
             List<RichItemContainerModel> containers = SingleSelectionStateDataMocks.SingleSelectionItems;
             RichCanvas.SelectAllItems();
-            UITestsAppChannel.Send("Test");
+            RichCanvasUIAClientCommunicator.Send("Test");
             int dragOffset = 50;
 
             // act

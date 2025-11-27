@@ -159,7 +159,6 @@
                                                 ViewportLocation="{Binding ViewportLocation, Mode=TwoWay}"
                                                 ViewportSize="{Binding ViewportSize, Mode=OneWayToSource}"
                                                 ViewportZoom="{Binding ZoomingViewModel.ViewportZoom, Mode=TwoWay}"
-                                                ScrollFactor="100"
                                                 MinScale="{Binding ZoomingViewModel.MinScale, Mode=TwoWay}"
                                                 MaxScale="{Binding ZoomingViewModel.MaxScale, Mode=TwoWay}"
                                                 ScaleFactor="{Binding ZoomingViewModel.ScaleFactor, Mode=TwoWay}"

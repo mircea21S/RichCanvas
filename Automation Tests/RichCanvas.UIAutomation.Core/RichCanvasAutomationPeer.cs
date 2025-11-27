@@ -1,5 +1,4 @@
-﻿using System.Windows.Automation;
-using System.Windows.Automation.Peers;
+﻿using System.Windows.Automation.Peers;
 using System.Windows.Automation.Provider;
 
 using Newtonsoft.Json;
@@ -15,8 +14,7 @@ namespace RichCanvas.UIAutomation.Core
     /// Initializes a new <see cref="RichCanvasAutomationPeer"/>.
     /// </remarks>
     /// <param name="owner"></param>
-    public partial class RichCanvasAutomationPeer(RichCanvasAutomation owner) : SelectorAutomationPeer(owner),
-        IValueProvider, IScrollProvider
+    public partial class RichCanvasAutomationPeer(RichCanvasAutomation owner) : SelectorAutomationPeer(owner), IValueProvider
     {
         /// <summary>
         /// Gets the <see cref="RichCanvas"/> that is associated with this <see cref="RichCanvasAutomationPeer"/>.
@@ -46,40 +44,6 @@ namespace RichCanvas.UIAutomation.Core
             RealTimeDraggingEnabled = OwnerRichCanvas.RealTimeDraggingEnabled
         });
 
-        /// <summary>
-        /// <inheritdoc/>
-        /// <br/>
-        /// Returns: Always true.
-        /// </summary>
-        public bool HorizontallyScrollable => true;
-
-        /// <summary>
-        /// Gets associated <see cref="RichCanvas.HorizontalOffset"/> value.
-        /// </summary>
-        public double HorizontalScrollPercent => OwnerRichCanvas.HorizontalOffset;
-
-        /// <summary>
-        /// Gets associated <see cref="RichCanvas.ViewportSize"/>.Width value.
-        /// </summary>
-        public double HorizontalViewSize => OwnerRichCanvas.ViewportSize.Width;
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// <br/>
-        /// Returns: Always true.
-        /// </summary>
-        public bool VerticallyScrollable => true;
-
-        /// <summary>
-        /// Gets associated <see cref="RichCanvas.VerticalOffset"/> value.
-        /// </summary>
-        public double VerticalScrollPercent => OwnerRichCanvas.VerticalOffset;
-
-        /// <summary>
-        /// Gets associated <see cref="RichCanvas.ViewportSize"/>.Height value.
-        /// </summary>
-        public double VerticalViewSize => OwnerRichCanvas.ViewportSize.Height;
-
         /// <inheritdoc/>
         public void SetValue(string value)
         {
@@ -93,6 +57,7 @@ namespace RichCanvas.UIAutomation.Core
             }
             OwnerRichCanvas.RealTimeDraggingEnabled = richCanvasData.RealTimeDraggingEnabled;
             OwnerRichCanvas.ViewportLocation = richCanvasData.ViewportLocation;
+            OwnerRichCanvas.ScrollFactor = richCanvasData.ScrollFactor;
         }
 
         /// <inheritdoc/>
@@ -114,56 +79,5 @@ namespace RichCanvas.UIAutomation.Core
         /// <inheritdoc/>
         protected override ItemAutomationPeer CreateItemAutomationPeer(object item)
             => new RichCanvasContainerAutomationPeer(item, this);
-
-        /// <summary>
-        /// <inheritdoc/>
-        /// <br/>
-        /// Using <see cref="OwnerRichCanvas"/> implementation of <see cref="System.Windows.Controls.Primitives.IScrollInfo"/>.
-        /// </summary>
-        public void Scroll(ScrollAmount horizontalAmount, ScrollAmount verticalAmount)
-        {
-            if (verticalAmount == ScrollAmount.SmallIncrement)
-            {
-                OwnerRichCanvas.LineDown();
-            }
-            if (verticalAmount == ScrollAmount.SmallDecrement)
-            {
-                OwnerRichCanvas.LineUp();
-            }
-            if (verticalAmount == ScrollAmount.LargeIncrement)
-            {
-                OwnerRichCanvas.PageDown();
-            }
-            if (verticalAmount == ScrollAmount.LargeDecrement)
-            {
-                OwnerRichCanvas.PageUp();
-            }
-
-            if (horizontalAmount == ScrollAmount.SmallIncrement)
-            {
-                OwnerRichCanvas.LineLeft();
-            }
-            if (horizontalAmount == ScrollAmount.SmallDecrement)
-            {
-                OwnerRichCanvas.LineRight();
-            }
-            if (horizontalAmount == ScrollAmount.LargeIncrement)
-            {
-                OwnerRichCanvas.PageLeft();
-            }
-            if (horizontalAmount == ScrollAmount.LargeDecrement)
-            {
-                OwnerRichCanvas.PageRight();
-            }
-        }
-
-        /// <summary>
-        /// Sets the amount of vertical and horizontal offset on the <see cref="OwnerRichCanvas"/>.
-        /// </summary>
-        public void SetScrollPercent(double horizontalPercent, double verticalPercent)
-        {
-            OwnerRichCanvas.SetVerticalOffset(OwnerRichCanvas.VerticalOffset + verticalPercent);
-            OwnerRichCanvas.SetHorizontalOffset(OwnerRichCanvas.HorizontalOffset + horizontalPercent);
-        }
     }
 }

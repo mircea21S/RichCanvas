@@ -18,5 +18,10 @@
             public const string AddPositionedRectangle = "AddPositionedRectangle";
             public const string AddDrawnRectangle = "AddDrawnRectangle";
         }
+
+        public static class Selection
+        {
+            public const string AddSelectableItems = "AddSelectableItems";
+        }
     }
 }

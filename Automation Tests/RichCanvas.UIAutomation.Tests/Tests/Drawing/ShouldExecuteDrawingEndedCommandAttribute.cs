@@ -17,7 +17,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
             if (test.Fixture is RichCanvasTestAppTest testParent)
             {
                 // always reset to default value
-                testParent.RichCanvas.EnableDrawingEndedCommandExecution();
+                testParent.RichCanvasUIAClientCommunicator.EnableDrawingEndedCommandExecution();
             }
         }
 
@@ -25,7 +25,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
         {
             if (test.Fixture is RichCanvasTestAppTest testParent)
             {
-                testParent.RichCanvas.DisableDrawingEndedCommandExecution();
+                testParent.RichCanvasUIAClientCommunicator.DisableDrawingEndedCommandExecution();
             }
         }
     }

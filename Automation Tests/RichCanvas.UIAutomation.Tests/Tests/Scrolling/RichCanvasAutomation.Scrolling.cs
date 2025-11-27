@@ -9,6 +9,12 @@ namespace RichCanvas.UIAutomation.Tests
     {
         public IScrollPattern ScrollInfo => Patterns.Scroll.PatternOrDefault;
 
+        public double ScrollFactor
+        {
+            get => RichCanvasData.ScrollFactor;
+            set => SetValue(value);
+        }
+
         public void ScrollByArrowKeyOrButton(Direction scrollingMode)
         {
             if (Patterns.Scroll.TryGetPattern(out IScrollPattern scrollPattern))

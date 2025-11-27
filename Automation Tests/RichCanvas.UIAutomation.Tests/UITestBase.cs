@@ -21,7 +21,7 @@ namespace RichCanvas.UIAutomation.Tests
         private string AppPath { get; }
         protected Application Application { get; private set; }
         public Window Window { get; private set; }
-        public RichCanvasUITestsPipeServer UITestsAppChannel { get; private set; }
+        public RichCanvasUIAClientChannel RichCanvasUIAClientCommunicator { get; private set; }
 
         public UITestBase()
         {
@@ -37,7 +37,7 @@ namespace RichCanvas.UIAutomation.Tests
             {
                 Application.Close();
                 Retry.WhileFalse(() => Application.HasExited, TimeSpan.FromSeconds(2), ignoreException: true);
-                UITestsAppChannel.Dispose();
+                RichCanvasUIAClientCommunicator.Dispose();
                 Application.Dispose();
                 Application = null;
             }
@@ -45,19 +45,19 @@ namespace RichCanvas.UIAutomation.Tests
 
         protected void StartApplication()
         {
-            UITestsAppChannel = new RichCanvasUITestsPipeServer();
+            RichCanvasUIAClientCommunicator = new RichCanvasUIAClientChannel();
 
             var app = Application.AttachOrLaunch(new ProcessStartInfo
             {
                 FileName = AppPath,
-                Arguments = UITestsAppChannel.GetClientHandleAsString(),
+                Arguments = RichCanvasUIAClientCommunicator.GetClientHandleAsString(),
                 UseShellExecute = false
             });
             app.WaitWhileMainHandleIsMissing();
             // hack to wait for all the initializations (some NullRefException being thrown if not)
             Thread.Sleep(1000);
 
-            UITestsAppChannel.DisposeLocalCopyOfClientHandle();
+            RichCanvasUIAClientCommunicator.DisposeLocalCopyOfClientHandle();
 
             Application = app;
             Window = app.GetMainWindow(_automation);

@@ -27,7 +27,7 @@ namespace RichCanvas.UIAutomation.Tests
             set => SetValue(value.AsWindowsPoint());
         }
 
-        public Size ViewportSizeInteger => new Size((int)RichCanvasData.ViewportSize.Width, (int)RichCanvasData.ViewportSize.Height);
+        public System.Windows.Size ViewportSizeInteger => RichCanvasData.ViewportSize;
 
         public RichCanvasContainerAutomation[] Items
         {
@@ -88,7 +88,7 @@ namespace RichCanvas.UIAutomation.Tests
 
         public Window ParentWindow { get; internal set; }
 
-        public RichCanvasUITestsPipeServer UITestsAppChannel { get; internal set; }
+        public RichCanvasUIAClientChannel UITestsAppChannel { get; internal set; }
 
         public bool RealTimeDraggingEnabled
         {

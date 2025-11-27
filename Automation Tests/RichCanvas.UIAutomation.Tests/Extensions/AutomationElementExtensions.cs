@@ -6,7 +6,7 @@ namespace RichCanvas.UIAutomation.Tests
     {
         internal static RichCanvasAutomation AsRichCanvasAutomation(this AutomationElement self,
             Window parentWindow,
-            IPC.RichCanvasUITestsPipeServer uITestsAppChannel)
+            IPC.RichCanvasUIAClientChannel uITestsAppChannel)
             => self == null ? null : new RichCanvasAutomation(self.FrameworkAutomationElement)
             {
                 ParentWindow = parentWindow,

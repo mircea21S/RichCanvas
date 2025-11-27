@@ -30,7 +30,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
             var mockRectangleSize = new Size(50, 50);
 
             // act
-            RichCanvas.AddImmutableRectangle();
+            RichCanvasUIAClientCommunicator.AddImmutableRectangle();
             RichCanvasContainerAutomation drawnContainer = RichCanvas.Items[0];
             RichCanvas.DrawPositionedContainer(drawnContainer, mockRectangleSize, scaleX, scaleY);
 
@@ -54,7 +54,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
             var mockRectangleSize = new Size(50, 50);
 
             // act
-            RichCanvas.AddPositionedRectangle();
+            RichCanvasUIAClientCommunicator.AddPositionedRectangle();
             RichCanvasContainerAutomation drawnContainer = RichCanvas.Items[0];
             RichCanvas.DrawPositionedContainer(drawnContainer, mockRectangleSize, scaleX, scaleY);
 
@@ -89,7 +89,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
             var containerSize = new Size(100, 100);
 
             // act
-            RichCanvas.AddEmptyRectangle();
+            RichCanvasUIAClientCommunicator.AddEmptyRectangle();
             RichCanvas.Draw(containerSize, out Point unscaledContainerLocation, scaleX, scaleY);
 
             // assert
@@ -121,7 +121,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
             RichItemContainerModel mockRectangle = DrawingStateDataMocks.DrawnRectangleMock;
 
             // act
-            RichCanvas.AddDrawnRectangle();
+            RichCanvasUIAClientCommunicator.AddDrawnRectangle();
 
             // assert
             RichCanvasContainerAutomation drawnContainer = RichCanvas.Items[0];
@@ -141,7 +141,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
             var itemSize = new Size(40, 40);
 
             // act
-            RichCanvas.AddEmptyRectangle();
+            RichCanvasUIAClientCommunicator.AddEmptyRectangle();
             RichCanvas.Draw(itemSize, out _);
 
             // assert
