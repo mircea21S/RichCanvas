@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Windows;
+using System.Drawing;
 
 using FlaUI.Core.Input;
 
@@ -12,7 +12,7 @@ namespace RichCanvas.UIAutomation.Tests
     {
         private bool _isSelecting;
 
-        public void StartSelection(System.Drawing.Point fromPoint)
+        public void StartSelection(Point fromPoint)
         {
             if (_isSelecting)
             {
@@ -20,7 +20,7 @@ namespace RichCanvas.UIAutomation.Tests
             }
 
             _isSelecting = true;
-            Mouse.Position = fromPoint.ToCanvasDrawingPoint();
+            Mouse.Position = fromPoint;
 
             FlaUIInputData flaUIDragInput = InputMapper.MapToFlaUIInput(RichCanvasGestures.Select);
             flaUIDragInput.Start();
@@ -32,7 +32,7 @@ namespace RichCanvas.UIAutomation.Tests
             {
                 throw new InvalidOperationException("Selection operation not started. Select input should be processed before selecting.");
             }
-            Mouse.Position = toPoint.AsDrawingPoint().ToCanvasDrawingPoint();
+            Mouse.Position = toPoint;
             Wait.UntilInputIsProcessed();
         }
 

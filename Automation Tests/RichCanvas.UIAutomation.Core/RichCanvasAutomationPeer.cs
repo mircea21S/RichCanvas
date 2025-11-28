@@ -42,7 +42,8 @@ namespace RichCanvas.UIAutomation.Core
             MaxZoom = OwnerRichCanvas.MaxScale,
             MinZoom = OwnerRichCanvas.MinScale,
             RealTimeDraggingEnabled = OwnerRichCanvas.RealTimeDraggingEnabled,
-            RealTimeSelectionEnabled = OwnerRichCanvas.RealTimeSelectionEnabled
+            RealTimeSelectionEnabled = OwnerRichCanvas.RealTimeSelectionEnabled,
+            CanSelectMultipleItems = OwnerRichCanvas.CanSelectMultipleItems,
         });
 
         /// <inheritdoc/>
@@ -60,6 +61,7 @@ namespace RichCanvas.UIAutomation.Core
             OwnerRichCanvas.ViewportLocation = richCanvasData.ViewportLocation;
             OwnerRichCanvas.ScrollFactor = richCanvasData.ScrollFactor;
             OwnerRichCanvas.RealTimeSelectionEnabled = richCanvasData.RealTimeSelectionEnabled;
+            OwnerRichCanvas.CanSelectMultipleItems = richCanvasData.CanSelectMultipleItems;
         }
 
         /// <inheritdoc/>

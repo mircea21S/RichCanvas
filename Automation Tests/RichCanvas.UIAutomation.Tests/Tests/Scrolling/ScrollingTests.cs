@@ -371,7 +371,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Scrolling
             System.Drawing.Size containerSize = direction switch
             {
                 Direction.Right => new System.Drawing.Size(RichCanvas.ViewportSize.Width.ToInt() + 50, addedContainer.Location.Y + 50),
-                Direction.Up => new System.Drawing.Size(addedContainer.Location.X + 50, -RichCanvasDemoTitleBarHeight.ToInt() - addedContainer.Location.Y),
+                Direction.Up => new System.Drawing.Size(addedContainer.Location.X + 50, -RichCanvasDemoTitleBarHeight - addedContainer.Location.Y),
                 Direction.Down => new System.Drawing.Size(addedContainer.Location.X + 50, RichCanvas.ViewportSize.Height.ToInt() + 50),
                 _ => throw new NotImplementedException(),
             };

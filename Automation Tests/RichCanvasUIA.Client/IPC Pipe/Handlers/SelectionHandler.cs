@@ -27,6 +27,13 @@ namespace RichCanvasUIA.Client.IPC_Pipe.Handlers
                     _mainWindowDataContext.Items.Add(item);
                 }
             }
+            else if (pipeDataName == PipeHandlerNames.Selection.AddSingleSelectionTestItems)
+            {
+                foreach (RichItemContainerModel item in SingleSelectionStateDataMocks.SingleSelectionItems)
+                {
+                    _mainWindowDataContext.Items.Add(item);
+                }
+            }
         }
     }
 }

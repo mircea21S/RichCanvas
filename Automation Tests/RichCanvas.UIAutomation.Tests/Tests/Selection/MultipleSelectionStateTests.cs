@@ -1,20 +1,23 @@
 ﻿using System.Drawing;
 using System.Linq;
 
+using FlaUI.Core.Input;
+
 using FluentAssertions;
 
 using NUnit.Framework;
 
 using RichCanvas.UIAutomation.Tests.Tests.Selection.SelectionModes;
+using RichCanvas.UIAutomation.Tests.Utilities;
 
 namespace RichCanvas.UIAutomation.Tests.Tests.Selection
 {
+    [MultipleSelection]
     [TestFixture]
     public class MultipleSelectionStateTests : RichCanvasTestAppTest
     {
         [TestCase(true)]
         [TestCase(false)]
-        [MultipleSelection]
         [RealTimeSelection(true)]
         [Test]
         public void SelectItems_WhenRealTimeSelectionEnabled_ShouldSelectItemsWhileMouseIsMoving(bool inverseDrag)
@@ -36,7 +39,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
                 for (int i = RichCanvas.Items.Length - 1; i >= 0; i--)
                 {
                     RichCanvasContainerAutomation item = RichCanvas.Items[i];
-                    RichCanvas.Select(new System.Windows.Point(item.Location.X, item.Location.Y));
+                    RichCanvas.Select(new UIAClientAppPoint(item.Location.X, item.Location.Y));
                     selectedItems++;
                     RichCanvas.SelectedItems.Length.Should().Be(selectedItems);
                 }
@@ -52,7 +55,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
                 for (int i = 0; i < RichCanvas.Items.Length; i++)
                 {
                     RichCanvasContainerAutomation item = RichCanvas.Items[i];
-                    RichCanvas.Select(new System.Windows.Point(item.BoundingRectangle.Right, item.BoundingRectangle.Bottom));
+                    RichCanvas.Select(new UIAClientAppPoint(item.BoundingRectangle.Right, item.BoundingRectangle.Bottom));
                     selectedItems++;
                     RichCanvas.SelectedItems.Length.Should().Be(selectedItems);
                 }
@@ -63,7 +66,6 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
 
         [TestCase(true)]
         [TestCase(false)]
-        [MultipleSelection]
         [RealTimeSelection(false)]
         [Test]
         public void SelectItems_WhenRealTimeSelectionDisabled_ShouldNotSelectItemsWhileMouseIsMoving(bool inverseDrag)
@@ -83,7 +85,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
                 for (int i = RichCanvas.Items.Length - 1; i >= 0; i--)
                 {
                     RichCanvasContainerAutomation item = RichCanvas.Items[i];
-                    RichCanvas.Select(new System.Windows.Point(item.Location.X, item.Location.Y));
+                    RichCanvas.Select(new UIAClientAppPoint(item.Location.X, item.Location.Y));
                     RichCanvas.SelectedItems.Length.Should().Be(0);
                 }
 
@@ -96,7 +98,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
                 for (int i = 0; i < RichCanvas.Items.Length; i++)
                 {
                     RichCanvasContainerAutomation item = RichCanvas.Items[i];
-                    RichCanvas.Select(new System.Windows.Point(item.BoundingRectangle.Right, item.BoundingRectangle.Bottom));
+                    RichCanvas.Select(new UIAClientAppPoint(item.BoundingRectangle.Right, item.BoundingRectangle.Bottom));
                     RichCanvas.SelectedItems.Length.Should().Be(0);
                 }
 
@@ -106,7 +108,6 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
 
         [TestCase(true)]
         [TestCase(false)]
-        [MultipleSelection]
         [RealTimeSelection(false)]
         [Test]
         public void SelectItems_WhenRealTimeSelectionDisabled_ShouldSelectItemsWhenMouseIsReleased(bool inverseDrag)
@@ -126,7 +127,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
                 for (int i = RichCanvas.Items.Length - 1; i >= 0; i--)
                 {
                     RichCanvasContainerAutomation item = RichCanvas.Items[i];
-                    RichCanvas.Select(new System.Windows.Point(item.Location.X, item.Location.Y));
+                    RichCanvas.Select(new UIAClientAppPoint(item.Location.X, item.Location.Y));
                 }
 
                 RichCanvas.EndSelection();
@@ -139,7 +140,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
                 for (int i = 0; i < RichCanvas.Items.Length; i++)
                 {
                     RichCanvasContainerAutomation item = RichCanvas.Items[i];
-                    RichCanvas.Select(new System.Windows.Point(item.BoundingRectangle.Right, item.BoundingRectangle.Bottom));
+                    RichCanvas.Select(new UIAClientAppPoint(item.BoundingRectangle.Right, item.BoundingRectangle.Bottom));
                 }
 
                 RichCanvas.EndSelection();
@@ -147,7 +148,6 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
             }
         }
 
-        [MultipleSelection]
         [RealTimeSelection(true)]
         [Test]
         public void ClickingItems_WhenRealTimeSelectionEnabled_ShouldAddAllItemsToSelection()
@@ -159,13 +159,12 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
             int selectedItems = 0;
             foreach (RichCanvasContainerAutomation item in RichCanvas.Items)
             {
-                item.Select();
+                Mouse.Click(new UIAClientAppPoint(item.Location.X + 1, item.Location.Y + 1));
                 selectedItems++;
                 RichCanvas.SelectedItems.Length.Should().Be(selectedItems);
             }
         }
 
-        [MultipleSelection]
         [RealTimeSelection(false)]
         [Test]
         public void ClickingItems_WhenRealTimeSelectionDisabled_ShouldAddAllItemsToSelection()
@@ -177,13 +176,12 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
             int selectedItems = 0;
             foreach (RichCanvasContainerAutomation item in RichCanvas.Items)
             {
-                item.Select();
+                Mouse.Click(new UIAClientAppPoint(item.Location.X + 1, item.Location.Y + 1));
                 selectedItems++;
                 RichCanvas.SelectedItems.Length.Should().Be(selectedItems);
             }
         }
 
-        [MultipleSelection]
         [Test]
         public void SetIsSelectedOnItems_ShouldAddAllItemsToSelection()
         {

@@ -11,7 +11,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests
         /// <summary>
         /// Size of Title bar (SystemParamters.WindowCaptionHeight) = 22.5
         /// </summary>
-        public const double RichCanvasDemoTitleBarHeight = 23;
+        public const int RichCanvasDemoTitleBarHeight = 23;
 
         private readonly Size _visualViewportSize;
         private RichCanvasAutomation _richCanvas;

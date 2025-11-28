@@ -103,11 +103,6 @@ namespace RichCanvas.UIAutomation.Tests
             property.SetValue(containerInfoClone, value);
             Patterns.Value.Pattern.SetValue(JsonConvert.SerializeObject(containerInfoClone));
         }
-
-        public void Select()
-        {
-            Mouse.Click(new Point(Location.X + 1, Location.Y + 1).ToCanvasDrawingPoint());
-        }
     }
 
     public enum StartPosition

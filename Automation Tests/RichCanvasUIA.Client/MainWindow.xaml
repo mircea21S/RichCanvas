@@ -153,7 +153,6 @@
                                                 SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                                                 SelectedItems="{Binding SelectedItems}"
                                                 RealTimeSelectionEnabled="{Binding RealTimeSelectionEnabled}"
-                                                CanSelectMultipleItems="{Binding CanSelectMultipleItems}"
                                                 RealTimeDraggingEnabled="{Binding RealTimeDraggingEnabled, Mode=TwoWay}"
                                                 DrawingEndedCommand="{Binding DrawingState.DrawingEndedCommand}"
                                                 ViewportLocation="{Binding ViewportLocation, Mode=TwoWay}"

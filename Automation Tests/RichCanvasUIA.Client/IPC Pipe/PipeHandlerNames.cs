@@ -27,6 +27,7 @@
         {
             public const string AddSelectableItems = "AddSelectableItems";
             public const string AddConsecutiveItemsForRealTimeSelection = "AddConsecutiveItemsForRealTimeSelection";
+            public const string AddSingleSelectionTestItems = "AddSingleSelectionTestItems";
         }
     }
 }

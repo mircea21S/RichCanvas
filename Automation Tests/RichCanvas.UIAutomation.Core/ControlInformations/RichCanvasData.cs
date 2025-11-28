@@ -69,6 +69,7 @@ namespace RichCanvas.UIAutomation.Core.ControlInformations
 
         public bool RealTimeDraggingEnabled { get; set; }
         public bool RealTimeSelectionEnabled { get; set; }
+        public bool CanSelectMultipleItems { get; set; }
 
         public object Clone()
         {
@@ -87,7 +88,8 @@ namespace RichCanvas.UIAutomation.Core.ControlInformations
                 ViewportSize = ViewportSize,
                 ViewportZoom = ViewportZoom,
                 RealTimeDraggingEnabled = RealTimeDraggingEnabled,
-                RealTimeSelectionEnabled = RealTimeSelectionEnabled
+                RealTimeSelectionEnabled = RealTimeSelectionEnabled,
+                CanSelectMultipleItems = CanSelectMultipleItems
             };
         }
     }

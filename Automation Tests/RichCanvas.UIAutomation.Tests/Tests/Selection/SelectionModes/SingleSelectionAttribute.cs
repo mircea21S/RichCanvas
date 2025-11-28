@@ -6,7 +6,7 @@ using NUnit.Framework.Interfaces;
 namespace RichCanvas.UIAutomation.Tests.Tests.Selection.SelectionModes
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
-    public class MultipleSelectionAttribute : Attribute, ITestAction
+    public class SingleSelectionAttribute : Attribute, ITestAction
     {
         public ActionTargets Targets => ActionTargets.Test;
 
@@ -22,7 +22,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection.SelectionModes
         {
             if (test.Fixture is RichCanvasTestAppTest testParent)
             {
-                testParent.RichCanvas.CanSelectMultipleItems = true;
+                testParent.RichCanvas.CanSelectMultipleItems = false;
             }
         }
     }

@@ -95,6 +95,12 @@ namespace RichCanvas.UIAutomation.Tests
             set => SetValue(value);
         }
 
+        public bool CanSelectMultipleItems
+        {
+            get => RichCanvasSettings.CanSelectMultipleItems;
+            set => SetValue(value);
+        }
+
         public RichCanvasAutomation(FrameworkAutomationElementBase frameworkAutomationElement) : base(frameworkAutomationElement)
         {
         }
