@@ -15,18 +15,16 @@ namespace RichCanvas.UIAutomation.Tests.Tests
 
         private readonly Size _visualViewportSize;
 
-        public RichCanvasAutomation RichCanvas => Window.FindFirstDescendant(d => d.ByAutomationId("source")).AsRichCanvasAutomation(Window, RichCanvasUIAClientCommunicator);
-        protected Size ViewportSize => RichCanvas?.RichCanvasData?.ViewportSize ?? new Size(1187, 800);
+        public RichCanvasAutomation RichCanvas => Window.FindFirstDescendant(d => d.ByAutomationId("source")).AsRichCanvasAutomation(Window);
+        protected Size ViewportSize => RichCanvas?.RichCanvasSettings?.ViewportSize ?? new Size(1187, 800);
         protected Size VisualViewportSize => _visualViewportSize;
-        protected System.Drawing.Point VisualViewportCenter => new System.Drawing.Point((int)VisualViewportSize.Width / 2, (int)VisualViewportSize.Height / 2);
-        protected System.Drawing.Point ViewportCenter => new System.Drawing.Point((int)ViewportSize.Width / 2, (int)ViewportSize.Height / 2);
-        protected Point ViewportLocation => RichCanvas?.RichCanvasData?.ViewportLocation ?? new Point(0, 0);
+        protected Point ViewportLocation => RichCanvas?.RichCanvasSettings?.ViewportLocation ?? new Point(0, 0);
         protected bool ShouldRestartApplication { get; set; }
         protected bool IgnoreItemsClearOnTearDown { get; set; }
 
         public RichCanvasTestAppTest()
         {
-            _visualViewportSize = new Size(RichCanvas.RichCanvasData.ViewportSize.Width, RichCanvas.RichCanvasData.ViewportSize.Height);
+            _visualViewportSize = new Size(RichCanvas.RichCanvasSettings.ViewportSize.Width, RichCanvas.RichCanvasSettings.ViewportSize.Height);
         }
 
         [SetUp]

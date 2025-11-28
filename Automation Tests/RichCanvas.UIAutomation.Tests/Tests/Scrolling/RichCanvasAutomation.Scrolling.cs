@@ -1,4 +1,9 @@
-﻿using FlaUI.Core.Definitions;
+﻿using System.Drawing;
+
+using FlaUI.Core.AutomationElements;
+using FlaUI.Core.AutomationElements.Scrolling;
+using FlaUI.Core.Definitions;
+using FlaUI.Core.Input;
 using FlaUI.Core.Patterns;
 
 using RichCanvas.UIAutomation.Tests.Tests.Scrolling;
@@ -11,7 +16,7 @@ namespace RichCanvas.UIAutomation.Tests
 
         public double ScrollFactor
         {
-            get => RichCanvasData.ScrollFactor;
+            get => RichCanvasSettings.ScrollFactor;
             set => SetValue(value);
         }
 
@@ -61,34 +66,29 @@ namespace RichCanvas.UIAutomation.Tests
             }
         }
 
-        public void ScrollByScrollbarsDragging(Direction scrollingMode)
+        public void ScrollByScrollbarsDragging(Direction direction)
         {
-            if (Patterns.Scroll.TryGetPattern(out IScrollPattern scrollPattern))
+            if (direction == Direction.Up || direction == Direction.Down)
             {
-                if (scrollingMode == Direction.Up)
+                VerticalScrollBar verticalScrollBar = ParentWindow.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsVerticalScrollBar();
+                var verticalScrollbarLocation = new Point(verticalScrollBar.BoundingRectangle.Location.X + 2, (int)ViewportSize.Height / 2);
+                Point verticalScrollbarMaxDragLocation = direction switch
                 {
-                    scrollPattern.SetScrollPercent(0, -1);
-                }
-                else if (scrollingMode == Direction.Down)
-                {
-                    scrollPattern.SetScrollPercent(0, 1);
-                }
-                else if (scrollingMode == Direction.Left)
-                {
-                    scrollPattern.SetScrollPercent(1, 0);
-                }
-                else
-                {
-                    scrollPattern.SetScrollPercent(-1, 0);
-                }
+                    Direction.Down => new Point(verticalScrollbarLocation.X, verticalScrollbarLocation.Y - 1000),
+                    _ => new Point(verticalScrollbarLocation.X, verticalScrollbarLocation.Y + 1000)
+                };
+                Mouse.Drag(verticalScrollbarLocation, verticalScrollbarMaxDragLocation);
             }
-        }
-
-        public void SetScrollPercent(double horizontalOffset, double verticalOffset)
-        {
-            if (Patterns.Scroll.TryGetPattern(out IScrollPattern scrollPattern))
+            else
             {
-                scrollPattern.SetScrollPercent(horizontalOffset, verticalOffset);
+                HorizontalScrollBar horizontalScrollbar = ParentWindow.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsHorizontalScrollBar();
+                var horiontalScrollbarLocation = new Point((int)ViewportSize.Width / 2, horizontalScrollbar.BoundingRectangle.Location.Y + 2);
+                Point horizontalScrollbarMaxDragLocation = direction switch
+                {
+                    Direction.Left => new Point(horiontalScrollbarLocation.X - 1000, horiontalScrollbarLocation.Y),
+                    _ => new Point(horiontalScrollbarLocation.X + 1000, horiontalScrollbarLocation.Y),
+                };
+                Mouse.Drag(horiontalScrollbarLocation, horizontalScrollbarMaxDragLocation);
             }
         }
     }

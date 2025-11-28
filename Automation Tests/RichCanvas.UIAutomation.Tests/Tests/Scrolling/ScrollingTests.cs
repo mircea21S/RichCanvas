@@ -6,66 +6,28 @@ using FlaUI.Core.AutomationElements;
 using FlaUI.Core.AutomationElements.Scrolling;
 using FlaUI.Core.Definitions;
 using FlaUI.Core.Input;
+using FlaUI.Core.Tools;
 
 using FluentAssertions;
 
 using NUnit.Framework;
 
-using RichCanvas.UIAutomation.Tests.Helpers;
+using RichCanvas.UIAutomation.Tests.Tests.Dragging;
+using RichCanvas.UIAutomation.Tests.Tests.Drawing;
 
-using RichCanvasUIA.Client.Automation;
 using RichCanvasUIA.Client.TestMocks;
 
 namespace RichCanvas.UIAutomation.Tests.Tests.Scrolling
 {
     // TODO: Investingate horizontal mouse wheel scrolling.
-    [TestFixture(false)]
-    //[TestFixture(true, true)]
-    //[TestFixture(true, false)]
     public class ScrollingTests : RichCanvasTestAppTest
     {
         private const double Tolerance = 1e-5;
-        private readonly bool _shouldZoom;
-        private readonly bool _zoomIn;
-
-        public ScrollingTests(bool shouldZoom, bool zoomIn)
-        {
-            _shouldZoom = shouldZoom;
-            _zoomIn = zoomIn;
-        }
-
-        public ScrollingTests(bool shouldZoom)
-        {
-            _shouldZoom = shouldZoom;
-        }
-
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
-        {
-            if (_shouldZoom)
-            {
-                if (_zoomIn)
-                {
-                    RichCanvas.SetViewportZoom(0.3);
-                }
-                else
-                {
-                    RichCanvas.SetViewportZoom(1.5);
-                }
-            }
-        }
-
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            RichCanvas.ResetZoom();
-        }
 
         public override void TearDown()
         {
             base.TearDown();
-            RichCanvas.ResetViewportLocation();
-            Mouse.Position = VisualViewportCenter.ToCanvasDrawingPoint();
+            RichCanvas.ViewportLocation = new System.Drawing.Point(0, 0);
         }
 
         [TestCase(Direction.Down)]
@@ -76,48 +38,28 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Scrolling
         public void ScrollingVerticallyAndHorizontally_ShouldTranslateTheCanvas(Direction scrollingDirection)
         {
             // arrange
-            var initialViewportLocation = RichCanvas.ViewportLocation;
+            System.Drawing.Point initialViewportLocation = RichCanvas.ViewportLocation;
 
             // act
             RichCanvas.ScrollByArrowKeyOrButton(scrollingDirection);
 
             // assert
-            double scrollFactor = RichCanvas.RichCanvasData.ScrollFactor;
+            double scrollFactor = RichCanvas.ScrollFactor;
             if (scrollingDirection == Direction.Up)
             {
-                ViewportLocation.Y.Should().BeApproximately(initialViewportLocation.Y - scrollFactor, Tolerance);
+                RichCanvas.ViewportLocation.Y.Should().Be((initialViewportLocation.Y - scrollFactor).ToInt());
             }
             else if (scrollingDirection == Direction.Down)
             {
-                ViewportLocation.Y.Should().BeApproximately(initialViewportLocation.Y + scrollFactor, Tolerance);
+                RichCanvas.ViewportLocation.Y.Should().Be((initialViewportLocation.Y + scrollFactor).ToInt());
             }
             else if (scrollingDirection == Direction.Left)
             {
-                ViewportLocation.X.Should().BeApproximately(initialViewportLocation.X + scrollFactor, Tolerance);
+                RichCanvas.ViewportLocation.X.Should().Be((initialViewportLocation.X + scrollFactor).ToInt());
             }
             else
             {
-                ViewportLocation.X.Should().BeApproximately(initialViewportLocation.X - scrollFactor, Tolerance);
-            }
-        }
-
-        private void MouseWheelScroll(Direction scrollingDirection)
-        {
-            if (scrollingDirection == Direction.Up)
-            {
-                Mouse.Scroll(1);
-            }
-            else if (scrollingDirection == Direction.Down)
-            {
-                Mouse.Scroll(-1);
-            }
-            else if (scrollingDirection == Direction.Right)
-            {
-                Mouse.HorizontalScroll(1);
-            }
-            else
-            {
-                Mouse.HorizontalScroll(-1);
+                RichCanvas.ViewportLocation.X.Should().Be((initialViewportLocation.X - scrollFactor).ToInt());
             }
         }
 
@@ -135,16 +77,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Scrolling
             RichCanvas.ScrollByArrowKeyOrButton(scrollingDirection);
 
             // assert
-            if (scrollingDirection == Direction.Up || scrollingDirection == Direction.Down)
-            {
-                VerticalScrollBar verticalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsVerticalScrollBar();
-                verticalScrollBar.Should().BeNull();
-            }
-            else
-            {
-                HorizontalScrollBar horizontalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsHorizontalScrollBar();
-                horizontalScrollBar.Should().BeNull();
-            }
+            ScrollbarShouldNotBeVisible(scrollingDirection);
         }
 
         [TestCase(Direction.Down)]
@@ -159,24 +92,29 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Scrolling
             RichCanvas.ScrollFactor = 100;
 
             // act
-            var drawnContainer = RichCanvas.Items[0];
+            RichCanvasContainerAutomation drawnContainer = RichCanvas.Items[0];
             do
             {
                 RichCanvas.ScrollByArrowKeyOrButton(scrollingDirection);
+                // assert
+                if (ItemIsInsideViewport(drawnContainer, scrollingDirection))
+                {
+                    if (scrollingDirection == Direction.Up || scrollingDirection == Direction.Down)
+                    {
+                        VerticalScrollBar verticalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsVerticalScrollBar();
+                        verticalScrollBar.Should().BeNull();
+                    }
+                    else
+                    {
+                        HorizontalScrollBar horizontalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsHorizontalScrollBar();
+                        horizontalScrollBar.Should().BeNull();
+                    }
+                }
             }
             while (ItemIsInsideViewport(drawnContainer, scrollingDirection));
 
             // assert
-            if (scrollingDirection == Direction.Up || scrollingDirection == Direction.Down)
-            {
-                VerticalScrollBar verticalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsVerticalScrollBar();
-                verticalScrollBar.Should().NotBeNull();
-            }
-            else
-            {
-                HorizontalScrollBar horizontalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsHorizontalScrollBar();
-                horizontalScrollBar.Should().NotBeNull();
-            }
+            ScrollbarShouldBeVisible(scrollingDirection);
         }
 
         private bool ItemIsInsideViewport(RichCanvasContainerAutomation drawnContainer, Direction scrollingDirection)
@@ -184,9 +122,9 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Scrolling
             return scrollingDirection switch
             {
                 Direction.Down => RichCanvas.ViewportLocation.Y <= drawnContainer.Location.Y,
-                Direction.Up => Math.Abs(RichCanvas.ViewportLocation.Y) <= RichCanvas.ViewportSizeInteger.Height - DrawingStateDataMocks.DrawnRectangleMock.BoundingBox.Bottom,
+                Direction.Up => Math.Abs(RichCanvas.ViewportLocation.Y) <= RichCanvas.ViewportSize.Height - DrawingStateDataMocks.DrawnRectangleMock.BoundingBox.Bottom,
                 Direction.Left => RichCanvas.ViewportLocation.X <= drawnContainer.Location.X,
-                Direction.Right => Math.Abs(RichCanvas.ViewportLocation.X) <= RichCanvas.ViewportSizeInteger.Width - DrawingStateDataMocks.DrawnRectangleMock.BoundingBox.Right,
+                Direction.Right => Math.Abs(RichCanvas.ViewportLocation.X) <= RichCanvas.ViewportSize.Width - DrawingStateDataMocks.DrawnRectangleMock.BoundingBox.Right,
                 _ => true,
             };
         }
@@ -194,256 +132,161 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Scrolling
         // scrollbar dragging here means actually putting the mouse over the scrollbar then dragging it (not using automation patterns)
         [TestCase(Direction.Down)]
         [TestCase(Direction.Up)]
-        [Test]
-        public void ScrollingVerticallyByScrollbarDraggingToMaximum_WithItemsInsideViewportSizeAndVisibleScrollbar_ShouldMoveAllItemsInViewport(Direction scrollingMode)
-        {
-            // arrange
-            Window.InvokeButton(AutomationIds.AddSelectableItemsButtonId2);
-            ArrangeUIVerticallyToShowScrollbars(scrollingMode);
-            VerticalScrollBar verticalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsVerticalScrollBar();
-            System.Drawing.Point verticalScrollbarBoundingRectangle = verticalScrollBar.BoundingRectangle.Location;
-            var verticalScrollbarLocation = new System.Drawing.Point(verticalScrollbarBoundingRectangle.X + 2, (int)VisualViewportSize.Height / 2);
-
-            // act
-            Mouse.Position = verticalScrollbarLocation;
-            Mouse.Down();
-            if (scrollingMode == Direction.Down)
-            {
-                Mouse.Position = new System.Drawing.Point(verticalScrollbarLocation.X, verticalScrollbarLocation.Y - 1000);
-            }
-            else
-            {
-                Mouse.Position = new System.Drawing.Point(verticalScrollbarLocation.X, verticalScrollbarLocation.Y + 1000);
-            }
-
-            // assert
-            if (scrollingMode == Direction.Down)
-            {
-                RichCanvas.RichCanvasData.ViewportLocation.Y.Should().BeApproximately(RichCanvas.RichCanvasData.ItemsExtent.Top, Tolerance);
-            }
-            else
-            {
-                RichCanvas.RichCanvasData.ViewportLocation.Y.Should().BeApproximately(-(ViewportSize.Height - RichCanvas.RichCanvasData.ItemsExtent.Bottom), Tolerance);
-            }
-            Mouse.Up();
-            Mouse.Position = ViewportCenter;
-        }
-
-        // scrollbar dragging here means actually putting the mouse over the scrollbar then dragging it (not using automation patterns)
         [TestCase(Direction.Left)]
         [TestCase(Direction.Right)]
         [Test]
-        public void ScrollingHorizontallyByScrollbarDraggingToMaximum_WithItemsInsideViewportSizAndVisibleScrollbar_ShouldMoveAllItemsInViewport(Direction scrollingMode)
+        public void UsingScrollbars_WhenItemsOutsideViewport_ShouldBringAllItemsOnDirectionInsideViewport(Direction direction)
         {
             // arrange
-            Window.InvokeButton(AutomationIds.AddSelectableItemsButtonId2);
-            RichCanvas.ResetViewportLocation();
-            ArrangeUIHorizontallyToShowScrollbars(scrollingMode);
-            HorizontalScrollBar horizontalScrollbar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsHorizontalScrollBar();
-            System.Drawing.Point horizontalScrollbarBoundingRectangle = horizontalScrollbar.BoundingRectangle.Location;
-            var horizontalScrollbarLocation = new System.Drawing.Point((int)VisualViewportSize.Width / 2, horizontalScrollbarBoundingRectangle.Y + 2);
+            switch (direction)
+            {
+                case Direction.Down:
+                    RichCanvasUIAClientCommunicator.AddItemTopOutsideViewport();
+                    break;
+
+                case Direction.Up:
+                    RichCanvasUIAClientCommunicator.AddItemBottomOutsideViewport();
+                    break;
+
+                case Direction.Left:
+                    RichCanvasUIAClientCommunicator.AddItemLeftOutsideViewport();
+                    break;
+
+                case Direction.Right:
+                    RichCanvasUIAClientCommunicator.AddItemRightOutsideViewport();
+                    break;
+            }
 
             // act
-            Mouse.Position = horizontalScrollbarLocation;
-            Mouse.Down();
-            if (scrollingMode == Direction.Left)
-            {
-                Mouse.Position = new System.Drawing.Point(horizontalScrollbarLocation.X - 1000, horizontalScrollbarLocation.Y);
-            }
-            else
-            {
-                Mouse.Position = new System.Drawing.Point(horizontalScrollbarLocation.X + 1000, horizontalScrollbarLocation.Y);
-            }
+            RichCanvas.ScrollByScrollbarsDragging(direction);
 
             // assert
-            if (scrollingMode == Direction.Left)
+            if (direction == Direction.Down)
             {
-                RichCanvas.RichCanvasData.ViewportLocation.X.Should().BeApproximately(RichCanvas.RichCanvasData.ItemsExtent.Left, Tolerance);
+                RichCanvas.ViewportLocation.Y.Should().Be(RichCanvas.RichCanvasSettings.ItemsExtent.Top.ToInt());
+            }
+            else if (direction == Direction.Up)
+            {
+                RichCanvas.ViewportLocation.Y.Should().Be(-(RichCanvas.ViewportSize.Height - RichCanvas.RichCanvasSettings.ItemsExtent.Bottom).ToInt());
+            }
+            else if (direction == Direction.Left)
+            {
+                RichCanvas.ViewportLocation.X.Should().Be(RichCanvas.RichCanvasSettings.ItemsExtent.Left.ToInt());
             }
             else
             {
-                RichCanvas.RichCanvasData.ViewportLocation.X.Should().BeApproximately(-(ViewportSize.Width - RichCanvas.RichCanvasData.ItemsExtent.Right), Tolerance);
+                RichCanvas.ViewportLocation.X.Should().Be(-(RichCanvas.ViewportSize.Width - RichCanvas.RichCanvasSettings.ItemsExtent.Right).ToInt());
             }
-            Mouse.Up();
-            Mouse.Position = ViewportCenter;
         }
 
         // Left direction not excluded here as I can offset the starting point, because I am scrolling only once
         // scrolling multiple times would require offseting multiple times, meaning mouse up and down which will stop and restart dragging each time
-        [TestCase(Direction.Up, 1)]
-        [TestCase(Direction.Down, 1)]
-        [TestCase(Direction.Left, 1)]
-        [TestCase(Direction.Right, 1)]
-        [TestCase(Direction.Up, 5)]
-        [TestCase(Direction.Down, 5)]
-        [TestCase(Direction.Left, 5)]
-        [TestCase(Direction.Right, 5)]
-        [TestCase(Direction.Up, 10)]
-        [TestCase(Direction.Down, 10)]
-        [TestCase(Direction.Left, 10)]
-        [TestCase(Direction.Right, 10)]
+        [TestCase(Direction.Up)]
+        [TestCase(Direction.Down)]
+        [TestCase(Direction.Left)]
+        [TestCase(Direction.Right)]
+        [RealTimeDragging(false)]
         [Test]
-        public void SingleDraggingItemOutsideViewport_WithRealTimeDraggingDisable_ShouldUpdateScrollOnMouseUp(Direction draggingDirection, int outsideDistance)
+        public void DragItemOutsideViewport_WithRealTimeDraggingDisable_ShouldShowScrollBarsWhenMouseIsReleased(Direction draggingDirection)
         {
             // arrange
-            Window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);
+            RichCanvasUIAClientCommunicator.AddDrawnRectangle();
+            RichCanvasContainerAutomation drawnContainer = RichCanvas.Items[0];
+            int offset = draggingDirection switch
+            {
+                Direction.Left => RichCanvas.ViewportLocation.X - (drawnContainer.Location.X + drawnContainer.ActualWidth.ToInt()),
+                Direction.Right => (RichCanvas.ViewportSize.Width - drawnContainer.Location.X).ToInt(),
+                Direction.Up => RichCanvas.ViewportLocation.Y - (drawnContainer.Location.Y + drawnContainer.ActualHeight.ToInt()),
+                Direction.Down => (RichCanvas.ViewportSize.Height - drawnContainer.Location.Y).ToInt(),
+                _ => throw new NotImplementedException()
+            };
 
             // act
-            RichCanvas.DragContainerOutsideViewportWithOffset(RichCanvas.Items[0], draggingDirection, outsideDistance, VisualViewportSize);
+            switch (draggingDirection)
+            {
+                case Direction.Left:
+                    drawnContainer.Drag(offset, StartPosition.TopRight, DragDirection.OnlyX);
+                    break;
+
+                case Direction.Up:
+                    drawnContainer.Drag(offset, StartPosition.BottomLeft, DragDirection.OnlyY);
+                    break;
+
+                case Direction.Down:
+                    drawnContainer.Drag(offset, dragDirection: DragDirection.OnlyY);
+                    break;
+
+                case Direction.Right:
+                    drawnContainer.Drag(offset, dragDirection: DragDirection.OnlyX);
+                    break;
+            }
 
             // assert
-            Vector scrollOffset = ViewportLocation - RichCanvas.RichCanvasData.ItemsExtent.Location;
-            Rect extent = RichCanvas.RichCanvasData.ItemsExtent;
-            extent.Union(new Rect(ViewportLocation, ViewportSize));
-
-            if (draggingDirection == Direction.Up)
-            {
-                RichCanvas.ScrollInfo.VerticalScrollPercent.Value.Should().BeApproximately(scrollOffset.Y, Tolerance);
-                RichCanvas.RichCanvasData.ViewportExtent.Height.Should().BeApproximately(extent.Height, Tolerance);
-            }
-            if (draggingDirection == Direction.Down)
-            {
-                RichCanvas.ScrollInfo.VerticalScrollPercent.Value.Should().Be(0);
-                RichCanvas.RichCanvasData.ViewportExtent.Height.Should().BeApproximately(extent.Height, Tolerance);
-            }
-            if (draggingDirection == Direction.Left)
-            {
-                RichCanvas.ScrollInfo.HorizontalScrollPercent.Value.Should().BeApproximately(scrollOffset.X, Tolerance);
-                RichCanvas.RichCanvasData.ViewportExtent.Width.Should().BeApproximately(extent.Width, Tolerance);
-            }
-            if (draggingDirection == Direction.Right)
-            {
-                RichCanvas.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(0);
-                RichCanvas.RichCanvasData.ViewportExtent.Width.Should().BeApproximately(extent.Width, Tolerance);
-            }
+            ScrollbarShouldBeVisible(draggingDirection);
         }
 
-        // exclude Left direction as full screen window is used and there's no space left
-        // on the left side of the screen to drag the mouse
-        [TestCase(Direction.Up, 1)]
-        [TestCase(Direction.Down, 1)]
-        [TestCase(Direction.Right, 1)]
-        [TestCase(Direction.Up, 5)]
-        [TestCase(Direction.Down, 5)]
-        [TestCase(Direction.Right, 5)]
-        [TestCase(Direction.Up, 10)]
-        [TestCase(Direction.Down, 10)]
-        [TestCase(Direction.Right, 10)]
+        [TestCase(Direction.Up)]
+        [TestCase(Direction.Down)]
+        [TestCase(Direction.Left)]
+        [TestCase(Direction.Right)]
+        [RealTimeDragging(false)]
         [Test]
-        public void SingleDraggingItemOutsideViewport_WithRealTimeDraggingDisable_ShouldNotUpdateScrollOnMouseMove(Direction draggingDirection, int offsetDistance)
+        public void DragItemOutsideViewport_WithRealTimeDraggingDisable_ShouldNotShowScrollBarsWhileMouseIsMoving(Direction draggingDirection)
         {
             // arrange
-            Window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);
-
-            // act
-            RichCanvas.DefferedDragContainerOutsideViewportWithOffset(RichCanvas.Items[0], draggingDirection, offsetDistance, AssertScrollModification, VisualViewportSize);
-
-            // assert
-            void AssertScrollModification(System.Drawing.Point _, int offsetOnStep)
+            RichCanvasUIAClientCommunicator.AddDrawnRectangle();
+            RichCanvasContainerAutomation drawnContainer = RichCanvas.Items[0];
+            int offset = draggingDirection switch
             {
-                if (draggingDirection == Direction.Up)
-                {
-                    RichCanvas.ScrollInfo.VerticalScrollPercent.Value.Should().Be(0);
-                    RichCanvas.RichCanvasData.ViewportExtent.Height.Should().Be(ViewportSize.Height);
-                }
-                if (draggingDirection == Direction.Down)
-                {
-                    RichCanvas.ScrollInfo.VerticalScrollPercent.Value.Should().Be(0);
-                    RichCanvas.RichCanvasData.ViewportExtent.Height.Should().Be(ViewportSize.Height);
-                }
-                if (draggingDirection == Direction.Right)
-                {
-                    RichCanvas.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(0);
-                    RichCanvas.RichCanvasData.ViewportExtent.Width.Should().Be(ViewportSize.Width);
-                }
-            }
-        }
+                Direction.Left => RichCanvas.ViewportLocation.X - (drawnContainer.Location.X + drawnContainer.ActualWidth.ToInt()),
+                Direction.Right => (RichCanvas.ViewportSize.Width - drawnContainer.Location.X).ToInt(),
+                Direction.Up => RichCanvas.ViewportLocation.Y - (drawnContainer.Location.Y + drawnContainer.ActualHeight.ToInt()),
+                Direction.Down => (RichCanvas.ViewportSize.Height - drawnContainer.Location.Y).ToInt(),
+                _ => throw new NotImplementedException()
+            };
 
-        // exclude Left direction as full screen window is used and there's no space left
-        // on the left side of the screen to drag the mouse
-        [TestCase(Direction.Up, 1)]
-        [TestCase(Direction.Down, 1)]
-        [TestCase(Direction.Right, 1)]
-        [TestCase(Direction.Up, 5)]
-        [TestCase(Direction.Down, 5)]
-        [TestCase(Direction.Right, 5)]
-        [TestCase(Direction.Up, 7)] // dragging up has the same problem and can't go on a higher value due to full screen
-        [TestCase(Direction.Down, 7)]
-        [TestCase(Direction.Right, 7)]
-        [Test]
-        public void SingleDraggingItemOutsideViewport_WithRealTimeDraggingEnable_ShouldUpdateScrollOnMouseMove(Direction draggingDirection, int offsetDistance)
-        {
-            // arrange
-            Window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);
-            Window.ToggleButton(AutomationIds.RealTimeDraggingToggleButtonId);
-
-            // act
-            RichCanvas.DefferedDragContainerOutsideViewportWithOffset(RichCanvas.Items[0], draggingDirection, offsetDistance, AssertScrollModification, VisualViewportSize);
-
-            // assert
-            void AssertScrollModification(System.Drawing.Point _, int offsetOnStep)
+            // act & assert
+            switch (draggingDirection)
             {
-                Vector scrollOffset = ViewportLocation - RichCanvas.RichCanvasData.ItemsExtent.Location;
-                Rect extent = RichCanvas.RichCanvasData.ItemsExtent;
-                extent.Union(new Rect(ViewportLocation, ViewportSize));
+                case Direction.Left:
+                    {
+                        drawnContainer.StartDragging(StartPosition.TopRight);
+                        drawnContainer.Move(offset, DragDirection.OnlyX);
+                        HorizontalScrollBar horizontalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsHorizontalScrollBar();
+                        horizontalScrollBar.Should().BeNull();
+                        drawnContainer.EndDragging();
+                        break;
+                    }
 
-                if (draggingDirection == Direction.Up)
-                {
-                    RichCanvas.ScrollInfo.VerticalScrollPercent.Value.Should().BeApproximately(scrollOffset.Y, Tolerance);
-                    RichCanvas.RichCanvasData.ViewportExtent.Height.Should().BeApproximately(extent.Height, Tolerance);
-                }
-                if (draggingDirection == Direction.Down)
-                {
-                    RichCanvas.ScrollInfo.VerticalScrollPercent.Value.Should().Be(0);
-                    RichCanvas.RichCanvasData.ViewportExtent.Height.Should().BeApproximately(extent.Height, Tolerance);
-                }
-                if (draggingDirection == Direction.Right)
-                {
-                    RichCanvas.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(0);
-                    RichCanvas.RichCanvasData.ViewportExtent.Width.Should().BeApproximately(extent.Width, Tolerance);
-                }
-            }
-            Window.ToggleButton(AutomationIds.RealTimeDraggingToggleButtonId);
-        }
+                case Direction.Up:
+                    {
+                        drawnContainer.StartDragging(StartPosition.BottomLeft);
+                        drawnContainer.Move(offset, DragDirection.OnlyY);
+                        VerticalScrollBar verticalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsVerticalScrollBar();
+                        verticalScrollBar.Should().BeNull();
+                        drawnContainer.EndDragging();
+                        break;
+                    }
 
-        [TestCase(Direction.Up, 1)]
-        [TestCase(Direction.Down, 1)]
-        [TestCase(Direction.Right, 1)]
-        [TestCase(Direction.Up, 7)]
-        [TestCase(Direction.Down, 7)]
-        [TestCase(Direction.Right, 7)]
-        [Test]
-        public void DrawingContainerOutsideViewport_ShouldUpdateScrollOnMouseMove(Direction direction, int offset)
-        {
-            // arrange
-            Window.ToggleCheckbox(AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId);
+                case Direction.Down:
+                    {
+                        drawnContainer.StartDragging();
+                        drawnContainer.Move(offset, DragDirection.OnlyY);
+                        VerticalScrollBar verticalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsVerticalScrollBar();
+                        verticalScrollBar.Should().BeNull();
+                        drawnContainer.EndDragging();
+                        break;
+                    }
 
-            // act
-            RichCanvas.DrawEmptyContainer(VisualViewportSize, direction, offset, AssertOnMouseMove);
-
-            // assert
-            Window.ToggleCheckbox(AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId);
-            void AssertOnMouseMove()
-            {
-                Rect expectedExtent = RichCanvas.RichCanvasData.ItemsExtent;
-                expectedExtent.Union(new Rect(ViewportLocation, RichCanvas.RichCanvasData.ViewportSize));
-                Vector scrollOffset = ViewportLocation - RichCanvas.RichCanvasData.ItemsExtent.Location;
-
-                if (direction == Direction.Up)
-                {
-                    RichCanvas.ScrollInfo.VerticalScrollPercent.Value.Should().BeApproximately(scrollOffset.Y, Tolerance);
-                    RichCanvas.RichCanvasData.ViewportExtent.Height.Should().BeApproximately(expectedExtent.Height, Tolerance);
-                }
-                if (direction == Direction.Down)
-                {
-                    RichCanvas.ScrollInfo.VerticalScrollPercent.Value.Should().Be(0);
-                    RichCanvas.RichCanvasData.ViewportExtent.Height.Should().BeApproximately(expectedExtent.Height, Tolerance);
-                }
-                if (direction == Direction.Right)
-                {
-                    RichCanvas.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(0);
-                    RichCanvas.RichCanvasData.ViewportExtent.Width.Should().BeApproximately(expectedExtent.Width, Tolerance);
-                }
+                case Direction.Right:
+                    {
+                        drawnContainer.StartDragging();
+                        drawnContainer.Move(offset, DragDirection.OnlyX);
+                        HorizontalScrollBar horizontalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsHorizontalScrollBar();
+                        horizontalScrollBar.Should().BeNull();
+                        drawnContainer.EndDragging();
+                        break;
+                    }
             }
         }
 
@@ -451,52 +294,132 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Scrolling
         [TestCase(Direction.Down)]
         [TestCase(Direction.Left)]
         [TestCase(Direction.Right)]
+        [RealTimeDragging(true)]
         [Test]
-        public void AddDrawnContainerOutsideViewport_ShouldUpdateScroll(Direction direction)
+        public void DragItemOutsideViewport_WithRealTimeDraggingEnabled_ShouldShowScrollBarsWhileMouseIsMovig(Direction draggingDirection)
         {
             // arrange
-            Window.ToggleCheckbox(AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId);
+            RichCanvasUIAClientCommunicator.AddDrawnRectangle();
+            RichCanvasContainerAutomation drawnContainer = RichCanvas.Items[0];
+            int offset = draggingDirection switch
+            {
+                Direction.Left => RichCanvas.ViewportLocation.X - (drawnContainer.Location.X + drawnContainer.ActualWidth.ToInt()),
+                Direction.Right => (RichCanvas.ViewportSize.Width - drawnContainer.Location.X).ToInt(),
+                Direction.Up => RichCanvas.ViewportLocation.Y - (drawnContainer.Location.Y + drawnContainer.ActualHeight.ToInt()),
+                Direction.Down => (RichCanvas.ViewportSize.Height - drawnContainer.Location.Y).ToInt(),
+                _ => throw new NotImplementedException()
+            };
 
+            // act & assert
+            switch (draggingDirection)
+            {
+                case Direction.Left:
+                    {
+                        drawnContainer.StartDragging(StartPosition.TopRight);
+                        drawnContainer.Move(offset, DragDirection.OnlyX);
+                        HorizontalScrollBar horizontalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsHorizontalScrollBar();
+                        horizontalScrollBar.Should().NotBeNull();
+                        drawnContainer.EndDragging();
+                        break;
+                    }
+
+                case Direction.Up:
+                    {
+                        drawnContainer.StartDragging(StartPosition.BottomLeft);
+                        drawnContainer.Move(offset, DragDirection.OnlyY);
+                        VerticalScrollBar verticalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsVerticalScrollBar();
+                        verticalScrollBar.Should().NotBeNull();
+                        drawnContainer.EndDragging();
+                        break;
+                    }
+
+                case Direction.Down:
+                    {
+                        drawnContainer.StartDragging();
+                        drawnContainer.Move(offset, DragDirection.OnlyY);
+                        VerticalScrollBar verticalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsVerticalScrollBar();
+                        verticalScrollBar.Should().NotBeNull();
+                        drawnContainer.EndDragging();
+                        break;
+                    }
+
+                case Direction.Right:
+                    {
+                        drawnContainer.StartDragging();
+                        drawnContainer.Move(offset, DragDirection.OnlyX);
+                        HorizontalScrollBar horizontalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsHorizontalScrollBar();
+                        horizontalScrollBar.Should().NotBeNull();
+                        drawnContainer.EndDragging();
+                        break;
+                    }
+            }
+        }
+
+        // left excluded due to maximized window
+        [TestCase(Direction.Up)]
+        [TestCase(Direction.Down)]
+        [TestCase(Direction.Right)]
+        [ShouldExecuteDrawingEndedCommand(false)]
+        [Test]
+        public void DrawContainerOutsideViewport_ShouldShowScrollBarsAfterDraw(Direction direction)
+        {
+            // arrange
+            RichCanvasUIAClientCommunicator.AddPositionedRectangle();
+
+            // act
+            RichCanvasContainerAutomation addedContainer = RichCanvas.Items[0];
+            System.Drawing.Size containerSize = direction switch
+            {
+                Direction.Right => new System.Drawing.Size(RichCanvas.ViewportSize.Width.ToInt() + 50, addedContainer.Location.Y + 50),
+                Direction.Up => new System.Drawing.Size(addedContainer.Location.X + 50, -RichCanvasDemoTitleBarHeight.ToInt() - addedContainer.Location.Y),
+                Direction.Down => new System.Drawing.Size(addedContainer.Location.X + 50, RichCanvas.ViewportSize.Height.ToInt() + 50),
+                _ => throw new NotImplementedException(),
+            };
+            RichCanvas.DrawPositionedContainer(addedContainer, containerSize);
+
+            // assert
+            ScrollbarShouldBeVisible(direction);
+        }
+
+        [TestCase(Direction.Up)]
+        [TestCase(Direction.Down)]
+        [TestCase(Direction.Left)]
+        [TestCase(Direction.Right)]
+        [ShouldExecuteDrawingEndedCommand(false)]
+        [Test]
+        public void AddDrawnContainerOutsideViewport_ShouldShowScrollBars(Direction direction)
+        {
             // act
             switch (direction)
             {
-                case Direction.Up:
-                    Window.InvokeButton(AutomationIds.AddItemTopOutsideViewportButtonId);
+                case Direction.Down:
+                    RichCanvasUIAClientCommunicator.AddItemTopOutsideViewport();
                     break;
 
-                case Direction.Down:
-                    Window.InvokeButton(AutomationIds.AddItemBottomOutsideViewportButtonId);
+                case Direction.Up:
+                    RichCanvasUIAClientCommunicator.AddItemBottomOutsideViewport();
                     break;
 
                 case Direction.Left:
-                    Window.InvokeButton(AutomationIds.AddItemLeftOutsideViewportButtonId);
+                    RichCanvasUIAClientCommunicator.AddItemLeftOutsideViewport();
                     break;
 
                 case Direction.Right:
-                    Window.InvokeButton(AutomationIds.AddItemRightOutsideViewportButtonId);
+                    RichCanvasUIAClientCommunicator.AddItemRightOutsideViewport();
                     break;
             }
 
             // assert
-            var addedItemLocation = new Point(RichCanvas.Items[0].RichCanvasContainerData.Left, RichCanvas.Items[0].RichCanvasContainerData.Top);
-            Vector offset = ViewportLocation - addedItemLocation;
-            Rect expectedExtent = RichCanvas.RichCanvasData.ItemsExtent;
-            expectedExtent.Union(new Rect(ViewportLocation, ViewportSize));
-            RichCanvas.ScrollInfo.VerticalScrollPercent.Value.Should().Be(Math.Max(0, offset.Y));
-            RichCanvas.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(Math.Max(0, offset.X));
-            RichCanvas.RichCanvasData.ViewportExtent.Height.Should().Be(expectedExtent.Height);
-            RichCanvas.RichCanvasData.ViewportExtent.Width.Should().Be(expectedExtent.Width);
-
-            Window.ToggleCheckbox(AutomationIds.ShouldExecuteDrawingEndedCommandCheckboxId);
+            ScrollbarShouldBeVisible(direction);
         }
 
         [Test]
-        public void ResizeViewportWithItems_ToHideOrIntersectWithThem_ShouldUpdateScroll()
+        public void ResizeViewportWhenItemsDrawn_ToHideOrIntersectWithThem_ShouldShowScrollBars()
         {
             // arrange
-            Window.InvokeButton(AutomationIds.AddSelectableItemsButtonId2);
-            double lowestItemTop = RichCanvas.Items.Max(i => i.RichCanvasContainerData.Top);
-            double lowestItemRight = RichCanvas.Items.Max(i => i.RichCanvasContainerData.Left + i.ActualWidth);
+            RichCanvasUIAClientCommunicator.AddSelectableItems();
+            double lowestItemTop = RichCanvas.Items.Max(i => i.Location.Y);
+            double lowestItemRight = RichCanvas.Items.Max(i => i.Location.X + i.ActualWidth);
 
             // act
             // resize by dragging the title bar
@@ -510,87 +433,75 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Scrolling
             }
 
             // assert
-            Vector offset = ViewportLocation - RichCanvas.RichCanvasData.ItemsExtent.Location;
-            Rect expectedExtent = RichCanvas.RichCanvasData.ItemsExtent;
-            expectedExtent.Union(new Rect(ViewportLocation, ViewportSize));
-
-            RichCanvas.ScrollInfo.VerticalScrollPercent.Value.Should().BeApproximately(Math.Max(0, offset.Y), Tolerance);
-            RichCanvas.ScrollInfo.HorizontalScrollPercent.Value.Should().BeApproximately(Math.Max(0, offset.X), Tolerance);
-            RichCanvas.RichCanvasData.ViewportExtent.Height.Should().BeApproximately(expectedExtent.Height, Tolerance);
-            RichCanvas.RichCanvasData.ViewportExtent.Width.Should().BeApproximately(expectedExtent.Width, Tolerance);
+            VerticalScrollBar verticalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsVerticalScrollBar();
+            verticalScrollBar.Should().NotBeNull();
+            HorizontalScrollBar horizontalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsHorizontalScrollBar();
+            horizontalScrollBar.Should().NotBeNull();
 
             Window.Patterns.Window.Pattern.SetWindowVisualState(WindowVisualState.Maximized);
         }
 
-        [TestCase(Direction.Left, 5)]
-        [TestCase(Direction.Up, 5)]
-        [TestCase(Direction.Down, 5)]
-        [TestCase(Direction.Right, 5)]
-        [TestCase(Direction.Left, 7)]
-        [TestCase(Direction.Up, 7)]
-        [TestCase(Direction.Down, 7)]
-        [TestCase(Direction.Right, 7)]
-        [TestCase(Direction.Left, 1)]
-        [TestCase(Direction.Up, 1)]
-        [TestCase(Direction.Down, 1)]
-        [TestCase(Direction.Right, 1)]
+        [TestCase(Direction.Left)]
+        [TestCase(Direction.Up)]
+        [TestCase(Direction.Down)]
+        [TestCase(Direction.Right)]
         [Test]
-        public void PanningRichCanvasWithElementInDirection_ToMoveElementOutsideViewport_ShouldUpdateScroll(Direction direction, int outsideDistance)
+        public void PanningRichCanvas_WhenItemLeavesViewport_ShouldShowScrollBars(Direction direction)
         {
             // arrange
-            Window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);
+            RichCanvasUIAClientCommunicator.AddDrawnRectangle();
             RichCanvas.Focus();
 
+            RichCanvasContainerAutomation itemContainer = RichCanvas.Items[0];
+            Point panningStartPoint = direction switch
+            {
+                Direction.Right => new Point(itemContainer.BoundingRectangle.Right, itemContainer.BoundingRectangle.Top),
+                Direction.Left => new Point(itemContainer.BoundingRectangle.Right, itemContainer.BoundingRectangle.Top),
+                Direction.Up => new Point(itemContainer.BoundingRectangle.Left, itemContainer.BoundingRectangle.Top),
+                Direction.Down => new Point(itemContainer.BoundingRectangle.Left, itemContainer.BoundingRectangle.Bottom),
+                _ => throw new NotImplementedException()
+            };
+            Point outsideViewportPoint = direction switch
+            {
+                Direction.Right => new Point(RichCanvas.ViewportSize.Width.ToInt() + 50, itemContainer.BoundingRectangle.Top),
+                Direction.Left => new Point(itemContainer.BoundingRectangle.Left - 50, itemContainer.BoundingRectangle.Top),
+                Direction.Up => new Point(itemContainer.BoundingRectangle.Left, -50),
+                Direction.Down => new Point(itemContainer.BoundingRectangle.Left, RichCanvas.ViewportSize.Height.ToInt() + 50),
+                _ => throw new NotImplementedException()
+            };
+
             // act
-            RichCanvas.PanItemOutsideViewport(RichCanvas.Items[0], direction, outsideDistance, VisualViewportSize);
+            RichCanvas.Pan(panningStartPoint.AsDrawingPoint(), outsideViewportPoint.AsDrawingPoint());
 
             // assert
-            Vector offset = ViewportLocation - RichCanvas.RichCanvasData.ItemsExtent.Location;
-            Rect expectedExtent = RichCanvas.RichCanvasData.ItemsExtent;
-            expectedExtent.Union(new Rect(ViewportLocation, ViewportSize));
-
-            if (direction == Direction.Up)
-            {
-                RichCanvas.ScrollInfo.VerticalScrollPercent.Value.Should().BeApproximately(offset.Y, Tolerance);
-                RichCanvas.RichCanvasData.ViewportExtent.Height.Should().BeApproximately(expectedExtent.Height, Tolerance);
-            }
-            if (direction == Direction.Down)
-            {
-                RichCanvas.ScrollInfo.VerticalScrollPercent.Value.Should().Be(0);
-                RichCanvas.RichCanvasData.ViewportExtent.Height.Should().BeApproximately(expectedExtent.Height, Tolerance);
-            }
-            if (direction == Direction.Right)
-            {
-                RichCanvas.ScrollInfo.HorizontalScrollPercent.Value.Should().Be(0);
-                RichCanvas.RichCanvasData.ViewportExtent.Width.Should().BeApproximately(expectedExtent.Width, Tolerance);
-            }
-            if (direction == Direction.Left)
-            {
-                RichCanvas.ScrollInfo.HorizontalScrollPercent.Value.Should().BeApproximately(offset.X, Tolerance);
-                RichCanvas.RichCanvasData.ViewportExtent.Width.Should().BeApproximately(expectedExtent.Width, Tolerance);
-            }
-            RichCanvas.ResetViewportLocation();
+            ScrollbarShouldBeVisible(direction);
         }
 
-        private void ArrangeUIVerticallyToShowScrollbars(Direction scrollingMode)
+        private void ScrollbarShouldBeVisible(Direction direction)
         {
-            while (scrollingMode == Direction.Down
-                    ? RichCanvas.RichCanvasData.ItemsExtent.Top > ViewportLocation.Y
-                    : scrollingMode == Direction.Up && RichCanvas.RichCanvasData.ItemsExtent.Height < ViewportSize.Height + ViewportLocation.Y)
+            if (direction == Direction.Up || direction == Direction.Down)
             {
-                Input.MouseWheelScroll(scrollingMode);
+                VerticalScrollBar verticalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsVerticalScrollBar();
+                verticalScrollBar.Should().NotBeNull();
+            }
+            else
+            {
+                HorizontalScrollBar horizontalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsHorizontalScrollBar();
+                horizontalScrollBar.Should().NotBeNull();
             }
         }
 
-        private void ArrangeUIHorizontallyToShowScrollbars(Direction scrollingMode)
+        private void ScrollbarShouldNotBeVisible(Direction direction)
         {
-            if (scrollingMode == Direction.Left)
+            if (direction == Direction.Up || direction == Direction.Down)
             {
-                RichCanvas.SetScrollPercent(RichCanvas.RichCanvasData.ItemsExtent.Left + 10, 0);
+                VerticalScrollBar verticalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsVerticalScrollBar();
+                verticalScrollBar.Should().BeNull();
             }
-            else if (scrollingMode == Direction.Right)
+            else
             {
-                RichCanvas.SetScrollPercent(-(ViewportSize.Width - RichCanvas.RichCanvasData.ItemsExtent.Right) - 10, 0);
+                HorizontalScrollBar horizontalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsHorizontalScrollBar();
+                horizontalScrollBar.Should().BeNull();
             }
         }
     }

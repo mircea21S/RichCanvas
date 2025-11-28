@@ -58,8 +58,8 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Panning
             RichCanvas.ViewportLocation = new Point(100, 100);
 
             // assert
-            RichCanvas.RichCanvasData.TranslateTransformX.Should().Be(-100);
-            RichCanvas.RichCanvasData.TranslateTransformY.Should().Be(-100);
+            RichCanvas.RichCanvasSettings.TranslateTransformX.Should().Be(-100);
+            RichCanvas.RichCanvasSettings.TranslateTransformY.Should().Be(-100);
             RichCanvas.ViewportLocation = initialViewportLocation;
         }
     }

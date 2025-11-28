@@ -10,8 +10,8 @@ namespace RichCanvas.UIAutomation.Tests
 {
     public partial class RichCanvasAutomation
     {
-        public double ViewportZoom => RichCanvasData.ViewportZoom;
-        public double ScaleFactor => RichCanvasData.ScaleFactor;
+        public double ViewportZoom => RichCanvasSettings.ViewportZoom;
+        public double ScaleFactor => RichCanvasSettings.ScaleFactor;
 
         public void ZoomIn()
         {

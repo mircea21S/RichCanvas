@@ -97,6 +97,26 @@ namespace RichCanvas.UIAutomation.Tests.IPC
             SendToAppWithSelectionPrefix(PipeHandlerNames.Selection.AddSelectableItems);
         }
 
+        internal void AddItemRightOutsideViewport()
+        {
+            SendToAppWithItemsSourcePrefix(PipeHandlerNames.ItemsSource.AddItemRightOutsideViewport);
+        }
+
+        internal void AddItemLeftOutsideViewport()
+        {
+            SendToAppWithItemsSourcePrefix(PipeHandlerNames.ItemsSource.AddItemLeftOutsideViewport);
+        }
+
+        internal void AddItemTopOutsideViewport()
+        {
+            SendToAppWithItemsSourcePrefix(PipeHandlerNames.ItemsSource.AddItemTopOutsideViewport);
+        }
+
+        internal void AddItemBottomOutsideViewport()
+        {
+            SendToAppWithItemsSourcePrefix(PipeHandlerNames.ItemsSource.AddItemBottomOutsideViewport);
+        }
+
         private void SendToAppWithSelectionPrefix(string operationName)
         {
             Send($"{nameof(PipeHandlerNames.Selection)}.{operationName}");
