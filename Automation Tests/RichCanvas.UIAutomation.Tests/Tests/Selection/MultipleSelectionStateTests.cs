@@ -1,305 +1,201 @@
-﻿using FluentAssertions;
+﻿using System.Drawing;
+using System.Linq;
+
+using FluentAssertions;
 
 using NUnit.Framework;
 
-using RichCanvas.Gestures;
-using RichCanvas.UIAutomation.Tests.Helpers;
-
-using RichCanvasUIA.Client.Automation;
-using RichCanvasUIA.Client.TestMocks;
-
-using System.Drawing;
+using RichCanvas.UIAutomation.Tests.Tests.Selection.SelectionModes;
 
 namespace RichCanvas.UIAutomation.Tests.Tests.Selection
 {
     [TestFixture]
     public class MultipleSelectionStateTests : RichCanvasTestAppTest
     {
-        private bool ReleaseRealTimeSelection { get; set; }
-
-        public override void SetUp()
-        {
-            base.SetUp();
-            // enable multiple selection
-            Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
-        }
-
-        public override void TearDown()
-        {
-            base.TearDown();
-            if (ReleaseRealTimeSelection)
-            {
-                Window.ToggleButton(AutomationIds.RealTimeSelectionToggleButtonId);
-                ReleaseRealTimeSelection = false;
-            }
-            // disable multiple selection
-            Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
-        }
-
         [TestCase(true)]
         [TestCase(false)]
+        [MultipleSelection]
+        [RealTimeSelection(true)]
         [Test]
-        public void MultipleSelectionStateWithRealTimeSelectionEnabled_DragInSpecifiedDirection_ShouldSelectItemsWhileDragging(bool inverseDrag)
+        public void SelectItems_WhenRealTimeSelectionEnabled_ShouldSelectItemsWhileMouseIsMoving(bool inverseDrag)
         {
             // arrange
-            ArrangeRealTimeScenario();
-            var currentUiItems = MultipleSelectionStateDataMocks.MultipleSelectionCloselyPositionedDummyItems;
+            RichCanvasUIAClientCommunicator.AddConsecutiveItemsForRealTimeSelection();
+            int mostRightPoint = RichCanvas.Items.Max(x => x.BoundingRectangle.Right);
+            int mostBottomPoint = RichCanvas.Items.Max(x => x.BoundingRectangle.Bottom);
+            int mostLeftPoint = RichCanvas.Items.Min(x => x.Location.X);
+            int mostTopPoint = RichCanvas.Items.Min(x => x.Location.Y);
 
             // act and assert
             if (inverseDrag)
             {
-                var startPoint = new Point((int)currentUiItems[1].BoundingBox.Right + 1, (int)currentUiItems[1].BoundingBox.Bottom + 1);
-                Input.WithGesture(RichCanvasGestures.Select).DefferedDrag(startPoint, [
-                        (currentUiItems[1].BoundingBox.TopLeft.AsDrawingPoint(), () => RichCanvas.SelectedItems.Length.Should().Be(1)),
-                        (currentUiItems[0].BoundingBox.TopLeft.AsDrawingPoint(), () => RichCanvas.SelectedItems.Length.Should().Be(2))
-                    ]);
+                var startPoint = new Point(mostRightPoint + 1, mostBottomPoint + 1);
+                RichCanvas.StartSelection(startPoint);
 
-                RichCanvas.SelectedItems.Length.Should().Be(currentUiItems.Count);
-            }
-            else
-            {
-                var startPoint = new Point((int)currentUiItems[0].Left - 1, (int)currentUiItems[0].Top - 1);
-                Input.WithGesture(RichCanvasGestures.Select).DefferedDrag(startPoint, [
-                       (currentUiItems[0].BoundingBox.BottomRight.AsDrawingPoint(), () => RichCanvas.SelectedItems.Length.Should().Be(1)),
-                       (currentUiItems[1].BoundingBox.BottomRight.AsDrawingPoint(), () => RichCanvas.SelectedItems.Length.Should().Be(2))
-                   ]);
-
-                RichCanvas.SelectedItems.Length.Should().Be(currentUiItems.Count);
-            }
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        [Test]
-        public void MultipleSelectionStateWithSelectionAbility_ClickItem_ShouldSelectItemsWhenClicked(bool realTimeSelectionEnabled)
-        {
-            // arrange
-            ArrangeSelectionScenario(realTimeSelectionEnabled);
-            var currentUiItems = MultipleSelectionStateDataMocks.MultipleSelectionCloselyPositionedDummyItems;
-
-            // act and assert
-            Input.WithGesture(RichCanvasGestures.Select)
-                .Click(currentUiItems[0].Center.AsDrawingPoint().ToCanvasDrawingPoint());
-            RichCanvas.SelectedItems.Length.Should().Be(1);
-
-            Input.WithGesture(RichCanvasGestures.Select)
-               .Click(currentUiItems[1].Center.AsDrawingPoint().ToCanvasDrawingPoint());
-            RichCanvas.SelectedItems.Length.Should().Be(2);
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        [Test]
-        public void MultipleSelectionStateWithSelectionAbility_ClickingItems_ShouldSelectItemsWithoutUnselectingAny(bool realTimeSelectionEnabled)
-        {
-            // arrange
-            ArrangeSelectionScenario(realTimeSelectionEnabled);
-            var currentUiItems = MultipleSelectionStateDataMocks.MultipleSelectionCloselyPositionedDummyItems;
-
-            // act and assert
-            Input.WithGesture(RichCanvasGestures.Select)
-                .Click(currentUiItems[0].Center.AsDrawingPoint().ToCanvasDrawingPoint());
-            RichCanvas.SelectedItems.Length.Should().Be(1);
-
-            Input.WithGesture(RichCanvasGestures.Select)
-               .Click(currentUiItems[1].Center.AsDrawingPoint().ToCanvasDrawingPoint());
-            RichCanvas.SelectedItems.Length.Should().Be(2);
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        [Test]
-        public void MultipleSelectionStateWithSelectionAbility_AddToSelectedItemsBindedCollection_ShouldSelectAddedItems(bool realTimeSelectionEnabled)
-        {
-            // arrange
-            ArrangeSelectionScenario(realTimeSelectionEnabled, AutomationIds.AddSelectableItemsButtonId2);
-
-            // act & assert
-            Window.InvokeButton(AutomationIds.SelectFirst1ItemsNotSelectedButtonId);
-            RichCanvas.SelectedItems.Length.Should().Be(1);
-            RichCanvas.Items[0].RichCanvasContainerData.IsSelected.Should().BeTrue();
-
-            Window.InvokeButton(AutomationIds.SelectFirst2ItemsNotSelectedButtonId);
-            RichCanvas.SelectedItems.Length.Should().Be(3);
-            RichCanvas.Items[0].RichCanvasContainerData.IsSelected.Should().BeTrue();
-            RichCanvas.Items[1].RichCanvasContainerData.IsSelected.Should().BeTrue();
-            RichCanvas.Items[2].RichCanvasContainerData.IsSelected.Should().BeTrue();
-
-            Window.InvokeButton(AutomationIds.SelectFirst3ItemsNotSelectedButtonId);
-            RichCanvas.SelectedItems.Length.Should().Be(6);
-            RichCanvas.Items[0].RichCanvasContainerData.IsSelected.Should().BeTrue();
-            RichCanvas.Items[1].RichCanvasContainerData.IsSelected.Should().BeTrue();
-            RichCanvas.Items[2].RichCanvasContainerData.IsSelected.Should().BeTrue();
-            RichCanvas.Items[3].RichCanvasContainerData.IsSelected.Should().BeTrue();
-            RichCanvas.Items[4].RichCanvasContainerData.IsSelected.Should().BeTrue();
-            RichCanvas.Items[5].RichCanvasContainerData.IsSelected.Should().BeTrue();
-        }
-
-        [TestCase(true, 1)]
-        [TestCase(true, 2)]
-        [TestCase(true, 4)]
-        [TestCase(false, 1)]
-        [TestCase(false, 2)]
-        [TestCase(false, 4)]
-        [Test]
-        public void MultipleSelectionStateWithSelectionAbility_SetSelectedItemsThroughBindingThenClickOnItems_ShouldSelectClickedItems(bool realTimeSelectionEnabled, int itemsClicked)
-        {
-            // arrange
-            ArrangeSelectionScenario(realTimeSelectionEnabled, AutomationIds.AddSelectableItemsButtonId2);
-            Window.InvokeButton(AutomationIds.SelectFirst3ItemsNotSelectedButtonId);
-            // act & assert
-            RichCanvas.SelectedItems.Should().HaveCount(3);
-
-            if (itemsClicked == 1)
-            {
-                Input.WithGesture(RichCanvasGestures.Select).Click(MultipleSelectionStateDataMocks.MultipleSelectionDummyItems[3].Center.AsDrawingPoint().ToCanvasDrawingPoint());
-                RichCanvas.Items[3].RichCanvasContainerData.IsSelected.Should().BeTrue();
-            }
-            else
-            {
-                var selectionCount = RichCanvas.SelectedItems.Length;
-                for (int i = 1; i <= itemsClicked; i++)
+                int selectedItems = 0;
+                for (int i = RichCanvas.Items.Length - 1; i >= 0; i--)
                 {
-                    Input.WithGesture(RichCanvasGestures.Select).Click(MultipleSelectionStateDataMocks.MultipleSelectionDummyItems[selectionCount + i].Center.AsDrawingPoint().ToCanvasDrawingPoint());
-                    RichCanvas.Items[selectionCount + i].RichCanvasContainerData.IsSelected.Should().BeTrue();
+                    RichCanvasContainerAutomation item = RichCanvas.Items[i];
+                    RichCanvas.Select(new System.Windows.Point(item.Location.X, item.Location.Y));
+                    selectedItems++;
+                    RichCanvas.SelectedItems.Length.Should().Be(selectedItems);
                 }
+
+                RichCanvas.EndSelection();
             }
-            RichCanvas.SelectedItems.Should().HaveCount(3 + itemsClicked);
+            else
+            {
+                var startPoint = new Point(mostLeftPoint - 5, mostTopPoint - 5);
+                RichCanvas.StartSelection(startPoint);
+
+                int selectedItems = 0;
+                for (int i = 0; i < RichCanvas.Items.Length; i++)
+                {
+                    RichCanvasContainerAutomation item = RichCanvas.Items[i];
+                    RichCanvas.Select(new System.Windows.Point(item.BoundingRectangle.Right, item.BoundingRectangle.Bottom));
+                    selectedItems++;
+                    RichCanvas.SelectedItems.Length.Should().Be(selectedItems);
+                }
+
+                RichCanvas.EndSelection();
+            }
         }
 
         [TestCase(true)]
         [TestCase(false)]
+        [MultipleSelection]
+        [RealTimeSelection(false)]
         [Test]
-        public void MultipleSelectionStateWithSelectionAbility_SetSelectedItemsThroughBindingThenClickOnEmptyCanvas_ShouldClearSelectedItems(bool realTimeSelectionEnabled)
+        public void SelectItems_WhenRealTimeSelectionDisabled_ShouldNotSelectItemsWhileMouseIsMoving(bool inverseDrag)
         {
             // arrange
-            ArrangeSelectionScenario(realTimeSelectionEnabled, AutomationIds.AddSelectableItemsButtonId2);
-            Window.InvokeButton(AutomationIds.SelectFirst5ItemsNotSelectedButtonId);
-
-            // act & assert
-            Input.WithGesture(RichCanvasGestures.Select).Click(new Point(105, 105));
-            RichCanvas.SelectedItems.Should().BeEmpty();
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        [Test]
-        public void MultipleSelectionStateWithRealTimeSelectionDisabled_DragInSpecifiedDirection_ShouldSelectItemsOnMouseUp(bool inverseDrag)
-        {
-            // arrange
-            AddMultipleItemsForSelection(AutomationIds.AddSelectableItemsButtonId2);
-            var currentUiItems = MultipleSelectionStateDataMocks.MultipleSelectionDummyItems;
+            RichCanvasUIAClientCommunicator.AddConsecutiveItemsForRealTimeSelection();
+            int mostRightPoint = RichCanvas.Items.Max(x => x.BoundingRectangle.Right);
+            int mostBottomPoint = RichCanvas.Items.Max(x => x.BoundingRectangle.Bottom);
+            int mostLeftPoint = RichCanvas.Items.Min(x => x.Location.X);
+            int mostTopPoint = RichCanvas.Items.Min(x => x.Location.Y);
 
             // act and assert
             if (inverseDrag)
             {
-                var startPoint = new Point((int)currentUiItems[7].BoundingBox.Right + 1, (int)currentUiItems[7].BoundingBox.Bottom + 1);
-                Input.WithGesture(RichCanvasGestures.Select).DefferedDrag(startPoint, [
-                        (currentUiItems[5].BoundingBox.TopLeft.AsDrawingPoint(), () => RichCanvas.SelectedItems.Length.Should().Be(0)),
-                        (currentUiItems[3].BoundingBox.TopLeft.AsDrawingPoint(), () => RichCanvas.SelectedItems.Length.Should().Be(0)),
-                        (currentUiItems[1].BoundingBox.TopLeft.AsDrawingPoint(), () => RichCanvas.SelectedItems.Length.Should().Be(0)),
-                        (currentUiItems[0].BoundingBox.TopLeft.AsDrawingPoint(), () => RichCanvas.SelectedItems.Length.Should().Be(0))
-                    ]);
+                var startPoint = new Point(mostRightPoint + 1, mostBottomPoint + 1);
+                RichCanvas.StartSelection(startPoint);
+                for (int i = RichCanvas.Items.Length - 1; i >= 0; i--)
+                {
+                    RichCanvasContainerAutomation item = RichCanvas.Items[i];
+                    RichCanvas.Select(new System.Windows.Point(item.Location.X, item.Location.Y));
+                    RichCanvas.SelectedItems.Length.Should().Be(0);
+                }
 
-                RichCanvas.SelectedItems.Length.Should().Be(currentUiItems.Count);
+                RichCanvas.EndSelection();
             }
             else
             {
-                var startPoint = new Point((int)currentUiItems[0].Left - 1, (int)currentUiItems[0].Top - 1);
-                Input.WithGesture(RichCanvasGestures.Select).DefferedDrag(startPoint, [
-                       (currentUiItems[1].BoundingBox.BottomRight.AsDrawingPoint(), () => RichCanvas.SelectedItems.Length.Should().Be(0)),
-                       (currentUiItems[3].BoundingBox.BottomRight.AsDrawingPoint(), () => RichCanvas.SelectedItems.Length.Should().Be(0)),
-                       (currentUiItems[5].BoundingBox.BottomRight.AsDrawingPoint(), () => RichCanvas.SelectedItems.Length.Should().Be(0)),
-                       (currentUiItems[7].BoundingBox.BottomRight.AsDrawingPoint(), () => RichCanvas.SelectedItems.Length.Should().Be(0))
-                   ]);
+                var startPoint = new Point(mostLeftPoint - 5, mostTopPoint - 5);
+                RichCanvas.StartSelection(startPoint);
+                for (int i = 0; i < RichCanvas.Items.Length; i++)
+                {
+                    RichCanvasContainerAutomation item = RichCanvas.Items[i];
+                    RichCanvas.Select(new System.Windows.Point(item.BoundingRectangle.Right, item.BoundingRectangle.Bottom));
+                    RichCanvas.SelectedItems.Length.Should().Be(0);
+                }
 
-                RichCanvas.SelectedItems.Length.Should().Be(currentUiItems.Count);
+                RichCanvas.EndSelection();
             }
         }
 
         [TestCase(true)]
         [TestCase(false)]
+        [MultipleSelection]
+        [RealTimeSelection(false)]
         [Test]
-        public void MultipleSelectionStateWithSelectedElementsAndSelectionAbility_ClearAllItems_ShouldClearSelection(bool realTimeSelectionEnabled)
+        public void SelectItems_WhenRealTimeSelectionDisabled_ShouldSelectItemsWhenMouseIsReleased(bool inverseDrag)
         {
             // arrange
-            IgnoreItemsClearOnTearDown = true;
-            ArrangeSelectionScenario(realTimeSelectionEnabled, AutomationIds.AddSelectableItemsButtonId2);
-            Window.InvokeButton(AutomationIds.SelectFirst5ItemsNotSelectedButtonId);
+            RichCanvasUIAClientCommunicator.AddConsecutiveItemsForRealTimeSelection();
+            int mostRightPoint = RichCanvas.Items.Max(x => x.BoundingRectangle.Right);
+            int mostBottomPoint = RichCanvas.Items.Max(x => x.BoundingRectangle.Bottom);
+            int mostLeftPoint = RichCanvas.Items.Min(x => x.Location.X);
+            int mostTopPoint = RichCanvas.Items.Min(x => x.Location.Y);
 
-            // act
-            Window.ClearAllItems();
-
-            // assert
-            RichCanvas.SelectedItems.Should().BeEmpty();
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        [Test]
-        public void MultipleSelectionStateWithOneSelectedItem_WhenSetCanSelectMultipleItemsFalse_ShouldSetSelectedItemToTheOneItemSelected(bool realTimeSelectionEnabled)
-        {
-            // arrange
-            ArrangeSelectionScenario(realTimeSelectionEnabled);
-            var currentUiItems = MultipleSelectionStateDataMocks.MultipleSelectionDummyItems;
-
-            // act
-            Input.WithGesture(RichCanvasGestures.Select).Click(currentUiItems[0].Center.AsDrawingPoint().ToCanvasDrawingPoint());
-            Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
-
-            // assert
-            RichCanvas.SelectedItem.Should().Be(RichCanvas.Items[0]);
-            RichCanvas.SelectedItems.Length.Should().Be(1);
-            RichCanvas.SelectedItems[0].Should().Be(RichCanvas.Items[0]);
-            // toggle button again preparing for teardown
-            Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
-        }
-
-        [TestCase(true)]
-        [TestCase(false)]
-        [Test]
-        public void MultipleSelectionStateWithSelectedItems_WhenSetCanSelectMultipleItemsFalse_ShouldClearSelection(bool realTimeSelectionEnabled)
-        {
-            // arrange
-            ArrangeSelectionScenario(realTimeSelectionEnabled);
-            var currentUiItems = MultipleSelectionStateDataMocks.MultipleSelectionDummyItems;
-
-            // act
-            Input.WithGesture(RichCanvasGestures.Select).Click(currentUiItems[0].Center.AsDrawingPoint().ToCanvasDrawingPoint());
-            Input.WithGesture(RichCanvasGestures.Select).Click(currentUiItems[1].Center.AsDrawingPoint().ToCanvasDrawingPoint());
-            Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
-
-            // assert
-            RichCanvas.SelectedItem.Should().BeNull();
-            RichCanvas.SelectedItems.Should().BeEmpty();
-            // toggle button again preparing for teardown
-            Window.ToggleButton(AutomationIds.CanSelectMultipleItemsToggleButtonId);
-        }
-
-        private void ArrangeRealTimeScenario(string buttonId = AutomationIds.AddSelectableItemsButtonId1)
-        {
-            // enable real-time selection
-            Window.ToggleButton(AutomationIds.RealTimeSelectionToggleButtonId);
-            ReleaseRealTimeSelection = true;
-            AddMultipleItemsForSelection(buttonId);
-        }
-
-        private void AddMultipleItemsForSelection(string buttonId = AutomationIds.AddSelectableItemsButtonId1)
-        {
-            // add items for selection
-            Window.InvokeButton(buttonId);
-        }
-
-        private void ArrangeSelectionScenario(bool realTimeSelectionEnabled, string buttonId = AutomationIds.AddSelectableItemsButtonId1)
-        {
-            if (realTimeSelectionEnabled)
+            // act and assert
+            if (inverseDrag)
             {
-                ArrangeRealTimeScenario(buttonId);
+                var startPoint = new Point(mostRightPoint + 1, mostBottomPoint + 1);
+                RichCanvas.StartSelection(startPoint);
+                for (int i = RichCanvas.Items.Length - 1; i >= 0; i--)
+                {
+                    RichCanvasContainerAutomation item = RichCanvas.Items[i];
+                    RichCanvas.Select(new System.Windows.Point(item.Location.X, item.Location.Y));
+                }
+
+                RichCanvas.EndSelection();
+                RichCanvas.SelectedItems.Length.Should().Be(RichCanvas.Items.Length);
             }
             else
             {
-                AddMultipleItemsForSelection(buttonId);
+                var startPoint = new Point(mostLeftPoint - 5, mostTopPoint - 5);
+                RichCanvas.StartSelection(startPoint);
+                for (int i = 0; i < RichCanvas.Items.Length; i++)
+                {
+                    RichCanvasContainerAutomation item = RichCanvas.Items[i];
+                    RichCanvas.Select(new System.Windows.Point(item.BoundingRectangle.Right, item.BoundingRectangle.Bottom));
+                }
+
+                RichCanvas.EndSelection();
+                RichCanvas.SelectedItems.Length.Should().Be(RichCanvas.Items.Length);
             }
+        }
+
+        [MultipleSelection]
+        [RealTimeSelection(true)]
+        [Test]
+        public void ClickingItems_WhenRealTimeSelectionEnabled_ShouldAddAllItemsToSelection()
+        {
+            // arrange
+            RichCanvasUIAClientCommunicator.AddConsecutiveItemsForRealTimeSelection();
+
+            // act and assert
+            int selectedItems = 0;
+            foreach (RichCanvasContainerAutomation item in RichCanvas.Items)
+            {
+                item.Select();
+                selectedItems++;
+                RichCanvas.SelectedItems.Length.Should().Be(selectedItems);
+            }
+        }
+
+        [MultipleSelection]
+        [RealTimeSelection(false)]
+        [Test]
+        public void ClickingItems_WhenRealTimeSelectionDisabled_ShouldAddAllItemsToSelection()
+        {
+            // arrange
+            RichCanvasUIAClientCommunicator.AddConsecutiveItemsForRealTimeSelection();
+
+            // act and assert
+            int selectedItems = 0;
+            foreach (RichCanvasContainerAutomation item in RichCanvas.Items)
+            {
+                item.Select();
+                selectedItems++;
+                RichCanvas.SelectedItems.Length.Should().Be(selectedItems);
+            }
+        }
+
+        [MultipleSelection]
+        [Test]
+        public void SetIsSelectedOnItems_ShouldAddAllItemsToSelection()
+        {
+            // arrange
+            RichCanvasUIAClientCommunicator.AddConsecutiveItemsForRealTimeSelection();
+
+            // act & assert
+            foreach (RichCanvasContainerAutomation item in RichCanvas.Items)
+            {
+                item.IsSelected = true;
+            }
+            RichCanvas.SelectedItems.Should().HaveCount(RichCanvas.Items.Length);
         }
     }
 }

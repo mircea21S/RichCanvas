@@ -15,7 +15,14 @@ namespace RichCanvasUIA.Client.IPC_Pipe.Handlers
         {
             if (pipeDataName == PipeHandlerNames.Selection.AddSelectableItems)
             {
-                foreach (var item in MultipleSelectionStateDataMocks.MultipleSelectionDummyItems)
+                foreach (RichItemContainerModel item in MultipleSelectionStateDataMocks.MultipleSelectionDummyItems)
+                {
+                    _mainWindowDataContext.Items.Add(item);
+                }
+            }
+            else if (pipeDataName == PipeHandlerNames.Selection.AddConsecutiveItemsForRealTimeSelection)
+            {
+                foreach (RichItemContainerModel item in MultipleSelectionStateDataMocks.MultipleSelectionCloselyPositionedDummyItems)
                 {
                     _mainWindowDataContext.Items.Add(item);
                 }

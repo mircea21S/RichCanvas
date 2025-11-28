@@ -41,7 +41,8 @@ namespace RichCanvas.UIAutomation.Core
             MousePosition = OwnerRichCanvas.MousePosition,
             MaxZoom = OwnerRichCanvas.MaxScale,
             MinZoom = OwnerRichCanvas.MinScale,
-            RealTimeDraggingEnabled = OwnerRichCanvas.RealTimeDraggingEnabled
+            RealTimeDraggingEnabled = OwnerRichCanvas.RealTimeDraggingEnabled,
+            RealTimeSelectionEnabled = OwnerRichCanvas.RealTimeSelectionEnabled
         });
 
         /// <inheritdoc/>
@@ -58,6 +59,7 @@ namespace RichCanvas.UIAutomation.Core
             OwnerRichCanvas.RealTimeDraggingEnabled = richCanvasData.RealTimeDraggingEnabled;
             OwnerRichCanvas.ViewportLocation = richCanvasData.ViewportLocation;
             OwnerRichCanvas.ScrollFactor = richCanvasData.ScrollFactor;
+            OwnerRichCanvas.RealTimeSelectionEnabled = richCanvasData.RealTimeSelectionEnabled;
         }
 
         /// <inheritdoc/>

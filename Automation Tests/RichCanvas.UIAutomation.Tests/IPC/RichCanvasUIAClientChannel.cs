@@ -131,5 +131,10 @@ namespace RichCanvas.UIAutomation.Tests.IPC
         {
             Send($"{nameof(PipeHandlerNames.ItemsSource)}.{operationName}");
         }
+
+        internal void AddConsecutiveItemsForRealTimeSelection()
+        {
+            SendToAppWithSelectionPrefix(PipeHandlerNames.Selection.AddConsecutiveItemsForRealTimeSelection);
+        }
     }
 }

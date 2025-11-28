@@ -169,15 +169,15 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
             // act & assert
             Window.InvokeButton(AutomationIds.SetSingleSelectedItemButtonId1);
             RichCanvas.SelectedItem.Should().Be(RichCanvas.Items[0]);
-            RichCanvas.SelectedItem.RichCanvasContainerData.IsSelected.Should().BeTrue();
+            RichCanvas.SelectedItem.RichCanvasContainerSettings.IsSelected.Should().BeTrue();
 
             Window.InvokeButton(AutomationIds.SetSingleSelectedItemButtonId2);
             RichCanvas.SelectedItem.Should().Be(RichCanvas.Items[1]);
-            RichCanvas.SelectedItem.RichCanvasContainerData.IsSelected.Should().BeTrue();
+            RichCanvas.SelectedItem.RichCanvasContainerSettings.IsSelected.Should().BeTrue();
 
             Window.InvokeButton(AutomationIds.SetSingleSelectedItemButtonId3);
             RichCanvas.SelectedItem.Should().Be(RichCanvas.Items[2]);
-            RichCanvas.SelectedItem.RichCanvasContainerData.IsSelected.Should().BeTrue();
+            RichCanvas.SelectedItem.RichCanvasContainerSettings.IsSelected.Should().BeTrue();
         }
 
         [TestCase(true)]
@@ -190,11 +190,11 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
             Window.InvokeButton(AutomationIds.SetSingleSelectedItemButtonId2);
             // act & assert
             RichCanvas.SelectedItem.Should().NotBeNull();
-            RichCanvas.Items[1].RichCanvasContainerData.IsSelected.Should().BeTrue();
+            RichCanvas.Items[1].RichCanvasContainerSettings.IsSelected.Should().BeTrue();
 
             Input.WithGesture(RichCanvasGestures.Select).Click(SingleSelectionStateDataMocks.SingleSelectionItems[1].Center.AsDrawingPoint().ToCanvasDrawingPoint());
             RichCanvas.SelectedItem.Should().NotBeNull();
-            RichCanvas.Items[1].RichCanvasContainerData.IsSelected.Should().BeTrue();
+            RichCanvas.Items[1].RichCanvasContainerSettings.IsSelected.Should().BeTrue();
         }
 
         [TestCase(true)]

@@ -5,9 +5,6 @@ using FlaUI.Core.Tools;
 
 using RichCanvas.Gestures;
 using RichCanvas.UIAutomation.Tests.Helpers;
-using RichCanvas.UIAutomation.Tests.Tests.Scrolling;
-
-using RichCanvasUIA.Client.Automation;
 
 namespace RichCanvas.UIAutomation.Tests
 {
@@ -64,21 +61,6 @@ namespace RichCanvas.UIAutomation.Tests
             double x = _rand.NextDouble() * width;
             double y = _rand.NextDouble() * height;
             return new Point(x.ToInt(), y.ToInt());
-        }
-
-        public void DrawEmptyContainer(System.Windows.Size visualViewportSize, Direction direction, int offset, Action assertCallbackAction)
-        {
-            ParentWindow.InvokeButton(AutomationIds.AddEmptyRectangleButtonId);
-            var viewportCenter = new Point((int)visualViewportSize.Width / 2, (int)visualViewportSize.Height / 2);
-            Point draggingEndPoint = direction switch
-            {
-                Direction.Left => new Point(-offset, viewportCenter.Y),
-                Direction.Right => new Point((int)visualViewportSize.Width + offset, viewportCenter.Y),
-                Direction.Up => new Point(viewportCenter.X, -offset),
-                Direction.Down => new Point(viewportCenter.X, (int)visualViewportSize.Height + offset),
-                _ => throw new NotImplementedException(),
-            };
-            Input.WithGesture(RichCanvasGestures.Drawing).DefferedDrag(viewportCenter, (draggingEndPoint.ToCanvasDrawingPoint(), assertCallbackAction));
         }
     }
 }

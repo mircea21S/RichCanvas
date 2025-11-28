@@ -14,8 +14,9 @@ namespace RichCanvas.UIAutomation.Tests.Tests
         public const double RichCanvasDemoTitleBarHeight = 23;
 
         private readonly Size _visualViewportSize;
+        private RichCanvasAutomation _richCanvas;
 
-        public RichCanvasAutomation RichCanvas => Window.FindFirstDescendant(d => d.ByAutomationId("source")).AsRichCanvasAutomation(Window);
+        public RichCanvasAutomation RichCanvas => _richCanvas ??= Window.FindFirstDescendant(d => d.ByAutomationId("source")).AsRichCanvasAutomation(Window);
         protected Size ViewportSize => RichCanvas?.RichCanvasSettings?.ViewportSize ?? new Size(1187, 800);
         protected Size VisualViewportSize => _visualViewportSize;
         protected Point ViewportLocation => RichCanvas?.RichCanvasSettings?.ViewportLocation ?? new Point(0, 0);

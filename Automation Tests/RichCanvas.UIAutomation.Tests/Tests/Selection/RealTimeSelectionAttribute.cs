@@ -3,10 +3,10 @@
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
-namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
+namespace RichCanvas.UIAutomation.Tests.Tests.Selection
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false)]
-    public class RealTimeDraggingAttribute(bool enabled) : Attribute, ITestAction
+    public class RealTimeSelectionAttribute(bool enabled) : Attribute, ITestAction
     {
         public ActionTargets Targets => ActionTargets.Test;
 
@@ -17,7 +17,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
             if (test.Fixture is RichCanvasTestAppTest testParent)
             {
                 // always reset to default value
-                testParent.RichCanvas.RealTimeDraggingEnabled = false;
+                testParent.RichCanvas.RealTimeSelectionEnabled = false;
             }
         }
 
@@ -25,7 +25,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
         {
             if (test.Fixture is RichCanvasTestAppTest testParent)
             {
-                testParent.RichCanvas.RealTimeDraggingEnabled = Enabled;
+                testParent.RichCanvas.RealTimeSelectionEnabled = Enabled;
             }
         }
     }

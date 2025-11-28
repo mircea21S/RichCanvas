@@ -26,6 +26,7 @@
         public static class Selection
         {
             public const string AddSelectableItems = "AddSelectableItems";
+            public const string AddConsecutiveItemsForRealTimeSelection = "AddConsecutiveItemsForRealTimeSelection";
         }
     }
 }

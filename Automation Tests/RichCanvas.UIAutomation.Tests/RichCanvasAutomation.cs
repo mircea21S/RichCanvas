@@ -89,6 +89,12 @@ namespace RichCanvas.UIAutomation.Tests
             set => SetValue(value);
         }
 
+        public bool RealTimeSelectionEnabled
+        {
+            get => RichCanvasSettings.RealTimeSelectionEnabled;
+            set => SetValue(value);
+        }
+
         public RichCanvasAutomation(FrameworkAutomationElementBase frameworkAutomationElement) : base(frameworkAutomationElement)
         {
         }

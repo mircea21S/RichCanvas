@@ -19,6 +19,27 @@ namespace RichCanvasUIA.Client.TestMocks
                 Left = 150,
                 Height = 50,
                 Width = 50
+            },
+            new()
+            {
+                Top = 250,
+                Left = 250,
+                Height = 50,
+                Width = 50
+            },
+            new()
+            {
+                Top = 350,
+                Left = 350,
+                Height = 50,
+                Width = 50
+            },
+            new()
+            {
+                Top = 450,
+                Left = 450,
+                Height = 50,
+                Width = 50
             }
         ];
 

@@ -68,6 +68,7 @@ namespace RichCanvas.UIAutomation.Core.ControlInformations
         public double MinZoom { get; set; }
 
         public bool RealTimeDraggingEnabled { get; set; }
+        public bool RealTimeSelectionEnabled { get; set; }
 
         public object Clone()
         {
@@ -85,7 +86,8 @@ namespace RichCanvas.UIAutomation.Core.ControlInformations
                 ViewportLocation = ViewportLocation,
                 ViewportSize = ViewportSize,
                 ViewportZoom = ViewportZoom,
-                RealTimeDraggingEnabled = RealTimeDraggingEnabled
+                RealTimeDraggingEnabled = RealTimeDraggingEnabled,
+                RealTimeSelectionEnabled = RealTimeSelectionEnabled
             };
         }
     }

@@ -20,20 +20,24 @@ namespace RichCanvas.UIAutomation.Tests
     {
         private bool _dragging;
 
-        public RichCanvasContainerData RichCanvasContainerData => JsonConvert.DeserializeObject<RichCanvasContainerData>(Patterns.Value.Pattern.Value.Value, new JsonSerializerSettings
+        public RichCanvasContainerData RichCanvasContainerSettings => JsonConvert.DeserializeObject<RichCanvasContainerData>(Patterns.Value.Pattern.Value.Value, new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.All
         });
 
-        public Point Location => new Point(RichCanvasContainerData.Left.ToInt(), RichCanvasContainerData.Top.ToInt());
+        public Point Location => new Point(RichCanvasContainerSettings.Left.ToInt(), RichCanvasContainerSettings.Top.ToInt());
 
         public bool IsDraggable
         {
-            get => RichCanvasContainerData.IsDraggable;
-            internal set => SetValue(value);
+            get => RichCanvasContainerSettings.IsDraggable;
+            set => SetValue(value);
         }
 
-        public bool IsDrawn => ActualHeight != 0 && ActualWidth != 0 && !double.IsNaN(ActualHeight) && !double.IsNaN(ActualWidth);
+        public bool IsSelected
+        {
+            get => RichCanvasContainerSettings.IsSelected;
+            set => SetValue(value);
+        }
 
         public void StartDragging(StartPosition startPosition = StartPosition.TopLeft)
         {
@@ -85,7 +89,7 @@ namespace RichCanvas.UIAutomation.Tests
             _dragging = false;
         }
 
-        internal void Drag(int offset, StartPosition startPosition = StartPosition.TopLeft, DragDirection dragDirection = DragDirection.Both)
+        public void Drag(int offset, StartPosition startPosition = StartPosition.TopLeft, DragDirection dragDirection = DragDirection.Both)
         {
             StartDragging(startPosition);
             Move(offset, dragDirection);
@@ -94,10 +98,15 @@ namespace RichCanvas.UIAutomation.Tests
 
         private void SetValue(object value, [CallerMemberName] string propertyName = default)
         {
-            var containerInfoClone = (RichCanvasContainerData)RichCanvasContainerData.Clone();
+            var containerInfoClone = (RichCanvasContainerData)RichCanvasContainerSettings.Clone();
             PropertyInfo property = containerInfoClone.GetType().GetProperty(propertyName);
             property.SetValue(containerInfoClone, value);
             Patterns.Value.Pattern.SetValue(JsonConvert.SerializeObject(containerInfoClone));
+        }
+
+        public void Select()
+        {
+            Mouse.Click(new Point(Location.X + 1, Location.Y + 1).ToCanvasDrawingPoint());
         }
     }
 

@@ -68,6 +68,7 @@ namespace RichCanvas.UIAutomation.Core
             }
 
             Container.IsDraggable = richCanvasContainerData.IsDraggable;
+            Container.IsSelected = richCanvasContainerData.IsSelected;
         }
 
         /// <inheritdoc/>

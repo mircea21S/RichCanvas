@@ -110,8 +110,8 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
             drawnRectangleContainer.Location.Should().Be(new Point(expectedLeft.ToInt(), expectedTop.ToInt()));
             drawnRectangleContainer.ActualWidth.Should().Be(containerSize.Width);
             drawnRectangleContainer.ActualHeight.Should().Be(containerSize.Height);
-            drawnRectangleContainer.RichCanvasContainerData.ScaleX.Should().Be(scaleX);
-            drawnRectangleContainer.RichCanvasContainerData.ScaleY.Should().Be(scaleY);
+            drawnRectangleContainer.RichCanvasContainerSettings.ScaleX.Should().Be(scaleX);
+            drawnRectangleContainer.RichCanvasContainerSettings.ScaleY.Should().Be(scaleY);
         }
 
         [Test]
@@ -127,8 +127,8 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
             RichCanvasContainerAutomation drawnContainer = RichCanvas.Items[0];
             using (new AssertionScope())
             {
-                drawnContainer.RichCanvasContainerData.Top.Should().Be(mockRectangle.Top);
-                drawnContainer.RichCanvasContainerData.Left.Should().Be(mockRectangle.Left);
+                drawnContainer.RichCanvasContainerSettings.Top.Should().Be(mockRectangle.Top);
+                drawnContainer.RichCanvasContainerSettings.Left.Should().Be(mockRectangle.Left);
                 drawnContainer.ActualHeight.Should().Be(mockRectangle.Height);
                 drawnContainer.ActualWidth.Should().Be(mockRectangle.Width);
             }
