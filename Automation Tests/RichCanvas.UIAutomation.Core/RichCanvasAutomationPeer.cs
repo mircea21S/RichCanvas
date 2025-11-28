@@ -62,6 +62,7 @@ namespace RichCanvas.UIAutomation.Core
             OwnerRichCanvas.ScrollFactor = richCanvasData.ScrollFactor;
             OwnerRichCanvas.RealTimeSelectionEnabled = richCanvasData.RealTimeSelectionEnabled;
             OwnerRichCanvas.CanSelectMultipleItems = richCanvasData.CanSelectMultipleItems;
+            OwnerRichCanvas.ViewportZoom = richCanvasData.ViewportZoom;
         }
 
         /// <inheritdoc/>

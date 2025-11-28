@@ -22,8 +22,6 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Scrolling
     // TODO: Investingate horizontal mouse wheel scrolling.
     public class ScrollingTests : RichCanvasTestAppTest
     {
-        private const double Tolerance = 1e-5;
-
         public override void TearDown()
         {
             base.TearDown();

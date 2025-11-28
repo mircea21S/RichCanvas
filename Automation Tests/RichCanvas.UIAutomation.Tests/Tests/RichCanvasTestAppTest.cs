@@ -53,5 +53,8 @@ namespace RichCanvas.UIAutomation.Tests.Tests
             }
             Window.ClearAllItems();
         }
+
+        protected RichCanvasAutomation GetCurrentRichCanvasElement()
+            => Window.FindFirstDescendant(d => d.ByAutomationId("source")).AsRichCanvasAutomation(Window);
     }
 }

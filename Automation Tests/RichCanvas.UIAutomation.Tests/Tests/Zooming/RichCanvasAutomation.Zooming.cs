@@ -1,5 +1,4 @@
-﻿using FlaUI.Core.AutomationElements;
-using FlaUI.Core.Input;
+﻿using FlaUI.Core.Input;
 
 using RichCanvas.Gestures;
 using RichCanvas.UIAutomation.Tests.Helpers;
@@ -10,7 +9,12 @@ namespace RichCanvas.UIAutomation.Tests
 {
     public partial class RichCanvasAutomation
     {
-        public double ViewportZoom => RichCanvasSettings.ViewportZoom;
+        public double ViewportZoom
+        {
+            get => RichCanvasSettings.ViewportZoom;
+            set => SetValue(value);
+        }
+
         public double ScaleFactor => RichCanvasSettings.ScaleFactor;
 
         public void ZoomIn()
@@ -29,7 +33,7 @@ namespace RichCanvas.UIAutomation.Tests
             Keyboard.Release(virtualKeyMap);
         }
 
-        public void ResetZoom() => ParentWindow.InvokeButton(AutomationIds.ResetViewportZoomButtonId);
+        public void ResetZoom() => ViewportZoom = 1;
 
         public void Zoom(bool zoomIn)
         {
@@ -41,12 +45,6 @@ namespace RichCanvas.UIAutomation.Tests
             {
                 ZoomOut();
             }
-        }
-
-        public void SetViewportZoom(double zoomValue)
-        {
-            TextBox viewportZoomTextBox = ParentWindow.FindFirstDescendant(d => d.ByAutomationId(AutomationIds.ViewportZoomTextBoxId)).AsTextBox();
-            viewportZoomTextBox.Patterns.Value.Pattern.SetValue(zoomValue.ToString());
         }
 
         internal void SelectAllItems()

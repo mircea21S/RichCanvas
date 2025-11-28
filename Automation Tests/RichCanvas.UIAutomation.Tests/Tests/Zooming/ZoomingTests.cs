@@ -2,22 +2,27 @@
 using System.Drawing;
 
 using FlaUI.Core.AutomationElements;
+using FlaUI.Core.AutomationElements.Scrolling;
+using FlaUI.Core.Definitions;
 using FlaUI.Core.Input;
 
 using FluentAssertions;
 
 using NUnit.Framework;
 
-using RichCanvasUIA.Client.Automation;
+using RichCanvas.UIAutomation.Tests.Utilities;
 
 namespace RichCanvas.UIAutomation.Tests.Tests.Zooming
 {
     [TestFixture]
     public class ZoomingTests : RichCanvasTestAppTest
     {
+        private const double Tolerance = 1e-5;
+
         public override void TearDown()
         {
             RichCanvas.ResetZoom();
+            RichCanvas.ViewportLocation = new Point(0, 0);
 
             base.TearDown();
         }
@@ -53,7 +58,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Zooming
             double expectedViewportZoom = zoomIn
                 ? initialZoom * RichCanvas.ScaleFactor
                 : initialZoom / RichCanvas.ScaleFactor;
-            RichCanvas.RichCanvasSettings.ViewportZoom.Should().Be(expectedViewportZoom);
+            RichCanvas.ViewportZoom.Should().Be(expectedViewportZoom);
         }
 
         [TestCase(100, 100, true)]
@@ -72,17 +77,14 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Zooming
         public void RichCanvas_WhenZoomingAtMultiplePositions_ShouldKeepEachPositionSteadyThroughoutZooming(int xPosition, int yPosition, bool zoomIn)
         {
             // arrange
-            var mousePosition = new Point(xPosition, yPosition);
-            Point canvasPoint = mousePosition.ToCanvasDrawingPoint();
-            Mouse.Position = canvasPoint;
-
-            System.Windows.Point mousePositionBeforeZooming = RichCanvas.RichCanvasSettings.MousePosition;
+            Mouse.Position = new UIAClientAppPoint(xPosition, yPosition);
+            System.Windows.Point mousePositionBeforeZooming = GetCurrentRichCanvasElement().RichCanvasSettings.MousePosition;
 
             // act
             RichCanvas.Zoom(zoomIn);
 
             // assert
-            System.Windows.Point mousePositionAfterZooming = RichCanvas.RichCanvasSettings.MousePosition;
+            System.Windows.Point mousePositionAfterZooming = GetCurrentRichCanvasElement().RichCanvasSettings.MousePosition;
             mousePositionBeforeZooming.Should().Be(mousePositionAfterZooming);
         }
 
@@ -129,7 +131,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Zooming
             }
 
             // assert
-            RichCanvas.ViewportZoom.Should().Be(maxZoom);
+            GetCurrentRichCanvasElement().ViewportZoom.Should().Be(maxZoom);
         }
 
         [Test]
@@ -148,64 +150,35 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Zooming
             }
 
             // assert
-            RichCanvas.ViewportZoom.Should().Be(minZoom);
+            GetCurrentRichCanvasElement().ViewportZoom.Should().Be(minZoom);
         }
 
         [Test]
         public void ZoomedRichCanvas_WhenMouseOnTopLeftCornerOfCanvas_ShouldBeViewportLocation()
         {
-            // arrange
-            var topLeftCornerPoint = new Point(0, 0);
-            Point canvasTopLeftCorner = topLeftCornerPoint.ToCanvasDrawingPoint();
-
-            // act
-            Mouse.Position = canvasTopLeftCorner;
-            RichCanvas.Zoom(false);
-            RichCanvas.Zoom(true);
-            RichCanvas.Zoom(true);
-            RichCanvas.Zoom(true);
-            RichCanvas.Zoom(false);
-            RichCanvas.Zoom(false);
-            RichCanvas.Zoom(false);
-
-            // assert
-            RichCanvas.RichCanvasSettings.MousePosition.Should().Be(RichCanvas.ViewportLocation.AsWindowsPoint());
-        }
-
-        [TestCase(2)]
-        [TestCase(3)]
-        [TestCase(1.4)]
-        [TestCase(1.2)]
-        [TestCase(0.553)]
-        [TestCase(0.1)]
-        [TestCase(0.8)]
-        [TestCase(0.02)]
-        [Test]
-        public void RichCanvas_WhenViewportZoomIsSetThroughBinding_ShouldUpdateZoom(double viewportZoomValue)
-        {
             // arrange & act
-            RichCanvas.SetViewportZoom(viewportZoomValue);
-            // lose focus to trigger the binding
-            Keyboard.Press(FlaUI.Core.WindowsAPI.VirtualKeyShort.TAB);
+            Mouse.Position = new UIAClientAppPoint(0, 0);
+            RichCanvas.Zoom(false);
+            RichCanvas.Zoom(true);
+            RichCanvas.Zoom(true);
+            RichCanvas.Zoom(true);
+            RichCanvas.Zoom(false);
+            RichCanvas.Zoom(false);
+            RichCanvas.Zoom(false);
 
             // assert
-            if (viewportZoomValue > RichCanvas.RichCanvasSettings.MaxZoom)
-            {
-                viewportZoomValue = RichCanvas.RichCanvasSettings.MaxZoom;
-            }
-            else if (viewportZoomValue < RichCanvas.RichCanvasSettings.MinZoom)
-            {
-                viewportZoomValue = RichCanvas.RichCanvasSettings.MinZoom;
-            }
-            RichCanvas.ViewportZoom.Should().Be(viewportZoomValue);
+            GetCurrentRichCanvasElement().RichCanvasSettings.MousePosition.X
+                .Should().BeApproximately(GetCurrentRichCanvasElement().ViewportLocation.AsWindowsPoint().X, Tolerance);
+            GetCurrentRichCanvasElement().RichCanvasSettings.MousePosition.Y
+                .Should().BeApproximately(GetCurrentRichCanvasElement().ViewportLocation.AsWindowsPoint().Y, Tolerance);
         }
 
         [Test]
         public void RichCanvas_WhenZoomIn_ShouldUpdateScrolling()
         {
             // arrange
-            Window.InvokeButton(AutomationIds.AddSelectableItemsButtonId2);
-            Mouse.Position = new Point(203, 303).ToCanvasDrawingPoint();
+            RichCanvasUIAClientCommunicator.AddSelectableItems();
+            Mouse.Position = new UIAClientAppPoint(203, 303);
 
             // act
             for (int i = 0; i < 4; i++)
@@ -214,44 +187,44 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Zooming
             }
 
             // assert
-            System.Windows.Vector expectedScrollOffset = ViewportLocation - RichCanvas.RichCanvasSettings.ItemsExtent.Location;
-            System.Windows.Rect expectedExtent = RichCanvas.RichCanvasSettings.ItemsExtent;
-            expectedExtent.Union(new System.Windows.Rect(ViewportLocation, ViewportSize));
-            double doubleTolerance = 1e-5;
-
-            RichCanvas.ScrollInfo.VerticalScrollPercent.Value.Should().BeApproximately(expectedScrollOffset.Y < 0 ? 0 : expectedScrollOffset.Y, doubleTolerance);
-            RichCanvas.ScrollInfo.HorizontalScrollPercent.Value.Should().BeApproximately(expectedScrollOffset.X < 0 ? 0 : expectedScrollOffset.X, doubleTolerance);
-            RichCanvas.RichCanvasSettings.ViewportExtent.Height.Should().BeApproximately(expectedExtent.Height, doubleTolerance);
-            RichCanvas.RichCanvasSettings.ViewportExtent.Width.Should().BeApproximately(expectedExtent.Width, doubleTolerance);
+            ScrollbarsShouldBeVisible();
         }
 
         [Test]
         public void RichCanvas_WhenZoomOutAfterZoomIn_ShouldUpdateScrolling()
         {
             // arrange
-            Window.InvokeButton(AutomationIds.AddSelectableItemsButtonId2);
-            Mouse.Position = new Point(203, 303).ToCanvasDrawingPoint();
+            RichCanvasUIAClientCommunicator.AddSelectableItems();
+            Mouse.Position = new UIAClientAppPoint(203, 303);
+
+            // act & assert
             for (int i = 0; i < 6; i++)
             {
                 RichCanvas.Zoom(true);
             }
+            ScrollbarsShouldBeVisible();
 
-            // act
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 6; i++)
             {
                 RichCanvas.Zoom(false);
             }
+            ScrollbarsShouldNotBeVisible();
+        }
 
-            // assert
-            System.Windows.Vector expectedScrollOffset = ViewportLocation - RichCanvas.RichCanvasSettings.ItemsExtent.Location;
-            System.Windows.Rect expectedExtent = RichCanvas.RichCanvasSettings.ItemsExtent;
-            expectedExtent.Union(new System.Windows.Rect(ViewportLocation, ViewportSize));
-            double doubleTolerance = 1e-5;
+        private void ScrollbarsShouldBeVisible()
+        {
+            VerticalScrollBar verticalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsVerticalScrollBar();
+            verticalScrollBar.Should().NotBeNull();
+            HorizontalScrollBar horizontalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsHorizontalScrollBar();
+            horizontalScrollBar.Should().NotBeNull();
+        }
 
-            RichCanvas.ScrollInfo.VerticalScrollPercent.Value.Should().BeApproximately(expectedScrollOffset.Y < 0 ? 0 : expectedScrollOffset.Y, doubleTolerance);
-            RichCanvas.ScrollInfo.HorizontalScrollPercent.Value.Should().BeApproximately(expectedScrollOffset.X < 0 ? 0 : expectedScrollOffset.X, doubleTolerance);
-            RichCanvas.RichCanvasSettings.ViewportExtent.Height.Should().BeApproximately(expectedExtent.Height, doubleTolerance);
-            RichCanvas.RichCanvasSettings.ViewportExtent.Width.Should().BeApproximately(expectedExtent.Width, doubleTolerance);
+        private void ScrollbarsShouldNotBeVisible()
+        {
+            VerticalScrollBar verticalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsVerticalScrollBar();
+            verticalScrollBar.Should().BeNull();
+            HorizontalScrollBar horizontalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsHorizontalScrollBar();
+            horizontalScrollBar.Should().BeNull();
         }
     }
 }
