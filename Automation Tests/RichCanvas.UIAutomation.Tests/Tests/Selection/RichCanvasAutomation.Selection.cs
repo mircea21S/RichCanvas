@@ -46,5 +46,13 @@ namespace RichCanvas.UIAutomation.Tests
             flaUIDragInput.Stop();
             _isSelecting = false;
         }
+
+        public void SelectAllItems()
+        {
+            foreach (RichCanvasContainerAutomation item in Items)
+            {
+                item.IsSelected = true;
+            }
+        }
     }
 }

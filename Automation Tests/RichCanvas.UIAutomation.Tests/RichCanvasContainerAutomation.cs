@@ -39,7 +39,7 @@ namespace RichCanvas.UIAutomation.Tests
             set => SetValue(value);
         }
 
-        public void StartDragging(StartPosition startPosition = StartPosition.TopLeft)
+        public void StartDragging(Point startLocation)
         {
             if (_dragging)
             {
@@ -47,34 +47,20 @@ namespace RichCanvas.UIAutomation.Tests
             }
 
             _dragging = true;
-            Point startLocation = startPosition switch
-            {
-                StartPosition.TopLeft => Point.Add(Location, new Size(1, 1)),
-                StartPosition.TopRight => Point.Add(Location, new Size(ActualWidth.ToInt(), 1)),
-                StartPosition.BottomLeft => Point.Add(Location, new Size(1, ActualHeight.ToInt())),
-                StartPosition.BottomRight => Point.Add(Location, new Size(ActualWidth.ToInt(), ActualHeight.ToInt())),
-                _ => throw new NotImplementedException(),
-            };
-            Mouse.Position = startLocation.ToCanvasDrawingPoint();
+            Mouse.Position = startLocation;
 
             FlaUIInputData flaUIDragInput = InputMapper.MapToFlaUIInput(RichCanvasGestures.Drag);
             flaUIDragInput.Start();
         }
 
-        public void Move(int offset, DragDirection dragDirection = DragDirection.Both)
+        public void Move(Point dragTo)
         {
             if (!_dragging)
             {
                 throw new InvalidOperationException("Dragging operation not started. Drag input should be processed before moving.");
             }
-            Point dragTo = dragDirection switch
-            {
-                DragDirection.Both => new Point(Mouse.Position.X + offset, Mouse.Position.Y + offset),
-                DragDirection.OnlyX => new Point(Mouse.Position.X + offset, Mouse.Position.Y),
-                DragDirection.OnlyY => new Point(Mouse.Position.X, Mouse.Position.Y + offset),
-                _ => throw new NotImplementedException()
-            };
-            Mouse.Position = dragTo.ToCanvasDrawingPoint();
+
+            Mouse.Position = dragTo;
             Wait.UntilInputIsProcessed();
         }
 
@@ -89,10 +75,10 @@ namespace RichCanvas.UIAutomation.Tests
             _dragging = false;
         }
 
-        public void Drag(int offset, StartPosition startPosition = StartPosition.TopLeft, DragDirection dragDirection = DragDirection.Both)
+        public void Drag(Point from, Point to)
         {
-            StartDragging(startPosition);
-            Move(offset, dragDirection);
+            StartDragging(from);
+            Move(to);
             EndDragging();
         }
 

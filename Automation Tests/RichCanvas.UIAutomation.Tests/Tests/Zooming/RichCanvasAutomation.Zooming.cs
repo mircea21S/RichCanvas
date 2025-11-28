@@ -3,8 +3,6 @@
 using RichCanvas.Gestures;
 using RichCanvas.UIAutomation.Tests.Helpers;
 
-using RichCanvasUIA.Client.Automation;
-
 namespace RichCanvas.UIAutomation.Tests
 {
     public partial class RichCanvasAutomation
@@ -45,11 +43,6 @@ namespace RichCanvas.UIAutomation.Tests
             {
                 ZoomOut();
             }
-        }
-
-        internal void SelectAllItems()
-        {
-            ParentWindow.InvokeButton(AutomationIds.SelectAllItemsButtonId);
         }
     }
 }

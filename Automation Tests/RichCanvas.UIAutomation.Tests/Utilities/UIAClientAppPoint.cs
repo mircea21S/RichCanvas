@@ -1,8 +1,10 @@
-﻿using RichCanvas.UIAutomation.Tests.Tests;
+﻿using System.Drawing;
+
+using RichCanvas.UIAutomation.Tests.Tests;
 
 namespace RichCanvas.UIAutomation.Tests.Utilities
 {
-    internal struct UIAClientAppPoint
+    internal readonly struct UIAClientAppPoint
     {
         internal int X { get; }
         internal int Y { get; }
@@ -21,7 +23,16 @@ namespace RichCanvas.UIAutomation.Tests.Utilities
             Yd = y + RichCanvasTestAppTest.RichCanvasDemoTitleBarHeight;
         }
 
-        public static implicit operator System.Drawing.Point(UIAClientAppPoint clientAppPoint)
+        internal UIAClientAppPoint(Point point)
+        {
+            X = point.X;
+            Y = point.Y + RichCanvasTestAppTest.RichCanvasDemoTitleBarHeight;
+        }
+
+        public static implicit operator Point(UIAClientAppPoint clientAppPoint)
             => new(clientAppPoint.X, clientAppPoint.Y);
+
+        public static implicit operator UIAClientAppPoint(Point point)
+          => new(point.X, point.Y);
     }
 }

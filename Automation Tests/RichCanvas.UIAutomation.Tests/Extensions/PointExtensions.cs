@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 using FlaUI.Core.Tools;
 
@@ -23,5 +24,13 @@ namespace RichCanvas.UIAutomation.Tests
         internal static System.Windows.Point AsWindowsPoint(this Point drawingPoint) => new System.Windows.Point(drawingPoint.X, drawingPoint.Y);
 
         internal static Point OffsetNew(this Point drawingPoint, Point offset) => new Point(drawingPoint.X + offset.X, drawingPoint.Y + offset.Y);
+
+        internal static Point AddOffset(this Point point, int offset, DragDirection dragDirection = DragDirection.Both) => dragDirection switch
+        {
+            DragDirection.Both => new Point(point.X + offset, point.Y + offset),
+            DragDirection.OnlyX => new Point(point.X + offset, point.Y),
+            DragDirection.OnlyY => new Point(point.X, point.Y + offset),
+            _ => throw new NotImplementedException()
+        };
     }
 }

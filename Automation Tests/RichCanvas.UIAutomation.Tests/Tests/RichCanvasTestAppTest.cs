@@ -1,6 +1,8 @@
-﻿using System.Windows;
+﻿using System.Drawing;
 
 using FlaUI.Core.AutomationElements;
+using FlaUI.Core.Input;
+using FlaUI.Core.Tools;
 
 using NUnit.Framework;
 
@@ -17,15 +19,15 @@ namespace RichCanvas.UIAutomation.Tests.Tests
         private RichCanvasAutomation _richCanvas;
 
         public RichCanvasAutomation RichCanvas => _richCanvas ??= Window.FindFirstDescendant(d => d.ByAutomationId("source")).AsRichCanvasAutomation(Window);
-        protected Size ViewportSize => RichCanvas?.RichCanvasSettings?.ViewportSize ?? new Size(1187, 800);
         protected Size VisualViewportSize => _visualViewportSize;
-        protected Point ViewportLocation => RichCanvas?.RichCanvasSettings?.ViewportLocation ?? new Point(0, 0);
         protected bool ShouldRestartApplication { get; set; }
         protected bool IgnoreItemsClearOnTearDown { get; set; }
 
+        internal Point CurrentPoint => new Point(Mouse.Position.X, Mouse.Position.Y);
+
         public RichCanvasTestAppTest()
         {
-            _visualViewportSize = new Size(RichCanvas.RichCanvasSettings.ViewportSize.Width, RichCanvas.RichCanvasSettings.ViewportSize.Height);
+            _visualViewportSize = new Size(RichCanvas.RichCanvasSettings.ViewportSize.Width.ToInt(), RichCanvas.RichCanvasSettings.ViewportSize.Height.ToInt());
         }
 
         [SetUp]

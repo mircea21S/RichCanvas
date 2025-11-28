@@ -12,6 +12,7 @@ using FluentAssertions;
 
 using NUnit.Framework;
 
+using RichCanvas.UIAutomation.Tests.Extensions;
 using RichCanvas.UIAutomation.Tests.Tests.Dragging;
 using RichCanvas.UIAutomation.Tests.Tests.Drawing;
 
@@ -203,19 +204,19 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Scrolling
             switch (draggingDirection)
             {
                 case Direction.Left:
-                    drawnContainer.Drag(offset, StartPosition.TopRight, DragDirection.OnlyX);
+                    drawnContainer.Drag(drawnContainer.GetContainerLocation(StartPosition.TopRight), CurrentPoint.AddOffset(offset, DragDirection.OnlyX));
                     break;
 
                 case Direction.Up:
-                    drawnContainer.Drag(offset, StartPosition.BottomLeft, DragDirection.OnlyY);
+                    drawnContainer.Drag(drawnContainer.GetContainerLocation(StartPosition.BottomLeft), CurrentPoint.AddOffset(offset, DragDirection.OnlyY));
                     break;
 
                 case Direction.Down:
-                    drawnContainer.Drag(offset, dragDirection: DragDirection.OnlyY);
+                    drawnContainer.Drag(drawnContainer.GetContainerLocation(), CurrentPoint.AddOffset(offset, DragDirection.OnlyY));
                     break;
 
                 case Direction.Right:
-                    drawnContainer.Drag(offset, dragDirection: DragDirection.OnlyX);
+                    drawnContainer.Drag(drawnContainer.GetContainerLocation(), CurrentPoint.AddOffset(offset, DragDirection.OnlyX));
                     break;
             }
 
@@ -248,8 +249,8 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Scrolling
             {
                 case Direction.Left:
                     {
-                        drawnContainer.StartDragging(StartPosition.TopRight);
-                        drawnContainer.Move(offset, DragDirection.OnlyX);
+                        drawnContainer.StartDragging(drawnContainer.GetContainerLocation(StartPosition.TopRight));
+                        drawnContainer.Move(CurrentPoint.AddOffset(offset, DragDirection.OnlyX));
                         HorizontalScrollBar horizontalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsHorizontalScrollBar();
                         horizontalScrollBar.Should().BeNull();
                         drawnContainer.EndDragging();
@@ -258,8 +259,8 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Scrolling
 
                 case Direction.Up:
                     {
-                        drawnContainer.StartDragging(StartPosition.BottomLeft);
-                        drawnContainer.Move(offset, DragDirection.OnlyY);
+                        drawnContainer.StartDragging(drawnContainer.GetContainerLocation(StartPosition.BottomLeft));
+                        drawnContainer.Move(CurrentPoint.AddOffset(offset, DragDirection.OnlyY));
                         VerticalScrollBar verticalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsVerticalScrollBar();
                         verticalScrollBar.Should().BeNull();
                         drawnContainer.EndDragging();
@@ -268,8 +269,8 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Scrolling
 
                 case Direction.Down:
                     {
-                        drawnContainer.StartDragging();
-                        drawnContainer.Move(offset, DragDirection.OnlyY);
+                        drawnContainer.StartDragging(drawnContainer.GetContainerLocation());
+                        drawnContainer.Move(CurrentPoint.AddOffset(offset, DragDirection.OnlyY));
                         VerticalScrollBar verticalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsVerticalScrollBar();
                         verticalScrollBar.Should().BeNull();
                         drawnContainer.EndDragging();
@@ -278,8 +279,8 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Scrolling
 
                 case Direction.Right:
                     {
-                        drawnContainer.StartDragging();
-                        drawnContainer.Move(offset, DragDirection.OnlyX);
+                        drawnContainer.StartDragging(drawnContainer.GetContainerLocation());
+                        drawnContainer.Move(CurrentPoint.AddOffset(offset, DragDirection.OnlyX));
                         HorizontalScrollBar horizontalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsHorizontalScrollBar();
                         horizontalScrollBar.Should().BeNull();
                         drawnContainer.EndDragging();
@@ -313,8 +314,8 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Scrolling
             {
                 case Direction.Left:
                     {
-                        drawnContainer.StartDragging(StartPosition.TopRight);
-                        drawnContainer.Move(offset, DragDirection.OnlyX);
+                        drawnContainer.StartDragging(drawnContainer.GetContainerLocation(StartPosition.TopRight));
+                        drawnContainer.Move(CurrentPoint.AddOffset(offset, DragDirection.OnlyX));
                         HorizontalScrollBar horizontalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsHorizontalScrollBar();
                         horizontalScrollBar.Should().NotBeNull();
                         drawnContainer.EndDragging();
@@ -323,8 +324,8 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Scrolling
 
                 case Direction.Up:
                     {
-                        drawnContainer.StartDragging(StartPosition.BottomLeft);
-                        drawnContainer.Move(offset, DragDirection.OnlyY);
+                        drawnContainer.StartDragging(drawnContainer.GetContainerLocation(StartPosition.BottomLeft));
+                        drawnContainer.Move(CurrentPoint.AddOffset(offset, DragDirection.OnlyY));
                         VerticalScrollBar verticalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsVerticalScrollBar();
                         verticalScrollBar.Should().NotBeNull();
                         drawnContainer.EndDragging();
@@ -333,8 +334,8 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Scrolling
 
                 case Direction.Down:
                     {
-                        drawnContainer.StartDragging();
-                        drawnContainer.Move(offset, DragDirection.OnlyY);
+                        drawnContainer.StartDragging(drawnContainer.GetContainerLocation());
+                        drawnContainer.Move(CurrentPoint.AddOffset(offset, DragDirection.OnlyY));
                         VerticalScrollBar verticalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsVerticalScrollBar();
                         verticalScrollBar.Should().NotBeNull();
                         drawnContainer.EndDragging();
@@ -343,8 +344,8 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Scrolling
 
                 case Direction.Right:
                     {
-                        drawnContainer.StartDragging();
-                        drawnContainer.Move(offset, DragDirection.OnlyX);
+                        drawnContainer.StartDragging(drawnContainer.GetContainerLocation());
+                        drawnContainer.Move(CurrentPoint.AddOffset(offset, DragDirection.OnlyX));
                         HorizontalScrollBar horizontalScrollBar = Window.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsHorizontalScrollBar();
                         horizontalScrollBar.Should().NotBeNull();
                         drawnContainer.EndDragging();
