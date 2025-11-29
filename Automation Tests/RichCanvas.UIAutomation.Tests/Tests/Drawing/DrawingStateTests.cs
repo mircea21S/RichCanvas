@@ -15,8 +15,6 @@ using RichCanvasUIA.Client;
 using RichCanvasUIA.Client.Automation;
 using RichCanvasUIA.Client.TestMocks;
 
-using Point = System.Drawing.Point;
-
 namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
 {
     [TestFixture]
