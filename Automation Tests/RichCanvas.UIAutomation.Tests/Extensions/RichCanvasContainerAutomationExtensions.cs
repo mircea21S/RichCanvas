@@ -9,7 +9,7 @@ namespace RichCanvas.UIAutomation.Tests.Extensions
 {
     internal static class RichCanvasContainerAutomationExtensions
     {
-        internal static UIAClientAppPoint GetContainerLocation(this RichCanvasContainerAutomation container, StartPosition startPosition = StartPosition.TopLeft) => startPosition switch
+        internal static UIAClientAppPoint GetLocationPoint(this RichCanvasContainerAutomation container, StartPosition startPosition = StartPosition.TopLeft) => startPosition switch
         {
             StartPosition.TopLeft => Point.Add(container.Location, new Size(1, 1)),
             StartPosition.TopRight => Point.Add(container.Location, new Size(container.ActualWidth.ToInt(), 1)),

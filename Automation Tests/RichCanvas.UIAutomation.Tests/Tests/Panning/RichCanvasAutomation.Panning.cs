@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 
 using RichCanvas.Gestures;
+using RichCanvas.UIAutomation.Tests.Extensions;
 using RichCanvas.UIAutomation.Tests.Helpers;
 
 namespace RichCanvas.UIAutomation.Tests

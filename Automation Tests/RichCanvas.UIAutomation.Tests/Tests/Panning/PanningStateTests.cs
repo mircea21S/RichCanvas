@@ -2,6 +2,8 @@
 
 using NUnit.Framework;
 
+using RichCanvas.UIAutomation.Tests.Extensions;
+
 using System.Drawing;
 
 namespace RichCanvas.UIAutomation.Tests.Tests.Panning

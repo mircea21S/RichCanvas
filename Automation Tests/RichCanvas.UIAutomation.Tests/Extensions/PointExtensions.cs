@@ -4,12 +4,13 @@ using System.Drawing;
 using FlaUI.Core.Tools;
 
 using RichCanvas.UIAutomation.Tests.Tests;
+using RichCanvas.UIAutomation.Tests.Utilities;
 
-namespace RichCanvas.UIAutomation.Tests
+namespace RichCanvas.UIAutomation.Tests.Extensions
 {
     internal static class PointExtensions
     {
-        internal static Point ToCanvasDrawingPoint(this Point point) => new Point(point.X, point.Y + (int)RichCanvasTestAppTest.RichCanvasDemoTitleBarHeight);
+        internal static Point ToCanvasDrawingPoint(this Point point) => new Point(point.X, point.Y + RichCanvasTestAppTest.RichCanvasDemoTitleBarHeight);
 
         /// <summary>
         /// Workaround of issue with FlaUI https://github.com/FlaUI/FlaUI/issues/612.

@@ -25,7 +25,7 @@ namespace RichCanvas.UIAutomation.Tests
             TypeNameHandling = TypeNameHandling.All
         });
 
-        public Point Location => new Point(RichCanvasContainerSettings.Left.ToInt(), RichCanvasContainerSettings.Top.ToInt());
+        public Point Location => new(RichCanvasContainerSettings.Left.ToInt(), RichCanvasContainerSettings.Top.ToInt());
 
         public bool IsDraggable
         {
@@ -89,20 +89,5 @@ namespace RichCanvas.UIAutomation.Tests
             property.SetValue(containerInfoClone, value);
             Patterns.Value.Pattern.SetValue(JsonConvert.SerializeObject(containerInfoClone));
         }
-    }
-
-    public enum StartPosition
-    {
-        TopLeft,
-        TopRight,
-        BottomLeft,
-        BottomRight
-    }
-
-    public enum DragDirection
-    {
-        Both,
-        OnlyX,
-        OnlyY
     }
 }

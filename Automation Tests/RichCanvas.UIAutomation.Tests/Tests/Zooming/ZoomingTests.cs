@@ -10,6 +10,7 @@ using FluentAssertions;
 
 using NUnit.Framework;
 
+using RichCanvas.UIAutomation.Tests.Extensions;
 using RichCanvas.UIAutomation.Tests.Utilities;
 
 namespace RichCanvas.UIAutomation.Tests.Tests.Zooming

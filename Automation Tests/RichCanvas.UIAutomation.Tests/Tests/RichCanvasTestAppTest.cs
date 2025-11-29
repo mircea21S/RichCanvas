@@ -23,7 +23,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests
         protected bool ShouldRestartApplication { get; set; }
         protected bool IgnoreItemsClearOnTearDown { get; set; }
 
-        internal Point CurrentPoint => new Point(Mouse.Position.X, Mouse.Position.Y);
+        internal Point CurrentMousePosition => new(Mouse.Position.X, Mouse.Position.Y);
 
         public RichCanvasTestAppTest()
         {

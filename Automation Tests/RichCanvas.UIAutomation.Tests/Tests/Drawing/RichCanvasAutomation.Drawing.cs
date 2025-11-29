@@ -4,6 +4,7 @@ using System.Drawing;
 using FlaUI.Core.Tools;
 
 using RichCanvas.Gestures;
+using RichCanvas.UIAutomation.Tests.Extensions;
 using RichCanvas.UIAutomation.Tests.Helpers;
 
 namespace RichCanvas.UIAutomation.Tests

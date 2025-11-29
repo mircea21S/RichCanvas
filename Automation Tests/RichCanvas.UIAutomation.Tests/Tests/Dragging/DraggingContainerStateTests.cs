@@ -28,14 +28,14 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
 
             // act & assert
             RichCanvasContainerAutomation drawnContainer = RichCanvas.Items[0];
-            drawnContainer.StartDragging(drawnContainer.GetContainerLocation());
+            drawnContainer.StartDragging(drawnContainer.GetLocationPoint());
 
             Point locationBeforeMove = drawnContainer.Location;
-            drawnContainer.Move(CurrentPoint.AddOffset(dragOffset));
+            drawnContainer.Move(CurrentMousePosition.AddOffset(dragOffset));
             drawnContainer.Location.Should().Be(Point.Add(locationBeforeMove, new Size(dragOffset, dragOffset)));
 
             Point locationBeforeMove2 = drawnContainer.Location;
-            drawnContainer.Move(CurrentPoint.AddOffset(dragOffset));
+            drawnContainer.Move(CurrentMousePosition.AddOffset(dragOffset));
             drawnContainer.Location.Should().Be(Point.Add(locationBeforeMove2, new Size(dragOffset, dragOffset)));
 
             drawnContainer.EndDragging();
@@ -50,12 +50,12 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
 
             // act & assert
             RichCanvasContainerAutomation drawnContainer = RichCanvas.Items[0];
-            drawnContainer.StartDragging(drawnContainer.GetContainerLocation());
+            drawnContainer.StartDragging(drawnContainer.GetLocationPoint());
 
-            drawnContainer.Move(CurrentPoint.AddOffset(dragOffset));
+            drawnContainer.Move(CurrentMousePosition.AddOffset(dragOffset));
             drawnContainer.Location.Should().Be(new Point(DrawingStateDataMocks.DrawnRectangleMock.Left.ToInt(), DrawingStateDataMocks.DrawnRectangleMock.Top.ToInt()));
 
-            drawnContainer.Move(CurrentPoint.AddOffset(dragOffset));
+            drawnContainer.Move(CurrentMousePosition.AddOffset(dragOffset));
             drawnContainer.Location.Should().Be(new Point(DrawingStateDataMocks.DrawnRectangleMock.Left.ToInt(), DrawingStateDataMocks.DrawnRectangleMock.Top.ToInt()));
 
             drawnContainer.EndDragging();
@@ -70,7 +70,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
 
             // act
             RichCanvasContainerAutomation drawnContainer = RichCanvas.Items[0];
-            Point startPoint = drawnContainer.GetContainerLocation();
+            Point startPoint = drawnContainer.GetLocationPoint();
             drawnContainer.Drag(startPoint, startPoint.AddOffset(dragOffset));
 
             // assert
@@ -89,9 +89,9 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
 
             // act & assert
             RichCanvasContainerAutomation dragContainer = RichCanvas.Items[0];
-            dragContainer.StartDragging(dragContainer.GetContainerLocation());
+            dragContainer.StartDragging(dragContainer.GetLocationPoint());
 
-            dragContainer.Move(CurrentPoint.AddOffset(dragOffset));
+            dragContainer.Move(CurrentMousePosition.AddOffset(dragOffset));
             for (int i = 0; i < containers.Count; i++)
             {
                 RichItemContainerModel item = containers[i];
@@ -99,7 +99,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
                 container.Location.Should().Be(new Point(item.Left.ToInt() + dragOffset, item.Top.ToInt() + dragOffset));
             }
 
-            dragContainer.Move(CurrentPoint.AddOffset(dragOffset));
+            dragContainer.Move(CurrentMousePosition.AddOffset(dragOffset));
             for (int i = 0; i < containers.Count; i++)
             {
                 RichItemContainerModel item = containers[i];
@@ -121,7 +121,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
 
             // act
             RichCanvasContainerAutomation dragContainer = RichCanvas.Items[0];
-            Point startPoint = dragContainer.GetContainerLocation();
+            Point startPoint = dragContainer.GetLocationPoint();
             dragContainer.Drag(startPoint, startPoint.AddOffset(dragOffset));
 
             // assert
@@ -142,7 +142,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
             container.IsDraggable = false;
 
             // act
-            container.Drag(container.GetContainerLocation(), CurrentPoint.AddOffset(50));
+            container.Drag(container.GetLocationPoint(), CurrentMousePosition.AddOffset(50));
 
             // assert
             container.Location.X.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Left.ToInt());

@@ -1,4 +1,5 @@
-﻿using RichCanvas.UIAutomation.Tests.Tests.Scrolling;
+﻿using RichCanvas.UIAutomation.Tests.Extensions;
+using RichCanvas.UIAutomation.Tests.Tests.Scrolling;
 
 using System.Collections.Generic;
 using System.Drawing;

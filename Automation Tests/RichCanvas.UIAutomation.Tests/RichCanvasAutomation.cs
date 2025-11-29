@@ -11,6 +11,7 @@ using FlaUI.Core.Patterns;
 using Newtonsoft.Json;
 
 using RichCanvas.UIAutomation.Core.ControlInformations;
+using RichCanvas.UIAutomation.Tests.Extensions;
 
 namespace RichCanvas.UIAutomation.Tests
 {
