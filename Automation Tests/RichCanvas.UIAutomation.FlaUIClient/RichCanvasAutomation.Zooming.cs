@@ -1,9 +1,9 @@
 ﻿using FlaUI.Core.Input;
 
 using RichCanvas.Gestures;
-using RichCanvas.UIAutomation.Tests.Helpers;
+using RichCanvas.UIAutomation.FlaUIClient.Input;
 
-namespace RichCanvas.UIAutomation.Tests
+namespace RichCanvas.UIAutomation.FlaUIClient
 {
     public partial class RichCanvasAutomation
     {
@@ -15,7 +15,7 @@ namespace RichCanvas.UIAutomation.Tests
 
         public double ScaleFactor => GetRichCanvasSettings().ScaleFactor;
 
-        public void ZoomIn()
+        public static void ZoomIn()
         {
             var virtualKeyMap = RichCanvasGestures.ZoomModifierKey.ToVirtualKeyShort();
             Keyboard.Press(virtualKeyMap);
@@ -23,7 +23,7 @@ namespace RichCanvas.UIAutomation.Tests
             Keyboard.Release(virtualKeyMap);
         }
 
-        public void ZoomOut()
+        public static void ZoomOut()
         {
             var virtualKeyMap = RichCanvasGestures.ZoomModifierKey.ToVirtualKeyShort();
             Keyboard.Press(virtualKeyMap);
@@ -33,7 +33,7 @@ namespace RichCanvas.UIAutomation.Tests
 
         public void ResetZoom() => ViewportZoom = 1;
 
-        public void Zoom(bool zoomIn)
+        public static void Zoom(bool zoomIn)
         {
             if (zoomIn)
             {

@@ -19,11 +19,11 @@ namespace RichCanvas.UIAutomation.Tests
     {
         public Point ViewportLocation
         {
-            get => RichCanvasSettings.ViewportLocation.AsDrawingPoint();
+            get => GetRichCanvasSettings().ViewportLocation.AsDrawingPoint();
             set => SetValue(value.AsWindowsPoint());
         }
 
-        public System.Windows.Size ViewportSize => RichCanvasSettings.ViewportSize;
+        public System.Windows.Size ViewportSize => GetRichCanvasSettings().ViewportSize;
 
         public RichCanvasContainerAutomation[] Items
         {
@@ -80,25 +80,29 @@ namespace RichCanvas.UIAutomation.Tests
             }
         }
 
-        public RichCanvasData RichCanvasSettings => Patterns.Value.Pattern.Value.Value.AsRichCanvasData();
+        public RichCanvasData GetRichCanvasSettings()
+            => JsonConvert.DeserializeObject<RichCanvasData>(Patterns.Value.Pattern.Value.Value, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All
+            });
 
         public Window ParentWindow { get; internal set; }
 
         public bool RealTimeDraggingEnabled
         {
-            get => RichCanvasSettings.RealTimeDraggingEnabled;
+            get => GetRichCanvasSettings().RealTimeDraggingEnabled;
             set => SetValue(value);
         }
 
         public bool RealTimeSelectionEnabled
         {
-            get => RichCanvasSettings.RealTimeSelectionEnabled;
+            get => GetRichCanvasSettings().RealTimeSelectionEnabled;
             set => SetValue(value);
         }
 
         public bool CanSelectMultipleItems
         {
-            get => RichCanvasSettings.CanSelectMultipleItems;
+            get => GetRichCanvasSettings().CanSelectMultipleItems;
             set => SetValue(value);
         }
 
@@ -108,7 +112,7 @@ namespace RichCanvas.UIAutomation.Tests
 
         private void SetValue(object value, [CallerMemberName] string propertyName = default)
         {
-            var containerInfoClone = (RichCanvasData)RichCanvasSettings.Clone();
+            var containerInfoClone = (RichCanvasData)GetRichCanvasSettings().Clone();
             PropertyInfo property = containerInfoClone.GetType().GetProperty(propertyName);
             property.SetValue(containerInfoClone, value);
             Patterns.Value.Pattern.SetValue(JsonConvert.SerializeObject(containerInfoClone));

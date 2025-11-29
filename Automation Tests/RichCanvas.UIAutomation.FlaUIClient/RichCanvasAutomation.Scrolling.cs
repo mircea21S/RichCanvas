@@ -6,11 +6,11 @@ using FlaUI.Core.Definitions;
 using FlaUI.Core.Input;
 using FlaUI.Core.Patterns;
 
-namespace RichCanvas.UIAutomation.Tests
+namespace RichCanvas.UIAutomation.FlaUIClient
 {
     public partial class RichCanvasAutomation
     {
-        public IScrollPattern ScrollInfo => Patterns.Scroll.PatternOrDefault;
+        public IScrollPattern? ScrollInfo => Patterns.Scroll.PatternOrDefault;
 
         public double ScrollFactor
         {
@@ -20,7 +20,7 @@ namespace RichCanvas.UIAutomation.Tests
 
         public void ScrollByArrowKeyOrButton(Direction scrollingMode)
         {
-            if (Patterns.Scroll.TryGetPattern(out IScrollPattern scrollPattern))
+            if (Patterns.Scroll.TryGetPattern(out IScrollPattern? scrollPattern))
             {
                 if (scrollingMode == Direction.Up)
                 {
@@ -43,7 +43,7 @@ namespace RichCanvas.UIAutomation.Tests
 
         public void ScrollByPage(Direction scrollingMode)
         {
-            if (Patterns.Scroll.TryGetPattern(out IScrollPattern scrollPattern))
+            if (Patterns.Scroll.TryGetPattern(out IScrollPattern? scrollPattern))
             {
                 if (scrollingMode == Direction.Up)
                 {
@@ -68,7 +68,8 @@ namespace RichCanvas.UIAutomation.Tests
         {
             if (direction == Direction.Up || direction == Direction.Down)
             {
-                VerticalScrollBar verticalScrollBar = ParentWindow.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsVerticalScrollBar();
+                VerticalScrollBar? verticalScrollBar = (ParentWindow?.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsVerticalScrollBar())
+                    ?? throw new InvalidOperationException($"Invalid operation - vertical scrollbar not found.");
                 var verticalScrollbarLocation = new Point(verticalScrollBar.BoundingRectangle.Location.X + 2, (int)ViewportSize.Height / 2);
                 Point verticalScrollbarMaxDragLocation = direction switch
                 {
@@ -79,7 +80,8 @@ namespace RichCanvas.UIAutomation.Tests
             }
             else
             {
-                HorizontalScrollBar horizontalScrollbar = ParentWindow.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsHorizontalScrollBar();
+                HorizontalScrollBar? horizontalScrollbar = (ParentWindow?.FindFirstDescendant(x => x.ByControlType(ControlType.ScrollBar)).AsHorizontalScrollBar())
+                    ?? throw new InvalidOperationException($"Invalid operation - horizontal scrollbar not found.");
                 var horiontalScrollbarLocation = new Point((int)ViewportSize.Width / 2, horizontalScrollbar.BoundingRectangle.Location.Y + 2);
                 Point horizontalScrollbarMaxDragLocation = direction switch
                 {

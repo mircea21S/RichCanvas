@@ -27,7 +27,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests
 
         public RichCanvasTestAppTest()
         {
-            _visualViewportSize = new Size(RichCanvas.RichCanvasSettings.ViewportSize.Width.ToInt(), RichCanvas.RichCanvasSettings.ViewportSize.Height.ToInt());
+            _visualViewportSize = new Size(RichCanvas.GetRichCanvasSettings().ViewportSize.Width.ToInt(), RichCanvas.GetRichCanvasSettings().ViewportSize.Height.ToInt());
         }
 
         [SetUp]

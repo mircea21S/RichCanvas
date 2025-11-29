@@ -79,13 +79,13 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Zooming
         {
             // arrange
             Mouse.Position = new UIAClientAppPoint(xPosition, yPosition);
-            System.Windows.Point mousePositionBeforeZooming = GetCurrentRichCanvasElement().RichCanvasSettings.MousePosition;
+            System.Windows.Point mousePositionBeforeZooming = GetCurrentRichCanvasElement().GetRichCanvasSettings().MousePosition;
 
             // act
             RichCanvas.Zoom(zoomIn);
 
             // assert
-            System.Windows.Point mousePositionAfterZooming = GetCurrentRichCanvasElement().RichCanvasSettings.MousePosition;
+            System.Windows.Point mousePositionAfterZooming = GetCurrentRichCanvasElement().GetRichCanvasSettings().MousePosition;
             mousePositionBeforeZooming.Should().Be(mousePositionAfterZooming);
         }
 
@@ -120,7 +120,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Zooming
         public void RichCanvas_WhenZoomIn_ShouldStopAtMaxScale()
         {
             // arrange
-            double maxZoom = RichCanvas.RichCanvasSettings.MaxZoom;
+            double maxZoom = RichCanvas.GetRichCanvasSettings().MaxZoom;
             double scaleFactor = RichCanvas.ScaleFactor;
             double noOfZoomsUntilMax = Math.Log(maxZoom) / Math.Log(scaleFactor);
 
@@ -139,7 +139,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Zooming
         public void RichCanvas_WhenZoomOut_ShouldStopAtMinScale()
         {
             // arrange
-            double minZoom = RichCanvas.RichCanvasSettings.MinZoom;
+            double minZoom = RichCanvas.GetRichCanvasSettings().MinZoom;
             double scaleFactor = RichCanvas.ScaleFactor;
             double noOfZoomsUntilMax = Math.Log(1 / minZoom) / Math.Log(scaleFactor);
 
@@ -168,9 +168,9 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Zooming
             RichCanvas.Zoom(false);
 
             // assert
-            GetCurrentRichCanvasElement().RichCanvasSettings.MousePosition.X
+            GetCurrentRichCanvasElement().GetRichCanvasSettings().MousePosition.X
                 .Should().BeApproximately(GetCurrentRichCanvasElement().ViewportLocation.AsWindowsPoint().X, Tolerance);
-            GetCurrentRichCanvasElement().RichCanvasSettings.MousePosition.Y
+            GetCurrentRichCanvasElement().GetRichCanvasSettings().MousePosition.Y
                 .Should().BeApproximately(GetCurrentRichCanvasElement().ViewportLocation.AsWindowsPoint().Y, Tolerance);
         }
 

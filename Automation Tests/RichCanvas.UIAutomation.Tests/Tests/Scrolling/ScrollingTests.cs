@@ -163,19 +163,19 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Scrolling
             // assert
             if (direction == Direction.Down)
             {
-                RichCanvas.ViewportLocation.Y.Should().Be(RichCanvas.RichCanvasSettings.ItemsExtent.Top.ToInt());
+                RichCanvas.ViewportLocation.Y.Should().Be(RichCanvas.GetRichCanvasSettings().ItemsExtent.Top.ToInt());
             }
             else if (direction == Direction.Up)
             {
-                RichCanvas.ViewportLocation.Y.Should().Be(-(RichCanvas.ViewportSize.Height - RichCanvas.RichCanvasSettings.ItemsExtent.Bottom).ToInt());
+                RichCanvas.ViewportLocation.Y.Should().Be(-(RichCanvas.ViewportSize.Height - RichCanvas.GetRichCanvasSettings().ItemsExtent.Bottom).ToInt());
             }
             else if (direction == Direction.Left)
             {
-                RichCanvas.ViewportLocation.X.Should().Be(RichCanvas.RichCanvasSettings.ItemsExtent.Left.ToInt());
+                RichCanvas.ViewportLocation.X.Should().Be(RichCanvas.GetRichCanvasSettings().ItemsExtent.Left.ToInt());
             }
             else
             {
-                RichCanvas.ViewportLocation.X.Should().Be(-(RichCanvas.ViewportSize.Width - RichCanvas.RichCanvasSettings.ItemsExtent.Right).ToInt());
+                RichCanvas.ViewportLocation.X.Should().Be(-(RichCanvas.ViewportSize.Width - RichCanvas.GetRichCanvasSettings().ItemsExtent.Right).ToInt());
             }
         }
 
