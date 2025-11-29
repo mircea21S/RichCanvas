@@ -6,8 +6,6 @@ using FlaUI.Core.Definitions;
 using FlaUI.Core.Input;
 using FlaUI.Core.Patterns;
 
-using RichCanvas.UIAutomation.Tests.Tests.Scrolling;
-
 namespace RichCanvas.UIAutomation.Tests
 {
     public partial class RichCanvasAutomation
@@ -66,7 +64,7 @@ namespace RichCanvas.UIAutomation.Tests
             }
         }
 
-        public void ScrollByScrollbarsDragging(Direction direction)
+        public virtual void ScrollByScrollbarsDragging(Direction direction)
         {
             if (direction == Direction.Up || direction == Direction.Down)
             {
@@ -91,5 +89,13 @@ namespace RichCanvas.UIAutomation.Tests
                 Mouse.Drag(horiontalScrollbarLocation, horizontalScrollbarMaxDragLocation);
             }
         }
+    }
+
+    public enum Direction
+    {
+        Up,
+        Down,
+        Left,
+        Right
     }
 }

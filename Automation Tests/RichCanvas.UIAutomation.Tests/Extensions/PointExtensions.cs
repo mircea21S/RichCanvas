@@ -34,6 +34,14 @@ namespace RichCanvas.UIAutomation.Tests.Extensions
             _ => throw new NotImplementedException()
         };
 
+        internal static Point AddOffset(this UIAClientAppPoint point, int offset, DragDirection dragDirection = DragDirection.Both) => dragDirection switch
+        {
+            DragDirection.Both => new Point(point.X + offset, point.Y + offset),
+            DragDirection.OnlyX => new Point(point.X + offset, point.Y),
+            DragDirection.OnlyY => new Point(point.X, point.Y + offset),
+            _ => throw new NotImplementedException()
+        };
+
         internal static Point GetEndPointByScale(this UIAClientAppPoint fromPoint, Size containerSize, int scaleX = 1, int scaleY = 1)
         {
             if (scaleX == 1 && scaleY == 1)
