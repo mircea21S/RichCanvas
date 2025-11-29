@@ -33,5 +33,22 @@ namespace RichCanvas.UIAutomation.Tests.Extensions
             DragDirection.OnlyY => new Point(point.X, point.Y + offset),
             _ => throw new NotImplementedException()
         };
+
+        internal static Point GetEndPointByScale(this UIAClientAppPoint fromPoint, Size containerSize, int scaleX = 1, int scaleY = 1)
+        {
+            if (scaleX == 1 && scaleY == 1)
+            {
+                return new Point(fromPoint.X + containerSize.Width, fromPoint.Y + containerSize.Height);
+            }
+            else if (scaleX == -1 && scaleY == 1)
+            {
+                return new Point(fromPoint.X - containerSize.Width, fromPoint.Y + containerSize.Height);
+            }
+            else if (scaleX == 1 && scaleY == -1)
+            {
+                return new Point(fromPoint.X + containerSize.Width, fromPoint.Y - containerSize.Height);
+            }
+            return new Point(fromPoint.X - containerSize.Width, fromPoint.Y - containerSize.Height);
+        }
     }
 }

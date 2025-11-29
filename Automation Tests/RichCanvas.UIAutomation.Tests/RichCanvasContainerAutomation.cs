@@ -20,24 +20,26 @@ namespace RichCanvas.UIAutomation.Tests
     {
         private bool _dragging;
 
-        public RichCanvasContainerData RichCanvasContainerSettings => JsonConvert.DeserializeObject<RichCanvasContainerData>(Patterns.Value.Pattern.Value.Value, new JsonSerializerSettings
-        {
-            TypeNameHandling = TypeNameHandling.All
-        });
-
-        public Point Location => new(RichCanvasContainerSettings.Left.ToInt(), RichCanvasContainerSettings.Top.ToInt());
+        public Point Location => new(GetRichCanvasContainerSettings().Left.ToInt(), GetRichCanvasContainerSettings().Top.ToInt());
 
         public bool IsDraggable
         {
-            get => RichCanvasContainerSettings.IsDraggable;
+            get => GetRichCanvasContainerSettings().IsDraggable;
             set => SetValue(value);
         }
 
         public bool IsSelected
         {
-            get => RichCanvasContainerSettings.IsSelected;
+            get => GetRichCanvasContainerSettings().IsSelected;
             set => SetValue(value);
         }
+
+        public RichCanvasContainerData GetRichCanvasContainerSettings()
+            => JsonConvert.DeserializeObject<RichCanvasContainerData>(Patterns.Value.Pattern.Value.Value,
+                new JsonSerializerSettings
+                {
+                    TypeNameHandling = TypeNameHandling.All
+                });
 
         public void StartDragging(Point startLocation)
         {
@@ -82,9 +84,9 @@ namespace RichCanvas.UIAutomation.Tests
             EndDragging();
         }
 
-        private void SetValue(object value, [CallerMemberName] string propertyName = default)
+        protected void SetValue(object value, [CallerMemberName] string propertyName = default)
         {
-            var containerInfoClone = (RichCanvasContainerData)RichCanvasContainerSettings.Clone();
+            var containerInfoClone = (RichCanvasContainerData)GetRichCanvasContainerSettings().Clone();
             PropertyInfo property = containerInfoClone.GetType().GetProperty(propertyName);
             property.SetValue(containerInfoClone, value);
             Patterns.Value.Pattern.SetValue(JsonConvert.SerializeObject(containerInfoClone));

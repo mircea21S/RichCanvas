@@ -11,7 +11,6 @@ using RichCanvas.UIAutomation.Tests.Extensions;
 using RichCanvas.UIAutomation.Tests.Tests.Selection.SelectionModes;
 
 using RichCanvasUIA.Client;
-using RichCanvasUIA.Client.Automation;
 using RichCanvasUIA.Client.TestMocks;
 
 namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
@@ -45,7 +44,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
         public void DragSingleContainer_WithRealTimeDraggingDisabled_ShouldNotUpdateContainerLocationWhileMouseIsMoving()
         {
             // arrange
-            Window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);
+            RichCanvasUIAClientCommunicator.AddDrawnRectangle();
             int dragOffset = 50;
 
             // act & assert
@@ -65,7 +64,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
         public void DragSingleContainer_WithRealTimeDraggingDisabled_ShouldUpdateContainerLocationWhenMouseIsReleased()
         {
             // arrange
-            Window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);
+            RichCanvasUIAClientCommunicator.AddDrawnRectangle();
             int dragOffset = 50;
 
             // act
@@ -82,7 +81,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
         public void DragMultipleContainers_WithRealTimeSelectionEnabled_ShouldUpdatePositionForAllSelectedContainersWhileMouseIsMoving()
         {
             // arrange
-            Window.InvokeButton(AutomationIds.AddTestSingleSelectionItemsButtonId);
+            RichCanvasUIAClientCommunicator.AddSingleSelectionTestItems();
             List<RichItemContainerModel> containers = SingleSelectionStateDataMocks.SingleSelectionItems;
             RichCanvas.SelectAllItems();
             int dragOffset = 50;
@@ -114,7 +113,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
         public void DragMultipleContainers_WithRealTimeSelectionDisabled_ShouldUpdatePositionForAllSelectedContainersWhenMouseIsReleased()
         {
             // arrange
-            Window.InvokeButton(AutomationIds.AddTestSingleSelectionItemsButtonId);
+            RichCanvasUIAClientCommunicator.AddSingleSelectionTestItems();
             List<RichItemContainerModel> containers = SingleSelectionStateDataMocks.SingleSelectionItems;
             RichCanvas.SelectAllItems();
             int dragOffset = 50;
@@ -137,7 +136,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
         public void DraggingContainer_WhenIsNotDraggable_ShouldNotUpdateLocation()
         {
             // arrange
-            Window.InvokeButton(AutomationIds.AddDrawnRectangleButtonId);
+            RichCanvasUIAClientCommunicator.AddDrawnRectangle();
             RichCanvasContainerAutomation container = RichCanvas.Items[0];
             container.IsDraggable = false;
 
