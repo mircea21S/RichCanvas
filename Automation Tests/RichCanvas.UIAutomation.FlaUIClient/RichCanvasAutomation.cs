@@ -81,7 +81,7 @@ namespace RichCanvas.UIAutomation.FlaUIClient
             }
         }
 
-        public Window? ParentWindow { get; internal set; }
+        public Window? ParentWindow { get; set; }
 
         public bool RealTimeDraggingEnabled
         {

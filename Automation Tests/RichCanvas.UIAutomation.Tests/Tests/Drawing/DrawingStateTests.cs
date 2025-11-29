@@ -8,6 +8,7 @@ using FluentAssertions.Execution;
 
 using NUnit.Framework;
 
+using RichCanvas.UIAutomation.FlaUIClient;
 using RichCanvas.UIAutomation.Tests.Extensions;
 using RichCanvas.UIAutomation.Tests.Utilities;
 

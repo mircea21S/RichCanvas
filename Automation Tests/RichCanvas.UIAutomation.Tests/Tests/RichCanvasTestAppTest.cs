@@ -6,6 +6,10 @@ using FlaUI.Core.Tools;
 
 using NUnit.Framework;
 
+using RichCanvas.UIAutomation.FlaUIClient;
+
+using RichCanvasUIA.Client.Automation;
+
 namespace RichCanvas.UIAutomation.Tests.Tests
 {
     public class RichCanvasTestAppTest : UITestBase
@@ -53,7 +57,12 @@ namespace RichCanvas.UIAutomation.Tests.Tests
                 IgnoreItemsClearOnTearDown = false;
                 return;
             }
-            Window.ClearAllItems();
+            var button = Window.FindFirstDescendant(d => d.ByAutomationId(AutomationIds.ClearItemsButtonId));
+            if (button.Patterns.Invoke.TryGetPattern(out var invokePattern))
+            {
+                invokePattern.Invoke();
+            }
+            Wait.UntilInputIsProcessed();
         }
 
         protected RichCanvasAutomation GetCurrentRichCanvasElement()

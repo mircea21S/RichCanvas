@@ -12,6 +12,7 @@ using FluentAssertions;
 
 using NUnit.Framework;
 
+using RichCanvas.UIAutomation.FlaUIClient;
 using RichCanvas.UIAutomation.Tests.Extensions;
 using RichCanvas.UIAutomation.Tests.Tests.Dragging;
 using RichCanvas.UIAutomation.Tests.Tests.Drawing;

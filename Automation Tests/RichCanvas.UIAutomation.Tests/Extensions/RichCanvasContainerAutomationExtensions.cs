@@ -3,6 +3,7 @@ using System.Drawing;
 
 using FlaUI.Core.Tools;
 
+using RichCanvas.UIAutomation.FlaUIClient;
 using RichCanvas.UIAutomation.Tests.Utilities;
 
 namespace RichCanvas.UIAutomation.Tests.Extensions

@@ -11,7 +11,7 @@ namespace RichCanvas.UIAutomation.FlaUIClient
     {
         private static readonly Random _rand = new();
 
-        public static void Draw(Point startPoint, Point endPoint)
+        public void Draw(Point startPoint, Point endPoint)
         {
             FlaUIInputData flaUiInput = InputMapper.MapToFlaUIInput(RichCanvasGestures.Drawing);
             flaUiInput.Drag(startPoint, endPoint);
