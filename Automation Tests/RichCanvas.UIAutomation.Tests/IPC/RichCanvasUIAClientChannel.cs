@@ -141,5 +141,10 @@ namespace RichCanvas.UIAutomation.Tests.IPC
         {
             SendToAppWithSelectionPrefix(PipeHandlerNames.Selection.AddSingleSelectionTestItems);
         }
+
+        internal void ClearAllItems()
+        {
+            SendToAppWithItemsSourcePrefix(PipeHandlerNames.ItemsSource.ClearAllItems);
+        }
     }
 }

@@ -10,6 +10,7 @@
             public const string AddItemLeftOutsideViewport = "AddItemLeftOutsideViewport";
             public const string AddItemBottomOutsideViewport = "AddItemBottomOutsideViewport";
             public const string AddItemRightOutsideViewport = "AddItemRightOutsideViewport";
+            public const string ClearAllItems = "ClearAllItems";
         }
 
         public static class Drawing

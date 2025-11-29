@@ -8,8 +8,6 @@ using NUnit.Framework;
 
 using RichCanvas.UIAutomation.FlaUIClient;
 
-using RichCanvasUIA.Client.Automation;
-
 namespace RichCanvas.UIAutomation.Tests.Tests
 {
     public class RichCanvasTestAppTest : UITestBase
@@ -22,7 +20,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests
         private readonly Size _visualViewportSize;
         private RichCanvasAutomation _richCanvas;
 
-        public RichCanvasAutomation RichCanvas => _richCanvas ??= Window.FindFirstDescendant(d => d.ByAutomationId("source")).AsRichCanvasAutomation(Window);
+        public RichCanvasAutomation RichCanvas => _richCanvas ??= GetCurrentRichCanvasElement();
         protected Size VisualViewportSize => _visualViewportSize;
         protected bool ShouldRestartApplication { get; set; }
         protected bool IgnoreItemsClearOnTearDown { get; set; }
@@ -57,12 +55,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests
                 IgnoreItemsClearOnTearDown = false;
                 return;
             }
-            var button = Window.FindFirstDescendant(d => d.ByAutomationId(AutomationIds.ClearItemsButtonId));
-            if (button.Patterns.Invoke.TryGetPattern(out var invokePattern))
-            {
-                invokePattern.Invoke();
-            }
-            Wait.UntilInputIsProcessed();
+            RichCanvasUIAClientCommunicator.ClearAllItems();
         }
 
         protected RichCanvasAutomation GetCurrentRichCanvasElement()

@@ -60,6 +60,10 @@
                         Height = 100
                     });
                     break;
+
+                case PipeHandlerNames.ItemsSource.ClearAllItems:
+                    _mainWindowDataContext.Items.Clear();
+                    break;
             }
         }
     }
