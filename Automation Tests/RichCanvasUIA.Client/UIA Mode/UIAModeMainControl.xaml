@@ -4,10 +4,87 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:RichCanvasUIA.Client.UIA_Mode"
+             xmlns:richCanvasUIACore="clr-namespace:RichCanvas.UIAutomation.Core;assembly=RichCanvas.UIAutomation.Core"
+             xmlns:richCanvasConverters="clr-namespace:RichCanvas.Converters;assembly=RichCanvas"
+             xmlns:automationModels="clr-namespace:RichCanvasUIA.Client.UIA_Mode.Automation_Models"
+             xmlns:rc="clr-namespace:RichCanvas;assembly=RichCanvas"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800">
+    <UserControl.DataContext>
+        <local:RichCanvasClientUIAModeViewModel />
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <GeometryDrawing x:Key="RectangleGridGeometry">
+            <GeometryDrawing.Pen>
+                <Pen Brush="DodgerBlue"
+                     Thickness="0.3" />
+            </GeometryDrawing.Pen>
+            <GeometryDrawing.Geometry>
+                <RectangleGeometry Rect="0,0,10,10" />
+            </GeometryDrawing.Geometry>
+        </GeometryDrawing>
+        <richCanvasConverters:UIntToRectConverter x:Key="UIntToRectConverter" />
+    </UserControl.Resources>
     <Grid>
-        <TextBlock Text="TEST" />
+        <ScrollViewer CanContentScroll="True"
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Auto">
+            <richCanvasUIACore:RichCanvasAutomation AutomationProperties.AutomationId="{x:Static local:AutomationIds.RichCanvasControl}"
+                                                    Name="richCanvasElement"
+                                                    ItemsSource="{Binding RichCanvasAutomationModel.Items}">
+                <richCanvasUIACore:RichCanvasAutomation.Background>
+                    <DrawingBrush TileMode="Tile"
+                                  ViewportUnits="Absolute"
+                                  Viewport="{Binding GridSpacing, ElementName=richCanvasElement, Converter={StaticResource UIntToRectConverter}}"
+                                  Transform="{Binding AppliedTransform, ElementName=source}"
+                                  Drawing="{StaticResource RectangleGridGeometry}" />
+                </richCanvasUIACore:RichCanvasAutomation.Background>
+                <richCanvasUIACore:RichCanvasAutomation.Resources>
+                    <DataTemplate DataType="{x:Type automationModels:RichCanvasContainerAutomationModel}">
+                        <Rectangle Fill="Red">
+                        </Rectangle>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type automationModels:LineAutomationModel}">
+                        <Line  Stroke="Red"
+                               StrokeThickness="3"
+                               X2="{Binding Width}"
+                               Y2="{Binding Height}">
+                        </Line>
+                    </DataTemplate>
+                    <DataTemplate DataType="{x:Type automationModels:DrawingEndedVisualAutomationModel}">
+                        <TextBlock Text="DRAWING ENDED"
+                                   AutomationProperties.AutomationId="{x:Static local:AutomationIds.DrawingEndedTextBoxId}" />
+                    </DataTemplate>
+                </richCanvasUIACore:RichCanvasAutomation.Resources>
+                <richCanvasUIACore:RichCanvasAutomation.ItemContainerStyle>
+                    <Style TargetType="rc:RichCanvasContainer">
+
+                        <Setter Property="Top"
+                                Value="{Binding Top, Mode=TwoWay}" />
+
+                        <Setter Property="Left"
+                                Value="{Binding Left, Mode=TwoWay}" />
+
+                        <Setter Property="Width"
+                                Value="{Binding Width, Mode=TwoWay}" />
+
+                        <Setter Property="Height"
+                                Value="{Binding Height, Mode=TwoWay}" />
+
+                        <Setter Property="AllowScaleChangeToUpdatePosition"
+                                Value="{Binding AllowScaleChangeToUpdatePosition}" />
+
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected"
+                                     Value="True">
+                                <Setter Property="Opacity"
+                                        Value="0.6" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </richCanvasUIACore:RichCanvasAutomation.ItemContainerStyle>
+            </richCanvasUIACore:RichCanvasAutomation>
+        </ScrollViewer>
     </Grid>
 </UserControl>

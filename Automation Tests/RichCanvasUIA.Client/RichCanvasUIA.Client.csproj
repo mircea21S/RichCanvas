@@ -59,7 +59,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Automation\AutomationIds.cs" />
+    <Compile Include="UIA Mode\Automation Models\DrawingEndedVisualAutomationModel.cs" />
+    <Compile Include="UIA Mode\Automation Models\LineAutomationModel.cs" />
+    <Compile Include="UIA Mode\Automation Models\RichCanvasAutomationModel.cs" />
+    <Compile Include="UIA Mode\Automation Models\RichCanvasContainerAutomationModel.cs" />
+    <Compile Include="UIA Mode\AutomationIds.cs" />
     <Compile Include="Converters\PointToStringConverter.cs" />
     <Compile Include="Converters\StringToDoubleConverter.cs" />
     <Compile Include="Debug Mode\DebugModeMainWindow.xaml.cs">
@@ -95,6 +99,7 @@
     <Compile Include="TestMocks\MultipleSelectionStateDataMocks.cs" />
     <Compile Include="TestMocks\PanningStateDataMocks.cs" />
     <Compile Include="TestMocks\SingleSelectionStateDataMocks.cs" />
+    <Compile Include="UIA Mode\RichCanvasClientUIAModeViewModel.cs" />
     <Compile Include="UIA Mode\UIAModeMainControl.xaml.cs">
       <DependentUpon>UIAModeMainControl.xaml</DependentUpon>
     </Compile>

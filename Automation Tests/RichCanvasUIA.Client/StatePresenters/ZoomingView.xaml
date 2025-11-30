@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vm="clr-namespace:RichCanvasUIA.Client.States"
              xmlns:converters="clr-namespace:RichCanvasUIA.Client.Converters"
-             xmlns:auto="clr-namespace:RichCanvasUIA.Client.Automation"
+             xmlns:auto="clr-namespace:RichCanvasUIA.Client.UIA_Mode"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800"

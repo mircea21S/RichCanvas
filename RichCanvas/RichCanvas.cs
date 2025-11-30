@@ -433,7 +433,7 @@ namespace RichCanvas
                     if (CanSelectMultipleItems)
                     {
                         base.SelectedItems.Clear();
-                        SelectedItems.Clear();
+                        SelectedItems?.Clear();
                     }
                     else
                     {

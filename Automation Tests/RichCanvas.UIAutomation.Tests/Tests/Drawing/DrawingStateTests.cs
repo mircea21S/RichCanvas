@@ -13,8 +13,8 @@ using RichCanvas.UIAutomation.Tests.Extensions;
 using RichCanvas.UIAutomation.Tests.Utilities;
 
 using RichCanvasUIA.Client;
-using RichCanvasUIA.Client.Automation;
 using RichCanvasUIA.Client.TestMocks;
+using RichCanvasUIA.Client.UIA_Mode;
 
 namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
 {

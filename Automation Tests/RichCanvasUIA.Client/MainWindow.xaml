@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RichCanvasUIA.Client"
         xmlns:scs="clr-namespace:System.Collections.Specialized;assembly=System"
-        xmlns:auto="clr-namespace:RichCanvasUIA.Client.Automation"
+        xmlns:auto="clr-namespace:RichCanvasUIA.Client.UIA_Mode"
         xmlns:models="clr-namespace:RichCanvasUIA.Client.Models"
         xmlns:rc="clr-namespace:RichCanvas;assembly=RichCanvas"
         xmlns:richCanvasConverters="clr-namespace:RichCanvas.Converters;assembly=RichCanvas"
