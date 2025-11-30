@@ -4,7 +4,7 @@ using System.IO.Pipes;
 
 using FlaUI.Core.Input;
 
-using RichCanvasUIA.Client.IPC_Pipe;
+using RichCanvasUIA.Client.UIA_Mode.IPC_Pipe;
 
 namespace RichCanvas.UIAutomation.Tests.IPC
 {

@@ -69,12 +69,6 @@
     <Compile Include="Debug Mode\DebugModeMainWindow.xaml.cs">
       <DependentUpon>DebugModeMainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="IPC Pipe\Handlers\DrawingStateHandler.cs" />
-    <Compile Include="IPC Pipe\Handlers\IPipeHandler.cs" />
-    <Compile Include="IPC Pipe\Handlers\ItemsSourceHandler.cs" />
-    <Compile Include="IPC Pipe\Handlers\SelectionHandler.cs" />
-    <Compile Include="IPC Pipe\PipeHandlerNames.cs" />
-    <Compile Include="IPC Pipe\RichCanvasUITestsPipeHandler.cs" />
     <Compile Include="Models\DrawingEndedRepresentation.cs" />
     <Compile Include="Models\Line.cs" />
     <Compile Include="RelayCommand.cs" />
@@ -99,6 +93,13 @@
     <Compile Include="TestMocks\MultipleSelectionStateDataMocks.cs" />
     <Compile Include="TestMocks\PanningStateDataMocks.cs" />
     <Compile Include="TestMocks\SingleSelectionStateDataMocks.cs" />
+    <Compile Include="UIA Mode\IPC Pipe\Handlers\DrawingStateHandler.cs" />
+    <Compile Include="UIA Mode\IPC Pipe\Handlers\PipeHandlerDefinition.cs" />
+    <Compile Include="UIA Mode\IPC Pipe\Handlers\ItemsSourceHandler.cs" />
+    <Compile Include="UIA Mode\IPC Pipe\Handlers\SelectionHandler.cs" />
+    <Compile Include="UIA Mode\IPC Pipe\PipeHandlerNames.cs" />
+    <Compile Include="UIA Mode\IPC Pipe\RichCanvasUITestsPipeHandler.cs" />
+    <Compile Include="UIA Mode\PreDefinedAutomationItemModels.cs" />
     <Compile Include="UIA Mode\RichCanvasClientUIAModeViewModel.cs" />
     <Compile Include="UIA Mode\UIAModeMainControl.xaml.cs">
       <DependentUpon>UIAModeMainControl.xaml</DependentUpon>

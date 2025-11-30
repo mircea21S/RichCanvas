@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 using System.Windows;
 
 using RichCanvasUIA.Client.Debug_Mode;
-using RichCanvasUIA.Client.IPC_Pipe;
 using RichCanvasUIA.Client.UIA_Mode;
+using RichCanvasUIA.Client.UIA_Mode.IPC_Pipe;
 
 namespace RichCanvasUIA.Client
 {
@@ -71,7 +71,7 @@ namespace RichCanvasUIA.Client
                 {
                     Application.Current.Dispatcher.BeginInvoke(() =>
                     {
-                        pipeHandler.Process(pipeData, (MainWindowViewModel)DataContext);
+                        pipeHandler.Process(pipeData, (RichCanvasClientUIAModeViewModel)mainContent.DataContext);
                     });
                 }
             });

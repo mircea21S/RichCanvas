@@ -32,7 +32,10 @@
                       HorizontalScrollBarVisibility="Auto">
             <richCanvasUIACore:RichCanvasAutomation AutomationProperties.AutomationId="{x:Static local:AutomationIds.RichCanvasControl}"
                                                     Name="richCanvasElement"
-                                                    ItemsSource="{Binding RichCanvasAutomationModel.Items}">
+                                                    ItemsSource="{Binding RichCanvasAutomationModel.Items}"
+                                                    DrawingEndedCommand="{Binding RichCanvasAutomationModel.DrawingEndedCommand}"
+                                                    ViewportLocation="{Binding RichCanvasAutomationModel.ViewportLocation, Mode=OneWayToSource}"
+                                                    ViewportSize="{Binding RichCanvasAutomationModel.ViewportSize, Mode=OneWayToSource}">
                 <richCanvasUIACore:RichCanvasAutomation.Background>
                     <DrawingBrush TileMode="Tile"
                                   ViewportUnits="Absolute"
@@ -59,22 +62,16 @@
                 </richCanvasUIACore:RichCanvasAutomation.Resources>
                 <richCanvasUIACore:RichCanvasAutomation.ItemContainerStyle>
                     <Style TargetType="rc:RichCanvasContainer">
-
                         <Setter Property="Top"
                                 Value="{Binding Top, Mode=TwoWay}" />
-
                         <Setter Property="Left"
                                 Value="{Binding Left, Mode=TwoWay}" />
-
                         <Setter Property="Width"
                                 Value="{Binding Width, Mode=TwoWay}" />
-
                         <Setter Property="Height"
                                 Value="{Binding Height, Mode=TwoWay}" />
-
                         <Setter Property="AllowScaleChangeToUpdatePosition"
                                 Value="{Binding AllowScaleChangeToUpdatePosition}" />
-
                         <Style.Triggers>
                             <Trigger Property="IsSelected"
                                      Value="True">

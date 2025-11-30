@@ -5,8 +5,8 @@ namespace RichCanvasUIA.Client.TestMocks
     public static class SingleSelectionStateDataMocks
     {
         public static List<RichItemContainerModel> SingleSelectionItems =>
-       [
-           new()
+        [
+            new()
             {
                 Top = 50,
                 Left = 50,
@@ -27,6 +27,6 @@ namespace RichCanvasUIA.Client.TestMocks
                 Height = 50,
                 Width = 50
             }
-       ];
+        ];
     }
 }

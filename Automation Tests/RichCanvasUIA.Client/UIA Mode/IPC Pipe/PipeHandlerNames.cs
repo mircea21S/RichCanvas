@@ -1,4 +1,4 @@
-﻿namespace RichCanvasUIA.Client.IPC_Pipe
+﻿namespace RichCanvasUIA.Client.UIA_Mode.IPC_Pipe
 {
     public class PipeHandlerNames
     {
