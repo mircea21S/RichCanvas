@@ -1,5 +1,4 @@
-﻿using RichCanvasUIA.Client.TestMocks;
-using System;
+﻿using System;
 using System.Windows.Input;
 
 namespace RichCanvasUIA.Client.States
@@ -21,10 +20,10 @@ namespace RichCanvasUIA.Client.States
 
         private void AddTestSingleSelectionItems()
         {
-            foreach (var item in SingleSelectionStateDataMocks.SingleSelectionItems)
-            {
-                Parent.Items.Add(item);
-            }
+            //foreach (var item in SingleSelectionStateDataMocks.SingleSelectionItems)
+            //{
+            //    Parent.Items.Add(item);
+            //}
         }
 
         private void SetSelectedItem(Int64 index)

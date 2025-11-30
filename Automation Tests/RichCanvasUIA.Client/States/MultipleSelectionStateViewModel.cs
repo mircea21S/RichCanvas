@@ -1,6 +1,4 @@
-﻿using RichCanvasUIA.Client;
-using RichCanvasUIA.Client.TestMocks;
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows.Input;
 
@@ -20,20 +18,20 @@ namespace RichCanvasUIA.Client.States
 
         private void AddSelectableItems(Int64 collectionType)
         {
-            if (collectionType == 1)
-            {
-                foreach (var item in MultipleSelectionStateDataMocks.MultipleSelectionCloselyPositionedDummyItems)
-                {
-                    Parent.Items.Add(item);
-                }
-            }
-            else if (collectionType == 2)
-            {
-                foreach (var item in MultipleSelectionStateDataMocks.MultipleSelectionDummyItems)
-                {
-                    Parent.Items.Add(item);
-                }
-            }
+            //if (collectionType == 1)
+            //{
+            //    foreach (var item in MultipleSelectionStateDataMocks.MultipleSelectionCloselyPositionedDummyItems)
+            //    {
+            //        Parent.Items.Add(item);
+            //    }
+            //}
+            //else if (collectionType == 2)
+            //{
+            //    foreach (var item in MultipleSelectionStateDataMocks.MultipleSelectionDummyItems)
+            //    {
+            //        Parent.Items.Add(item);
+            //    }
+            //}
         }
 
         private RelayCommand<Int64> _addSelectedItemsCommand;

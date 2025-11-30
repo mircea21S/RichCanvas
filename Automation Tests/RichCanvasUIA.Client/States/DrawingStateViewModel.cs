@@ -1,8 +1,8 @@
-﻿using RichCanvasUIA.Client.Models;
-using RichCanvasUIA.Client.TestMocks;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Input;
+
+using RichCanvasUIA.Client.Models;
 
 namespace RichCanvasUIA.Client.States
 {
@@ -11,6 +11,7 @@ namespace RichCanvasUIA.Client.States
         public MainWindowViewModel Parent { get; }
 
         private bool _shoudlExecuteDrawingEndedCommand = true;
+
         public bool ShouldExecuteDrawingEndedCommand
         {
             get => _shoudlExecuteDrawingEndedCommand;
@@ -27,7 +28,7 @@ namespace RichCanvasUIA.Client.States
 
         private void AddPositionedRectangle(bool isImmutable)
         {
-            Parent.Items.Add(isImmutable ? DrawingStateDataMocks.ImmutablePositionedRectangleMockWithoutSize : DrawingStateDataMocks.PositionedRectangleMockWithoutSize);
+            //Parent.Items.Add(isImmutable ? DrawingStateDataMocks.ImmutablePositionedRectangleMockWithoutSize : DrawingStateDataMocks.PositionedRectangleMockWithoutSize);
         }
 
         private RelayCommand _addDrawnRectangleCommand;
@@ -35,7 +36,7 @@ namespace RichCanvasUIA.Client.States
 
         private void AddDrawnRectangle()
         {
-            Parent.Items.Add(DrawingStateDataMocks.DrawnRectangleMock);
+            //Parent.Items.Add(DrawingStateDataMocks.DrawnRectangleMock);
         }
 
         private RelayCommand<Type> _addEmptyItemCommand;
@@ -83,6 +84,7 @@ namespace RichCanvasUIA.Client.States
                         Height = 100
                     });
                     break;
+
                 case Direction.Left:
                     Parent.Items.Add(new RichItemContainerModel
                     {
@@ -92,6 +94,7 @@ namespace RichCanvasUIA.Client.States
                         Height = 100
                     });
                     break;
+
                 case Direction.Bottom:
                     Parent.Items.Add(new RichItemContainerModel
                     {
@@ -101,6 +104,7 @@ namespace RichCanvasUIA.Client.States
                         Height = 100
                     });
                     break;
+
                 case Direction.Right:
                     Parent.Items.Add(new RichItemContainerModel
                     {

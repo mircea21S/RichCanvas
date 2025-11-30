@@ -3,7 +3,6 @@ using System.Collections.Specialized;
 using System.Windows.Input;
 
 using RichCanvasUIA.Client.States;
-using RichCanvasUIA.Client.TestMocks;
 
 namespace RichCanvasUIA.Client
 {
@@ -143,7 +142,6 @@ namespace RichCanvasUIA.Client
 
         private void PerformSetViewportLocationValue()
         {
-            ViewportLocation = PanningStateDataMocks.ViewportLocationMockValue;
         }
 
         private void ResetViewportZoom()

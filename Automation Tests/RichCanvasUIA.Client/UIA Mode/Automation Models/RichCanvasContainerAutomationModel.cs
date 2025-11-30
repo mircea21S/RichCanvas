@@ -1,4 +1,6 @@
-﻿namespace RichCanvasUIA.Client.UIA_Mode.Automation_Models
+﻿using System.Windows;
+
+namespace RichCanvasUIA.Client.UIA_Mode.Automation_Models
 {
     public class RichCanvasContainerAutomationModel : ObservableObject
     {
@@ -41,5 +43,7 @@
             get => _allowScaleChangeToUpdatePosition;
             set => SetProperty(ref _allowScaleChangeToUpdatePosition, value);
         }
+
+        public Rect BoundingBox => new(Left, Top, Width, Height);
     }
 }

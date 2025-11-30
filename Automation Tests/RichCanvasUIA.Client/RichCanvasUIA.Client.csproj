@@ -89,10 +89,6 @@
     <Compile Include="States\MultipleSelectionStateViewModel.cs" />
     <Compile Include="States\SingleSelectionStateViewModel.cs" />
     <Compile Include="States\ZoomingViewModel.cs" />
-    <Compile Include="TestMocks\DrawingStateDataMocks.cs" />
-    <Compile Include="TestMocks\MultipleSelectionStateDataMocks.cs" />
-    <Compile Include="TestMocks\PanningStateDataMocks.cs" />
-    <Compile Include="TestMocks\SingleSelectionStateDataMocks.cs" />
     <Compile Include="UIA Mode\IPC Pipe\Handlers\DrawingStateHandler.cs" />
     <Compile Include="UIA Mode\IPC Pipe\Handlers\PipeHandlerDefinition.cs" />
     <Compile Include="UIA Mode\IPC Pipe\Handlers\ItemsSourceHandler.cs" />

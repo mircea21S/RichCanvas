@@ -11,8 +11,8 @@ using RichCanvas.UIAutomation.FlaUIClient;
 using RichCanvas.UIAutomation.Tests.Extensions;
 using RichCanvas.UIAutomation.Tests.Tests.Selection.SelectionModes;
 
-using RichCanvasUIA.Client;
-using RichCanvasUIA.Client.TestMocks;
+using RichCanvasUIA.Client.UIA_Mode;
+using RichCanvasUIA.Client.UIA_Mode.Automation_Models;
 
 namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
 {
@@ -53,10 +53,10 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
             drawnContainer.StartDragging(drawnContainer.GetLocationPoint());
 
             drawnContainer.Move(CurrentMousePosition.AddOffset(dragOffset));
-            drawnContainer.Location.Should().Be(new Point(DrawingStateDataMocks.DrawnRectangleMock.Left.ToInt(), DrawingStateDataMocks.DrawnRectangleMock.Top.ToInt()));
+            drawnContainer.Location.Should().Be(new Point(PreDefinedAutomationItemModels.FullyDrawnRectangle.Left.ToInt(), PreDefinedAutomationItemModels.FullyDrawnRectangle.Top.ToInt()));
 
             drawnContainer.Move(CurrentMousePosition.AddOffset(dragOffset));
-            drawnContainer.Location.Should().Be(new Point(DrawingStateDataMocks.DrawnRectangleMock.Left.ToInt(), DrawingStateDataMocks.DrawnRectangleMock.Top.ToInt()));
+            drawnContainer.Location.Should().Be(new Point(PreDefinedAutomationItemModels.FullyDrawnRectangle.Left.ToInt(), PreDefinedAutomationItemModels.FullyDrawnRectangle.Top.ToInt()));
 
             drawnContainer.EndDragging();
         }
@@ -74,7 +74,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
             drawnContainer.Drag(startPoint, startPoint.AddOffset(dragOffset));
 
             // assert
-            var containerInitialLocation = new Point(DrawingStateDataMocks.DrawnRectangleMock.Left.ToInt(), DrawingStateDataMocks.DrawnRectangleMock.Top.ToInt());
+            var containerInitialLocation = new Point(PreDefinedAutomationItemModels.FullyDrawnRectangle.Left.ToInt(), PreDefinedAutomationItemModels.FullyDrawnRectangle.Top.ToInt());
             drawnContainer.Location.Should().Be(Point.Add(containerInitialLocation, new Size(dragOffset, dragOffset)));
         }
 
@@ -83,7 +83,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
         {
             // arrange
             RichCanvasUIAClientCommunicator.AddSingleSelectionTestItems();
-            List<RichItemContainerModel> containers = SingleSelectionStateDataMocks.SingleSelectionItems;
+            List<RichCanvasContainerAutomationModel> containers = PreDefinedAutomationItemModels.SelectableItemsForSingleSelection;
             RichCanvas.SelectAllItems();
             int dragOffset = 50;
 
@@ -94,7 +94,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
             dragContainer.Move(CurrentMousePosition.AddOffset(dragOffset));
             for (int i = 0; i < containers.Count; i++)
             {
-                RichItemContainerModel item = containers[i];
+                var item = containers[i];
                 RichCanvasContainerAutomation container = RichCanvas.Items[i];
                 container.Location.Should().Be(new Point(item.Left.ToInt() + dragOffset, item.Top.ToInt() + dragOffset));
             }
@@ -102,7 +102,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
             dragContainer.Move(CurrentMousePosition.AddOffset(dragOffset));
             for (int i = 0; i < containers.Count; i++)
             {
-                RichItemContainerModel item = containers[i];
+                var item = containers[i];
                 RichCanvasContainerAutomation container = RichCanvas.Items[i];
                 container.Location.Should().Be(new Point(item.Left.ToInt() + (dragOffset * 2), item.Top.ToInt() + (dragOffset * 2)));
             }
@@ -115,7 +115,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
         {
             // arrange
             RichCanvasUIAClientCommunicator.AddSingleSelectionTestItems();
-            List<RichItemContainerModel> containers = SingleSelectionStateDataMocks.SingleSelectionItems;
+            List<RichCanvasContainerAutomationModel> containers = PreDefinedAutomationItemModels.SelectableItemsForSingleSelection;
             RichCanvas.SelectAllItems();
             int dragOffset = 50;
 
@@ -127,7 +127,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
             // assert
             for (int i = 0; i < containers.Count; i++)
             {
-                RichItemContainerModel item = containers[i];
+                var item = containers[i];
                 RichCanvasContainerAutomation container = RichCanvas.Items[i];
                 container.Location.Should().Be(new Point(item.Left.ToInt() + dragOffset, item.Top.ToInt() + dragOffset));
             }
@@ -145,8 +145,8 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Dragging
             container.Drag(container.GetLocationPoint(), CurrentMousePosition.AddOffset(50));
 
             // assert
-            container.Location.X.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Left.ToInt());
-            container.Location.Y.Should().Be(DrawingStateDataMocks.DrawnRectangleMock.Top.ToInt());
+            container.Location.X.Should().Be(PreDefinedAutomationItemModels.FullyDrawnRectangle.Left.ToInt());
+            container.Location.Y.Should().Be(PreDefinedAutomationItemModels.FullyDrawnRectangle.Top.ToInt());
         }
     }
 }

@@ -128,7 +128,7 @@ namespace RichCanvasUIA.Client.UIA_Mode
             }
         ];
 
-        public static List<RichCanvasContainerAutomationModel> SelectableItemsForSingleSelection =>
+        public static List<RichCanvasContainerAutomationModel> SelectableItemsForSingleSelection =
         [
             new()
             {

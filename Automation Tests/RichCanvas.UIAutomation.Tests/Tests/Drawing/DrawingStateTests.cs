@@ -12,8 +12,6 @@ using RichCanvas.UIAutomation.FlaUIClient;
 using RichCanvas.UIAutomation.Tests.Extensions;
 using RichCanvas.UIAutomation.Tests.Utilities;
 
-using RichCanvasUIA.Client;
-using RichCanvasUIA.Client.TestMocks;
 using RichCanvasUIA.Client.UIA_Mode;
 
 namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
@@ -29,7 +27,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
         public void DrawScaledItem_WithAllowScaleToUpdatePositionFalse_ShouldNotModifyTopAndLeft(int scaleX, int scaleY)
         {
             // arrange
-            RichItemContainerModel mockRectangle = DrawingStateDataMocks.ImmutablePositionedRectangleMockWithoutSize;
+            var mockRectangle = PreDefinedAutomationItemModels.ImmutablePositionedRectangleWithoutSize;
             var mockRectangleSize = new Size(50, 50);
 
             // act
@@ -57,7 +55,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
         public void DrawScaledItem_WithAllowScaleToUpdatePositionTrue_ShouldModifyTopAndLeft(int scaleX, int scaleY)
         {
             // arrange
-            RichItemContainerModel rectangleMock = DrawingStateDataMocks.PositionedRectangleMockWithoutSize;
+            var rectangleMock = PreDefinedAutomationItemModels.ImmutablePositionedRectangleWithoutSize;
             var mockRectangleSize = new Size(50, 50);
 
             // act
@@ -129,7 +127,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
         public void AddContainerWithBoundPositionAndSize_ShouldDrawContainerWithPositionAndSizeTheSameAsSpecified()
         {
             // arrange
-            RichItemContainerModel mockRectangle = DrawingStateDataMocks.DrawnRectangleMock;
+            var mockRectangle = PreDefinedAutomationItemModels.FullyDrawnRectangle;
 
             // act
             RichCanvasUIAClientCommunicator.AddDrawnRectangle();

@@ -18,7 +18,7 @@ using RichCanvas.UIAutomation.Tests.Tests.Dragging;
 using RichCanvas.UIAutomation.Tests.Tests.Drawing;
 using RichCanvas.UIAutomation.Tests.Utilities;
 
-using RichCanvasUIA.Client.TestMocks;
+using RichCanvasUIA.Client.UIA_Mode;
 
 namespace RichCanvas.UIAutomation.Tests.Tests.Scrolling
 {
@@ -123,9 +123,9 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Scrolling
             return scrollingDirection switch
             {
                 Direction.Down => RichCanvas.ViewportLocation.Y <= drawnContainer.Location.Y,
-                Direction.Up => Math.Abs(RichCanvas.ViewportLocation.Y) <= RichCanvas.ViewportSize.Height - DrawingStateDataMocks.DrawnRectangleMock.BoundingBox.Bottom,
+                Direction.Up => Math.Abs(RichCanvas.ViewportLocation.Y) <= RichCanvas.ViewportSize.Height - PreDefinedAutomationItemModels.FullyDrawnRectangle.BoundingBox.Bottom,
                 Direction.Left => RichCanvas.ViewportLocation.X <= drawnContainer.Location.X,
-                Direction.Right => Math.Abs(RichCanvas.ViewportLocation.X) <= RichCanvas.ViewportSize.Width - DrawingStateDataMocks.DrawnRectangleMock.BoundingBox.Right,
+                Direction.Right => Math.Abs(RichCanvas.ViewportLocation.X) <= RichCanvas.ViewportSize.Width - PreDefinedAutomationItemModels.FullyDrawnRectangle.BoundingBox.Right,
                 _ => true,
             };
         }
