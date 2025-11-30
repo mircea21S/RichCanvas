@@ -62,6 +62,9 @@
     <Compile Include="Automation\AutomationIds.cs" />
     <Compile Include="Converters\PointToStringConverter.cs" />
     <Compile Include="Converters\StringToDoubleConverter.cs" />
+    <Compile Include="Debug Mode\DebugModeMainWindow.xaml.cs">
+      <DependentUpon>DebugModeMainWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="IPC Pipe\Handlers\DrawingStateHandler.cs" />
     <Compile Include="IPC Pipe\Handlers\IPipeHandler.cs" />
     <Compile Include="IPC Pipe\Handlers\ItemsSourceHandler.cs" />
@@ -92,6 +95,13 @@
     <Compile Include="TestMocks\MultipleSelectionStateDataMocks.cs" />
     <Compile Include="TestMocks\PanningStateDataMocks.cs" />
     <Compile Include="TestMocks\SingleSelectionStateDataMocks.cs" />
+    <Compile Include="UIA Mode\UIAModeMainControl.xaml.cs">
+      <DependentUpon>UIAModeMainControl.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Debug Mode\DebugModeMainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -117,6 +127,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="StatePresenters\ZoomingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UIA Mode\UIAModeMainControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -159,5 +173,6 @@
       <Name>RichCanvas.UIAutomation.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

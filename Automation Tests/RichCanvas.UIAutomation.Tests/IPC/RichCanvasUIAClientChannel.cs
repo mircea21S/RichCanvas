@@ -42,6 +42,11 @@ namespace RichCanvas.UIAutomation.Tests.IPC
             }
         }
 
+        internal void DisposeLocalCopyOfClientHandle() => _pipeServer.DisposeLocalCopyOfClientHandle();
+
+        internal string GetClientHandleAsString()
+            => _pipeServer.GetClientHandleAsString();
+
         internal void AddDrawnRectangle()
         {
             SendToAppWithDrawingPrefix(PipeHandlerNames.Drawing.AddDrawnRectangle);
@@ -87,11 +92,6 @@ namespace RichCanvas.UIAutomation.Tests.IPC
             SendToAppWithDrawingPrefix(PipeHandlerNames.Drawing.EnableDrawingEndedCommandExecution);
         }
 
-        internal void DisposeLocalCopyOfClientHandle() => _pipeServer.DisposeLocalCopyOfClientHandle();
-
-        internal string GetClientHandleAsString()
-            => _pipeServer.GetClientHandleAsString();
-
         internal void AddSelectableItems()
         {
             SendToAppWithSelectionPrefix(PipeHandlerNames.Selection.AddSelectableItems);
@@ -117,21 +117,6 @@ namespace RichCanvas.UIAutomation.Tests.IPC
             SendToAppWithItemsSourcePrefix(PipeHandlerNames.ItemsSource.AddItemBottomOutsideViewport);
         }
 
-        private void SendToAppWithSelectionPrefix(string operationName)
-        {
-            Send($"{nameof(PipeHandlerNames.Selection)}.{operationName}");
-        }
-
-        private void SendToAppWithDrawingPrefix(string operationName)
-        {
-            Send($"{nameof(PipeHandlerNames.Drawing)}.{operationName}");
-        }
-
-        private void SendToAppWithItemsSourcePrefix(string operationName)
-        {
-            Send($"{nameof(PipeHandlerNames.ItemsSource)}.{operationName}");
-        }
-
         internal void AddConsecutiveItemsForRealTimeSelection()
         {
             SendToAppWithSelectionPrefix(PipeHandlerNames.Selection.AddConsecutiveItemsForRealTimeSelection);
@@ -145,6 +130,21 @@ namespace RichCanvas.UIAutomation.Tests.IPC
         internal void ClearAllItems()
         {
             SendToAppWithItemsSourcePrefix(PipeHandlerNames.ItemsSource.ClearAllItems);
+        }
+
+        private void SendToAppWithSelectionPrefix(string operationName)
+        {
+            Send($"{nameof(PipeHandlerNames.Selection)}.{operationName}");
+        }
+
+        private void SendToAppWithDrawingPrefix(string operationName)
+        {
+            Send($"{nameof(PipeHandlerNames.Drawing)}.{operationName}");
+        }
+
+        private void SendToAppWithItemsSourcePrefix(string operationName)
+        {
+            Send($"{nameof(PipeHandlerNames.ItemsSource)}.{operationName}");
         }
     }
 }
