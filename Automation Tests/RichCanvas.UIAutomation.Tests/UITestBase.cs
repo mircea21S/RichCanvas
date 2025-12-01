@@ -50,7 +50,7 @@ namespace RichCanvas.UIAutomation.Tests
             var app = Application.AttachOrLaunch(new ProcessStartInfo
             {
                 FileName = AppPath,
-                Arguments = RichCanvasUIAClientCommunicator.GetClientHandleAsString(),
+                Arguments = $"UIA+{RichCanvasUIAClientCommunicator.GetClientHandleAsString()}",
                 UseShellExecute = false
             });
             app.WaitWhileMainHandleIsMissing();

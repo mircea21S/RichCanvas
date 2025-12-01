@@ -5,7 +5,6 @@ using FluentAssertions;
 using NUnit.Framework;
 
 using RichCanvas.UIAutomation.Tests.Extensions;
-using RichCanvas.UIAutomation.Tests.Utilities;
 
 namespace RichCanvas.UIAutomation.Tests.Tests.Panning
 {
@@ -24,7 +23,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Panning
             Point endPoint = RichCanvas.GetRandomPointOnRichCanvas();
             var distanceVector = endPoint.AsWindowsPoint() - startPoint.AsWindowsPoint();
 
-            RichCanvas.Pan(new UIAClientAppPoint(startPoint), new UIAClientAppPoint(endPoint));
+            RichCanvas.Pan(startPoint.RelativeToRichCanvas(RichCanvas), endPoint.RelativeToRichCanvas(RichCanvas));
 
             // assert
             var expectedLocation = new System.Windows.Point(initialViewportLocation.X - distanceVector.X, initialViewportLocation.Y - distanceVector.Y);

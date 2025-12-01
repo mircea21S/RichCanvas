@@ -11,7 +11,6 @@ using FluentAssertions;
 using NUnit.Framework;
 
 using RichCanvas.UIAutomation.Tests.Extensions;
-using RichCanvas.UIAutomation.Tests.Utilities;
 
 namespace RichCanvas.UIAutomation.Tests.Tests.Zooming
 {
@@ -78,7 +77,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Zooming
         public void RichCanvas_WhenZoomingAtMultiplePositions_ShouldKeepEachPositionSteadyThroughoutZooming(int xPosition, int yPosition, bool zoomIn)
         {
             // arrange
-            Mouse.Position = new UIAClientAppPoint(xPosition, yPosition);
+            Mouse.Position = CreatePointRelativeToRichCanvasElement(xPosition, yPosition);
             System.Windows.Point mousePositionBeforeZooming = GetCurrentRichCanvasElement().GetRichCanvasSettings().MousePosition;
 
             // act
@@ -158,7 +157,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Zooming
         public void ZoomedRichCanvas_WhenMouseOnTopLeftCornerOfCanvas_ShouldBeViewportLocation()
         {
             // arrange & act
-            Mouse.Position = new UIAClientAppPoint(0, 0);
+            Mouse.Position = CreatePointRelativeToRichCanvasElement(0, 0);
             RichCanvas.Zoom(false);
             RichCanvas.Zoom(true);
             RichCanvas.Zoom(true);
@@ -179,7 +178,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Zooming
         {
             // arrange
             RichCanvasUIAClientCommunicator.AddSelectableItems();
-            Mouse.Position = new UIAClientAppPoint(203, 303);
+            Mouse.Position = CreatePointRelativeToRichCanvasElement(203, 303);
 
             // act
             for (int i = 0; i < 4; i++)
@@ -196,7 +195,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Zooming
         {
             // arrange
             RichCanvasUIAClientCommunicator.AddSelectableItems();
-            Mouse.Position = new UIAClientAppPoint(203, 303);
+            Mouse.Position = CreatePointRelativeToRichCanvasElement(203, 303);
 
             // act & assert
             for (int i = 0; i < 6; i++)

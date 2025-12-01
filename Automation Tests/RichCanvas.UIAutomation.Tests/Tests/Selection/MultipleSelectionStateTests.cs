@@ -8,8 +8,8 @@ using FluentAssertions;
 using NUnit.Framework;
 
 using RichCanvas.UIAutomation.FlaUIClient;
+using RichCanvas.UIAutomation.Tests.Extensions;
 using RichCanvas.UIAutomation.Tests.Tests.Selection.SelectionModes;
-using RichCanvas.UIAutomation.Tests.Utilities;
 
 namespace RichCanvas.UIAutomation.Tests.Tests.Selection
 {
@@ -34,13 +34,13 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
             if (inverseDrag)
             {
                 var startPoint = new Point(mostRightPoint + 1, mostBottomPoint + 1);
-                RichCanvas.StartSelection(startPoint);
+                RichCanvas.StartSelection(startPoint.RelativeToRichCanvas(RichCanvas));
 
                 int selectedItems = 0;
                 for (int i = RichCanvas.Items.Length - 1; i >= 0; i--)
                 {
                     RichCanvasContainerAutomation item = RichCanvas.Items[i];
-                    RichCanvas.Select(new UIAClientAppPoint(item.Location.X, item.Location.Y));
+                    RichCanvas.Select(CreatePointRelativeToRichCanvasElement(item.Location.X, item.Location.Y));
                     selectedItems++;
                     RichCanvas.SelectedItems.Length.Should().Be(selectedItems);
                 }
@@ -50,13 +50,13 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
             else
             {
                 var startPoint = new Point(mostLeftPoint - 5, mostTopPoint - 5);
-                RichCanvas.StartSelection(startPoint);
+                RichCanvas.StartSelection(startPoint.RelativeToRichCanvas(RichCanvas));
 
                 int selectedItems = 0;
                 for (int i = 0; i < RichCanvas.Items.Length; i++)
                 {
                     RichCanvasContainerAutomation item = RichCanvas.Items[i];
-                    RichCanvas.Select(new UIAClientAppPoint(item.BoundingRectangle.Right, item.BoundingRectangle.Bottom));
+                    RichCanvas.Select(CreatePointRelativeToRichCanvasElement(item.BoundingRectangle.Right, item.BoundingRectangle.Bottom));
                     selectedItems++;
                     RichCanvas.SelectedItems.Length.Should().Be(selectedItems);
                 }
@@ -82,11 +82,11 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
             if (inverseDrag)
             {
                 var startPoint = new Point(mostRightPoint + 1, mostBottomPoint + 1);
-                RichCanvas.StartSelection(startPoint);
+                RichCanvas.StartSelection(startPoint.RelativeToRichCanvas(RichCanvas));
                 for (int i = RichCanvas.Items.Length - 1; i >= 0; i--)
                 {
                     RichCanvasContainerAutomation item = RichCanvas.Items[i];
-                    RichCanvas.Select(new UIAClientAppPoint(item.Location.X, item.Location.Y));
+                    RichCanvas.Select(CreatePointRelativeToRichCanvasElement(item.Location.X, item.Location.Y));
                     RichCanvas.SelectedItems.Length.Should().Be(0);
                 }
 
@@ -95,11 +95,11 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
             else
             {
                 var startPoint = new Point(mostLeftPoint - 5, mostTopPoint - 5);
-                RichCanvas.StartSelection(startPoint);
+                RichCanvas.StartSelection(startPoint.RelativeToRichCanvas(RichCanvas));
                 for (int i = 0; i < RichCanvas.Items.Length; i++)
                 {
                     RichCanvasContainerAutomation item = RichCanvas.Items[i];
-                    RichCanvas.Select(new UIAClientAppPoint(item.BoundingRectangle.Right, item.BoundingRectangle.Bottom));
+                    RichCanvas.Select(CreatePointRelativeToRichCanvasElement(item.BoundingRectangle.Right, item.BoundingRectangle.Bottom));
                     RichCanvas.SelectedItems.Length.Should().Be(0);
                 }
 
@@ -124,11 +124,11 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
             if (inverseDrag)
             {
                 var startPoint = new Point(mostRightPoint + 1, mostBottomPoint + 1);
-                RichCanvas.StartSelection(startPoint);
+                RichCanvas.StartSelection(startPoint.RelativeToRichCanvas(RichCanvas));
                 for (int i = RichCanvas.Items.Length - 1; i >= 0; i--)
                 {
                     RichCanvasContainerAutomation item = RichCanvas.Items[i];
-                    RichCanvas.Select(new UIAClientAppPoint(item.Location.X, item.Location.Y));
+                    RichCanvas.Select(CreatePointRelativeToRichCanvasElement(item.Location.X, item.Location.Y));
                 }
 
                 RichCanvas.EndSelection();
@@ -137,11 +137,11 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
             else
             {
                 var startPoint = new Point(mostLeftPoint - 5, mostTopPoint - 5);
-                RichCanvas.StartSelection(startPoint);
+                RichCanvas.StartSelection(startPoint.RelativeToRichCanvas(RichCanvas));
                 for (int i = 0; i < RichCanvas.Items.Length; i++)
                 {
                     RichCanvasContainerAutomation item = RichCanvas.Items[i];
-                    RichCanvas.Select(new UIAClientAppPoint(item.BoundingRectangle.Right, item.BoundingRectangle.Bottom));
+                    RichCanvas.Select(CreatePointRelativeToRichCanvasElement(item.BoundingRectangle.Right, item.BoundingRectangle.Bottom));
                 }
 
                 RichCanvas.EndSelection();
@@ -160,7 +160,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
             int selectedItems = 0;
             foreach (RichCanvasContainerAutomation item in RichCanvas.Items)
             {
-                Mouse.Click(new UIAClientAppPoint(item.Location.X + 1, item.Location.Y + 1));
+                Mouse.Click(CreatePointRelativeToRichCanvasElement(item.Location.X + 1, item.Location.Y + 1));
                 selectedItems++;
                 RichCanvas.SelectedItems.Length.Should().Be(selectedItems);
             }
@@ -177,7 +177,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
             int selectedItems = 0;
             foreach (RichCanvasContainerAutomation item in RichCanvas.Items)
             {
-                Mouse.Click(new UIAClientAppPoint(item.Location.X + 1, item.Location.Y + 1));
+                Mouse.Click(CreatePointRelativeToRichCanvasElement(item.Location.X + 1, item.Location.Y + 1));
                 selectedItems++;
                 RichCanvas.SelectedItems.Length.Should().Be(selectedItems);
             }

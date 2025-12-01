@@ -7,8 +7,8 @@ using FluentAssertions;
 using NUnit.Framework;
 
 using RichCanvas.UIAutomation.FlaUIClient;
+using RichCanvas.UIAutomation.Tests.Extensions;
 using RichCanvas.UIAutomation.Tests.Tests.Selection.SelectionModes;
-using RichCanvas.UIAutomation.Tests.Utilities;
 
 namespace RichCanvas.UIAutomation.Tests.Tests.Selection
 {
@@ -27,15 +27,15 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
 
             // act and assert
             var startPoint = new Point(30, 30);
-            RichCanvas.StartSelection(startPoint);
+            RichCanvas.StartSelection(startPoint.RelativeToRichCanvas(RichCanvas));
 
-            RichCanvas.Select(new Point(150, 150));
+            RichCanvas.Select(new Point(150, 150).RelativeToRichCanvas(RichCanvas));
             RichCanvas.SelectedItem.Should().Be(RichCanvas.Items[0]);
 
-            RichCanvas.Select(new Point(250, 250));
+            RichCanvas.Select(new Point(250, 250).RelativeToRichCanvas(RichCanvas));
             RichCanvas.SelectedItem.Should().Be(RichCanvas.Items[0]);
 
-            RichCanvas.Select(new Point(350, 350));
+            RichCanvas.Select(new Point(350, 350).RelativeToRichCanvas(RichCanvas));
             RichCanvas.SelectedItem.Should().Be(RichCanvas.Items[0]);
 
             RichCanvas.EndSelection();
@@ -77,7 +77,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
             // act and assert
             foreach (RichCanvasContainerAutomation item in RichCanvas.Items)
             {
-                Mouse.Click(new UIAClientAppPoint(item.Location.X + 1, item.Location.Y + 1));
+                Mouse.Click(CreatePointRelativeToRichCanvasElement(item.Location.X + 1, item.Location.Y + 1));
                 RichCanvas.SelectedItem.Should().Be(item);
             }
         }
@@ -91,17 +91,17 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
 
             // act and assert
             var startPoint = new Point(30, 30);
-            RichCanvas.StartSelection(startPoint);
+            RichCanvas.StartSelection(startPoint.RelativeToRichCanvas(RichCanvas));
 
-            RichCanvas.Select(new Point(100, 100));
+            RichCanvas.Select(new Point(100, 100).RelativeToRichCanvas(RichCanvas));
             RichCanvas.SelectedItem.Should().BeNull();
             RichCanvas.SelectedItems.Should().BeEmpty();
 
-            RichCanvas.Select(new Point(200, 200));
+            RichCanvas.Select(new Point(200, 200).RelativeToRichCanvas(RichCanvas));
             RichCanvas.SelectedItem.Should().BeNull();
             RichCanvas.SelectedItems.Should().BeEmpty();
 
-            RichCanvas.Select(new Point(300, 300));
+            RichCanvas.Select(new Point(300, 300).RelativeToRichCanvas(RichCanvas));
             RichCanvas.SelectedItem.Should().BeNull();
             RichCanvas.SelectedItems.Should().BeEmpty();
 
@@ -117,8 +117,8 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
 
             // act
             var startPoint = new Point(30, 30);
-            RichCanvas.StartSelection(startPoint);
-            RichCanvas.Select(new Point(300, 300));
+            RichCanvas.StartSelection(startPoint.RelativeToRichCanvas(RichCanvas));
+            RichCanvas.Select(new Point(300, 300).RelativeToRichCanvas(RichCanvas));
             RichCanvas.EndSelection();
 
             // assert
@@ -135,8 +135,8 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Selection
 
             // act
             var startPoint = new Point(30, 30);
-            RichCanvas.StartSelection(startPoint);
-            RichCanvas.Select(new Point(300, 300));
+            RichCanvas.StartSelection(startPoint.RelativeToRichCanvas(RichCanvas));
+            RichCanvas.Select(new Point(300, 300).RelativeToRichCanvas(RichCanvas));
             RichCanvas.EndSelection();
 
             // assert

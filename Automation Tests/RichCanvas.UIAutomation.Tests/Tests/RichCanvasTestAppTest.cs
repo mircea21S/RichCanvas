@@ -8,15 +8,12 @@ using NUnit.Framework;
 
 using RichCanvas.UIAutomation.FlaUIClient;
 
+using RichCanvasUIA.Client.UIA_Mode;
+
 namespace RichCanvas.UIAutomation.Tests.Tests
 {
     public class RichCanvasTestAppTest : UITestBase
     {
-        /// <summary>
-        /// Size of Title bar (SystemParamters.WindowCaptionHeight) = 22.5
-        /// </summary>
-        public const int RichCanvasDemoTitleBarHeight = 23;
-
         private readonly Size _visualViewportSize;
         private RichCanvasAutomation _richCanvas;
 
@@ -59,6 +56,8 @@ namespace RichCanvas.UIAutomation.Tests.Tests
         }
 
         protected RichCanvasAutomation GetCurrentRichCanvasElement()
-            => Window.FindFirstDescendant(d => d.ByAutomationId("source")).AsRichCanvasAutomation(Window);
+            => Window.FindFirstDescendant(d => d.ByAutomationId(AutomationIds.RichCanvasControl)).AsRichCanvasAutomation(Window);
+
+        protected Point CreatePointRelativeToRichCanvasElement(int x, int y) => new(x + RichCanvas.BoundingRectangle.Left, y + RichCanvas.BoundingRectangle.Top);
     }
 }

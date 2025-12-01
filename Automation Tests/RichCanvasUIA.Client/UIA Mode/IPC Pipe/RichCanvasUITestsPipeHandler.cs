@@ -10,6 +10,7 @@ namespace RichCanvasUIA.Client.UIA_Mode.IPC_Pipe
 
         internal void Process(string pipeData, RichCanvasClientUIAModeViewModel uiaModeViewModel)
         {
+            uiaModeViewModel.PipeDataInfo = $"{pipeData}";
             if (pipeData.Split('.').Length != 2)
             {
                 return;

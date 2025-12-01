@@ -10,10 +10,8 @@
              xmlns:rc="clr-namespace:RichCanvas;assembly=RichCanvas"
              mc:Ignorable="d"
              d:DesignHeight="450"
-             d:DesignWidth="800">
-    <UserControl.DataContext>
-        <local:RichCanvasClientUIAModeViewModel />
-    </UserControl.DataContext>
+             d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=local:RichCanvasClientUIAModeViewModel}">
     <UserControl.Resources>
         <GeometryDrawing x:Key="RectangleGridGeometry">
             <GeometryDrawing.Pen>
@@ -27,6 +25,10 @@
         <richCanvasConverters:UIntToRectConverter x:Key="UIntToRectConverter" />
     </UserControl.Resources>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
         <ScrollViewer CanContentScroll="True"
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Auto">
@@ -40,7 +42,7 @@
                     <DrawingBrush TileMode="Tile"
                                   ViewportUnits="Absolute"
                                   Viewport="{Binding GridSpacing, ElementName=richCanvasElement, Converter={StaticResource UIntToRectConverter}}"
-                                  Transform="{Binding AppliedTransform, ElementName=source}"
+                                  Transform="{Binding AppliedTransform, ElementName=richCanvasElement}"
                                   Drawing="{StaticResource RectangleGridGeometry}" />
                 </richCanvasUIACore:RichCanvasAutomation.Background>
                 <richCanvasUIACore:RichCanvasAutomation.Resources>
@@ -83,5 +85,14 @@
                 </richCanvasUIACore:RichCanvasAutomation.ItemContainerStyle>
             </richCanvasUIACore:RichCanvasAutomation>
         </ScrollViewer>
+        <StatusBar Grid.Row="1">
+            <StatusBarItem>
+                <TextBlock Text="{Binding PipeDataInfo, StringFormat='\{0\} pipe data'}"></TextBlock>
+            </StatusBarItem>
+            <StatusBarItem>
+                <Button Content="Test"
+                        Command="{Binding TestCommand}" />
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </UserControl>

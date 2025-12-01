@@ -246,7 +246,7 @@ namespace RichCanvas
         /// <summary>
         /// Gets or sets the items in the <see cref="RichCanvas"/> that are selected.
         /// </summary>
-        public new IList SelectedItems
+        public new IList? SelectedItems
         {
             get => (IList)GetValue(SelectedItemsProperty);
             set => SetValue(SelectedItemsProperty, value);
@@ -630,13 +630,13 @@ namespace RichCanvas
                 if (e.AddedItems.Count == 1)
                 {
                     SelectedItem = e.AddedItems[0];
-                    SelectedItems.Add(e.AddedItems[0]);
+                    SelectedItems?.Add(e.AddedItems[0]);
                 }
                 else if (e.AddedItems.Count > 1)
                 {
                     throw new ArgumentOutOfRangeException($"Cannot select more than 1 item when {nameof(CanSelectMultipleItems)} is set to false.");
                 }
-                if (e.RemovedItems.Count == 1 && SelectedItems.Count > 0 && e.RemovedItems[0] == SelectedItems[0])
+                if (SelectedItems != null && e.RemovedItems.Count == 1 && SelectedItems.Count > 0 && e.RemovedItems[0] == SelectedItems[0])
                 {
                     SelectedItems.Remove(e.RemovedItems[0]);
                 }

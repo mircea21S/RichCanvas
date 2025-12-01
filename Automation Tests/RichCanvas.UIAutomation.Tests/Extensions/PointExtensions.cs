@@ -3,6 +3,7 @@ using System.Drawing;
 
 using FlaUI.Core.Tools;
 
+using RichCanvas.UIAutomation.FlaUIClient;
 using RichCanvas.UIAutomation.Tests.Utilities;
 
 namespace RichCanvas.UIAutomation.Tests.Extensions
@@ -21,8 +22,6 @@ namespace RichCanvas.UIAutomation.Tests.Extensions
 
         internal static System.Windows.Point AsWindowsPoint(this Point drawingPoint) => new System.Windows.Point(drawingPoint.X, drawingPoint.Y);
 
-        internal static Point OffsetNew(this Point drawingPoint, Point offset) => new Point(drawingPoint.X + offset.X, drawingPoint.Y + offset.Y);
-
         internal static Point AddOffset(this Point point, int offset, DragDirection dragDirection = DragDirection.Both) => dragDirection switch
         {
             DragDirection.Both => new Point(point.X + offset, point.Y + offset),
@@ -31,15 +30,7 @@ namespace RichCanvas.UIAutomation.Tests.Extensions
             _ => throw new NotImplementedException()
         };
 
-        internal static Point AddOffset(this UIAClientAppPoint point, int offset, DragDirection dragDirection = DragDirection.Both) => dragDirection switch
-        {
-            DragDirection.Both => new Point(point.X + offset, point.Y + offset),
-            DragDirection.OnlyX => new Point(point.X + offset, point.Y),
-            DragDirection.OnlyY => new Point(point.X, point.Y + offset),
-            _ => throw new NotImplementedException()
-        };
-
-        internal static Point GetEndPointByScale(this UIAClientAppPoint fromPoint, Size containerSize, int scaleX = 1, int scaleY = 1)
+        internal static Point GetEndPointByScale(this Point fromPoint, Size containerSize, int scaleX = 1, int scaleY = 1)
         {
             if (scaleX == 1 && scaleY == 1)
             {
@@ -54,6 +45,11 @@ namespace RichCanvas.UIAutomation.Tests.Extensions
                 return new Point(fromPoint.X + containerSize.Width, fromPoint.Y - containerSize.Height);
             }
             return new Point(fromPoint.X - containerSize.Width, fromPoint.Y - containerSize.Height);
+        }
+
+        internal static Point RelativeToRichCanvas(this Point point, RichCanvasAutomation richCanvas)
+        {
+            return new Point(point.X + richCanvas.BoundingRectangle.Left, point.Y + richCanvas.BoundingRectangle.Top);
         }
     }
 }

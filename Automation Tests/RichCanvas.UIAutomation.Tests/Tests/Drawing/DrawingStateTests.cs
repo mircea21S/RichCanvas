@@ -10,7 +10,6 @@ using NUnit.Framework;
 
 using RichCanvas.UIAutomation.FlaUIClient;
 using RichCanvas.UIAutomation.Tests.Extensions;
-using RichCanvas.UIAutomation.Tests.Utilities;
 
 using RichCanvasUIA.Client.UIA_Mode;
 
@@ -34,7 +33,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
             RichCanvasUIAClientCommunicator.AddImmutableRectangle();
             RichCanvasContainerAutomation drawnContainer = RichCanvas.Items[0];
 
-            var drawingStartPoint = new UIAClientAppPoint(drawnContainer.Location);
+            var drawingStartPoint = drawnContainer.Location.RelativeToRichCanvas(RichCanvas);
             var drawingEndPoint = drawingStartPoint.GetEndPointByScale(mockRectangleSize, scaleX, scaleY);
             RichCanvas.Draw(drawingStartPoint, drawingEndPoint);
 
@@ -55,13 +54,13 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
         public void DrawScaledItem_WithAllowScaleToUpdatePositionTrue_ShouldModifyTopAndLeft(int scaleX, int scaleY)
         {
             // arrange
-            var rectangleMock = PreDefinedAutomationItemModels.ImmutablePositionedRectangleWithoutSize;
+            var rectangleMock = PreDefinedAutomationItemModels.MutablePositionedRectangleWithSize;
             var mockRectangleSize = new Size(50, 50);
 
             // act
             RichCanvasUIAClientCommunicator.AddPositionedRectangle();
             RichCanvasContainerAutomation drawnContainer = RichCanvas.Items[0];
-            var drawingStartPoint = new UIAClientAppPoint(drawnContainer.Location);
+            var drawingStartPoint = drawnContainer.Location.RelativeToRichCanvas(RichCanvas);
             var drawingEndPoint = drawingStartPoint.GetEndPointByScale(mockRectangleSize, scaleX, scaleY);
             RichCanvas.Draw(drawingStartPoint, drawingEndPoint);
 
@@ -97,7 +96,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
             // act
             RichCanvasUIAClientCommunicator.AddEmptyRectangle();
             var containerLocationPoint = RichCanvas.GetRandomPointOnRichCanvas();
-            var visualContainerLocationPoint = new UIAClientAppPoint(containerLocationPoint);
+            var visualContainerLocationPoint = containerLocationPoint.RelativeToRichCanvas(RichCanvas);
             var containerDrawEndPoint = visualContainerLocationPoint.GetEndPointByScale(containerSize, scaleX, scaleY);
             RichCanvas.Draw(visualContainerLocationPoint, containerDrawEndPoint);
 
@@ -151,7 +150,7 @@ namespace RichCanvas.UIAutomation.Tests.Tests.Drawing
 
             // act
             RichCanvasUIAClientCommunicator.AddEmptyRectangle();
-            var containerLocationPoint = new UIAClientAppPoint(RichCanvas.GetRandomPointOnRichCanvas());
+            var containerLocationPoint = RichCanvas.GetRandomPointOnRichCanvas().RelativeToRichCanvas(RichCanvas);
             var containerDrawEndPoint = containerLocationPoint.GetEndPointByScale(itemSize);
             RichCanvas.Draw(containerLocationPoint, containerDrawEndPoint);
 

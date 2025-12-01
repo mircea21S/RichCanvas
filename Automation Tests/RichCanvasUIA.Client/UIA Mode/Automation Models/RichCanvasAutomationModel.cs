@@ -8,7 +8,7 @@ namespace RichCanvasUIA.Client.UIA_Mode.Automation_Models
     {
         public ObservableCollection<RichCanvasContainerAutomationModel> Items { get; } = [];
 
-        public bool ShouldExecuteDrawingEndedCommand { get; set; }
+        public bool ShouldExecuteDrawingEndedCommand { get; set; } = true;
 
         private Point _viewportLocation;
 

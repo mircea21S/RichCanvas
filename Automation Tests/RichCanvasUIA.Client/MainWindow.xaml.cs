@@ -32,7 +32,10 @@ namespace RichCanvasUIA.Client
             var startMode = commandLineArguments[0];
             if (StartUIAMode(startMode, out string pipeHandlerName))
             {
-                mainContent.Content = new UIAModeMainControl();
+                mainContent.Content = new UIAModeMainControl
+                {
+                    DataContext = new RichCanvasClientUIAModeViewModel()
+                };
                 if (!string.IsNullOrEmpty(pipeHandlerName))
                 {
                     var pipeHandler = new RichCanvasUITestsPipeHandler();
@@ -48,7 +51,7 @@ namespace RichCanvasUIA.Client
 
         private bool StartUIAMode(string startMode, out string pipeHandlerName)
         {
-            var regex = new Regex(@"^(?<first>UIA)(?:\+(?<pipeHandlerName>\w+))?$");
+            var regex = new Regex(@"^(?<first>UIA)(?:\+(?<pipeHandlerName>[A-Za-z0-9]+))?$");
 
             var match = regex.Match(startMode);
             if (match.Success)
@@ -71,7 +74,7 @@ namespace RichCanvasUIA.Client
                 {
                     Application.Current.Dispatcher.BeginInvoke(() =>
                     {
-                        pipeHandler.Process(pipeData, (RichCanvasClientUIAModeViewModel)mainContent.DataContext);
+                        pipeHandler.Process(pipeData, (RichCanvasClientUIAModeViewModel)((UIAModeMainControl)mainContent.Content).DataContext);
                     });
                 }
             });

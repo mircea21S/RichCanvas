@@ -6,14 +6,20 @@ namespace RichCanvasUIA.Client.UIA_Mode
 {
     public class PreDefinedAutomationItemModels
     {
-        public static RichCanvasContainerAutomationModel ImmutablePositionedRectangleWithoutSize = new()
+        public static RichCanvasContainerAutomationModel MutablePositionedRectangleWithSize => new()
+        {
+            Top = 100,
+            Left = 100
+        };
+
+        public static RichCanvasContainerAutomationModel ImmutablePositionedRectangleWithoutSize => new()
         {
             AllowScaleChangeToUpdatePosition = false,
             Top = 300,
             Left = 300
         };
 
-        public static RichCanvasContainerAutomationModel MutablePositionedRectangleWithSize = new()
+        public static RichCanvasContainerAutomationModel FullyDrawnRectangle => new()
         {
             Top = 100,
             Left = 100,
@@ -21,15 +27,7 @@ namespace RichCanvasUIA.Client.UIA_Mode
             Width = 100
         };
 
-        public static RichCanvasContainerAutomationModel FullyDrawnRectangle = new()
-        {
-            Top = 100,
-            Left = 100,
-            Height = 100,
-            Width = 100
-        };
-
-        public static List<RichCanvasContainerAutomationModel> SelectableItems =
+        public static List<RichCanvasContainerAutomationModel> SelectableItems =>
        [
            new()
             {
@@ -89,7 +87,7 @@ namespace RichCanvasUIA.Client.UIA_Mode
             }
        ];
 
-        public static List<RichCanvasContainerAutomationModel> VisuallyConsecutiveItemsForRealTimeSelection =
+        public static List<RichCanvasContainerAutomationModel> VisuallyConsecutiveItemsForRealTimeSelection =>
         [
             new()
             {
@@ -128,7 +126,7 @@ namespace RichCanvasUIA.Client.UIA_Mode
             }
         ];
 
-        public static List<RichCanvasContainerAutomationModel> SelectableItemsForSingleSelection =
+        public static List<RichCanvasContainerAutomationModel> SelectableItemsForSingleSelection =>
         [
             new()
             {
