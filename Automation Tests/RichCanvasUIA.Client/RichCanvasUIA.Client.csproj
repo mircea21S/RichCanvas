@@ -69,26 +69,7 @@
     <Compile Include="Debug Mode\DebugModeMainWindow.xaml.cs">
       <DependentUpon>DebugModeMainWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\DrawingEndedRepresentation.cs" />
-    <Compile Include="Models\Line.cs" />
     <Compile Include="RelayCommand.cs" />
-    <Compile Include="RichItemContainerModel.cs" />
-    <Compile Include="StatePresenters\DrawingStateView.xaml.cs">
-      <DependentUpon>DrawingStateView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="StatePresenters\MultipleSelectionStateView.xaml.cs">
-      <DependentUpon>MultipleSelectionStateView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="StatePresenters\SingleSelectionStateView.xaml.cs">
-      <DependentUpon>SingleSelectionStateView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="StatePresenters\ZoomingView.xaml.cs">
-      <DependentUpon>ZoomingView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="States\DrawingStateViewModel.cs" />
-    <Compile Include="States\MultipleSelectionStateViewModel.cs" />
-    <Compile Include="States\SingleSelectionStateViewModel.cs" />
-    <Compile Include="States\ZoomingViewModel.cs" />
     <Compile Include="UIA Mode\IPC Pipe\Handlers\DrawingStateHandler.cs" />
     <Compile Include="UIA Mode\IPC Pipe\Handlers\PipeHandlerDefinition.cs" />
     <Compile Include="UIA Mode\IPC Pipe\Handlers\ItemsSourceHandler.cs" />
@@ -116,29 +97,12 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="StatePresenters\DrawingStateView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="StatePresenters\MultipleSelectionStateView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="StatePresenters\SingleSelectionStateView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="StatePresenters\ZoomingView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="UIA Mode\UIAModeMainControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainWindowViewModel.cs" />
     <Compile Include="ObservableObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
