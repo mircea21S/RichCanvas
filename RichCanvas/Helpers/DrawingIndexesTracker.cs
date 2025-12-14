@@ -27,12 +27,12 @@ namespace RichCanvas.Helpers
             Func<int, bool> isItemAtIndexValidForDrawingFunction,
             Action? executeOnReset = null)
         {
-            items.CollectionChanged += Items_CollectionChanged;
+            items.CollectionChanged += OnItemsCollectionChanged;
             _executeOnReset = executeOnReset;
             _shouldDrawIndex = isItemAtIndexValidForDrawingFunction;
         }
 
-        private void Items_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        private void OnItemsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Reset)
             {

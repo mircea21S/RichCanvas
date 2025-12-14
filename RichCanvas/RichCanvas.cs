@@ -426,6 +426,7 @@ namespace RichCanvas
                 index =>
                 {
                     var container = (RichCanvasContainer)ItemContainerGenerator.ContainerFromIndex(index);
+                    if (container == null) return false;
                     return !container.IsValid();
                 },
                 () =>
