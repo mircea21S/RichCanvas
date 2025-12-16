@@ -29,6 +29,14 @@ namespace RichCanvasUIA.Client
             var commandLineArguments = Environment.GetCommandLineArgs()?.Skip(1)?.ToArray();
             if (commandLineArguments == null || commandLineArguments.Length > 1) return;
 
+            if (commandLineArguments.Length == 0)
+            {
+                mainContent.Content = new DebugModeMainWindow
+                {
+                    DataContext = new DebugModeMainWindowViewModel()
+                };
+                return;
+            }
             var startMode = commandLineArguments[0];
             if (StartUIAMode(startMode, out string pipeHandlerName))
             {
@@ -45,7 +53,10 @@ namespace RichCanvasUIA.Client
             // always start Debug for now
             else
             {
-                mainContent.Content = new DebugModeMainWindow();
+                mainContent.Content = new DebugModeMainWindow
+                {
+                    DataContext = new DebugModeMainWindowViewModel()
+                };
             }
         }
 

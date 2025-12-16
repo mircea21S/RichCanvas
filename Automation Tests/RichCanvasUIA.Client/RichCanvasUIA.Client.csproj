@@ -59,6 +59,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Debug Mode\DebugModeMainWindowViewModel.cs" />
+    <Compile Include="Debug Mode\Editor\RichCanvasEditor.cs" />
     <Compile Include="UIA Mode\Automation Models\DrawingEndedVisualAutomationModel.cs" />
     <Compile Include="UIA Mode\Automation Models\LineAutomationModel.cs" />
     <Compile Include="UIA Mode\Automation Models\RichCanvasAutomationModel.cs" />
@@ -82,6 +84,10 @@
       <DependentUpon>UIAModeMainControl.xaml</DependentUpon>
     </Compile>
     <Page Include="Debug Mode\DebugModeMainWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Debug Mode\Editor\RichCanvasEditorTemplate.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -5,29 +5,60 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:RichCanvasUIA.Client.Debug_Mode"
              xmlns:richCanvasConverters="clr-namespace:RichCanvas.Converters;assembly=RichCanvas"
+             xmlns:editor="clr-namespace:RichCanvasUIA.Client.Debug_Mode.Editor"
+             xmlns:richcanvas="clr-namespace:RichCanvas;assembly=RichCanvas"
              mc:Ignorable="d"
              d:DesignHeight="450"
-             d:DesignWidth="800">
+             d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=local:DebugModeMainWindowViewModel}">
     <UserControl.Resources>
-        <Style TargetType="Separator">
-            <Setter Property="HorizontalAlignment"
-                    Value="Stretch" />
-            <Setter Property="Height"
-                    Value="2" />
-            <Setter Property="Margin"
-                    Value="5,5,5,5" />
-        </Style>
-        <GeometryDrawing x:Key="RectangleGridGeometry">
-            <GeometryDrawing.Pen>
-                <Pen Brush="DodgerBlue"
-                     Thickness="0.3" />
-            </GeometryDrawing.Pen>
-            <GeometryDrawing.Geometry>
-                <RectangleGeometry Rect="0,0,10,10" />
-            </GeometryDrawing.Geometry>
-        </GeometryDrawing>
-        <richCanvasConverters:UIntToRectConverter x:Key="UIntToRectConverter" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Debug Mode/Editor/RichCanvasEditorTemplate.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="Separator">
+                <Setter Property="HorizontalAlignment"
+                        Value="Stretch" />
+                <Setter Property="Height"
+                        Value="2" />
+                <Setter Property="Margin"
+                        Value="5,5,5,5" />
+            </Style>
+        </ResourceDictionary>
     </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TabControl ItemsSource="{Binding RichCanvasEditors}"
+                    SelectedIndex="0">
+            <TabControl.ItemContainerStyle>
+                <Style TargetType="TabItem">
+                    <Setter Property="HeaderTemplate">
+                        <Setter.Value>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Name}"
+                                               VerticalAlignment="Center" />
+                                    <Button FontSize="20"
+                                            Margin="4,0,0,0"
+                                            Width="24"
+                                            Command="{Binding Path=DataContext.AddRichCanvasEditorCommand, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                        <TextBlock Text="+"
+                                                   Margin="0,-3,0,0" />
+                                    </Button>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Setter.Value>
+                    </Setter>
+                    <Setter Property="Content"
+                            Value="{Binding Editor}" />
+                    <Setter Property="ContentTemplate"
+                            Value="{StaticResource RichCanvasEditorTemplate}" />
+                </Style>
+            </TabControl.ItemContainerStyle>
+        </TabControl>
+    </Grid>
 
     <!--<Grid>
         <Grid.RowDefinitions>
@@ -136,94 +167,6 @@
                 </StackPanel>
             </Border>
         </StackPanel>
-
-        <ScrollViewer CanContentScroll="True"
-                      VerticalScrollBarVisibility="Auto"
-                      HorizontalScrollBarVisibility="Auto">
-            <richCanvasUIA:RichCanvasAutomation ItemsSource="{Binding Items}"
-                                                SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
-                                                SelectedItems="{Binding SelectedItems}"
-                                                RealTimeSelectionEnabled="{Binding RealTimeSelectionEnabled}"
-                                                RealTimeDraggingEnabled="{Binding RealTimeDraggingEnabled, Mode=TwoWay}"
-                                                DrawingEndedCommand="{Binding DrawingState.DrawingEndedCommand}"
-                                                ViewportLocation="{Binding ViewportLocation, Mode=TwoWay}"
-                                                ViewportSize="{Binding ViewportSize, Mode=OneWayToSource}"
-                                                ViewportZoom="{Binding ZoomingViewModel.ViewportZoom, Mode=TwoWay}"
-                                                MinScale="{Binding ZoomingViewModel.MinScale, Mode=TwoWay}"
-                                                MaxScale="{Binding ZoomingViewModel.MaxScale, Mode=TwoWay}"
-                                                ScaleFactor="{Binding ZoomingViewModel.ScaleFactor, Mode=TwoWay}"
-                                                EnableSnapping="{Binding EnableSnapping, Mode=TwoWay}"
-                                                GridSpacing="{Binding GridSpacing, Mode=TwoWay}"
-                                                Name="source">
-                <richCanvasUIA:RichCanvasAutomation.Background>
-                    <DrawingBrush TileMode="Tile"
-                                  ViewportUnits="Absolute"
-                                  Viewport="{Binding GridSpacing, ElementName=source, Converter={StaticResource UIntToRectConverter}}"
-                                  Transform="{Binding AppliedTransform, ElementName=source}"
-                                  Drawing="{StaticResource RectangleGridGeometry}" />
-                </richCanvasUIA:RichCanvasAutomation.Background>
-                <richCanvasUIA:RichCanvasAutomation.Resources>
-                    <DataTemplate DataType="{x:Type local:RichItemContainerModel}">
-                        <Rectangle Fill="Red">
-                            <Rectangle.Style>
-                                <Style>
-                                    <Setter Property="rc:RichCanvasContainer.ApplyTransform">
-                                        <Setter.Value>
-                                            <TransformGroup>
-                                                <RotateTransform Angle="{Binding Angle}" />
-                                                <ScaleTransform />
-                                                <TranslateTransform />
-                                            </TransformGroup>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </Rectangle.Style>
-                        </Rectangle>
-                    </DataTemplate>
-                    <DataTemplate DataType="{x:Type models:Line}">
-                        <Line  Stroke="Red"
-                               StrokeThickness="3"
-                               X2="{Binding Width}"
-                               Y2="{Binding Height}">
-                        </Line>
-                    </DataTemplate>
-                    <DataTemplate DataType="{x:Type models:DrawingEndedRepresentation}">
-                        <TextBlock Text="DRAWING ENDED"
-                                   AutomationProperties.AutomationId="{x:Static auto:AutomationIds.DrawingEndedTextBoxId}" />
-                    </DataTemplate>
-                </richCanvasUIA:RichCanvasAutomation.Resources>
-                <richCanvasUIA:RichCanvasAutomation.ItemContainerStyle>
-                    <Style TargetType="rc:RichCanvasContainer">
-
-                        <Setter Property="Top"
-                                Value="{Binding Top, Mode=TwoWay}" />
-
-                        <Setter Property="Left"
-                                Value="{Binding Left, Mode=TwoWay}" />
-
-                        <Setter Property="Width"
-                                Value="{Binding Width, Mode=TwoWay}" />
-
-                        <Setter Property="Height"
-                                Value="{Binding Height, Mode=TwoWay}" />
-
-                        <Setter Property="AllowScaleChangeToUpdatePosition"
-                                Value="{Binding AllowScaleChangeToUpdatePosition}" />
-
-                        <Setter Property="IsDraggable"
-                                Value="{Binding IsDraggable, Mode=TwoWay}" />
-
-                        <Style.Triggers>
-                            <Trigger Property="IsSelected"
-                                     Value="True">
-                                <Setter Property="Opacity"
-                                        Value="0.6" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </richCanvasUIA:RichCanvasAutomation.ItemContainerStyle>
-            </richCanvasUIA:RichCanvasAutomation>
-        </ScrollViewer>
 
         <StatusBar Grid.Row="1">
             <StatusBarItem>
