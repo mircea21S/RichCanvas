@@ -61,6 +61,17 @@
     </ApplicationDefinition>
     <Compile Include="Debug Mode\DebugModeMainWindowViewModel.cs" />
     <Compile Include="Debug Mode\Editor\RichCanvasEditor.cs" />
+    <Compile Include="Debug Mode\Editor\RichCanvasEditorControl.xaml.cs">
+      <DependentUpon>RichCanvasEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Debug Mode\Editor\RichCanvasSettings.cs" />
+    <Compile Include="Debug Mode\Experimental Zone\TestRichCanvasControl.xaml.cs">
+      <DependentUpon>TestRichCanvasControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Debug Mode\Minimal Editor\MinimalRichCanvasControl.xaml.cs">
+      <DependentUpon>MinimalRichCanvasControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Debug Mode\RichCanvasItems\RichCanvasEditorItem.cs" />
     <Compile Include="UIA Mode\Automation Models\DrawingEndedVisualAutomationModel.cs" />
     <Compile Include="UIA Mode\Automation Models\LineAutomationModel.cs" />
     <Compile Include="UIA Mode\Automation Models\RichCanvasAutomationModel.cs" />
@@ -87,7 +98,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Debug Mode\Editor\RichCanvasEditorTemplate.xaml">
+    <Page Include="Debug Mode\Editor\RichCanvasEditorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Debug Mode\Experimental Zone\TestRichCanvasControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Debug Mode\Minimal Editor\MinimalRichCanvasControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

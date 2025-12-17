@@ -7,56 +7,46 @@
              xmlns:richCanvasConverters="clr-namespace:RichCanvas.Converters;assembly=RichCanvas"
              xmlns:editor="clr-namespace:RichCanvasUIA.Client.Debug_Mode.Editor"
              xmlns:richcanvas="clr-namespace:RichCanvas;assembly=RichCanvas"
+             xmlns:experimental_zone="clr-namespace:RichCanvasUIA.Client.Debug_Mode.Experimental_Zone"
+             xmlns:minimal_editor="clr-namespace:RichCanvasUIA.Client.Debug_Mode.Minimal_Editor"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=local:DebugModeMainWindowViewModel}">
     <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Debug Mode/Editor/RichCanvasEditorTemplate.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-            <Style TargetType="Separator">
-                <Setter Property="HorizontalAlignment"
-                        Value="Stretch" />
-                <Setter Property="Height"
-                        Value="2" />
-                <Setter Property="Margin"
-                        Value="5,5,5,5" />
-            </Style>
-        </ResourceDictionary>
+        <Style TargetType="Separator">
+            <Setter Property="HorizontalAlignment"
+                    Value="Stretch" />
+            <Setter Property="Height"
+                    Value="2" />
+            <Setter Property="Margin"
+                    Value="5,5,5,5" />
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TabControl ItemsSource="{Binding RichCanvasEditors}"
-                    SelectedIndex="0">
-            <TabControl.ItemContainerStyle>
-                <Style TargetType="TabItem">
-                    <Setter Property="HeaderTemplate">
-                        <Setter.Value>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Name}"
-                                               VerticalAlignment="Center" />
-                                    <Button FontSize="20"
-                                            Margin="4,0,0,0"
-                                            Width="24"
-                                            Command="{Binding Path=DataContext.AddRichCanvasEditorCommand, RelativeSource={RelativeSource AncestorType=UserControl}}">
-                                        <TextBlock Text="+"
-                                                   Margin="0,-3,0,0" />
-                                    </Button>
-                                </StackPanel>
-                            </DataTemplate>
-                        </Setter.Value>
-                    </Setter>
-                    <Setter Property="Content"
-                            Value="{Binding Editor}" />
-                    <Setter Property="ContentTemplate"
-                            Value="{StaticResource RichCanvasEditorTemplate}" />
-                </Style>
-            </TabControl.ItemContainerStyle>
+        <TabControl SelectedIndex="0">
+            <TabItem Header="RichCanvas MVVM">
+                <editor:RichCanvasEditorControl />
+            </TabItem>
+            <TabItem Header="Minimal RichCanvas">
+                <minimal_editor:MinimalRichCanvasControl />
+            </TabItem>
+            <TabItem Header="TestBed RichCanvas">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <editor:RichCanvasEditorControl x:Name="editor1" />
+                    <Separator Grid.Row="1" />
+                    <editor:RichCanvasEditorControl Grid.Row="2"
+                                                    DataContext="{Binding ElementName=editor1, Path=DataContext}" />
+                </Grid>
+            </TabItem>
         </TabControl>
     </Grid>
 
