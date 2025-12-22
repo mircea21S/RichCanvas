@@ -28,7 +28,6 @@
         <richCanvasConverters:UIntToRectConverter x:Key="UIntToRectConverter" />
     </UserControl.Resources>
     <Grid>
-        <TextBlock Text="{Binding Text}" />
         <ScrollViewer CanContentScroll="True"
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Auto">

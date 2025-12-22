@@ -9,6 +9,7 @@
              xmlns:richcanvas="clr-namespace:RichCanvas;assembly=RichCanvas"
              xmlns:experimental_zone="clr-namespace:RichCanvasUIA.Client.Debug_Mode.Experimental_Zone"
              xmlns:minimal_editor="clr-namespace:RichCanvasUIA.Client.Debug_Mode.Minimal_Editor"
+             xmlns:overlay="clr-namespace:RichCanvasUIA.Client.Debug_Mode.Overlay"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800"
@@ -29,7 +30,12 @@
         </Grid.RowDefinitions>
         <TabControl SelectedIndex="0">
             <TabItem Header="RichCanvas MVVM">
-                <editor:RichCanvasEditorControl />
+                <overlay:OverlayHost>
+                    <overlay:OverlayHost.Overlay>
+                        <overlay:RichCanvasToolbox RichCanvasEditor="{Binding ElementName=EditorContent, Path=DataContext}" />
+                    </overlay:OverlayHost.Overlay>
+                    <editor:RichCanvasEditorControl x:Name="EditorContent" />
+                </overlay:OverlayHost>
             </TabItem>
             <TabItem Header="Minimal RichCanvas">
                 <minimal_editor:MinimalRichCanvasControl />
