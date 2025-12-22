@@ -22,6 +22,50 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style TargetType="{x:Type ToolBar}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToolBar}">
+                        <Border x:Name="Border"
+                                BorderThickness="1"
+                                BorderBrush="Black">
+                            <DockPanel>
+                                <ToggleButton DockPanel.Dock="Right"
+                                              IsEnabled="{TemplateBinding HasOverflowItems}"
+                                              ClickMode="Press"
+                                              IsChecked="{Binding IsOverflowOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                                    <Popup x:Name="OverflowPopup"
+                                           AllowsTransparency="true"
+                                           Placement="Bottom"
+                                           StaysOpen="false"
+                                           Focusable="false"
+                                           PopupAnimation="Slide"
+                                           IsOpen="{Binding IsOverflowOpen, RelativeSource={RelativeSource TemplatedParent}}">
+                                        <Border x:Name="DropDownBorder"
+                                                BorderThickness="1">
+
+                                            <ToolBarOverflowPanel x:Name="PART_ToolBarOverflowPanel"
+                                                                  Margin="2"
+                                                                  WrapWidth="200"
+                                                                  Focusable="true"
+                                                                  FocusVisualStyle="{x:Null}"
+                                                                  KeyboardNavigation.TabNavigation="Cycle"
+                                                                  KeyboardNavigation.DirectionalNavigation="Cycle" />
+                                        </Border>
+                                    </Popup>
+                                </ToggleButton>
+
+                                <!--<Thumb x:Name="ToolBarThumb"
+                                       Width="10" />-->
+                                <ToolBarPanel x:Name="PART_ToolBarPanel"
+                                              IsItemsHost="true"
+                                              Margin="0,1,2,2" />
+                            </DockPanel>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -35,7 +79,8 @@
 
         <!--actions toolbar-->
         <DockPanel Grid.Column="1"
-                   VerticalAlignment="Bottom">
+                   VerticalAlignment="Bottom"
+                   Margin="0,0,0,8">
             <ToolBarTray HorizontalAlignment="Center"
                          IsLocked="True">
                 <ToolBar Band="1">
@@ -45,6 +90,7 @@
                         <!--Settings menu-->
                         <MenuItem ItemContainerStyle="{StaticResource menuItemStyle}"
                                   Header="{StaticResource SettingsIcon}">
+                            <menus:ZoomingSettingsMenu DataContext="{Binding RichCanvasEditor.Settings}" />
                             <menus:SelectionSettingsMenu DataContext="{Binding RichCanvasEditor.Settings}" />
                         </MenuItem>
                         <!--Rectangle menu-->
@@ -113,6 +159,13 @@
                     <Button Content="{StaticResource RemoveAllIcon}"
                             Command="{Binding RemoveAllCommand}">
                     </Button>
+                    <Menu Padding="0"
+                          Margin="0"
+                          VerticalAlignment="Center">
+                        <MenuItem ItemContainerStyle="{StaticResource menuItemStyle}"
+                                  Header="{StaticResource PerformanceIcon}">
+                        </MenuItem>
+                    </Menu>
                 </ToolBar>
             </ToolBarTray>
         </DockPanel>

@@ -17,5 +17,13 @@
             get => _canSelectMultipleItems;
             set => SetProperty(ref _canSelectMultipleItems, value);
         }
+
+        private double _zoomFactor = 1.1;
+
+        public double ZoomFactor
+        {
+            get => _zoomFactor;
+            set => SetProperty(ref _zoomFactor, value);
+        }
     }
 }

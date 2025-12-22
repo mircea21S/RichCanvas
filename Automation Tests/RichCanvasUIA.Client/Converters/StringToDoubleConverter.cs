@@ -8,7 +8,11 @@ namespace RichCanvasUIA.Client.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value.ToString();
+            if (double.TryParse(value.ToString(), out double result))
+            {
+                return result;
+            }
+            return null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

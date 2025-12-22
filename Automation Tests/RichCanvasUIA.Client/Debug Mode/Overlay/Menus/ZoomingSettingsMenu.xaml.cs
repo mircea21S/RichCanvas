@@ -3,11 +3,11 @@
 namespace RichCanvasUIA.Client.Debug_Mode.Overlay.Menus
 {
     /// <summary>
-    /// Interaction logic for SelectionSettingsMenu.xaml
+    /// Interaction logic for ZoomingSettingsMenu.xaml
     /// </summary>
-    public partial class SelectionSettingsMenu : UserControl
+    public partial class ZoomingSettingsMenu : UserControl
     {
-        public SelectionSettingsMenu()
+        public ZoomingSettingsMenu()
         {
             InitializeComponent();
         }

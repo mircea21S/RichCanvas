@@ -75,6 +75,9 @@
     <Compile Include="Debug Mode\Overlay\Menus\SelectionSettingsMenu.xaml.cs">
       <DependentUpon>SelectionSettingsMenu.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Debug Mode\Overlay\Menus\ZoomingSettingsMenu.xaml.cs">
+      <DependentUpon>ZoomingSettingsMenu.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Debug Mode\Overlay\OverlayHost.cs" />
     <Compile Include="Debug Mode\Overlay\RichCanvasSettingsPanel.xaml.cs">
       <DependentUpon>RichCanvasSettingsPanel.xaml</DependentUpon>
@@ -120,6 +123,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Debug Mode\Overlay\Menus\SelectionSettingsMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Debug Mode\Overlay\Menus\ZoomingSettingsMenu.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

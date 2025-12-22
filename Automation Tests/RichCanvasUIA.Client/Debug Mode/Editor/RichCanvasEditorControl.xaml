@@ -35,7 +35,8 @@
                            ItemsSource="{Binding Items}"
                            SelectedItems="{Binding SelectedItems}"
                            RealTimeSelectionEnabled="{Binding Settings.RealTimeSelectionEnabled}"
-                           CanSelectMultipleItems="{Binding Settings.CanSelectMultipleItems}">
+                           CanSelectMultipleItems="{Binding Settings.CanSelectMultipleItems}"
+                           ScaleFactor="{Binding Settings.ZoomFactor}">
                 <rc:RichCanvas.Background>
                     <DrawingBrush TileMode="Tile"
                                   ViewportUnits="Absolute"
