@@ -6,22 +6,33 @@
              xmlns:local="clr-namespace:RichCanvasUIA.Client.Debug_Mode.Overlay"
              mc:Ignorable="d"
              d:DesignHeight="450"
-             d:DesignWidth="800">
-    <DockPanel>
-        <Rectangle Fill="Red"
-                   Width="100"
-                   Height="10"
-                   DockPanel.Dock="Top" />
-        <Rectangle Fill="Red"
-                   Width="100"
-                   Height="10"
-                   DockPanel.Dock="Bottom" />
-        <Rectangle Fill="Red"
-                   Width="50"
-                   Height="100"
-                   DockPanel.Dock="Right" />
-        <Rectangle Fill="Red"
-                   Width="100"
-                   Height="10" />
-    </DockPanel>
+             d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance local:RichCanvasToolboxViewModel}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="auto" />
+        </Grid.ColumnDefinitions>
+
+        <!--settings panel-->
+        <local:RichCanvasSettingsPanel DataContext="{Binding RichCanvasEditor.Settings}" />
+
+        <!--actions toolbar-->
+        <DockPanel Grid.Column="1"
+                   VerticalAlignment="Bottom">
+            <ToolBarTray HorizontalAlignment="Center">
+                <ToolBar Band="1">
+                    <Button Content="HO">
+                    </Button>
+                    <Button Content="HO">
+                    </Button>
+                    <Button Content="HO">
+                    </Button>
+                </ToolBar>
+            </ToolBarTray>
+        </DockPanel>
+
+        <!--RichCanvas items preview-->
+    </Grid>
 </UserControl>

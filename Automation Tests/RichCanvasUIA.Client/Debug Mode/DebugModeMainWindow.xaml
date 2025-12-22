@@ -32,9 +32,9 @@
             <TabItem Header="RichCanvas MVVM">
                 <overlay:OverlayHost>
                     <overlay:OverlayHost.Overlay>
-                        <overlay:RichCanvasToolbox RichCanvasEditor="{Binding ElementName=EditorContent, Path=DataContext}" />
+                        <overlay:RichCanvasToolbox DataContext="{Binding FullMVVMRichCanvasEditor.RichCanvasToolbox}" />
                     </overlay:OverlayHost.Overlay>
-                    <editor:RichCanvasEditorControl x:Name="EditorContent" />
+                    <editor:RichCanvasEditorControl DataContext="{Binding FullMVVMRichCanvasEditor.RichCanvasEditor}" />
                 </overlay:OverlayHost>
             </TabItem>
             <TabItem Header="Minimal RichCanvas">
