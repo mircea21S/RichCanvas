@@ -32,7 +32,10 @@
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Auto">
             <rc:RichCanvas Name="source"
-                           ItemsSource="{Binding Items}">
+                           ItemsSource="{Binding Items}"
+                           SelectedItems="{Binding SelectedItems}"
+                           RealTimeSelectionEnabled="{Binding Settings.RealTimeSelectionEnabled}"
+                           CanSelectMultipleItems="{Binding Settings.CanSelectMultipleItems}">
                 <rc:RichCanvas.Background>
                     <DrawingBrush TileMode="Tile"
                                   ViewportUnits="Absolute"

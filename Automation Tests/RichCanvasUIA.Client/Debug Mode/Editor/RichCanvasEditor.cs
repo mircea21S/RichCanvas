@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 using RichCanvasUIA.Client.Debug_Mode.RichCanvasItems;
 
@@ -8,5 +9,6 @@ namespace RichCanvasUIA.Client.Debug_Mode.Editor
     {
         public RichCanvasSettings Settings { get; } = new RichCanvasSettings();
         public ObservableCollection<RichCanvasEditorItem> Items { get; } = [];
+        public List<RichCanvasEditorItem> SelectedItems { get; } = [];
     }
 }

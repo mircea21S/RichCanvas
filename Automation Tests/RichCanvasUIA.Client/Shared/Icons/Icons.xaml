@@ -42,4 +42,34 @@
             </DrawingImage>
         </Image.Source>
     </Image>
+    <Image x:Key="SettingsIcon">
+        <Image.Source>
+            <DrawingImage>
+                <DrawingImage.Drawing>
+                    <DrawingGroup ClipGeometry="M0,0 V24 H24 V0 H0 Z">
+                        <GeometryDrawing Geometry="F1 M24,24z M0,0z M12,15C13.6569,15 15,13.6569 15,12 15,10.3431 13.6569,9 12,9 10.3431,9 9,10.3431 9,12 9,13.6569 10.3431,15 12,15z">
+                            <GeometryDrawing.Pen>
+                                <Pen Brush="#FF000000"
+                                     Thickness="1.5"
+                                     StartLineCap="Round"
+                                     EndLineCap="Round"
+                                     LineJoin="Round"
+                                     MiterLimit="1" />
+                            </GeometryDrawing.Pen>
+                        </GeometryDrawing>
+                        <GeometryDrawing Geometry="F1 M24,24z M0,0z M19.6224,10.3954L18.5247,7.7448 20,6 18,4 16.2647,5.48295 13.5578,4.36974 12.9353,2 10.981,2 10.3491,4.40113 7.70441,5.51596 6,4 4,6 5.45337,7.78885 4.3725,10.4463 2,11 2,13 4.40111,13.6555 5.51575,16.2997 4,18 6,20 7.79116,18.5403 10.397,19.6123 11,22 13,22 13.6045,19.6132 16.2551,18.5155C16.6969,18.8313,18,20,18,20L20,18 18.5159,16.2494 19.6139,13.598 21.9999,12.9772 22,11 19.6224,10.3954z">
+                            <GeometryDrawing.Pen>
+                                <Pen Brush="#FF000000"
+                                     Thickness="1.5"
+                                     StartLineCap="Round"
+                                     EndLineCap="Round"
+                                     LineJoin="Round"
+                                     MiterLimit="1" />
+                            </GeometryDrawing.Pen>
+                        </GeometryDrawing>
+                    </DrawingGroup>
+                </DrawingImage.Drawing>
+            </DrawingImage>
+        </Image.Source>
+    </Image>
 </ResourceDictionary>

@@ -10,7 +10,7 @@
             set => SetProperty(ref _realTimeSelectionEnabled, value);
         }
 
-        private bool _canSelectMultipleItems;
+        private bool _canSelectMultipleItems = true;
 
         public bool CanSelectMultipleItems
         {

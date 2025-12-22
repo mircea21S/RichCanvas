@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:RichCanvasUIA.Client.Debug_Mode.Overlay"
              xmlns:items="clr-namespace:RichCanvasUIA.Client.Debug_Mode.RichCanvasItems"
+             xmlns:menus="clr-namespace:RichCanvasUIA.Client.Debug_Mode.Overlay.Menus"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800"
@@ -41,12 +42,17 @@
                     <Menu Padding="0"
                           Margin="0"
                           VerticalAlignment="Center">
+                        <!--Settings menu-->
+                        <MenuItem ItemContainerStyle="{StaticResource menuItemStyle}"
+                                  Header="{StaticResource SettingsIcon}">
+                            <menus:SelectionSettingsMenu DataContext="{Binding RichCanvasEditor.Settings}" />
+                        </MenuItem>
                         <!--Rectangle menu-->
                         <MenuItem ItemContainerStyle="{StaticResource menuItemStyle}">
                             <MenuItem.Header>
                                 <Rectangle Stroke="Red"
-                                           Width="10"
-                                           Height="10" />
+                                           Width="16"
+                                           Height="16" />
                             </MenuItem.Header>
                             <Button Command="{Binding AddNotDrawnItemCommand}"
                                     CommandParameter="{x:Type items:RichCanvasEditorItem}">
@@ -74,8 +80,8 @@
                                       StrokeThickness="2"
                                       X1="0"
                                       Y1="0"
-                                      X2="10"
-                                      Y2="10" />
+                                      X2="15"
+                                      Y2="20" />
                             </MenuItem.Header>
                             <Button Command="{Binding AddNotDrawnItemCommand}"
                                     CommandParameter="{x:Type items:LineEditorItem}">
