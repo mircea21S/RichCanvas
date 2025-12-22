@@ -58,16 +58,16 @@
                             </Rectangle.Style>
                         </Rectangle>
                     </DataTemplate>
-                    <!--<DataTemplate DataType="{x:Type models:Line}">
-                <Line  Stroke="Red"
-                       StrokeThickness="3"
-                       X2="{Binding Width}"
-                       Y2="{Binding Height}">
-                </Line>
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type models:DrawingEndedRepresentation}">
-                <TextBlock Text="DRAWING ENDED" />
-            </DataTemplate>-->
+                    <DataTemplate DataType="{x:Type items:LineEditorItem}">
+                        <Line  Stroke="Red"
+                               StrokeThickness="3"
+                               X2="{Binding Width}"
+                               Y2="{Binding Height}">
+                        </Line>
+                    </DataTemplate>
+                    <!--<DataTemplate DataType="{x:Type models:DrawingEndedRepresentation}">
+                        <TextBlock Text="DRAWING ENDED" />
+                    </DataTemplate>-->
                 </rc:RichCanvas.Resources>
                 <rc:RichCanvas.ItemContainerStyle>
                     <Style TargetType="rc:RichCanvasContainer">

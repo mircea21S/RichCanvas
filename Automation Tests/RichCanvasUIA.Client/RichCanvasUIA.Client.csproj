@@ -80,6 +80,7 @@
       <DependentUpon>RichCanvasToolbox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Debug Mode\Overlay\RichCanvasToolboxViewModel.cs" />
+    <Compile Include="Debug Mode\RichCanvasItems\LineEditorItem.cs" />
     <Compile Include="Debug Mode\RichCanvasItems\RichCanvasEditorItem.cs" />
     <Compile Include="UIA Mode\Automation Models\DrawingEndedVisualAutomationModel.cs" />
     <Compile Include="UIA Mode\Automation Models\LineAutomationModel.cs" />
@@ -115,6 +116,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Shared\Icons\Icons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Debug Mode\Minimal Editor\MinimalRichCanvasControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -143,7 +148,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Themes\Generic.xaml">
+    <Page Include="Shared\Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -4,10 +4,24 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:RichCanvasUIA.Client.Debug_Mode.Overlay"
+             xmlns:items="clr-namespace:RichCanvasUIA.Client.Debug_Mode.RichCanvasItems"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800"
              d:DataContext="{d:DesignInstance local:RichCanvasToolboxViewModel}">
+    <UserControl.Resources>
+        <Style x:Key="menuItemStyle"
+               TargetType="MenuItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="MenuItem">
+                        <ContentPresenter Content="{TemplateBinding Header}"
+                                          Margin="4" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
@@ -21,13 +35,77 @@
         <!--actions toolbar-->
         <DockPanel Grid.Column="1"
                    VerticalAlignment="Bottom">
-            <ToolBarTray HorizontalAlignment="Center">
+            <ToolBarTray HorizontalAlignment="Center"
+                         IsLocked="True">
                 <ToolBar Band="1">
-                    <Button Content="HO">
+                    <Menu Padding="0"
+                          Margin="0"
+                          VerticalAlignment="Center">
+                        <!--Rectangle menu-->
+                        <MenuItem ItemContainerStyle="{StaticResource menuItemStyle}">
+                            <MenuItem.Header>
+                                <Rectangle Stroke="Red"
+                                           Width="10"
+                                           Height="10" />
+                            </MenuItem.Header>
+                            <Button Command="{Binding AddNotDrawnItemCommand}"
+                                    CommandParameter="{x:Type items:RichCanvasEditorItem}">
+                                <Button.Content>
+                                    <Rectangle Stroke="Red"
+                                               StrokeDashArray="2 2"
+                                               SnapsToDevicePixels="True"
+                                               Width="10"
+                                               Height="10" />
+                                </Button.Content>
+                            </Button>
+                            <Button Command="{Binding AddDrawnItemCommand}"
+                                    CommandParameter="{x:Type items:RichCanvasEditorItem}">
+                                <Button.Content>
+                                    <Rectangle Stroke="Red"
+                                               Width="10"
+                                               Height="10" />
+                                </Button.Content>
+                            </Button>
+                        </MenuItem>
+                        <!--Line menu-->
+                        <MenuItem ItemContainerStyle="{StaticResource menuItemStyle}">
+                            <MenuItem.Header>
+                                <Line Stroke="Red"
+                                      StrokeThickness="2"
+                                      X1="0"
+                                      Y1="0"
+                                      X2="10"
+                                      Y2="10" />
+                            </MenuItem.Header>
+                            <Button Command="{Binding AddNotDrawnItemCommand}"
+                                    CommandParameter="{x:Type items:LineEditorItem}">
+                                <Button.Content>
+                                    <Line Stroke="Red"
+                                          StrokeDashArray="2 2"
+                                          SnapsToDevicePixels="True"
+                                          X1="0"
+                                          Y1="0"
+                                          X2="10"
+                                          Y2="10" />
+                                </Button.Content>
+                            </Button>
+                            <Button Command="{Binding AddDrawnItemCommand}"
+                                    CommandParameter="{x:Type items:LineEditorItem}">
+                                <Button.Content>
+                                    <Line Stroke="Red"
+                                          X1="0"
+                                          Y1="0"
+                                          X2="10"
+                                          Y2="10" />
+                                </Button.Content>
+                            </Button>
+                        </MenuItem>
+                    </Menu>
+                    <Button Content="{StaticResource RemoveIcon}"
+                            Command="{Binding RemoveItemCommand}">
                     </Button>
-                    <Button Content="HO">
-                    </Button>
-                    <Button Content="HO">
+                    <Button Content="{StaticResource RemoveAllIcon}"
+                            Command="{Binding RemoveAllCommand}">
                     </Button>
                 </ToolBar>
             </ToolBarTray>
