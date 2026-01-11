@@ -6,10 +6,11 @@
              xmlns:local="clr-namespace:RichCanvasUIA.Client.Debug_Mode.Overlay"
              xmlns:items="clr-namespace:RichCanvasUIA.Client.Debug_Mode.RichCanvasItems"
              xmlns:menus="clr-namespace:RichCanvasUIA.Client.Debug_Mode.Overlay.Menus"
+             xmlns:context="clr-namespace:RichCanvasUIA.Client.Debug_Mode"
              mc:Ignorable="d"
              d:DesignHeight="450"
              d:DesignWidth="800"
-             d:DataContext="{d:DesignInstance local:RichCanvasToolboxViewModel}">
+             d:DataContext="{d:DesignInstance context:EditorContext}">
     <UserControl.Resources>
         <Style x:Key="menuItemStyle"
                TargetType="MenuItem">
@@ -88,8 +89,10 @@
                           Margin="0"
                           VerticalAlignment="Center">
                         <!--Settings menu-->
-                        <MenuItem ItemContainerStyle="{StaticResource menuItemStyle}"
-                                  Header="{StaticResource SettingsIcon}">
+                        <MenuItem ItemContainerStyle="{StaticResource menuItemStyle}">
+                            <MenuItem.Header>
+                                <Image Source="{StaticResource SettingsIcon}" />
+                            </MenuItem.Header>
                             <menus:ZoomingSettingsMenu DataContext="{Binding RichCanvasEditor.Settings}" />
                             <menus:SelectionSettingsMenu DataContext="{Binding RichCanvasEditor.Settings}" />
                         </MenuItem>
@@ -100,7 +103,7 @@
                                            Width="16"
                                            Height="16" />
                             </MenuItem.Header>
-                            <Button Command="{Binding AddNotDrawnItemCommand}"
+                            <Button Command="{Binding RichCanvasToolbox.AddNotDrawnItemCommand}"
                                     CommandParameter="{x:Type items:RichCanvasEditorItem}">
                                 <Button.Content>
                                     <Rectangle Stroke="Red"
@@ -110,7 +113,7 @@
                                                Height="10" />
                                 </Button.Content>
                             </Button>
-                            <Button Command="{Binding AddDrawnItemCommand}"
+                            <Button Command="{Binding RichCanvasToolbox.AddDrawnItemCommand}"
                                     CommandParameter="{x:Type items:RichCanvasEditorItem}">
                                 <Button.Content>
                                     <Rectangle Stroke="Red"
@@ -129,7 +132,7 @@
                                       X2="15"
                                       Y2="20" />
                             </MenuItem.Header>
-                            <Button Command="{Binding AddNotDrawnItemCommand}"
+                            <Button Command="{Binding RichCanvasToolbox.AddNotDrawnItemCommand}"
                                     CommandParameter="{x:Type items:LineEditorItem}">
                                 <Button.Content>
                                     <Line Stroke="Red"
@@ -141,7 +144,7 @@
                                           Y2="10" />
                                 </Button.Content>
                             </Button>
-                            <Button Command="{Binding AddDrawnItemCommand}"
+                            <Button Command="{Binding RichCanvasToolbox.AddDrawnItemCommand}"
                                     CommandParameter="{x:Type items:LineEditorItem}">
                                 <Button.Content>
                                     <Line Stroke="Red"
@@ -153,17 +156,23 @@
                             </Button>
                         </MenuItem>
                     </Menu>
-                    <Button Content="{StaticResource RemoveIcon}"
-                            Command="{Binding RemoveItemCommand}">
+                    <Button Command="{Binding RichCanvasToolbox.RemoveItemCommand}">
+                        <Button.Content>
+                            <Image Source="{StaticResource RemoveIcon}" />
+                        </Button.Content>
                     </Button>
-                    <Button Content="{StaticResource RemoveAllIcon}"
-                            Command="{Binding RemoveAllCommand}">
+                    <Button Command="{Binding RichCanvasToolbox.RemoveAllCommand}">
+                        <Button.Content>
+                            <Image Source="{StaticResource RemoveAllIcon}" />
+                        </Button.Content>
                     </Button>
                     <Menu Padding="0"
                           Margin="0"
                           VerticalAlignment="Center">
-                        <MenuItem ItemContainerStyle="{StaticResource menuItemStyle}"
-                                  Header="{StaticResource PerformanceIcon}">
+                        <MenuItem ItemContainerStyle="{StaticResource menuItemStyle}">
+                            <MenuItem.Header>
+                                <Image Source="{StaticResource PerformanceIcon}" />
+                            </MenuItem.Header>
                         </MenuItem>
                     </Menu>
                 </ToolBar>

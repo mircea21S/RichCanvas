@@ -6,14 +6,15 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type overlay:OverlayHost}">
                     <Grid x:Name="PART_LayoutRoot">
+                        <ContentPresenter x:Name="PART_Overlay"
+                                          Panel.ZIndex="99"
+                                          Content="{TemplateBinding Overlay}"
+                                          DataContext="{Binding DataContext, RelativeSource={RelativeSource TemplatedParent}}">
+                        </ContentPresenter>
 
-                        <Grid Panel.ZIndex="99">
-                            <ContentPresenter x:Name="PART_Overlay"
-                                              Content="{TemplateBinding Overlay}">
-                            </ContentPresenter>
-                        </Grid>
-
-                        <ContentPresenter x:Name="PART_Content" />
+                        <ContentPresenter x:Name="PART_Content"
+                                          ContentSource="Content"
+                                          DataContext="{Binding DataContext, RelativeSource={RelativeSource TemplatedParent}}" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

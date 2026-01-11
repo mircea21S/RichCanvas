@@ -42,11 +42,11 @@ namespace RichCanvasUIA.Client.Debug_Mode.Overlay
         private const string OverlayPart = "PART_Overlay";
         private const string LayoutRootPart = "PART_LayoutRoot";
 
-        public static DependencyProperty OverlayProperty = DependencyProperty.Register(nameof(Overlay), typeof(UIElement), typeof(OverlayHost), new FrameworkPropertyMetadata(default(UIElement)));
+        public static DependencyProperty OverlayProperty = DependencyProperty.Register(nameof(Overlay), typeof(object), typeof(OverlayHost), new FrameworkPropertyMetadata(default(object)));
 
-        public UIElement Overlay
+        public object Overlay
         {
-            get => (UIElement)GetValue(OverlayProperty);
+            get => GetValue(OverlayProperty);
             set => SetValue(OverlayProperty, value);
         }
 

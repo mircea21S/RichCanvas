@@ -30,11 +30,11 @@
         </Grid.RowDefinitions>
         <TabControl SelectedIndex="0">
             <TabItem Header="RichCanvas MVVM">
-                <overlay:OverlayHost>
+                <overlay:OverlayHost DataContext="{Binding FullMVVMRichCanvasEditor}">
                     <overlay:OverlayHost.Overlay>
-                        <overlay:RichCanvasToolbox DataContext="{Binding FullMVVMRichCanvasEditor.RichCanvasToolbox}" />
+                        <overlay:RichCanvasToolbox />
                     </overlay:OverlayHost.Overlay>
-                    <editor:RichCanvasEditorControl DataContext="{Binding FullMVVMRichCanvasEditor.RichCanvasEditor}" />
+                    <editor:RichCanvasEditorControl DataContext="{Binding RichCanvasEditor}" />
                 </overlay:OverlayHost>
             </TabItem>
             <TabItem Header="Minimal RichCanvas">
