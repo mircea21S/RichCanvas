@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
+using RichCanvas;
 
 namespace RichCanvasUIA.Client.Debug_Mode.Editor
 {
@@ -20,9 +10,29 @@ namespace RichCanvasUIA.Client.Debug_Mode.Editor
     /// </summary>
     public partial class RichCanvasEditorControl : UserControl
     {
+        // make it get-only. Think of adding it directly to RichCanvas library?
+        public static DependencyProperty SelectedContainerProperty = DependencyProperty.Register(nameof(SelectedContainer),
+            typeof(RichCanvasContainer),
+            typeof(RichCanvasEditorControl),
+            new FrameworkPropertyMetadata(default(RichCanvasContainer)));
+
+        public RichCanvasContainer SelectedContainer
+        {
+            get => (RichCanvasContainer)GetValue(SelectedContainerProperty);
+            set => SetValue(SelectedContainerProperty, value);
+        }
+
         public RichCanvasEditorControl()
         {
             InitializeComponent();
+        }
+
+        private void source_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count > 0)
+            {
+                SelectedContainer = (RichCanvasContainer)source.ItemContainerGenerator.ContainerFromItem(e.AddedItems[0]);
+            }
         }
     }
 }

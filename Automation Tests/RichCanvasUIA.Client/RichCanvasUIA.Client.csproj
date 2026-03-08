@@ -59,8 +59,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="Debug Mode\DebugModeMainWindowViewModel.cs" />
-    <Compile Include="Debug Mode\EditorContext.cs" />
+    <Compile Include="Debug Mode\Editor\RichCanvasEditorHost.cs" />
     <Compile Include="Debug Mode\Editor\RichCanvasEditor.cs" />
     <Compile Include="Debug Mode\Editor\RichCanvasEditorControl.xaml.cs">
       <DependentUpon>RichCanvasEditorControl.xaml</DependentUpon>
@@ -88,6 +89,9 @@
     <Compile Include="Debug Mode\Overlay\RichCanvasToolboxViewModel.cs" />
     <Compile Include="Debug Mode\RichCanvasItems\LineEditorItem.cs" />
     <Compile Include="Debug Mode\RichCanvasItems\RichCanvasEditorItem.cs" />
+    <Compile Include="Debug Mode\RichCanvasItems\RichCanvasEditorItemPreview.xaml.cs">
+      <DependentUpon>RichCanvasEditorItemPreview.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UIA Mode\Automation Models\DrawingEndedVisualAutomationModel.cs" />
     <Compile Include="UIA Mode\Automation Models\LineAutomationModel.cs" />
     <Compile Include="UIA Mode\Automation Models\RichCanvasAutomationModel.cs" />
@@ -127,6 +131,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Debug Mode\Overlay\Menus\ZoomingSettingsMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Debug Mode\RichCanvasItems\RichCanvasEditorItemPreview.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Debug Mode\RichCanvasItems\RichCanvasEditorItemsTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

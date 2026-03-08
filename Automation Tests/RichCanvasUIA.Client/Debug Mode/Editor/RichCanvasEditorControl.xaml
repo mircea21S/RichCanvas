@@ -31,9 +31,11 @@
         <ScrollViewer CanContentScroll="True"
                       VerticalScrollBarVisibility="Auto"
                       HorizontalScrollBarVisibility="Auto">
-            <rc:RichCanvas Name="source"
+            <rc:RichCanvas x:Name="source"
+                           SelectionChanged="source_SelectionChanged"
                            ItemsSource="{Binding Items}"
                            SelectedItems="{Binding SelectedItems}"
+                           SelectedItem="{Binding SelectedItem}"
                            RealTimeSelectionEnabled="{Binding Settings.RealTimeSelectionEnabled}"
                            CanSelectMultipleItems="{Binding Settings.CanSelectMultipleItems}"
                            ScaleFactor="{Binding Settings.ZoomFactor}">
@@ -45,30 +47,6 @@
                                   Drawing="{StaticResource RectangleGridGeometry}" />
                 </rc:RichCanvas.Background>
                 <rc:RichCanvas.Resources>
-                    <DataTemplate DataType="{x:Type items:RichCanvasEditorItem}">
-                        <Rectangle Fill="Red">
-                            <Rectangle.Style>
-                                <Style>
-                                    <Setter Property="rc:RichCanvasContainer.ApplyTransform">
-                                        <Setter.Value>
-                                            <TransformGroup>
-                                                <RotateTransform Angle="{Binding Angle}" />
-                                                <ScaleTransform />
-                                                <TranslateTransform />
-                                            </TransformGroup>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </Rectangle.Style>
-                        </Rectangle>
-                    </DataTemplate>
-                    <DataTemplate DataType="{x:Type items:LineEditorItem}">
-                        <Line  Stroke="Red"
-                               StrokeThickness="3"
-                               X2="{Binding Width}"
-                               Y2="{Binding Height}">
-                        </Line>
-                    </DataTemplate>
                     <!--<DataTemplate DataType="{x:Type models:DrawingEndedRepresentation}">
                         <TextBlock Text="DRAWING ENDED" />
                     </DataTemplate>-->

@@ -42,17 +42,47 @@ namespace RichCanvasUIA.Client.Debug_Mode.Overlay
         private const string OverlayPart = "PART_Overlay";
         private const string LayoutRootPart = "PART_LayoutRoot";
 
-        public static DependencyProperty OverlayProperty = DependencyProperty.Register(nameof(Overlay), typeof(object), typeof(OverlayHost), new FrameworkPropertyMetadata(default(object)));
+        public static DependencyProperty OverlayProperty = DependencyProperty.Register(nameof(Overlay), typeof(OverlayContent), typeof(OverlayHost), new FrameworkPropertyMetadata(default(OverlayContent)));
 
-        public object Overlay
+        public OverlayContent Overlay
         {
-            get => GetValue(OverlayProperty);
+            get => (OverlayContent)GetValue(OverlayProperty);
             set => SetValue(OverlayProperty, value);
         }
 
         static OverlayHost()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(OverlayHost), new FrameworkPropertyMetadata(typeof(OverlayHost)));
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            var contentPresenter = GetTemplateChild("PART_Content") as ContentPresenter;
+
+            if (contentPresenter != null && Overlay != null)
+            {
+                Overlay.TargetElement = contentPresenter.Content as FrameworkElement;
+            }
+        }
+    }
+
+    public class OverlayContent : ContentControl
+    {
+        private static readonly DependencyPropertyKey TargetElementPropertyKey =
+          DependencyProperty.RegisterReadOnly(
+              nameof(TargetElement),
+              typeof(FrameworkElement),
+              typeof(OverlayContent),
+              new PropertyMetadata(null));
+
+        public static readonly DependencyProperty TargetElementProperty =
+            TargetElementPropertyKey.DependencyProperty;
+
+        public FrameworkElement TargetElement
+        {
+            get => (FrameworkElement)GetValue(TargetElementProperty);
+            internal set => SetValue(TargetElementPropertyKey, value);
         }
     }
 }

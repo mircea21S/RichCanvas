@@ -3,5 +3,6 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/Shared/Icons/Icons.xaml" />
         <ResourceDictionary Source="/Debug Mode/Overlay/OverlayHostStyle.xaml" />
+        <ResourceDictionary Source="/Debug Mode/RichCanvasItems/RichCanvasEditorItemsTemplates.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

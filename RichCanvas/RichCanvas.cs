@@ -35,7 +35,7 @@ namespace RichCanvas
 
         internal readonly ScaleTransform ScaleTransform = new ScaleTransform();
         protected readonly TranslateTransform TranslateTransform = new TranslateTransform();
-        private RichCanvasPanel _mainPanel;
+        private RichCanvasPanel? _mainPanel;
         private DispatcherTimer _autoPanTimer;
         private Stack<CanvasState> _states;
         private readonly DrawingIndexesTracker _drawingIndexesTracker;
@@ -392,7 +392,7 @@ namespace RichCanvas
 
         #region Internal Properties
 
-        internal RichCanvasPanel ItemsHost => _mainPanel;
+        internal RichCanvasPanel? ItemsHost => _mainPanel;
         internal bool IsZooming { get; set; }
         internal IList BaseSelectedItems => base.SelectedItems;
         internal List<int> CurrentDrawingIndexes => _drawingIndexesTracker.DrawingIndexes;
